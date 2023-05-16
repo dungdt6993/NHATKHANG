@@ -1,0 +1,13 @@
+﻿.login-box-msg {
+    font-weight: bold;
+    font-size: 20px;
+    color: #6f42c1;
+}
+
+.logo-login {
+    width: 300px;
+}
+
+.logo-login .img-circle {
+    border-radius: 0%;
+}

@@ -1,0 +1,75 @@
+﻿<!-- Main Sidebar Container -->
+<aside class="main-sidebar sidebar-dark-purple elevation-4">
+    <!-- Brand Logo -->
+    <a href="/" @onclick="@(()=>ClickMenuFunc("/"))" class="brand-link purple navbar-purple">
+        <img src="../images/_default/logo-default.png" alt="Logo" class="brand-image img-circle elevation-3"
+             style="opacity: .8">
+
+        <span class="brand-text">Bhaya Soft</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src="@userVM.UrlAvatar" class="img-circle elevation-2" alt="Ảnh đại diện">
+            </div>
+            <div class="info">
+                <a href="/SYS/PersonalProfile" @onclick="@(()=>ClickMenuFunc("/SYS/PersonalProfile"))" class="d-block">@userVM.LastName @userVM.MiddleName @userVM.FirstName</a>
+            </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column nav-flat nav-collapse-hide-child" data-widget="treeview" role="menu" data-accordion="true">
+                <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
+                @if (ckViewFuncMenuRpt)
+                {
+                    <li class="nav-header" style="margin-bottom: 5px;">
+                        <a href="/RPT/SysReports" @onclick="@(()=>ClickMenuFunc("/RPT/SysReports"))" class="nav-link">
+                            <i class="nav-icon fa-solid fa-chart-pie"></i>
+                            <p>HỆ THỐNG BÁO CÁO</p>
+                        </a>
+                    </li>
+                }
+
+                @if (modules != null)
+                {
+                    @foreach (var module in modules)
+                    {
+                        <li class="nav-header">@module.ModuleName</li>
+
+                        @foreach (var funcMenuGrp in funcMenuGrps.Where(x => x.ModuleID == module.ModuleID))
+                        {
+                            <li class="nav-item">
+                                <a href="javascript:void(0);" class="nav-link">
+                                    <i class="nav-icon @funcMenuGrp.FuncGrpIcon"></i>
+                                    <p>
+                                        @funcMenuGrp.FuncGrpName
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    @foreach (var funcMenu in funcMenus.Where(x => x.FuncGrpID == funcMenuGrp.FuncGrpID))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="@funcMenu.FuncURL" @onclick="@(()=>ClickMenuFunc(@funcMenu.FuncURL))" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>@funcMenu.FuncName</p>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                    }
+                }
+
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>

@@ -1,0 +1,37 @@
+﻿@page "/"
+@using D69soft.Client.Helpers;
+@using D69soft.Client.Pages.Auth
+@using Microsoft.AspNetCore.Components.Authorization;
+
+<div id="slider">
+    <div class="box-body">
+
+        <div class="dashboard-content">
+        </div>
+
+    </div>
+</div>
+
+<Modal_ChangePass UserID=@UserID></Modal_ChangePass>
+
+@code {
+    [Inject] IJSRuntime js { get; set; }
+    [Inject] HttpClient httpClient { get; set; }
+
+    [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected string UserID;
+
+    bool ckChangePassDefault = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        UserID = (await authenticationStateTask).User.GetUserId();
+        ckChangePassDefault = await httpClient.GetFromJsonAsync<bool>($"api/Auth/CheckChangePassDefault/{UserID}");
+
+        if (!ckChangePassDefault)
+        {
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModal_ChangePass");
+        }
+    }
+}

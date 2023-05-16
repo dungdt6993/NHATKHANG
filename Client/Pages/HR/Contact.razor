@@ -1,0 +1,72 @@
+﻿@page "/HR/Contact"
+@using D69soft.Client.Components
+
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+
+            <div class="col-md-8 offset-md-2">
+                <div class="input-group">
+                    <input type="search" class="form-control form-control-lg" style="font-size: 1.25rem;" placeholder="Tìm kiếm..." @bind="onchange_SearchValues" @bind:event="oninput">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-lg btn-default">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body table-responsive p-0" style="height: calc(100vh - 172px);">
+
+                <table class="table table-striped projects">
+                    <tbody>
+
+                        @if (contacts != null)
+                        {
+                            <Virtualize Items="@search_contacts" Context="_contact" OverscanCount="50">
+
+                                <tr>
+                                    <td class="text-center">
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item">
+                                                <img alt="Avatar" class="table-avatar" src="@_contact.UrlAvatar">
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <a>
+                                            @_contact.LastName @_contact.MiddleName @_contact.FirstName
+                                        </a>
+                                        <br>
+                                        <small>
+                                            <i class="fa-solid fa-cake-candles"></i>
+                                            @(_contact.Birthday.HasValue ? _contact.Birthday.Value.ToString("dd/MM/yyyy") : "")
+                                        </small>
+                                        <br>
+                                        <small>
+                                            <i class="fa-solid fa-building-user"></i>
+                                            @_contact.DepartmentName
+                                        </small>
+                                        <br>
+                                        <small>
+                                            <i class="fa-solid fa-person-digging"></i>
+                                            @_contact.PositionName
+                                        </small>
+                                    </td>
+                                    <td class="project-state">
+                                        <a href="tel:@_contact.Mobile"><h4><span class="badge badge-warning">@_contact.Mobile</span></h4></a>
+                                    </td>
+                                </tr>
+
+                            </Virtualize>
+                        }
+
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+</section>

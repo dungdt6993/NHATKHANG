@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XtraReportsLayoutSerializer SerializerVersion="21.2.7.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v21.2, Version=21.2.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="Xuat_hang_chi_tiet" SnapGridSize="25" ReportUnit="TenthsOfAMillimeter" Landscape="true" Margins="23, 28, 38, 43" PageWidth="2794" PageHeight="2159" Version="21.2" DataMember="Tong_hop_xuat_chuyen_kho_chi_tiet" DataSource="#Ref-0" Dpi="254" Font="Arial, 9.75pt">
+  <Extensions>
+    <Item1 Ref="2" Key="VSReportExtInfo" Value=".repx" />
+  </Extensions>
+  <Parameters>
+    <Item1 Ref="4" Description="Từ ngày" Name="FDate" Type="#Ref-3">
+      <ExpressionBindings>
+        <Item1 Ref="5" PropertyName="Value" Expression="Now()" />
+      </ExpressionBindings>
+    </Item1>
+    <Item2 Ref="6" Description="Đến ngày" Name="TDate" Type="#Ref-3">
+      <ExpressionBindings>
+        <Item1 Ref="7" PropertyName="Value" Expression="Now()" />
+      </ExpressionBindings>
+    </Item2>
+    <Item3 Ref="9" Description="Từ kho" Name="FromStockCode" />
+    <Item4 Ref="10" Description="Đến kho" Name="ToStockCode" />
+    <Item5 Ref="11" Description="Lớp hàng" Name="IClsCode" />
+  </Parameters>
+  <Bands>
+    <Item1 Ref="12" ControlType="TopMarginBand" Name="TopMargin" HeightF="38.1" Dpi="254" />
+    <Item2 Ref="13" ControlType="BottomMarginBand" Name="BottomMargin" HeightF="43.39165" Dpi="254" />
+    <Item3 Ref="14" ControlType="DetailBand" Name="Detail" HeightF="63.5" Dpi="254">
+      <Controls>
+        <Item1 Ref="15" ControlType="XRTable" Name="xrTable5" TextAlignment="MiddleCenter" SizeF="2743,63.5" LocationFloat="7.629395E-06,0" Dpi="254" Font="Arial, 8pt" Padding="2,2,2,2,254" Borders="All">
+          <Rows>
+            <Item1 Ref="16" ControlType="XRTableRow" Name="xrTableRow7" Weight="1" Dpi="254">
+              <Cells>
+                <Item1 Ref="17" ControlType="XRTableCell" Name="xrTableCell22" Weight="0.24894645108262081" TextFormatString="{0:dd/MM/yyyy}" Multiline="true" Text="xrTableCell22" TextAlignment="MiddleCenter" Dpi="254">
+                  <ExpressionBindings>
+                    <Item1 Ref="18" EventName="BeforePrint" PropertyName="Text" Expression="[VDate]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="19" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="20" ControlType="XRTableCell" Name="xrTableCell14" Weight="0.25063647080029083" Multiline="true" Text="xrTableCell14" TextAlignment="MiddleCenter" Dpi="254">
+                  <ExpressionBindings>
+                    <Item1 Ref="21" EventName="BeforePrint" PropertyName="Text" Expression="[VNumber]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="22" UseTextAlignment="false" />
+                </Item2>
+                <Item3 Ref="23" ControlType="XRTableCell" Name="xrTableCell17" Weight="0.2857215592607153" Multiline="true" Text="xrTableCell17" TextAlignment="MiddleCenter" Dpi="254">
+                  <ExpressionBindings>
+                    <Item1 Ref="24" EventName="BeforePrint" PropertyName="Text" Expression="[ICode]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="25" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="26" ControlType="XRTableCell" Name="xrTableCell11" Weight="0.71480957426899949" Multiline="true" Text="xrTableCell1" TextAlignment="MiddleLeft" Dpi="254">
+                  <ExpressionBindings>
+                    <Item1 Ref="27" EventName="BeforePrint" PropertyName="Text" Expression="[IName]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="28" UseTextAlignment="false" />
+                </Item4>
+                <Item5 Ref="29" ControlType="XRTableCell" Name="xrTableCell13" Weight="0.57351139874357815" Multiline="true" Text="xrTableCell13" TextAlignment="MiddleLeft" Dpi="254">
+                  <ExpressionBindings>
+                    <Item1 Ref="30" EventName="BeforePrint" PropertyName="Text" Expression="[FromStock]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="31" UseTextAlignment="false" />
+                </Item5>
+                <Item6 Ref="32" ControlType="XRTableCell" Name="xrTableCell12" Weight="0.74081960314192052" Multiline="true" Text="xrTableCell12" TextAlignment="MiddleLeft" Dpi="254">
+                  <ExpressionBindings>
+                    <Item1 Ref="33" EventName="BeforePrint" PropertyName="Text" Expression="[ToStock]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="34" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="35" ControlType="XRTableCell" Name="xrTableCell16" Weight="0.19035593668480932" Multiline="true" Text="xrTableCell11" TextAlignment="MiddleCenter" Dpi="254">
+                  <ExpressionBindings>
+                    <Item1 Ref="36" EventName="BeforePrint" PropertyName="Text" Expression="[IUnitName]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="37" UseTextAlignment="false" />
+                </Item7>
+                <Item8 Ref="38" ControlType="XRTableCell" Name="xrTableCell18" Weight="0.216791907233634" TextFormatString="{0:n2}" Multiline="true" Text="xrTableCell18" TextAlignment="MiddleCenter" Dpi="254">
+                  <ExpressionBindings>
+                    <Item1 Ref="39" EventName="BeforePrint" PropertyName="Text" Expression="[Qty]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="40" UseTextAlignment="false" />
+                </Item8>
+                <Item9 Ref="41" ControlType="XRTableCell" Name="xrTableCell19" Weight="0.25796073674431252" TextFormatString="{0:#,#}" Multiline="true" Text="xrTableCell19" TextAlignment="MiddleCenter" Dpi="254">
+                  <ExpressionBindings>
+                    <Item1 Ref="42" EventName="BeforePrint" PropertyName="Text" Expression="[Price]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="43" UseTextAlignment="false" />
+                </Item9>
+                <Item10 Ref="44" ControlType="XRTableCell" Name="xrTableCell20" Weight="0.32212419595539787" TextFormatString="{0:#,#}" Multiline="true" Text="xrTableCell20" TextAlignment="MiddleCenter" Dpi="254">
+                  <ExpressionBindings>
+                    <Item1 Ref="45" EventName="BeforePrint" PropertyName="Text" Expression="[Amount]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="46" UseTextAlignment="false" />
+                </Item10>
+                <Item11 Ref="47" ControlType="XRTableCell" Name="xrTableCell10" Weight="0.64811633907818189" Multiline="true" Text="xrTableCell10" TextAlignment="MiddleLeft" Dpi="254">
+                  <ExpressionBindings>
+                    <Item1 Ref="48" EventName="BeforePrint" PropertyName="Text" Expression="[Vendor]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="49" UseTextAlignment="false" />
+                </Item11>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="50" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
+        </Item1>
+      </Controls>
+    </Item3>
+    <Item4 Ref="51" ControlType="ReportHeaderBand" Name="ReportHeader" HeightF="200.0251" Dpi="254">
+      <Controls>
+        <Item1 Ref="52" ControlType="XRTable" Name="xrTable3" TextAlignment="MiddleCenter" SizeF="2743,72.89589" LocationFloat="1.525879E-05,127.1292" Dpi="254" Font="Times New Roman, 9pt, style=Bold" BackColor="255,232,232,232" Borders="All">
+          <Rows>
+            <Item1 Ref="53" ControlType="XRTableRow" Name="xrTableRow1" Weight="1" Dpi="254">
+              <Cells>
+                <Item1 Ref="54" ControlType="XRTableCell" Name="xrTableCell21" Weight="0.18381567803573862" Multiline="true" Text="Ngày chứng từ" TextAlignment="MiddleCenter" Dpi="254">
+                  <StylePriority Ref="55" UseTextAlignment="false" />
+                </Item1>
+                <Item2 Ref="56" ControlType="XRTableCell" Name="xrTableCell15" Weight="0.18506353831892947" Multiline="true" Text="Số chứng từ" TextAlignment="MiddleCenter" Dpi="254">
+                  <StylePriority Ref="57" UseTextAlignment="false" />
+                </Item2>
+                <Item3 Ref="58" ControlType="XRTableCell" Name="xrTableCell2" Weight="0.21096947233947044" Multiline="true" Text="Mã hàng" TextAlignment="MiddleCenter" Dpi="254">
+                  <StylePriority Ref="59" UseTextAlignment="false" />
+                </Item3>
+                <Item4 Ref="60" ControlType="XRTableCell" Name="xrTableCell9" Weight="0.52779701669244061" Multiline="true" Text="Tên hàng" TextAlignment="MiddleCenter" Dpi="254">
+                  <StylePriority Ref="61" UseTextAlignment="false" />
+                </Item4>
+                <Item5 Ref="62" ControlType="XRTableCell" Name="xrTableCell8" Weight="0.423465903673394" Multiline="true" Text="Từ kho" TextAlignment="MiddleCenter" Dpi="254">
+                  <StylePriority Ref="63" UseTextAlignment="false" />
+                </Item5>
+                <Item6 Ref="64" ControlType="XRTableCell" Name="xrTableCell7" Weight="0.54700247113913336" Multiline="true" Text="Đến kho" TextAlignment="MiddleCenter" Dpi="254">
+                  <StylePriority Ref="65" UseTextAlignment="false" />
+                </Item6>
+                <Item7 Ref="66" ControlType="XRTableCell" Name="xrTableCell4" Weight="0.14055393379769185" Multiline="true" Text="Đơn vị" TextAlignment="MiddleCenter" Dpi="254">
+                  <StylePriority Ref="67" UseTextAlignment="false" />
+                </Item7>
+                <Item8 Ref="68" ControlType="XRTableCell" Name="xrTableCell5" Weight="0.16007373840481595" Multiline="true" Text="Số lượng" TextAlignment="MiddleCenter" Dpi="254">
+                  <StylePriority Ref="69" UseTextAlignment="false" />
+                </Item8>
+                <Item9 Ref="70" ControlType="XRTableCell" Name="xrTableCell6" Weight="0.19047143010243889" Multiline="true" Text="Đơn giá" TextAlignment="MiddleCenter" Dpi="254">
+                  <StylePriority Ref="71" UseTextAlignment="false" />
+                </Item9>
+                <Item10 Ref="72" ControlType="XRTableCell" Name="xrTableCell3" Weight="0.2378482489589302" Multiline="true" Text="Thành tiền" TextAlignment="MiddleCenter" Dpi="254">
+                  <StylePriority Ref="73" UseTextAlignment="false" />
+                </Item10>
+                <Item11 Ref="74" ControlType="XRTableCell" Name="xrTableCell1" Weight="0.47855242985372765" Multiline="true" Text="NCC" TextAlignment="MiddleCenter" Dpi="254">
+                  <StylePriority Ref="75" UseTextAlignment="false" />
+                </Item11>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="76" UseFont="false" UseBackColor="false" UseBorders="false" UseTextAlignment="false" />
+        </Item1>
+        <Item2 Ref="77" ControlType="XRRichText" Name="xrRichText29" SerializableRtfString="ewBcAHIAdABmADEAXABkAGUAZgBmADAAewBcAGYAbwBuAHQAdABiAGwAewBcAGYAMAAgAEMAYQBsAGkAYgByAGkAOwB9AHsAXABmADEAIABUAGkAbQBlAHMAIABOAGUAdwAgAFIAbwBtAGEAbgA7AH0AfQB7AFwAYwBvAGwAbwByAHQAYgBsACAAOwBcAHIAZQBkADAAXABnAHIAZQBlAG4AMABcAGIAbAB1AGUAMAAgADsAXAByAGUAZAAwAFwAZwByAGUAZQBuADAAXABiAGwAdQBlADIANQA1ACAAOwB9AHsAXAAqAFwAZABlAGYAYwBoAHAAIABcAGYAMQBcAGYAcwAyADQAfQB7AFwAcwB0AHkAbABlAHMAaABlAGUAdAAgAHsAXABxAGwAXABmADEAXABmAHMAMgA0ACAATgBvAHIAbQBhAGwAOwB9AHsAXAAqAFwAYwBzADEAXABmADEAXABmAHMAMgA0AFwAYwBmADEAIABEAGUAZgBhAHUAbAB0ACAAUABhAHIAYQBnAHIAYQBwAGgAIABGAG8AbgB0ADsAfQB7AFwAKgBcAGMAcwAyAFwAcwBiAGEAcwBlAGQAbwBuADEAXABmADEAXABmAHMAMgA0AFwAYwBmADEAIABMAGkAbgBlACAATgB1AG0AYgBlAHIAOwB9AHsAXAAqAFwAYwBzADMAXABmADEAXABmAHMAMgA0AFwAdQBsAFwAYwBmADIAIABIAHkAcABlAHIAbABpAG4AawA7AH0AewBcACoAXAB0AHMANABcAHQAcwByAG8AdwBkAFwAZgAxAFwAZgBzADIANABcAHEAbABcAHQAcwBjAGUAbABsAHAAYQBkAGQAZgBsADMAXAB0AHMAYwBlAGwAbABwAGEAZABkAGwAMQAwADgAXAB0AHMAYwBlAGwAbABwAGEAZABkAGYAYgAzAFwAdABzAGMAZQBsAGwAcABhAGQAZABmAHIAMwBcAHQAcwBjAGUAbABsAHAAYQBkAGQAcgAxADAAOABcAHQAcwBjAGUAbABsAHAAYQBkAGQAZgB0ADMAXAB0AHMAdgBlAHIAdABhAGwAdABcAGMAbAB0AHgAbAByAHQAYgAgAE4AbwByAG0AYQBsACAAVABhAGIAbABlADsAfQB7AFwAKgBcAHQAcwA1AFwAdABzAHIAbwB3AGQAXABzAGIAYQBzAGUAZABvAG4ANABcAGYAMQBcAGYAcwAyADQAXABxAGwAXAB0AHIAYgByAGQAcgB0AFwAYgByAGQAcgBzAFwAYgByAGQAcgB3ADEAMABcAHQAcgBiAHIAZAByAGwAXABiAHIAZAByAHMAXABiAHIAZAByAHcAMQAwAFwAdAByAGIAcgBkAHIAYgBcAGIAcgBkAHIAcwBcAGIAcgBkAHIAdwAxADAAXAB0AHIAYgByAGQAcgByAFwAYgByAGQAcgBzAFwAYgByAGQAcgB3ADEAMABcAHQAcgBiAHIAZAByAGgAXABiAHIAZAByAHMAXABiAHIAZAByAHcAMQAwAFwAdAByAGIAcgBkAHIAdgBcAGIAcgBkAHIAcwBcAGIAcgBkAHIAdwAxADAAXAB0AHMAYwBlAGwAbABwAGEAZABkAGYAbAAzAFwAdABzAGMAZQBsAGwAcABhAGQAZABsADEAMAA4AFwAdABzAGMAZQBsAGwAcABhAGQAZABmAHIAMwBcAHQAcwBjAGUAbABsAHAAYQBkAGQAcgAxADAAOABcAHQAcwB2AGUAcgB0AGEAbAB0AFwAYwBsAHQAeABsAHIAdABiACAAVABhAGIAbABlACAAUwBpAG0AcABsAGUAIAAxADsAfQB9AHsAXAAqAFwAbABpAHMAdABvAHYAZQByAHIAaQBkAGUAdABhAGIAbABlAH0AXABuAG8AdQBpAGMAbwBtAHAAYQB0AFwAaAB0AG0AYQB1AHQAcwBwAFwAcwBwAGwAeQB0AHcAbgBpAG4AZQBcAHAAYQByAGQAXABwAGwAYQBpAG4AXABxAGMAewBcAGYAMQBcAGYAcwAzADAAXABsAGEAbgBnADEAMAAzADMAXABsAGEAbgBnAGYAZQAxADAAMwAzAFwAYgBcAGMAZgAxACAAVABcAHUANwA4ADkAMgBcACcAMwBmAE4ARwAgAEgAXAB1ADcAOQAwADYAXAAnADMAZgBQACAAWABVAFwAdQA3ADgANAA0AFwAJwAzAGYAVAAgAEMASABVAFkAXAB1ADcAOAA3ADQAXAAnADMAZgBOACAASwBIAE8AIABDAEgASQAgAFQASQBcAHUANwA4ADcAMABcACcAMwBmAFQAIABbAD8AfQB7AFwAZgAxAFwAZgBzADMAMABcAGwAYQBuAGcAMQAwADMAMwBcAGwAYQBuAGcAZgBlADEAMAAzADMAXABiAFwAYwBmADEAIABGAH0AewBcAGYAMQBcAGYAcwAzADAAXABsAGEAbgBnADEAMAAzADMAXABsAGEAbgBnAGYAZQAxADAAMwAzAFwAYgBcAGMAZgAxACAARABhAHQAZQAhAGQAZAAvAE0ATQAvAHkAeQB5AHkAXQAgAC0AIABbAD8AfQB7AFwAZgAxAFwAZgBzADMAMABcAGwAYQBuAGcAMQAwADMAMwBcAGwAYQBuAGcAZgBlADEAMAAzADMAXABiAFwAYwBmADEAIABUAH0AewBcAGYAMQBcAGYAcwAzADAAXABsAGEAbgBnADEAMAAzADMAXABsAGEAbgBnAGYAZQAxADAAMwAzAFwAYgBcAGMAZgAxACAARABhAHQAZQAhAGQAZAAvAE0ATQAvAHkAeQB5AHkAXQB9AFwAZgAxAFwAZgBzADMAMABcAGIAXABjAGYAMQBcAHAAYQByAH0A" SizeF="2743,58.42001" LocationFloat="0,25.40002" Dpi="254" Font="Times New Roman, 16pt, style=Bold">
+          <StylePriority Ref="78" UseFont="false" />
+        </Item2>
+      </Controls>
+    </Item4>
+    <Item5 Ref="79" ControlType="ReportFooterBand" Name="ReportFooter" HeightF="0" Dpi="254" />
+  </Bands>
+  <ComponentStorage>
+    <Item1 Ref="0" ObjectType="DevExpress.DataAccess.Sql.SqlDataSource,DevExpress.DataAccess.v21.2" Name="sqlDataSource1" Base64="PFNxbERhdGFTb3VyY2UgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxDb25uZWN0aW9uIE5hbWU9IkQ2OXNvZnREQiIgRnJvbUFwcENvbmZpZz0idHJ1ZSIgLz48UXVlcnkgVHlwZT0iU3RvcmVkUHJvY1F1ZXJ5IiBOYW1lPSJUb25nX2hvcF94dWF0X2NodXllbl9raG9fY2hpX3RpZXQiPjxQYXJhbWV0ZXIgTmFtZT0iQEZEYXRlIiBUeXBlPSJEZXZFeHByZXNzLkRhdGFBY2Nlc3MuRXhwcmVzc2lvbiI+KFN5c3RlbS5EYXRlVGltZSkoP0ZEYXRlKTwvUGFyYW1ldGVyPjxQYXJhbWV0ZXIgTmFtZT0iQFREYXRlIiBUeXBlPSJEZXZFeHByZXNzLkRhdGFBY2Nlc3MuRXhwcmVzc2lvbiI+KFN5c3RlbS5EYXRlVGltZSkoP1REYXRlKTwvUGFyYW1ldGVyPjxQYXJhbWV0ZXIgTmFtZT0iQEZyb21TdG9ja0NvZGUiIFR5cGU9IkRldkV4cHJlc3MuRGF0YUFjY2Vzcy5FeHByZXNzaW9uIj4oU3lzdGVtLlN0cmluZykoP0Zyb21TdG9ja0NvZGUpPC9QYXJhbWV0ZXI+PFBhcmFtZXRlciBOYW1lPSJAVG9TdG9ja0NvZGUiIFR5cGU9IkRldkV4cHJlc3MuRGF0YUFjY2Vzcy5FeHByZXNzaW9uIj4oU3lzdGVtLlN0cmluZykoP1RvU3RvY2tDb2RlKTwvUGFyYW1ldGVyPjxQYXJhbWV0ZXIgTmFtZT0iQElDbHNDb2RlIiBUeXBlPSJEZXZFeHByZXNzLkRhdGFBY2Nlc3MuRXhwcmVzc2lvbiI+KFN5c3RlbS5TdHJpbmcpKD9JQ2xzQ29kZSk8L1BhcmFtZXRlcj48UHJvY05hbWU+UlBULkZJTl9YdWF0X2hhbmdfY2hpX3RpZXQ8L1Byb2NOYW1lPjwvUXVlcnk+PFJlc3VsdFNjaGVtYT48RGF0YVNldCBOYW1lPSJzcWxEYXRhU291cmNlMSI+PFZpZXcgTmFtZT0iVG9uZ19ob3BfeHVhdF9jaHV5ZW5fa2hvX2NoaV90aWV0Ij48RmllbGQgTmFtZT0iVkRhdGUiIFR5cGU9IkRhdGVUaW1lIiAvPjxGaWVsZCBOYW1lPSJWTnVtYmVyIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IklDb2RlIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IklOYW1lIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IklVbml0TmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJBbW91bnQiIFR5cGU9IkRvdWJsZSIgLz48RmllbGQgTmFtZT0iUXR5IiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJQcmljZSIgVHlwZT0iRG91YmxlIiAvPjxGaWVsZCBOYW1lPSJGcm9tU3RvY2siIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVG9TdG9jayIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJWZW5kb3IiIFR5cGU9IlN0cmluZyIgLz48L1ZpZXc+PC9EYXRhU2V0PjwvUmVzdWx0U2NoZW1hPjxDb25uZWN0aW9uT3B0aW9ucyBDbG9zZUNvbm5lY3Rpb249InRydWUiIC8+PC9TcWxEYXRhU291cmNlPg==" />
+  </ComponentStorage>
+  <ObjectStorage>
+    <Item1 ObjectType="DevExpress.XtraReports.Serialization.ObjectStorageInfo, DevExpress.XtraReports.v21.2" Ref="3" Content="System.DateTime" Type="System.Type" />
+  </ObjectStorage>
+</XtraReportsLayoutSerializer>

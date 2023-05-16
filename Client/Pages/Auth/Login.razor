@@ -1,0 +1,86 @@
+﻿@page "/Auth/Login"
+@using Blazored.FluentValidation
+@layout LoginLayout
+
+<PageTitle>Đăng nhập hệ thống</PageTitle>
+
+<EditForm Model="@userVM" OnValidSubmit="@LoginRequest">
+
+    <FluentValidationValidator />
+
+    <div class="login-page">
+        <div class="login-page login-box">
+            <div class="card">
+                <div class="card-body login-card-body">
+                    <p class="login-box-msg">Đăng nhập hệ thống <br /> Bhaya Soft</p>
+
+                    <div class="input-group mb-3">
+                        <InputText class="form-control" placeholder="Tài khoản" @bind-Value:get="userVM.Eserial" @bind-Value:set="(value) => {userVM.Eserial = value.ToUpper();}" />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user"></span>
+                            </div>
+                        </div>
+                        <ValidationMessage For="@(() => userVM.Eserial)" />
+                    </div>
+                    <div class="input-group mb-3">
+                        <InputText type="password" class="form-control" placeholder="Mật khẩu" @bind-Value="userVM.User_Password" />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                        <ValidationMessage For="@(() => userVM.User_Password)" />
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <label class="col-3 col-form-label">Language</label>
+                        <div class="col-9">
+                            <select class="selectpicker form-control" data-style="btn-selectpicker">
+                                <option data-content="<span class='fi fi-vn'></span> Tiếng Việt" value="vi"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="icheck-purple">
+
+                                <input type="checkbox" id="remember">
+                                <label for="remember">
+                                    Nhớ tài khoản?
+                                </label>
+
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-6">
+
+                            <button type="submit" class="btn bg-purple btn-block" disabled="@btnLoading">
+                                @if (btnLoading)
+                                {
+                                    <span class="spinner-border spinner-border-sm"></span>
+                                }
+                                Đăng nhập&nbsp;<i class="fas fa-sign-in-alt"></i>
+                            </button>
+
+                        </div>
+                        <!-- /.col -->
+                    </div>
+
+                    <!--Logo-->
+                    <div class="social-auth-links text-center mb-3">
+                        <div class="logo-login">
+                            <img src="../images/_default/logo-login.png" class="img-circle" />
+                        </div>
+                    </div>
+                    <!--/Logo-->
+
+                </div>
+                <!-- /.login-card-body -->
+            </div>
+        </div>
+
+    </div>
+
+</EditForm>

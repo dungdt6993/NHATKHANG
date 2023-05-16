@@ -1,0 +1,190 @@
+﻿a {
+    color: #6f42c1;
+    cursor: pointer;
+}
+
+.nav-pills .nav-link.active {
+    background-color: #6f42c1;
+}
+
+.card-body.p-0 .table tbody > tr > td:first-of-type, .card-body.p-0 .table tbody > tr > th:first-of-type, .card-body.p-0 .table tfoot > tr > td:first-of-type, .card-body.p-0 .table tfoot > tr > th:first-of-type, .card-body.p-0 .table thead > tr > td:first-of-type, .card-body.p-0 .table thead > tr > th:first-of-type {
+    padding-left: 0.9rem;
+}
+
+.card-body.p-0 .table tbody > tr > td:last-of-type, .card-body.p-0 .table tbody > tr > th:last-of-type, .card-body.p-0 .table tfoot > tr > td:last-of-type, .card-body.p-0 .table tfoot > tr > th:last-of-type, .card-body.p-0 .table thead > tr > td:last-of-type, .card-body.p-0 .table thead > tr > th:last-of-type {
+    padding-right: 0.9rem;
+}
+/*Modad*/
+.modal-title {
+    text-transform: uppercase;
+    color: #555;
+    font-weight: bold;
+}
+
+.modal-header {
+    background-color: #f4f6f9;
+}
+
+.modal-header .close {
+    font-size: xx-large;
+}
+
+.modal-footer {
+    background-color: #f4f6f9;
+}
+
+.form-group {
+    margin-bottom: 0.5rem !important;
+}
+
+.form-control {
+    font-size: unset;
+}
+
+.form-control:focus {
+    border-color: #6f42c1;
+}
+
+.input-group [data-toggle=modal] {
+    cursor: pointer;
+}
+
+.card-header .btn {
+    margin: 1px;
+}
+
+.btn {
+    font-weight: bold;
+}
+
+.page-item.active .page-link {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+}
+
+.page-link {
+    color: #6f42c1;
+}
+
+.modal-xxl {
+    min-width: 100%;
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+
+
+    margin: 0;
+}
+
+/*blazored-typeahead*/
+.blazored-typeahead__results {
+    z-index: 15;
+}
+
+.blazored-typeahead__active-item, .blazored-typeahead__result:hover, .blazored-typeahead__result:focus {
+    background-color: #6f42c1;
+    border-top: 1px solid #6f42c1;
+    border-bottom: 1px solid #6f42c1;
+}
+
+/*Table*/
+.tblFontSizeMin {
+    font-size: .8rem !important;
+}
+
+.table tr, .table td, .table th {
+    vertical-align: middle;
+}
+
+.table.table-head-fixed thead tr:nth-child(1) th {
+    color: #495057;
+    background-color: #e9ecef !important;
+    border-color: #dee2e6;
+    vertical-align: middle;
+}
+
+.table-hover-cursor td {
+    cursor: pointer;
+}
+
+.table .sort-th {
+    cursor: pointer;
+}
+
+.table .sort-th span {
+    float: right;
+}
+
+.table .selected {
+    background: rgba(0, 0, 0, 0.075);
+}
+
+/*SysMenu*/
+.nav-sidebar > .nav-header {
+    background: repeating-linear-gradient(45deg, black, transparent 100px);
+    font-weight: bold;
+}
+
+.card-title {
+    font-weight: bold;
+}
+
+.card.card-outline-tabs .card-header a {
+    font-weight: bold;
+}
+
+.card-header .nav-item a {
+    font-weight: bold;
+}
+
+label:not(.form-check-label):not(.custom-file-label) {
+    color: #495057;
+}
+
+/*bootstrap-select*/
+.btn-selectpicker {
+    border-color: #ddd;
+}
+
+.bootstrap-select.form-control .btn {
+    font-weight: normal;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+    background-color: #6f42c1;
+}
+
+.bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+    width: auto;
+}
+
+/*daterangepicker*/
+.daterangepicker .ranges li.active {
+    background-color: #6f42c1;
+}
+
+.daterangepicker td.active, .daterangepicker td.active:hover {
+    background-color: #6f42c1;
+}
+
+.applyBtn {
+    background-color: #6f42c1;
+}
+
+.daterangepicker .ranges li {
+    font-weight: bold;
+    background-color: #f5f5f5;
+    border: 1px solid #f5f5f5;
+    border-radius: 4px;
+    margin: 8px;
+}
+
+/*CheckBox*/
+.clearfix {
+    margin: 8px 0 0 8px;
+}
+
+/*dropdown-menu noti*/
+.dropdown-menu-lg {
+    max-width: none;
+}

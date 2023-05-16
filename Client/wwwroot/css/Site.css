@@ -1,0 +1,292 @@
+/*Main*/
+.brand-text {
+    font-size: larger;
+    font-weight: bold;
+}
+/*Main*/
+
+/*Dashboard*/
+.dashboard-content {
+    height: calc(100vh - 105px);
+    text-align: center;
+    position: relative;
+}
+
+.dashboard-content:before {
+    content: '';
+    display: block;
+    background: url("../images/_default/dashboard.png") no-repeat center center;
+    background-size: 60%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+/*Dashboard*/
+
+/*Profile*/
+.img-avatar-profile label {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    margin-bottom: unset;
+}
+
+.imgUser {
+    width: 100%;
+    height: 100%;
+    border-radius: 0.2rem;
+}
+
+.img-avatar-profile {
+    box-shadow: 0 1px 2px rgb(0 0 0 / 8%);
+    width: 165px;
+    height: 165px;
+    cursor: pointer;
+    border-radius: 0.25rem;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    display: flex;
+}
+
+    .img-avatar-profile:hover {
+        opacity: .5;
+    }
+
+img.table-profile-avatar {
+    border-radius: 50%;
+    display: inline;
+    width: 2.5rem;
+}
+
+#viewProfileDetailModal .table td, .table th {
+    padding: .45rem;
+    vertical-align: middle;
+}
+
+.hidden_adjustProfile {
+    display: none;
+}
+/*Profile*/
+
+/*DutyRoster*/
+.tblDutyRoster {
+    width: unset;
+}
+
+.tblDutyRoster thead th:first-child {
+    left: 0;
+    z-index: 15 !important;
+}
+
+.tblDutyRoster tbody th:first-child {
+    color: #495057;
+    background-color: #e9ecef !important;
+    border-color: #dee2e6;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+}
+
+.dutyroster-input {
+    text-align: center;
+    font-weight: bold;
+    padding: 2px;
+    color: #212529;
+}
+
+.dutyroster-td {
+    padding: unset !important;
+    font-weight: bold;
+    min-width: 50px;
+}
+
+/*DutyRoster*/
+
+/*DayOff*/
+
+.tblDayOff thead th:first-child {
+    left: 0;
+    z-index: 15 !important;
+}
+
+.tblDayOff tbody th:first-child {
+    color: #495057;
+    background-color: #e9ecef !important;
+    border-color: #dee2e6;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+}
+/*DayOff*/
+
+/*Cashier*/
+#custom-tabs-four-menu #item-list .btn {
+    width: 170px;
+    text-align: center;
+}
+
+#custom-tabs-four-menu #item-list .items {
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+#custom-tabs-four-menu #item-list .btn-name {
+    width: 116px;
+    height: 60px;
+    line-height: 16px;
+    white-space: pre-wrap;
+    margin: 2px;
+}
+
+#custom-tabs-four-menu #item-list .btn-both, .pos #custom-tabs-four-menu #item-list .btn-img {
+    background: 0 0;
+    padding: 3px;
+}
+
+#custom-tabs-four-menu #item-list .btn-both:hover, .pos #custom-tabs-four-menu #item-list .btn-img:hover {
+    background: #6f42c1;
+}
+
+#custom-tabs-four-menu #item-list .btn-both .bg-img {
+    background: #fff;
+    height: 160px;
+    padding: 5px;
+    border: 1px solid #f8f8fa;
+    transition: transform .5s ease;
+}
+
+#custom-tabs-four-menu #item-list .btn-both .bg-img img {
+    transition: transform .5s ease;
+}
+
+#custom-tabs-four-menu #item-list .btn-both .bg-img:hover img {
+    transform: scale(1.5);
+}
+
+#custom-tabs-four-menu #item-list .btn-both span {
+    display: block;
+    width: 160px;
+    background: #f8f8fa;
+    height: 40px;
+    overflow: hidden;
+    white-space: pre-wrap;
+    margin-left: 1px;
+}
+
+#custom-tabs-four-menu #item-list .btn-both span span {
+    display: table-cell;
+    vertical-align: middle;
+    overflow: hidden;
+    white-space: pre-wrap;
+    line-height: 16px;
+    padding: 3px 2px;
+    font-weight: bold;
+}
+
+#custom-tabs-four-room .button, #custom-tabs-four-menu .button {
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+#custom-tabs-four-room .button2, #custom-tabs-four-menu .button2 {
+    background-color: white;
+    color: #6f42c1;
+    border: 2px solid #6f42c1;
+}
+
+#custom-tabs-four-room .button2:hover, #custom-tabs-four-menu .button2:hover {
+    background-color: #6f42c1;
+    color: white;
+}
+
+#custom-tabs-four-room .active, #custom-tabs-four-menu .active {
+    background-color: #6f42c1;
+    color: white;
+}
+
+#custom-tabs-four-room .btn-app {
+    min-width: 145px;
+    height: 80px;
+    margin: 10px 5px 10px 5px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.v_invoice {
+    padding: 9px;
+    border-radius: 3px;
+    min-height: 20px;
+    background-color: #f8f8fa;
+}
+
+#custom-tabs-four-tab .nav-item a {
+    color: #6f42c1;
+    font-weight: bold;
+    font-size: medium;
+}
+
+#custom-tabs-four-menu .form-control-lg {
+    font-size: 1.25rem;
+    margin-bottom: 5px;
+}
+
+.active_btnPMode {
+    background-color: #6f42c1 !important;
+    color: white !important;
+}
+
+.active_btnPMode span {
+    color: white !important;
+}
+
+/*Cashier*/
+
+/*Items*/
+img.table-picture {
+    border-radius: .25rem;
+    display: inline;
+    width: 2.5rem;
+}
+
+.product-image-thumb label {
+    cursor: pointer;
+}
+/*Items*/
+
+/*EmplTrf*/
+#QuillEditor {
+    min-height: 100px;
+}
+
+/*table-fixed*/
+.table-fixed {
+}
+
+.table-fixed thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.table-fixed tbody th {
+    position: sticky;
+    left: 0;
+    color: #495057;
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+}

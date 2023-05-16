@@ -1,0 +1,36 @@
+﻿@using D69soft.Client.Pages
+@using D69soft.Client.Pages.Auth
+@using D69soft.Client.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@inherits LayoutComponentBase
+
+<PageTitle>Hệ thống quản trị doanh nghiệp Tập đoàn Du thuyền Bhaya</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+
+        <NavBar />
+        <NavMenu />
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <main>
+                <CustomErrorBoundary Context="_exception">
+                    <ChildContent>
+                        @Body
+                    </ChildContent>
+                    <ErrorContent>
+                        <Error exception="@_exception"></Error>
+                    </ErrorContent>
+                </CustomErrorBoundary>
+            </main>
+        </div>
+        <!-- /.content-wrapper -->
+
+        <Footer />
+
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin></RedirectToLogin>
+    </NotAuthorized>
+</AuthorizeView>

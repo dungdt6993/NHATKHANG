@@ -1,0 +1,76 @@
+﻿@inject IJSRuntime js
+
+@using Blazored.FluentValidation
+@using D69soft.Client.Helpers;
+@using D69soft.Shared.Models.ViewModels.SYSTEM;
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_ChangePass">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <EditForm Model="@changePassVM" OnValidSubmit="@ChangePass">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Thay đổi mật khẩu đăng nhập</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Mật khẩu mới</label>
+                        <div class="col-sm-8">
+                            <InputText type="password" class="form-control" @bind-Value="changePassVM.NewPass" />
+                            <ValidationMessage For="@(() => changePassVM.NewPass)" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Nhập lại mật khẩu mới</label>
+                        <div class="col-sm-8">
+                            <InputText type="password" class="form-control" @bind-Value="changePassVM.ComfirmNewPass" />
+                            <ValidationMessage For="@(() => changePassVM.ComfirmNewPass)" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times"></i> Thoát</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check"></i>
+                        Đổi mật khẩu
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Inject] HttpClient httpClient { get; set; }
+
+    //Change Pass
+    ChangePassVM changePassVM = new();
+
+    [Parameter]
+    public string UserID { get; set; }
+
+    private async Task ChangePass()
+    {
+        changePassVM.Eserial = UserID;
+
+        var response = await httpClient.PostAsJsonAsync($"api/Auth/ChangePass", changePassVM);
+
+        var result = await response.Content.ReadAsStringAsync();
+
+        if (bool.Parse(result))
+        {
+            await js.Swal_Message("Thông báo!", "Đổi mật khẩu đăng nhập thành công.", SweetAlertMessageType.success);
+
+            await js.InvokeAsync<object>("CloseModal", "#InitializeModal_ChangePass");
+        }
+    }
+
+}
