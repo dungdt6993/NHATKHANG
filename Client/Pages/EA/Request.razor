@@ -1,8 +1,6 @@
 ﻿@page "/EA/Request"
 
-@using Blazored.FluentValidation
-
-<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 <Loading isLoading="@isLoading"></Loading>
 
 <Modal_RptViewer ReportName=@ReportName></Modal_RptViewer>
@@ -65,7 +63,7 @@
             </div>
 
             <div class="col-sm-2">
-                @if (sysRepo.checkAccessSubFunc(UserID, "EA_Request_Create"))
+                @if (sysService.CheckAccessSubFunc(UserID, "EA_Request_Create"))
                 {
                     <a href="/EA/Cart" class="btn btn-block btn-success"><i class="fa-solid fa-xl fa-plus"></i> Tạo mới yêu cầu</a>
                 }

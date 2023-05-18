@@ -1,8 +1,7 @@
 ﻿@page "/KPI/KPIs"
-@using Model.ViewModels.KPI
 
 <Loading isLoading="@isLoading"></Loading>
-<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 
 <section class="content-header">
 
@@ -516,7 +515,7 @@
                                     <th class="text-center">Phụ trách bộ phận</th>
                                     <th class="text-center">Duyệt</th>
                                     <th class="text-center">Điểm số</th>
-                                    @if (sysRepo.checkAccessSubFunc(UserID, "KPI_KPIs_Management"))
+                                    @if (sysService.CheckAccessSubFunc(UserID, "KPI_KPIs_Management").Result)
                                     {
                                         <th class="text-center">
                                             <button type="button" class="btn btn-warning" @onclick="(() => InitializeKPI(String.Empty))"><i class="fa-solid fa-retweet"></i></button>
@@ -597,7 +596,7 @@
                                             </td>
                                             <td class="text-center text-bold">@_rankVM.TotalGrandFinalScore <small class="badge badge-success">@_rankVM.FinalRanking</small></td>
 
-                                            @if (sysRepo.checkAccessSubFunc(UserID, "KPI_KPIs_Management"))
+                                            @if (sysService.CheckAccessSubFunc(UserID, "KPI_KPIs_Management").Result)
                                             {
                                                 <td class="text-center">
                                                     <button type="button" class="btn btn-sm btn-warning" @onclick="(() => InitializeKPI(_rankVM.Eserial))"><i class="fa-solid fa-retweet"></i></button>

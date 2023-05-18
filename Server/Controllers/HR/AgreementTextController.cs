@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 
-namespace Data.Repositories.HR
+namespace D69soft.Server.Controllers.HR
 {
     [Route("api/[controller]")]
     [ApiController]

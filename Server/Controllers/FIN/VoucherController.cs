@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.FIN;
 
-namespace Data.Repositories.FIN
+namespace D69soft.Server.Controllers.FIN
 {
     [Route("api/[controller]")]
     [ApiController]

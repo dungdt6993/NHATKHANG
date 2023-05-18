@@ -1,33 +1,31 @@
-﻿using Data.Repositories.HR;
-using Data.Repositories.SYSTEM;
-using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using Model.ViewModels.FIN;
-using Model.ViewModels.HR;
-using WebApp.Helpers;
-using System.Data;
-using Data.Repositories.OP;
-using Model.ViewModels.OP;
+using D69soft.Client.Services;
+using D69soft.Client.Services.HR;
+using D69soft.Client.Services.OP;
+using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Shared.Models.ViewModels.OP;
+using D69soft.Client.Helpers;
 
-namespace WebApp.Pages.OP
+namespace D69soft.Client.Pages.OP
 {
     partial class CruiseSchedule
     {
         [Inject] IJSRuntime js { get; set; }
-        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        [Inject] SysRepository sysRepo { get; set; }
-
-        [Inject] OrganizationalChartService organizationalChartRepo { get; set; }
-        [Inject] OPService opRepo { get; set; }
+        [Inject] SysService sysService { get; set; }
+        [Inject] OrganizationalChartService organizationalChartService { get; set; }
+        [Inject] OPService opService { get; set; }
 
         protected string UserID;
 
         bool isLoading;
 
-        bool isLoadingPage;
+        bool isLoadingScreen = true;
 
         //Filter
         FilterHrVM filterHrVM = new();
@@ -55,13 +53,13 @@ namespace WebApp.Pages.OP
 
         protected override async Task OnInitializedAsync()
         {
-            isLoadingPage = true;
+            
 
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (sysRepo.checkPermisFunc(UserID, "OP_CruiseSchedule"))
+            if (await sysService.CheckAccessFunc(UserID, "OP_CruiseSchedule"))
             {
-                await sysRepo.insert_LogUserFunc(UserID, "OP_CruiseSchedule");
+                await sysService.InsertLogUserFunc(UserID, "OP_CruiseSchedule");
             }
             else
             {
@@ -71,19 +69,19 @@ namespace WebApp.Pages.OP
             //Initialize Filter
             filterHrVM.UserID = UserID;
 
-            year_filter_list = await sysRepo.GetYearFilter();
+            year_filter_list = await sysService.GetYearFilter();
             filterHrVM.Year = DateTime.Now.Year;
 
-            month_filter_list = await sysRepo.GetMonthFilter();
+            month_filter_list = await sysService.GetMonthFilter();
             filterHrVM.Month = DateTime.Now.Month;
 
-            division_filter_list = await organizationalChartRepo.GetDivisionList(filterHrVM);
+            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
             filterHrVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
 
-            cruiseScheduleVMs = await opRepo.GetCruiseSchedules(filterHrVM);
-            cruiseStatusVMs = await opRepo.GetCruiseStatus();
+            cruiseScheduleVMs = await opService.GetCruiseSchedules(filterHrVM);
+            cruiseStatusVMs = await opService.GetCruiseStatus();
 
-            isLoadingPage = false;
+            isLoadingScreen = false;
         }
 
         private async void onchange_filter_month(int value)
@@ -129,7 +127,7 @@ namespace WebApp.Pages.OP
         {
             isLoading = true;
 
-            cruiseScheduleVMs = await opRepo.GetCruiseSchedules(filterHrVM);
+            cruiseScheduleVMs = await opService.GetCruiseSchedules(filterHrVM);
 
             isLoading = false;
         }
@@ -149,7 +147,7 @@ namespace WebApp.Pages.OP
         {
             isLoading = true;
 
-            await opRepo.UpdateCruiseSchedule(cruiseScheduleVM);
+            await opService.UpdateCruiseSchedule(cruiseScheduleVM);
 
             await GetCruiseSchedules();
 

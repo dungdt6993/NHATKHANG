@@ -3,7 +3,7 @@
 
 
 <Loading isLoading="@isLoading"></Loading>
-<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 
 <Modal_DayOffDetail dayOffVMs=@dayOffVMs></Modal_DayOffDetail>
 
@@ -51,7 +51,7 @@
                 </div>
             </div>
 
-            @if (userRepo.GetRole(UserID) < 4)
+            @if (authService.GetRole(UserID) < 4)
             {
                 <div class="col-md-2">
                     <div class="form-group">
@@ -167,9 +167,9 @@
         <div class="card card-purple card-outline">
 
             <div class="card-header text-right">
-                @if (payrollRepo.IsOpenFunc(filterHrVM))
+                @if (payrollService.IsOpenFunc(filterHrVM))
                 {
-                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_AttendanceRecord_CalcFingerData"))
+                    @if (sysService.CheckAccessSubFunc(UserID, "HR_AttendanceRecord_CalcFingerData"))
                     {
                         <button type="button" class="btn btn-secondary" data-target="#InitializeModal_CalcFingerData" data-toggle="modal" @onclick="()=>CalcFingerData()"><i class="fa-solid fa-calculator"></i> Tính dữ liệu chấm công</button>
                     }
@@ -270,7 +270,7 @@
 
                                             _arVM.InputAttributes = new Dictionary<string, object>() { { "style", colorDayoff }, { "onpaste", "focusInputNextID('" + _arVM.InputNextID + "')" } };
 
-                                            if (_arVM.ckJoined == 0 || _arVM.ckTerminated == 1 || _arVM.isLock == 1 || sysRepo.checkAccessSubFunc(UserID, "HR_DutyRoster_Update") == false)
+                                            if (_arVM.ckJoined == 0 || _arVM.ckTerminated == 1 || _arVM.isLock == 1 || sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_Update") == false)
                                             {
 
                                                 @if (_arVM.ckJoined == 0 || _arVM.ckTerminated == 1)

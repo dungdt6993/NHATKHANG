@@ -3,8 +3,9 @@ using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using System.Data;
 using System.Net.Http.Json;
+using static System.Runtime.CompilerServices.RuntimeHelpers;
 
-namespace Data.Repositories.HR
+namespace D69soft.Client.Services.HR
 {
     public class PayrollService
     {
@@ -121,11 +122,11 @@ namespace Data.Repositories.HR
             return await _httpClient.GetFromJsonAsync<bool>($"api/Payroll/ContainsTrnCodeID/{_TrnCode}/{_TrnSubCode}");
         }
 
-        public async Task<bool> UpdateSalTrnCode(SalaryTransactionCodeVM _salaryTransactionCodeVM)
+        public async Task<int> UpdateSalTrnCode(SalaryTransactionCodeVM _salaryTransactionCodeVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/Payroll/UpdateSalTrnCode", _salaryTransactionCodeVM);
 
-            return await response.Content.ReadFromJsonAsync<bool>();
+            return await response.Content.ReadFromJsonAsync<int>();
         }
 
         //WDDefaut
@@ -156,6 +157,11 @@ namespace Data.Repositories.HR
             var response = await _httpClient.PostAsJsonAsync($"api/Payroll/UpdateSalaryQuestion", _payslipVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
+        }
+
+        public async Task<IEnumerable<PayslipVM>> GetPayslipUser(string _UserID)
+        {
+            return await _httpClient.GetFromJsonAsync<IEnumerable<PayslipVM>>($"api/Payroll/GetPayslipUser/{_UserID}");
         }
 
     }

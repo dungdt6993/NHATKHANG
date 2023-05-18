@@ -13,7 +13,7 @@ namespace D69soft.Client.Shared
         [Inject] IJSRuntime js { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
         [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
-        [Inject] SysService sysService { get; set; }
+        [Inject] authService authService { get; set; }
 
         bool isLoadingScreen = true;
 
@@ -33,15 +33,15 @@ namespace D69soft.Client.Shared
         {
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            userVM = await sysService.GetInfoUser(UserID);
+            userVM = await authService.GetInfoUser(UserID);
 
-            modules = await sysService.GetModuleMenu(UserID);
+            modules = await authService.GetModuleMenu(UserID);
 
-            funcMenuGrps = await sysService.GetFuncMenuGroup(UserID);
+            funcMenuGrps = await authService.GetFuncMenuGroup(UserID);
 
-            funcMenus = await sysService.GetFuncMenu(UserID);
+            funcMenus = await authService.GetFuncMenu(UserID);
 
-            ckViewFuncMenuRpt = await sysService.CheckViewFuncMenuRpt(UserID);
+            ckViewFuncMenuRpt = await authService.CheckViewFuncMenuRpt(UserID);
 
             isLoadingScreen = false;
         }

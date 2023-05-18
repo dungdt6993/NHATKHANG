@@ -5,7 +5,7 @@ using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.HR;
 
-namespace Data.Repositories.HR
+namespace D69soft.Server.Controllers.HR
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -72,8 +72,7 @@ namespace Data.Repositories.HR
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                var affectedRows = await conn.ExecuteAsync(sql, _divisionVM);
-                return affectedRows;
+                return await conn.ExecuteAsync(sql, _divisionVM);
             }
         }
 
@@ -109,7 +108,7 @@ namespace Data.Repositories.HR
         }
 
         [HttpPost("UpdateDepartment")]
-        public async Task<ActionResult<bool>> UpdateDepartment(DepartmentVM _departmentVM)
+        public async Task<ActionResult<int>> UpdateDepartment(DepartmentVM _departmentVM)
         {
             var sql = "";
             if (_departmentVM.IsTypeUpdate == 0)
@@ -132,8 +131,7 @@ namespace Data.Repositories.HR
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                await conn.ExecuteAsync(sql, _departmentVM);
-                return true;
+                return await conn.ExecuteAsync(sql, _departmentVM);
             }
         }
 
@@ -166,7 +164,7 @@ namespace Data.Repositories.HR
         }
 
         [HttpPost("UpdateDepartmentGroup")]
-        public async Task<ActionResult<bool>> UpdateDepartmentGroup(DepartmentGroupVM _departmentGroupVM)
+        public async Task<ActionResult<int>> UpdateDepartmentGroup(DepartmentGroupVM _departmentGroupVM)
         {
             var sql = "";
             if (_departmentGroupVM.IsTypeUpdate == 0)
@@ -189,8 +187,7 @@ namespace Data.Repositories.HR
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                await conn.ExecuteAsync(sql, _departmentGroupVM);
-                return true;
+                return await conn.ExecuteAsync(sql, _departmentGroupVM);
             }
         }
 
@@ -223,7 +220,7 @@ namespace Data.Repositories.HR
         }
 
         [HttpPost("UpdateSection")]
-        public async Task<ActionResult<bool>> UpdateSection(SectionVM _sectionVM)
+        public async Task<ActionResult<int>> UpdateSection(SectionVM _sectionVM)
         {
             var sql = "";
             if (_sectionVM.IsTypeUpdate == 0)
@@ -246,8 +243,7 @@ namespace Data.Repositories.HR
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                await conn.ExecuteAsync(sql, _sectionVM);
-                return true;
+                return await conn.ExecuteAsync(sql, _sectionVM);
             }
         }
 
@@ -280,7 +276,7 @@ namespace Data.Repositories.HR
         }
 
         [HttpPost("UpdatePosition")]
-        public async Task<ActionResult<bool>> UpdatePosition(PositionVM _positionVM)
+        public async Task<ActionResult<int>> UpdatePosition(PositionVM _positionVM)
         {
             var sql = "";
             if (_positionVM.IsTypeUpdate == 0)
@@ -303,8 +299,7 @@ namespace Data.Repositories.HR
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                await conn.ExecuteAsync(sql, _positionVM);
-                return true;
+                return await conn.ExecuteAsync(sql, _positionVM);
             }
         }
 
@@ -337,7 +332,7 @@ namespace Data.Repositories.HR
         }
 
         [HttpPost("UpdatePositionGroup")]
-        public async Task<ActionResult<bool>> UpdatePositionGroup(PositionGroupVM _positionGroupVM)
+        public async Task<ActionResult<int>> UpdatePositionGroup(PositionGroupVM _positionGroupVM)
         {
             var sql = "";
             if (_positionGroupVM.IsTypeUpdate == 0)
@@ -360,8 +355,7 @@ namespace Data.Repositories.HR
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                await conn.ExecuteAsync(sql, _positionGroupVM);
-                return true;
+                return await conn.ExecuteAsync(sql, _positionGroupVM);
             }
         }
     }

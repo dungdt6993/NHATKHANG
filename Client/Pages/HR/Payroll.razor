@@ -1,9 +1,7 @@
 ﻿@page "/HR/Payroll"
-@using System.Data
-@using Blazored.FluentValidation
 
 <Loading isLoading="@isLoading"></Loading>
-<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_SalaryDef">
     <div class="modal-dialog modal-lg">
@@ -653,7 +651,7 @@
         <div class="card card-purple card-outline">
 
             <div class="card-header text-right">
-                @if (sysRepo.checkAccessSubFunc(UserID, "HR_Payroll_Calc"))
+                @if (sysService.CheckAccessSubFunc(UserID, "HR_Payroll_Calc").Result)
                 {
 
                     @if (lockSalaryVM != null)
@@ -690,7 +688,7 @@
             <div class="card-body table-responsive table-fixed p-0" style="height: calc(100vh - 389px);">
                 @if (dtPayroll != null)
                 {
-                    <table class="table table-sm table-bordered table-hover" style="font-size: 11px;">
+@*                    <table class="table table-sm table-bordered table-hover" style="font-size: 11px;">
                         <thead class="thead-light">
                             <tr>
                                 <th rowspan="2">Họ tên</th>
@@ -700,7 +698,7 @@
 
                                 @{
                                     var sqlCountShiftTypeCalc = "select Count(ShiftTypeID) + 2 as cShiftTypeID from HR.ShiftType where coalesce(PercentIncome,0) > 0";
-                                    DataTable dtCountShiftTypeCalc = payrollRepo.ExecuteSQLQueryToDataTable(sqlCountShiftTypeCalc);
+                                    DataTable dtCountShiftTypeCalc = payrollService.ExecuteSQLQueryToDataTable(sqlCountShiftTypeCalc);
                                     if (dtCountShiftTypeCalc.Rows.Count > 0)
                                     {
                                         DataRow drCountShiftTypeCalc = dtCountShiftTypeCalc.Rows[0];
@@ -710,7 +708,7 @@
                                     var sqlCountTrnGrp = "select '['+cast(stg.TrnGroupCode as varchar)+'] '+ stg.TrnGroupName as TrnGrp, count(TrnCode) as cTrnCode from HR.SalaryTransactionGroup stg ";
                                     sqlCountTrnGrp += "join HR.SalaryTransactionCode stc on stc.TrnGroupCode = stg.TrnGroupCode group by stg.TrnGroupCode, stg.TrnGroupName order by TrnGrp ";
 
-                                    DataTable dtCountTrnGrp = payrollRepo.ExecuteSQLQueryToDataTable(sqlCountTrnGrp);
+                                    DataTable dtCountTrnGrp = payrollService.ExecuteSQLQueryToDataTable(sqlCountTrnGrp);
 
                                     if (dtCountTrnGrp.Rows.Count > 0)
                                     {
@@ -735,7 +733,7 @@
 
                                 @{
                                     var sqlSalaryDef = "select * from HR.SalaryDef";
-                                    DataTable dtSalaryDef = payrollRepo.ExecuteSQLQueryToDataTable(sqlSalaryDef);
+                                    DataTable dtSalaryDef = payrollService.ExecuteSQLQueryToDataTable(sqlSalaryDef);
                                     if (dtSalaryDef.Rows.Count > 0)
                                     {
                                         for (int i = 0; i < dtSalaryDef.Rows.Count; i++)
@@ -751,7 +749,7 @@
 
                                 @{
                                     var sqlShiftTypeCalc = "select ShiftTypeID, PercentIncome from HR.ShiftType where coalesce(PercentIncome,0) > 0";
-                                    DataTable dtShiftTypeCalc = payrollRepo.ExecuteSQLQueryToDataTable(sqlShiftTypeCalc);
+                                    DataTable dtShiftTypeCalc = payrollService.ExecuteSQLQueryToDataTable(sqlShiftTypeCalc);
                                     if (dtShiftTypeCalc.Rows.Count > 0)
                                     {
                                         for (int i = 0; i < dtShiftTypeCalc.Rows.Count; i++)
@@ -767,7 +765,7 @@
                                 @{
                                     var sqlTrn = "select '['+cast(TrnCode as varchar)+'-'+cast(TrnSubCode as varchar)+'] '+ [TrnName] as Trn from HR.SalaryTransactionCode  ";
                                     sqlTrn += "order by TrnCode, TrnSubCode ";
-                                    DataTable dtTrn = payrollRepo.ExecuteSQLQueryToDataTable(sqlTrn);
+                                    DataTable dtTrn = payrollService.ExecuteSQLQueryToDataTable(sqlTrn);
                                     if (dtTrn.Rows.Count > 0)
                                     {
                                         for (int i = 0; i < dtTrn.Rows.Count; i++)
@@ -814,7 +812,7 @@
 
                                         @{
                                             var sqlContent_ShiftTypeCalc = "select ShiftTypeID from HR.ShiftType where coalesce(PercentIncome,0) > 0";
-                                            DataTable dtContent_ShiftTypeCalc = payrollRepo.ExecuteSQLQueryToDataTable(sqlContent_ShiftTypeCalc);
+                                            DataTable dtContent_ShiftTypeCalc = payrollService.ExecuteSQLQueryToDataTable(sqlContent_ShiftTypeCalc);
                                             if (dtContent_ShiftTypeCalc.Rows.Count > 0)
                                             {
                                                 for (int j = 0; j < dtContent_ShiftTypeCalc.Rows.Count; j++)
@@ -829,7 +827,7 @@
                                         @{
                                             var sqlContent_Trn = "select 'TRN'+cast(TrnCode as varchar)+'x'+cast(TrnSubCode as varchar)+'' as Trn from HR.SalaryTransactionCode  ";
                                             sqlContent_Trn += "order by TrnCode, TrnSubCode ";
-                                            DataTable dtContent_Trn = payrollRepo.ExecuteSQLQueryToDataTable(sqlContent_Trn);
+                                            DataTable dtContent_Trn = payrollService.ExecuteSQLQueryToDataTable(sqlContent_Trn);
                                             if (dtContent_Trn.Rows.Count > 0)
                                             {
                                                 for (int j = 0; j < dtContent_Trn.Rows.Count; j++)
@@ -845,7 +843,7 @@
                                 }
                             }
                         </tbody>
-                    </table>
+                    </table>*@
                 }
             </div>
 

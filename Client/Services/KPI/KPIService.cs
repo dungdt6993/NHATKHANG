@@ -5,7 +5,7 @@ using D69soft.Shared.Models.ViewModels.KPI;
 using System.Data;
 using System.Net.Http.Json;
 
-namespace Data.Repositories.KPI
+namespace D69soft.Client.Services.KPI
 {
     public class KPIService
     {

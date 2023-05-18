@@ -1,40 +1,35 @@
-﻿using Data.Repositories.FIN;
-using Data.Repositories.SYSTEM;
-using Model.ViewModels.EA;
-using Model.ViewModels.FIN;
-using WebApp.Helpers;
-using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using Model.ViewModels.KPI;
-using DevExpress.Pdf.Native.BouncyCastle.Ocsp;
-using Model.ViewModels.HR;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
-using Model.ViewModels.POS;
-using Data.Repositories.HR;
 using BlazorDateRangePicker;
-using DevExpress.CodeParser;
+using D69soft.Client.Services;
+using D69soft.Client.Services.HR;
+using D69soft.Client.Services.FIN;
+using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Models.ViewModels.EA;
+using D69soft.Client.Helpers;
 
-namespace WebApp.Pages.EA
+namespace D69soft.Client.Pages.EA
 {
     partial class Request
     {
         [Inject] IJSRuntime js { get; set; }
-        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
-        [Inject] SysRepository sysRepo { get; set; }
-        [Inject] UserRepository userRepo { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        [Inject] OrganizationalChartService organizationalChartRepo { get; set; }
-
-        [Inject] VoucherService voucherRepo { get; set; }
-        [Inject] RequestService requestRepo { get; set; }
+        [Inject] SysService sysService { get; set; }
+        [Inject] AuthService authService { get; set; }
+        [Inject] OrganizationalChartService organizationalChartService { get; set; }
+        [Inject] VoucherService voucherService { get; set; }
+        [Inject] RequestService requestService { get; set; }
 
         protected string UserID;
 
         bool isLoading;
 
-        bool isLoadingPage;
+        bool isLoadingScreen = true;
 
         //Filter
         FilterFinVM filterFinVM = new();
@@ -67,13 +62,11 @@ namespace WebApp.Pages.EA
 
         protected override async Task OnInitializedAsync()
         {
-            isLoadingPage = true;
-
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (sysRepo.checkPermisFunc(UserID, "EA_Request"))
+            if (await sysService.CheckAccessFunc(UserID, "EA_Request"))
             {
-                await sysRepo.insert_LogUserFunc(UserID, "EA_Request");
+                await sysService.InsertLogUserFunc(UserID, "EA_Request");
             }
             else
             {
@@ -82,17 +75,17 @@ namespace WebApp.Pages.EA
 
             filterFinVM.UserID = filterHrVM.UserID = UserID;
 
-            division_filter_list = await organizationalChartRepo.GetDivisionList(filterHrVM);
+            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
             filterFinVM.DivisionID = filterHrVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
 
             filterFinVM.DepartmentID = filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartRepo.GetDepartmentList(filterHrVM);
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
 
             filterFinVM.EndDate = new DateTime(DateTime.MaxValue.Year, DateTime.MaxValue.Month, DateTime.MaxValue.Day);
 
-            permisSubFunc_EA_Request_Handover = sysRepo.checkAccessSubFunc(UserID, "EA_Request_Handover");
+            permisSubFunc_EA_Request_Handover = await sysService.CheckAccessSubFunc(UserID, "EA_Request_Handover");
 
-            if (userRepo.GetRole(UserID) <= 2)
+            if (await authService.GetRole(UserID) <= 2)
             {
                 userRoleAdmin = true;
             }
@@ -105,9 +98,9 @@ namespace WebApp.Pages.EA
             filterFinVM.ShowEntity = 100;
             filterFinVM.Status = "all";
 
-            requestVMs = search_requestVMs = await requestRepo.GetRequest(filterFinVM);
+            requestVMs = search_requestVMs = await requestService.GetRequest(filterFinVM);
 
-            isLoadingPage = false;
+            isLoadingScreen = false;
         }
 
         private async void onchange_filter_division(string value)
@@ -117,7 +110,7 @@ namespace WebApp.Pages.EA
             filterFinVM.DivisionID = filterHrVM.DivisionID = value;
 
             filterFinVM.DepartmentID = filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartRepo.GetDepartmentList(filterHrVM);
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
 
             isLoading = false;
 
@@ -130,7 +123,7 @@ namespace WebApp.Pages.EA
 
             filterFinVM.DepartmentID = filterHrVM.DepartmentID = value;
 
-            requestVMs = search_requestVMs = await requestRepo.GetRequest(filterFinVM);
+            requestVMs = search_requestVMs = await requestService.GetRequest(filterFinVM);
 
             await FilterRequest(filterFinVM.Status);
 
@@ -146,7 +139,7 @@ namespace WebApp.Pages.EA
             filterFinVM.StartDate = _range.Start;
             filterFinVM.EndDate = _range.End;
 
-            requestVMs = search_requestVMs = await requestRepo.GetRequest(filterFinVM);
+            requestVMs = search_requestVMs = await requestService.GetRequest(filterFinVM);
 
             await FilterRequest(filterFinVM.Status);
 
@@ -213,18 +206,18 @@ namespace WebApp.Pages.EA
                             stockVoucherVM.VDesc = $"Yêu cầu cấp hàng số {_requestVM.RequestCode} - {_requestVM.ReasonOfRequest} ";
                             stockVoucherVM.VDate = _requestVM.TimeSendApprove;
 
-                            stockVoucherDetailVMs = await requestRepo.GetRequestDetailToStockVoucherDetail(_requestVM.RequestCode);
+                            stockVoucherDetailVMs = await requestService.GetRequestDetailToStockVoucherDetail(_requestVM.RequestCode);
 
-                            await voucherRepo.UpdateVoucher(stockVoucherVM, stockVoucherDetailVMs);
+                            await voucherService.UpdateVoucher(stockVoucherVM, stockVoucherDetailVMs);
                         }
                     }
                 }
 
-                await requestRepo.SendApprove(_requestVM, type);
+                await requestService.SendApprove(_requestVM, type);
 
                 if (type == "SendDelRequest")
                 {
-                    requestVMs = search_requestVMs = await requestRepo.GetRequest(filterFinVM);
+                    requestVMs = search_requestVMs = await requestService.GetRequest(filterFinVM);
                 }
 
                 await FilterRequest(filterFinVM.Status);
@@ -240,7 +233,7 @@ namespace WebApp.Pages.EA
         private async void onchange_QtyApproved(ChangeEventArgs e, RequestVM _requestVM)
         {
             _requestVM.QtyApproved = float.Parse(e.Value.ToString());
-            await requestRepo.UpdateQtyApproved(_requestVM);
+            await requestService.UpdateQtyApproved(_requestVM);
 
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
@@ -252,7 +245,7 @@ namespace WebApp.Pages.EA
         private async void onchange_RDNote(ChangeEventArgs e, RequestVM _requestVM)
         {
             _requestVM.RDNote = e.Value.ToString();
-            await requestRepo.UpdateRDNote(_requestVM);
+            await requestService.UpdateRDNote(_requestVM);
 
             _requestVM.IsUpdateRDNote = false;
 
@@ -329,7 +322,7 @@ namespace WebApp.Pages.EA
             isLoading = true;
 
             filterFinVM.ShowEntity = int.Parse(e.Value.ToString());
-            requestVMs = search_requestVMs = await requestRepo.GetRequest(filterFinVM);
+            requestVMs = search_requestVMs = await requestService.GetRequest(filterFinVM);
 
             await FilterRequest(filterFinVM.Status);
 

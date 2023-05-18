@@ -1,8 +1,7 @@
 ﻿@page "/HR/MonthlyIncome"
-@using Blazored.FluentValidation
 
 <Loading isLoading="@isLoading"></Loading>
-<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_MonthlyIncomeTrnOther">
     <div class="modal-dialog">
@@ -250,7 +249,7 @@
         <div class="card card-purple card-outline">
 
             <div class="card-header text-right">
-                @if (payrollRepo.IsOpenFunc(filterHrVM))
+                @if (payrollService.IsOpenFunc(filterHrVM).Result)
                 {
                     <div class="row">
                         <div class="col-md-6">
@@ -347,7 +346,7 @@
                                     }
                                 </td>
                                 <td class="text-center">
-                                    @if (payrollRepo.IsOpenFunc(filterHrVM))
+                                    @if (payrollService.IsOpenFunc(filterHrVM).Result)
                                     {
                                         <button class="btn btn-default btn-xs" data-target="#InitializeModalUpdate_MonthlyIncomeTrnOther" data-toggle="modal" @onclick="(() => InitializeModalUpdate_MonthlyIncomeTrnOther(1,_monthlyIncomeTrnOtherVM))"><i class="fa-solid fa-pen"></i></button>
                                     }

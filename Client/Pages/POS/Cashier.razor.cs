@@ -1,33 +1,31 @@
-﻿using Data.Repositories.CRM;
-using Data.Repositories.POS;
-using Data.Repositories.SYSTEM;
-using Model.ViewModels.CRM;
-using Model.ViewModels.FIN;
-using Model.ViewModels.POS;
-using WebApp.Helpers;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.JSInterop;
+using D69soft.Client.Services;
+using D69soft.Client.Services.POS;
+using D69soft.Client.Services.CRM;
+using D69soft.Shared.Models.ViewModels.POS;
+using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Shared.Models.ViewModels.CRM;
+using D69soft.Client.Helpers;
 
-namespace WebApp.Pages.POS
+namespace D69soft.Client.Pages.POS
 {
     public partial class Cashier
     {
         [Inject] IJSRuntime js { get; set; }
-
-        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
 
-        [Inject] SysRepository sysRepo { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        [Inject] CashierService cashierRepo { get; set; }
-        [Inject] CustomerService customerRepo { get; set; }
+        [Inject] SysService sysService { get; set; }
+        [Inject] CashierService cashierService { get; set; }
+        [Inject] CustomerService customerService { get; set; }
 
 
         bool isLoading;
 
-        bool isLoadingPage;
+        bool isLoadingScreen = true;
 
         private HubConnection hubConnection;
 
@@ -70,29 +68,29 @@ namespace WebApp.Pages.POS
 
         protected override async Task OnInitializedAsync()
         {
-            isLoadingPage = true;
+            
 
             filterPosVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (sysRepo.checkPermisFunc(filterPosVM.UserID, "POS_Cashier"))
+            if (await sysService.CheckAccessFunc(filterPosVM.UserID, "POS_Cashier"))
             {
-                await sysRepo.insert_LogUserFunc(filterPosVM.UserID, "POS_Cashier");
+                await sysService.InsertLogUserFunc(filterPosVM.UserID, "POS_Cashier");
             }
             else
             {
                 navigationManager.NavigateTo("/");
             }
 
-            pointOfSaleVMs = await cashierRepo.GetPointOfSale();
+            pointOfSaleVMs = await cashierService.GetPointOfSale();
 
             filterPosVM.POSCode = pointOfSaleVMs.Count()==1? pointOfSaleVMs.ElementAt(0).POSCode : String.Empty;
 
             if (!String.IsNullOrEmpty(filterPosVM.POSCode))
             {
-                roomTableAreaList = await cashierRepo.GetRoomTableArea(filterPosVM.POSCode);
-                roomTableList = await cashierRepo.GetRoomTable(filterPosVM);
+                roomTableAreaList = await cashierService.GetRoomTableArea(filterPosVM.POSCode);
+                roomTableList = await cashierService.GetRoomTable(filterPosVM);
 
-                search_itemsVMs = itemsVMs = await cashierRepo.GetItems(filterPosVM);
+                search_itemsVMs = itemsVMs = await cashierService.GetItems(filterPosVM);
             }
 
             hubConnection = new HubConnectionBuilder()
@@ -121,17 +119,17 @@ namespace WebApp.Pages.POS
             await hubConnection.StartAsync();
 
 
-            isLoadingPage = false;
+            isLoadingScreen = false;
         }
 
         private async Task ChoosePointOfSale(string _posCode)
         {
             filterPosVM.POSCode = _posCode;
 
-            roomTableAreaList = await cashierRepo.GetRoomTableArea(filterPosVM.POSCode);
-            roomTableList = await cashierRepo.GetRoomTable(filterPosVM);
+            roomTableAreaList = await cashierService.GetRoomTableArea(filterPosVM.POSCode);
+            roomTableList = await cashierService.GetRoomTable(filterPosVM);
 
-            search_itemsVMs = itemsVMs = await cashierRepo.GetItems(filterPosVM);
+            search_itemsVMs = itemsVMs = await cashierService.GetItems(filterPosVM);
         }
 
         private async void FilterRoomTable(string _roomTableAreaID)
@@ -140,7 +138,7 @@ namespace WebApp.Pages.POS
 
             filterPosVM.RoomTableAreaID = _roomTableAreaID;
 
-            roomTableList = await cashierRepo.GetRoomTable(filterPosVM);
+            roomTableList = await cashierService.GetRoomTable(filterPosVM);
 
             isLoading = false;
 
@@ -185,20 +183,20 @@ namespace WebApp.Pages.POS
             }
             else
             {
-                await cashierRepo.OpenRoomTable(filterPosVM, infoInvoice);
+                await cashierService.OpenRoomTable(filterPosVM, infoInvoice);
 
                 if (infoInvoice.IsClickChangeRoomTable == 1)
                 {
                     await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
                 }
 
-                infoInvoice = await cashierRepo.GetInfoInvoice(filterPosVM);
+                infoInvoice = await cashierService.GetInfoInvoice(filterPosVM);
 
-                customer = infoInvoice.CustomerID != "" ? await customerRepo.GetCustomerByID(infoInvoice.CustomerID) : new();
+                customer = infoInvoice.CustomerID != "" ? await customerService.GetCustomerByID(infoInvoice.CustomerID) : new();
 
-                invoiceItemsList = await cashierRepo.GetInvoiceItems(infoInvoice.CheckNo);
+                invoiceItemsList = await cashierService.GetInvoiceItems(infoInvoice.CheckNo);
 
-                invoiceTotal = await cashierRepo.GetInvoiceTotal(infoInvoice.CheckNo);
+                invoiceTotal = await cashierService.GetInvoiceTotal(infoInvoice.CheckNo);
 
                 filterPosVM.ICode = String.Empty;
 
@@ -214,7 +212,7 @@ namespace WebApp.Pages.POS
 
             filterPosVM.RoomTableID = "TakeOut";
 
-            await cashierRepo.OpenTakeOut(filterPosVM);
+            await cashierService.OpenTakeOut(filterPosVM);
 
             if (infoInvoice.IsClickChangeRoomTable == 1 && infoInvoice.RoomTableID != "TakeOut")
             {
@@ -223,13 +221,13 @@ namespace WebApp.Pages.POS
                 await hubConnection.SendAsync("Send_LoadRoomTable", filterPosVM.POSCode, infoInvoice.RoomTableID, filterPosVM.UserID);
             }
 
-            infoInvoice = await cashierRepo.GetInfoInvoice(filterPosVM);
+            infoInvoice = await cashierService.GetInfoInvoice(filterPosVM);
 
-            customer = infoInvoice.CustomerID != "" ? await customerRepo.GetCustomerByID(infoInvoice.CustomerID) : new();
+            customer = infoInvoice.CustomerID != "" ? await customerService.GetCustomerByID(infoInvoice.CustomerID) : new();
 
-            invoiceItemsList = await cashierRepo.GetInvoiceItems(infoInvoice.CheckNo);
+            invoiceItemsList = await cashierService.GetInvoiceItems(infoInvoice.CheckNo);
 
-            invoiceTotal = await cashierRepo.GetInvoiceTotal(infoInvoice.CheckNo);
+            invoiceTotal = await cashierService.GetInvoiceTotal(infoInvoice.CheckNo);
 
             filterPosVM.ICode = String.Empty;
 
@@ -243,11 +241,11 @@ namespace WebApp.Pages.POS
                 filterPosVM.CheckNo = infoInvoice.CheckNo;
                 filterPosVM.ICode = _iCode;
 
-                await cashierRepo.ChooseItems(filterPosVM);
+                await cashierService.ChooseItems(filterPosVM);
 
-                invoiceItemsList = await cashierRepo.GetInvoiceItems(infoInvoice.CheckNo);
+                invoiceItemsList = await cashierService.GetInvoiceItems(infoInvoice.CheckNo);
 
-                invoiceTotal = await cashierRepo.GetInvoiceTotal(infoInvoice.CheckNo);
+                invoiceTotal = await cashierService.GetInvoiceTotal(infoInvoice.CheckNo);
 
                 filterPosVM.ReportName = "CustomNewReport";
 
@@ -259,11 +257,11 @@ namespace WebApp.Pages.POS
         {
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
             {
-                await cashierRepo.DelInvoiceItems(infoInvoice.CheckNo, seq);
+                await cashierService.DelInvoiceItems(infoInvoice.CheckNo, seq);
 
-                invoiceItemsList = await cashierRepo.GetInvoiceItems(infoInvoice.CheckNo);
+                invoiceItemsList = await cashierService.GetInvoiceItems(infoInvoice.CheckNo);
 
-                invoiceTotal = await cashierRepo.GetInvoiceTotal(infoInvoice.CheckNo);
+                invoiceTotal = await cashierService.GetInvoiceTotal(infoInvoice.CheckNo);
 
                 filterPosVM.ReportName = "CustomNewReport";
             }
@@ -273,7 +271,7 @@ namespace WebApp.Pages.POS
         {
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn muốn hủy?", SweetAlertMessageType.question))
             {
-                await cashierRepo.DelInvoice(infoInvoice.CheckNo);
+                await cashierService.DelInvoice(infoInvoice.CheckNo);
 
                 await hubConnection.SendAsync("Send_LoadRoomTable", filterPosVM.POSCode, infoInvoice.RoomTableID, filterPosVM.UserID);
 
@@ -367,10 +365,10 @@ namespace WebApp.Pages.POS
         {
             isLoading = true;
 
-            await cashierRepo.UpdateInvoiceDetail(invoiceDetail);
+            await cashierService.UpdateInvoiceDetail(invoiceDetail);
 
-            invoiceItemsList = await cashierRepo.GetInvoiceItems(infoInvoice.CheckNo);
-            invoiceTotal = await cashierRepo.GetInvoiceTotal(infoInvoice.CheckNo);
+            invoiceItemsList = await cashierService.GetInvoiceItems(infoInvoice.CheckNo);
+            invoiceTotal = await cashierService.GetInvoiceTotal(infoInvoice.CheckNo);
 
             filterPosVM.ICode = invoiceDetail.ICode;
 
@@ -385,7 +383,7 @@ namespace WebApp.Pages.POS
         {
             isLoading = true;
 
-            invoiceItemsList = await cashierRepo.GetInvoiceItems(infoInvoice.CheckNo);
+            invoiceItemsList = await cashierService.GetInvoiceItems(infoInvoice.CheckNo);
 
             isLoading = false;
         }
@@ -452,9 +450,9 @@ namespace WebApp.Pages.POS
         {
             isLoading = true;
 
-            await cashierRepo.UpdateInvoiceDiscount(invoiceDetail);
+            await cashierService.UpdateInvoiceDiscount(invoiceDetail);
 
-            invoiceTotal = await cashierRepo.GetInvoiceTotal(infoInvoice.CheckNo);
+            invoiceTotal = await cashierService.GetInvoiceTotal(infoInvoice.CheckNo);
 
             filterPosVM.ReportName = "CustomNewReport";
 
@@ -468,7 +466,7 @@ namespace WebApp.Pages.POS
         {
             isLoading = true;
 
-            invoiceTotal = await cashierRepo.GetInvoiceTotal(infoInvoice.CheckNo);
+            invoiceTotal = await cashierService.GetInvoiceTotal(infoInvoice.CheckNo);
 
             isLoading = false;
         }
@@ -494,8 +492,8 @@ namespace WebApp.Pages.POS
         {
             isLoading = true;
 
-            customer.CustomerID = infoInvoice.CustomerID = await customerRepo.Update(customer);
-            await cashierRepo.UpdateInvoiceCustomer(infoInvoice);
+            customer.CustomerID = infoInvoice.CustomerID = await customerService.UpdateCustomer(customer);
+            await cashierService.UpdateInvoiceCustomer(infoInvoice);
 
             await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Customer");
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
@@ -505,7 +503,7 @@ namespace WebApp.Pages.POS
 
         private async Task<IEnumerable<CustomerVM>> SearchCustomer(string searchText)
         {
-            return await customerRepo.GetSearchCustomer(searchText);
+            return await customerService.SearchCustomers(searchText);
         }
 
         private async Task SelectedCustomer(CustomerVM result)
@@ -520,7 +518,7 @@ namespace WebApp.Pages.POS
                 customer = new();
                 infoInvoice.CustomerID = "";
             }
-            await cashierRepo.UpdateInvoiceCustomer(infoInvoice);
+            await cashierService.UpdateInvoiceCustomer(infoInvoice);
         }
 
         private async Task ChangeRoomTableAsync()
@@ -546,7 +544,7 @@ namespace WebApp.Pages.POS
 
             payment.sumAmountPay = payment.CustomerAmount = invoiceTotal.sumAmountPay;
 
-            customerAmountSuggestList = await cashierRepo.GetCustomerAmountSuggest(invoiceTotal.sumAmountPay);
+            customerAmountSuggestList = await cashierService.GetCustomerAmountSuggest(invoiceTotal.sumAmountPay);
 
             isLoading = false;
         }
@@ -646,7 +644,7 @@ namespace WebApp.Pages.POS
         {
             isLoading = true;
 
-            await cashierRepo.SavePayment(payment, filterPosVM.POSCode, filterPosVM.UserID);
+            await cashierService.SavePayment(payment, filterPosVM.POSCode, filterPosVM.UserID);
 
             await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Payment");
             await js.Toast_Alert("Thanh toán thành công!", SweetAlertMessageType.success);
@@ -657,7 +655,7 @@ namespace WebApp.Pages.POS
 
             infoInvoice = new();
 
-            roomTableList = await cashierRepo.GetRoomTable(filterPosVM);
+            roomTableList = await cashierService.GetRoomTable(filterPosVM);
 
             isLoading = false;
         }

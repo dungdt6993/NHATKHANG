@@ -3,7 +3,7 @@ using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using System.Net.Http.Json;
 
-namespace Data.Repositories.HR
+namespace D69soft.Client.Services.HR
 {
     public class OrganizationalChartService
     {
@@ -24,11 +24,11 @@ namespace Data.Repositories.HR
         {
             return await _httpClient.GetFromJsonAsync<bool>($"api/OrganizationalChart/CheckContainsDivisionID/{id}");
         }
-        public async Task<bool> UpdateDivision(DivisionVM _divisionVM)
+        public async Task<int> UpdateDivision(DivisionVM _divisionVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/OrganizationalChart/UpdateDivision", _divisionVM);
 
-            return await response.Content.ReadFromJsonAsync<bool>();
+            return await response.Content.ReadFromJsonAsync<int>();
         }
 
         //Department
@@ -42,11 +42,11 @@ namespace Data.Repositories.HR
         {
             return await _httpClient.GetFromJsonAsync<bool>($"api/OrganizationalChart/CheckContainsDepartment/{id}");
         }
-        public async Task<bool> UpdateDepartment(DepartmentVM _departmentVM)
+        public async Task<int> UpdateDepartment(DepartmentVM _departmentVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/OrganizationalChart/UpdateDepartment", _departmentVM);
 
-            return await response.Content.ReadFromJsonAsync<bool>();
+            return await response.Content.ReadFromJsonAsync<int>();
         }
 
         //DepartmentGroup
@@ -58,11 +58,11 @@ namespace Data.Repositories.HR
         {
             return await _httpClient.GetFromJsonAsync<bool>($"api/OrganizationalChart/CheckContainsDepartmentGroupID/{id}");
         }
-        public async Task<bool> UpdateDepartmentGroup(DepartmentGroupVM _departmentGroupVM)
+        public async Task<int> UpdateDepartmentGroup(DepartmentGroupVM _departmentGroupVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/OrganizationalChart/UpdateDepartmentGroup", _departmentGroupVM);
 
-            return await response.Content.ReadFromJsonAsync<bool>();
+            return await response.Content.ReadFromJsonAsync<int>();
         }
 
         //Section
@@ -74,11 +74,11 @@ namespace Data.Repositories.HR
         {
             return await _httpClient.GetFromJsonAsync<bool>($"api/OrganizationalChart/CheckContainsSectionID/{id}");
         }
-        public async Task<bool> UpdateSection(SectionVM _sectionVM)
+        public async Task<int> UpdateSection(SectionVM _sectionVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/OrganizationalChart/UpdateSection", _sectionVM);
 
-            return await response.Content.ReadFromJsonAsync<bool>();
+            return await response.Content.ReadFromJsonAsync<int>();
         }
 
         //Position
@@ -90,11 +90,11 @@ namespace Data.Repositories.HR
         {
             return await _httpClient.GetFromJsonAsync<bool>($"api/OrganizationalChart/CheckContainsPositionID/{id}");
         }
-        public async Task<bool> UpdatePosition(PositionVM _positionVM)
+        public async Task<int> UpdatePosition(PositionVM _positionVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/OrganizationalChart/UpdatePosition", _positionVM);
 
-            return await response.Content.ReadFromJsonAsync<bool>();
+            return await response.Content.ReadFromJsonAsync<int>();
         }
 
         //PositionGroup
@@ -106,11 +106,11 @@ namespace Data.Repositories.HR
         {
             return await _httpClient.GetFromJsonAsync<bool>($"api/OrganizationalChart/CheckContainsPositionGroupID/{id}");
         }
-        public async Task<bool> UpdatePositionGroup(PositionGroupVM _positionGroupVM)
+        public async Task<int> UpdatePositionGroup(PositionGroupVM _positionGroupVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/OrganizationalChart/UpdatePositionGroup", _positionGroupVM);
 
-            return await response.Content.ReadFromJsonAsync<bool>();
+            return await response.Content.ReadFromJsonAsync<int>();
         }
     }
 }

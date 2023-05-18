@@ -38,7 +38,7 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<ProfileManagamentVM>(sql, new { UserID = _UserID });
-                return Ok(result.ToList());
+                return result.ToList();
             }
         }
 
@@ -541,8 +541,8 @@ namespace D69soft.Server.Controllers.HR
             }
         }
 
-        [HttpGet("GetSysReportGroupPermis/{_Eserial}")]
-        public async Task<IEnumerable<SysRptVM>> GetSysReportGroupPermis(string _Eserial)
+        [HttpGet("GetsysServicertGroupPermis/{_Eserial}")]
+        public async Task<IEnumerable<SysRptVM>> GetsysServicertGroupPermis(string _Eserial)
         {
             var sql = "select rg.RptGrpID, rg.RptGrpName, case when sum(case when coalesce(pr.RptID,'') != '' then 1 else 0 end) > 0 then 1 else 0 end as IsChecked from SYSTEM.RptGrp rg ";
             sql += "join (select * from SYSTEM.Rpt) r on rg.RptGrpID = r.RptGrpID ";
@@ -558,8 +558,8 @@ namespace D69soft.Server.Controllers.HR
             }
         }
 
-        [HttpGet("GetSysReportPermis/{_Eserial}")]
-        public async Task<IEnumerable<SysRptVM>> GetSysReportPermis(string _Eserial)
+        [HttpGet("GetsysServicertPermis/{_Eserial}")]
+        public async Task<IEnumerable<SysRptVM>> GetsysServicertPermis(string _Eserial)
         {
             var sql = "select r.RptGrpID, r.RptID, r.RptName, case when coalesce(pr.RptID,'') != '' then 1 else 0 end as IsChecked from SYSTEM.Rpt r ";
             sql += "left join (select * from SYSTEM.PermissionRpt where UserID=@Eserial) pr on pr.RptID = r.RptID  ";
@@ -574,8 +574,8 @@ namespace D69soft.Server.Controllers.HR
             }
         }
 
-        [HttpGet("UpdatePermis/{_funcVMs}/{_subFuncVMs}/{_departmentVMs}/{_sysReportsVMs}/{_Eserial}")]
-        public async Task<bool> UpdatePermis(IEnumerable<FuncVM> _funcVMs, IEnumerable<FuncVM> _subFuncVMs, IEnumerable<DepartmentVM> _departmentVMs, IEnumerable<SysRptVM> _sysReportsVMs, string _Eserial)
+        [HttpGet("UpdatePermis/{_funcVMs}/{_subFuncVMs}/{_departmentVMs}/{_sysServicertsVMs}/{_Eserial}")]
+        public async Task<bool> UpdatePermis(IEnumerable<FuncVM> _funcVMs, IEnumerable<FuncVM> _subFuncVMs, IEnumerable<DepartmentVM> _departmentVMs, IEnumerable<SysRptVM> _sysServicertsVMs, string _Eserial)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -604,9 +604,9 @@ namespace D69soft.Server.Controllers.HR
                 await conn.ExecuteAsync(sqlDept, new { Eserial = _Eserial });
 
                 var sqlRpt = "Delete from SYSTEM.PermissionRpt where UserID=@Eserial ";
-                foreach (var sysReportsVM in _sysReportsVMs)
+                foreach (var sysServicertsVM in _sysServicertsVMs)
                 {
-                    sqlRpt += "Insert into SYSTEM.PermissionRpt(UserID, RptID) Values(@Eserial,'" + sysReportsVM.RptID + "') ";
+                    sqlRpt += "Insert into SYSTEM.PermissionRpt(UserID, RptID) Values(@Eserial,'" + sysServicertsVM.RptID + "') ";
                 }
                 await conn.ExecuteAsync(sqlRpt, new { Eserial = _Eserial });
 
@@ -725,7 +725,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("UpdateContractType")]
-        public async Task<bool> UpdateContractType(ContractTypeVM _contractTypeVM)
+        public async Task<int> UpdateContractType(ContractTypeVM _contractTypeVM)
         {
             var sql = "";
             if (_contractTypeVM.IsTypeUpdate == 0)
@@ -748,8 +748,7 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                await conn.ExecuteAsync(sql, _contractTypeVM);
-                return true;
+                return await conn.ExecuteAsync(sql, _contractTypeVM);
             }
         }
 
@@ -782,7 +781,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("UpdateWorkType")]
-        public async Task<bool> UpdateWorkType(WorkTypeVM _workTypeVM)
+        public async Task<int> UpdateWorkType(WorkTypeVM _workTypeVM)
         {
             var sql = "";
             if (_workTypeVM.IsTypeUpdate == 0)
@@ -805,8 +804,7 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                await conn.ExecuteAsync(sql, _workTypeVM);
-                return true;
+                return await conn.ExecuteAsync(sql, _workTypeVM);
             }
         }
 

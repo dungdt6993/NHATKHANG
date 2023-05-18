@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 using System.Reflection.Emit;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Data.Repositories.FIN
+namespace D69soft.Client.Services.FIN
 {
     public class InventoryService
     {
@@ -31,11 +31,11 @@ namespace Data.Repositories.FIN
         {
             return await _httpClient.GetFromJsonAsync<IEnumerable<ItemsGroupVM>>($"api/Inventory/GetItemsGroupList");
         }
-        public async Task<bool> UpdateItemsGroup(ItemsGroupVM _itemsGroupVM)
+        public async Task<int> UpdateItemsGroup(ItemsGroupVM _itemsGroupVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/Inventory/UpdateItemsGroup", _itemsGroupVM);
 
-            return await response.Content.ReadFromJsonAsync<bool>();
+            return await response.Content.ReadFromJsonAsync<int>();
         }
         public async Task<bool> ContainsIGrpCode(string id)
         {
@@ -46,11 +46,11 @@ namespace Data.Repositories.FIN
         {
             return await _httpClient.GetFromJsonAsync<IEnumerable<ItemsUnitVM>>($"api/Inventory/GetItemsUnitList");
         }
-        public async Task<bool> UpdateItemsUnit(ItemsUnitVM _itemsUnitVM)
+        public async Task<int> UpdateItemsUnit(ItemsUnitVM _itemsUnitVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/Inventory/UpdateItemsUnit", _itemsUnitVM);
 
-            return await response.Content.ReadFromJsonAsync<bool>();
+            return await response.Content.ReadFromJsonAsync<int>();
         }
         public async Task<bool> ContainsIUnitCode(string id)
         {

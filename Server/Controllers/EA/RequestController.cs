@@ -6,7 +6,7 @@ using D69soft.Shared.Models.ViewModels.EA;
 using D69soft.Shared.Models.ViewModels.FIN;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Data.Repositories.FIN
+namespace D69soft.Server.Controllers.FIN
 {
     [Route("api/[controller]")]
     [ApiController]

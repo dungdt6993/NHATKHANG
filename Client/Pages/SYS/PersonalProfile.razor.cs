@@ -1,27 +1,25 @@
-﻿using Data.Repositories.SYSTEM;
-using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using Data.Repositories.HR;
-using Model.ViewModels.HR;
-using Model.ViewModels.SYSTEM;
-using WebApp.Helpers;
+using D69soft.Client.Services;
+using D69soft.Client.Services.HR;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Client.Helpers;
 
-namespace WebApp.Pages.SYS
+namespace D69soft.Client.Pages.SYS
 {
     partial class PersonalProfile
     {
         [Inject] IJSRuntime js { get; set; }
         [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        [Inject] SysRepository sysRepo { get; set; }
-
-        [Inject] UserRepository userRepo { get; set; }
-        [Inject] PayrollService payrollRepo { get; set; }
+        [Inject] SysService sysService { get; set; }
+        [Inject] PayrollService payrollService { get; set; }
 
         protected string UserID;
 
-        bool isLoadingPage;
+        bool isLoadingScreen = true;
 
         UserSysLogVM userSysLogVM = new UserSysLogVM();
 
@@ -37,8 +35,6 @@ namespace WebApp.Pages.SYS
 
         protected override async Task OnInitializedAsync()
         {
-            isLoadingPage = true;
-
             UserID = (await authenticationStateTask).User.GetUserId();
 
             userSysLogVM.UserSysLog = UserID;
@@ -46,11 +42,11 @@ namespace WebApp.Pages.SYS
             userSysLogVM.FuncPermisID = "HR_Profile";
             userSysLogVM.isShowNotifi = 1;
 
-            userInfo = await userRepo.GetInfoUser(UserID);
+            userInfo = await sysService.GetInfoUser(UserID);
 
-            payslipUsers = await userRepo.GetPayslipUser(UserID);
+            payslipUsers = await payrollService.GetPayslipUser(UserID);
 
-            isLoadingPage = false;
+            isLoadingScreen = false;
         }
 
         private async Task InitializeModalList_SalTrn(int _period)
@@ -66,7 +62,7 @@ namespace WebApp.Pages.SYS
             filterHrVM.TrnCode = 0;
             filterHrVM.TrnSubCode = 0;
 
-            monthlyIncomeTrnOtherVMs = await payrollRepo.GetMonthlyIncomeTrnOtherList(filterHrVM);
+            monthlyIncomeTrnOtherVMs = await payrollService.GetMonthlyIncomeTrnOtherList(filterHrVM);
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalList_SalTrn");
         }
@@ -88,16 +84,11 @@ namespace WebApp.Pages.SYS
             }
             else
             {
-                if (await payrollRepo.UpdateSalaryQuestion(_payslipVM))
+                if (await payrollService.UpdateSalaryQuestion(_payslipVM))
                 {
                     if (type == 0)
                     {
                         _payslipVM.TypeUpdateSalaryQuestion = 1;
-
-                        userSysLogVM.DescUserSysLog = "Mã NV " + UserID + " gửi thắc mắc lương!";
-
-                        await sysRepo.insert_UserSysLog(userSysLogVM);
-                        await sysRepo.notifi_UserSysLogByPermis(userSysLogVM);
 
                         await js.Swal_Message("Thông báo!", "Gửi câu hỏi thành công.", SweetAlertMessageType.success);
                     }
@@ -107,11 +98,6 @@ namespace WebApp.Pages.SYS
                         {
                             _payslipVM.TypeUpdateSalaryQuestion = 0;
                             _payslipVM.SalaryQuestion = string.Empty;
-
-                            userSysLogVM.DescUserSysLog = "Mã NV " + UserID + " hủy gửi thắc mắc lương!";
-
-                            await sysRepo.insert_UserSysLog(userSysLogVM);
-                            await sysRepo.notifi_UserSysLogByPermis(userSysLogVM);
 
                             await js.Swal_Message("Thông báo!", "Hủy thành công.", SweetAlertMessageType.success);
                         }

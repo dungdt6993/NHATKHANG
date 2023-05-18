@@ -11,25 +11,29 @@ using Model.Entities.HR;
 using Model.ViewModels.DOC;
 using Utilities;
 using Model.ViewModels.KPI;
+using D69soft.Client.Services;
+using D69soft.Client.Services.HR;
+using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Client.Helpers;
+using D69soft.Shared.Utilities;
 
-namespace WebApp.Pages.HR
+namespace D69soft.Client.Pages.HR
 {
     partial class WorkPlan
     {
         [Inject] IJSRuntime js { get; set; }
-        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        [Inject] SysRepository sysRepo { get; set; }
-        [Inject] OrganizationalChartService organizationalChartRepo { get; set; }
-
-        [Inject] DutyRosterService dutyRosterRepo { get; set; }
+        [Inject] SysService sysService { get; set; }
+        [Inject] OrganizationalChartService organizationalChartService { get; set; }
+        [Inject] DutyRosterService dutyRosterService { get; set; }
 
         protected string UserID;
 
         bool isLoading;
 
-        bool isLoadingPage;
+        bool isLoadingScreen = true;
 
         //Filter
         FilterHrVM filterHrVM = new();
@@ -62,13 +66,13 @@ namespace WebApp.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            isLoadingPage = true;
+            
 
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (sysRepo.checkPermisFunc(UserID, "HR_WorkPlan"))
+            if (await sysService.CheckAccessFunc(UserID, "HR_WorkPlan"))
             {
-                await sysRepo.insert_LogUserFunc(UserID, "HR_WorkPlan");
+                await sysService.InsertLogUserFunc(UserID, "HR_WorkPlan");
             }
             else
             {
@@ -80,15 +84,15 @@ namespace WebApp.Pages.HR
 
             filterHrVM.dDate = DateTime.Now;
 
-            division_filter_list = await organizationalChartRepo.GetDivisionList(filterHrVM);
+            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
             filterHrVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
 
             filterHrVM.PositionGroupID = string.Empty;
-            position_filter_list = await organizationalChartRepo.GetPositionList();
+            position_filter_list = await organizationalChartService.GetPositionList();
 
             await GetWorkPlans();
 
-            isLoadingPage = false;
+            isLoadingScreen = false;
         }
 
         public async Task OnRangeSelect_dDate(DateRange _range)
@@ -108,7 +112,7 @@ namespace WebApp.Pages.HR
             filterHrVM.PositionGroupID = string.Empty;
             filterHrVM.arrPositionID = new string[] { };
 
-            position_filter_list = await organizationalChartRepo.GetPositionList();
+            position_filter_list = await organizationalChartService.GetPositionList();
 
             await GetWorkPlans();
 
@@ -139,7 +143,7 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            workPlanVMs = await dutyRosterRepo.GetWorkPlans(filterHrVM);
+            workPlanVMs = await dutyRosterService.GetWorkPlans(filterHrVM);
 
             isLoading = false;
         }
@@ -202,7 +206,7 @@ namespace WebApp.Pages.HR
             {
                 workPlanVM.WorkPlanDesc = await QuillHtml.GetHTML();
 
-                await dutyRosterRepo.UpdateWorkPlan(workPlanVM);
+                await dutyRosterService.UpdateWorkPlan(workPlanVM);
                 workPlanVM.IsTypeUpdate = 1;
 
                 await GetWorkPlans();
@@ -214,7 +218,7 @@ namespace WebApp.Pages.HR
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
                 {
-                    int affectedRows = await dutyRosterRepo.UpdateWorkPlan(workPlanVM);
+                    int affectedRows = await dutyRosterService.UpdateWorkPlan(workPlanVM);
 
                     if (affectedRows > 0)
                     {
@@ -246,7 +250,7 @@ namespace WebApp.Pages.HR
             {
                 _workPlanVM.WorkPlanIsDone = true;
 
-                await dutyRosterRepo.UpdateWorkPlanIsDone(_workPlanVM);
+                await dutyRosterService.UpdateWorkPlanIsDone(_workPlanVM);
 
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
             }
@@ -256,7 +260,7 @@ namespace WebApp.Pages.HR
                 {
                     _workPlanVM.WorkPlanIsDone = false;
 
-                    await dutyRosterRepo.UpdateWorkPlanIsDone(_workPlanVM);
+                    await dutyRosterService.UpdateWorkPlanIsDone(_workPlanVM);
 
                     await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
                 }

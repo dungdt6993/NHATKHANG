@@ -1,11 +1,9 @@
 ﻿@page "/DOC/DOCForm"
-@using Blazored.FluentValidation
-@using Utilities;
 
 @inject NavigationManager MyNavigationManager
 
 <Loading isLoading="@isLoading"></Loading>
-<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Document">
     <div class="modal-dialog modal-lg">
@@ -219,7 +217,7 @@
         <div class="card card-purple card-outline">
 
             <div class="card-header text-right">
-                @if (sysRepo.checkAccessSubFunc(UserID, "DOC_DOCForm_Update"))
+                @if (sysService.CheckAccessSubFunc(UserID, "DOC_DOCForm_Update").Result)
                 {
                     <button type="button" class="btn btn-success" @onclick="()=>InitializeModalUpdate_Document(0, documentVM)"><i class="fa-solid fa-xl fa-plus"></i> Cật nhật</button>
                 }
@@ -235,7 +233,7 @@
                                 <th>Tên tài liệu</th>
                                 <th class="text-center">File</th>
                                 <th>Ghi chú</th>
-                                @if (sysRepo.checkAccessSubFunc(UserID, "DOC_DOCForm_Update"))
+                                @if (sysService.CheckAccessSubFunc(UserID, "DOC_DOCForm_Update").Result)
                                 {
                                     <th></th>
                                 }
@@ -284,7 +282,7 @@
                                         }
                                     </td>
                                     <td>@_documentVM.DocNote</td>
-                                    @if (sysRepo.checkAccessSubFunc(UserID, "DOC_DOCForm_Update"))
+                                    @if (sysService.CheckAccessSubFunc(UserID, "DOC_DOCForm_Update").Result)
                                     {
                                         <td class="text-center">
                                             <button class="btn btn-default btn-xs" @onclick="(() => InitializeModalUpdate_Document(1, _documentVM))"><i class="fa-solid fa-pen"></i></button>

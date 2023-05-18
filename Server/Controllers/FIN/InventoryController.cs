@@ -11,7 +11,7 @@ using System.Threading.Task<ActionResults;
 using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.FIN;
 
-namespace Data.Repositories.FIN
+namespace D69soft.Server.Controllers.FIN
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -67,7 +67,7 @@ namespace Data.Repositories.FIN
         }
 
         [HttpPost("UpdateItemsGroup")]
-        public async Task<ActionResult<bool>> UpdateItemsGroup(ItemsGroupVM _itemsGroupVM)
+        public async Task<ActionResult<int>> UpdateItemsGroup(ItemsGroupVM _itemsGroupVM)
         {
             var sql = "";
             if (_itemsGroupVM.IsTypeUpdate == 0)
@@ -90,8 +90,7 @@ namespace Data.Repositories.FIN
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                await conn.ExecuteAsync(sql, _itemsGroupVM);
-                return true;
+                return await conn.ExecuteAsync(sql, _itemsGroupVM); ;
             }
         }
 
@@ -123,7 +122,7 @@ namespace Data.Repositories.FIN
         }
 
         [HttpPost("UpdateItemsUnit")]
-        public async Task<ActionResult<bool>> UpdateItemsUnit(ItemsUnitVM _itemsUnitVM)
+        public async Task<ActionResult<int>> UpdateItemsUnit(ItemsUnitVM _itemsUnitVM)
         {
             var sql = "";
             if (_itemsUnitVM.IsTypeUpdate == 0)
@@ -146,8 +145,7 @@ namespace Data.Repositories.FIN
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                await conn.ExecuteAsync(sql, _itemsUnitVM);
-                return true;
+                return await conn.ExecuteAsync(sql, _itemsUnitVM);
             }
         }
 

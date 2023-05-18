@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 
-namespace WebApp.Pages.HR
+namespace D69soft.Client.Pages.HR
 {
     partial class AttendanceRecord
     {
@@ -15,20 +15,20 @@ namespace WebApp.Pages.HR
         [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
 
-        [Inject] SysRepository sysRepo { get; set; }
-        [Inject] UserRepository userRepo { get; set; }
+        [Inject] SysService sysService { get; set; }
+        [Inject] AuthService authService { get; set; }
 
-        [Inject] OrganizationalChartService organizationalChartRepo { get; set; }
+        [Inject] OrganizationalChartService organizationalChartService { get; set; }
 
-        [Inject] PayrollService payrollRepo { get; set; }
-        [Inject] DutyRosterService dutyRosterRepo { get; set; }
-        [Inject] DayOffService dayOffRepo { get; set; }
+        [Inject] PayrollService payrollService { get; set; }
+        [Inject] DutyRosterService dutyRosterService { get; set; }
+        [Inject] DayOffService dayOffService { get; set; }
 
         protected string UserID;
 
         bool isLoading;
 
-        bool isLoadingPage;
+        bool isLoadingScreen = true;
 
         //Filter
         FilterHrVM filterHrVM = new();
@@ -58,13 +58,13 @@ namespace WebApp.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            isLoadingPage = true;
+            
 
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (sysRepo.checkPermisFunc(UserID, "HR_AttendanceRecord"))
+            if (await sysService.CheckAccessFunc(UserID, "HR_AttendanceRecord"))
             {
-                await sysRepo.insert_LogUserFunc(UserID, "HR_AttendanceRecord");
+                await sysService.InsertLogUserFunc(UserID, "HR_AttendanceRecord");
             }
             else
             {
@@ -74,45 +74,45 @@ namespace WebApp.Pages.HR
             //Initialize Filter
             filterHrVM.UserID = arVM.UserID = UserID;
 
-            year_filter_list = await sysRepo.GetYearFilter();
+            year_filter_list = await sysService.GetYearFilter();
             filterHrVM.Year = DateTime.Now.Year;
 
-            month_filter_list = await sysRepo.GetMonthFilter();
+            month_filter_list = await sysService.GetMonthFilter();
             filterHrVM.Month = DateTime.Now.Month;
 
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
 
             //Initialize AttendanceRecordDutyRoster
-            await dutyRosterRepo.InitializeAttendanceRecordDutyRoster(filterHrVM);
+            await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterHrVM);
 
             //Initialize DODefault
-            await dayOffRepo.DayOff_calcDODefault(filterHrVM, 0);
+            await dayOffService.DayOff_calcDODefault(filterHrVM, 0);
 
             //Initialize PHDefault
-            await dayOffRepo.DayOff_calcPHDefault(filterHrVM, 0);
+            await dayOffService.DayOff_calcPHDefault(filterHrVM, 0);
 
-            division_filter_list = await organizationalChartRepo.GetDivisionList(filterHrVM);
+            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
             filterHrVM.DivisionID = division_filter_list.Count()>0?division_filter_list.ElementAt(0).DivisionID:string.Empty;
 
             filterHrVM.SectionID = string.Empty;
-            section_filter_list = await organizationalChartRepo.GetSectionList();
+            section_filter_list = await organizationalChartService.GetSectionList();
 
             filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartRepo.GetDepartmentList(filterHrVM);
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
 
             filterHrVM.PositionGroupID = string.Empty;
-            position_filter_list = await organizationalChartRepo.GetPositionList();
+            position_filter_list = await organizationalChartService.GetPositionList();
 
             //filter Eserial = User
-            profileUserVM = await dutyRosterRepo.GetProfileUser(filterHrVM);
+            profileUserVM = await dutyRosterService.GetProfileUser(filterHrVM);
 
             filterHrVM.DivisionID = profileUserVM.DivisionID;
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
             filterHrVM.Eserial = UserID;
 
-            arVMs = await dutyRosterRepo.GetAttendanceRecordList(filterHrVM);
+            arVMs = await dutyRosterService.GetAttendanceRecordList(filterHrVM);
 
             isLoadingPage = false;
         }
@@ -126,13 +126,13 @@ namespace WebApp.Pages.HR
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
 
             //Initialize AttendanceRecordDutyRoster
-            await dutyRosterRepo.InitializeAttendanceRecordDutyRoster(filterHrVM);
+            await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterHrVM);
 
             //Initialize DODefault
-            await dayOffRepo.DayOff_calcDODefault(filterHrVM,0);
+            await dayOffService.DayOff_calcDODefault(filterHrVM,0);
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
             filterHrVM.Eserial = eserial_filter_list.Count() > 0 ? eserial_filter_list.ElementAt(0).Eserial : string.Empty;
 
             arVMs = null;
@@ -151,13 +151,13 @@ namespace WebApp.Pages.HR
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
 
             //Initialize AttendanceRecordDutyRoster
-            await dutyRosterRepo.InitializeAttendanceRecordDutyRoster(filterHrVM);
+            await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterHrVM);
 
             //Initialize DODefault
-            await dayOffRepo.DayOff_calcDODefault(filterHrVM,0);
+            await dayOffService.DayOff_calcDODefault(filterHrVM,0);
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
             filterHrVM.Eserial = eserial_filter_list.Count() > 0 ? eserial_filter_list.ElementAt(0).Eserial : string.Empty;
 
             arVMs = null;
@@ -174,14 +174,14 @@ namespace WebApp.Pages.HR
             filterHrVM.DivisionID = value;
 
             filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartRepo.GetDepartmentList(filterHrVM);
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
 
             filterHrVM.PositionGroupID = string.Empty;
             filterHrVM.arrPositionID = new string[] { };
-            position_filter_list = await organizationalChartRepo.GetPositionList();
+            position_filter_list = await organizationalChartService.GetPositionList();
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
             filterHrVM.Eserial = eserial_filter_list.Count() > 0 ? eserial_filter_list.ElementAt(0).Eserial : string.Empty;
 
             arVMs = null;
@@ -201,10 +201,10 @@ namespace WebApp.Pages.HR
 
             filterHrVM.PositionGroupID = string.Empty;
             filterHrVM.arrPositionID = new string[] { };
-            position_filter_list = await organizationalChartRepo.GetPositionList();
+            position_filter_list = await organizationalChartService.GetPositionList();
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
             filterHrVM.Eserial = eserial_filter_list.Count() > 0 ? eserial_filter_list.ElementAt(0).Eserial : string.Empty;
 
             arVMs = null;
@@ -224,7 +224,7 @@ namespace WebApp.Pages.HR
             filterHrVM.arrPositionID = new string[] { };
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
             filterHrVM.Eserial = eserial_filter_list.Count()>0?eserial_filter_list.ElementAt(0).Eserial:string.Empty;
 
             arVMs = null;
@@ -259,7 +259,7 @@ namespace WebApp.Pages.HR
         private async void reload_filter_eserial()
         {
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
             filterHrVM.Eserial = eserial_filter_list.ElementAt(0).Eserial;
 
             StateHasChanged();
@@ -284,7 +284,7 @@ namespace WebApp.Pages.HR
 
             if (eserial_filter_list.Count() > 0)
             {
-                arVMs = await dutyRosterRepo.GetAttendanceRecordList(filterHrVM);
+                arVMs = await dutyRosterService.GetAttendanceRecordList(filterHrVM);
             }
 
             isLoading = false;
@@ -313,7 +313,7 @@ namespace WebApp.Pages.HR
                 _dutyRosterVM.SecondShiftID = arrShift[1].ToString();
             }
 
-            var result = await dutyRosterRepo.UpdateShiftWork(_dutyRosterVM);
+            var result = await dutyRosterService.UpdateShiftWork(_dutyRosterVM);
 
             switch (result)
             {
@@ -328,7 +328,7 @@ namespace WebApp.Pages.HR
                     await js.Swal_Message("Cảnh báo!", "Sử dụng ký hiệu <strong>OFF</strong> để nhập ngày nghỉ.", SweetAlertMessageType.warning);
                     break;
                 default:
-                    DutyRosterVM tmpDutyRosterVM = await dutyRosterRepo.GetDutyRosterByDay(filterHrVM, _dutyRosterVM);
+                    DutyRosterVM tmpDutyRosterVM = await dutyRosterService.GetDutyRosterByDay(filterHrVM, _dutyRosterVM);
                     _dutyRosterVM.WorkShift = tmpDutyRosterVM.WorkShift;
                     _dutyRosterVM.ColorHEX = tmpDutyRosterVM.ColorHEX;
                     _dutyRosterVM.inputLoading_updateShift = false;
@@ -349,7 +349,7 @@ namespace WebApp.Pages.HR
 
             _arVM.Explain = value;
 
-            await dutyRosterRepo.UpdateExplain(_arVM);
+            await dutyRosterService.UpdateExplain(_arVM);
 
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
@@ -364,7 +364,7 @@ namespace WebApp.Pages.HR
 
             _arVM.ExplainHOD = value;
 
-            await dutyRosterRepo.UpdateExplainHOD(_arVM);
+            await dutyRosterService.UpdateExplainHOD(_arVM);
 
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
@@ -379,7 +379,7 @@ namespace WebApp.Pages.HR
 
             _arVM.ExplainHR = value;
 
-            await dutyRosterRepo.UpdateExplainHR(_arVM);
+            await dutyRosterService.UpdateExplainHR(_arVM);
 
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
@@ -392,7 +392,7 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            await dutyRosterRepo.ConfirmExplain(_arVM);
+            await dutyRosterService.ConfirmExplain(_arVM);
 
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
@@ -405,7 +405,7 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            await dutyRosterRepo.ConfirmLateSoon(_arVM);
+            await dutyRosterService.ConfirmLateSoon(_arVM);
 
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
@@ -420,9 +420,9 @@ namespace WebApp.Pages.HR
 
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn cập nhật dữ liệu vân tay?", SweetAlertMessageType.question))
             {
-                await dutyRosterRepo.CalcFingerData(filterHrVM);
+                await dutyRosterService.CalcFingerData(filterHrVM);
 
-                arVMs = await dutyRosterRepo.GetAttendanceRecordList(filterHrVM);
+                arVMs = await dutyRosterService.GetAttendanceRecordList(filterHrVM);
 
                 await js.Swal_Message("Thông báo.", "Cập nhật thành công!", SweetAlertMessageType.success);
             }
@@ -436,7 +436,7 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            dayOffVMs = await dayOffRepo.GetDayOffDetail(filterHrVM.Period, _eserial);
+            dayOffVMs = await dayOffService.GetDayOffDetail(filterHrVM.Period, _eserial);
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModal_DayOffDetail");
 

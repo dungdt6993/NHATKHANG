@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.HR;
 
-namespace Data.Repositories.HR
+namespace D69soft.Server.Controllers.HR
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -256,8 +256,7 @@ namespace Data.Repositories.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var affectedRows = await conn.ExecuteAsync(sql, _shiftVM);
-                return affectedRows;
+                return await conn.ExecuteAsync(sql, _shiftVM);
             }
         }
 

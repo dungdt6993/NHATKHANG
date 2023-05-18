@@ -16,7 +16,7 @@ namespace D69soft.Client.Shared
         //{
         //    UserID = (await authenticationStateTask).User.GetUserId();
 
-        //    notifications = await sysRepo.GetNotifications(UserID);
+        //    notifications = await sysService.GetNotifications(UserID);
         //}
 
         private async Task Logout()
@@ -26,8 +26,8 @@ namespace D69soft.Client.Shared
 
         //private async Task SeenNotificationsALL()
         //{
-        //    await sysRepo.SeenNotificationsALL(UserID);
-        //    notifications = await sysRepo.GetNotifications(UserID);
+        //    await sysService.SeenNotificationsALL(UserID);
+        //    notifications = await sysService.GetNotifications(UserID);
         //}
     }
 }

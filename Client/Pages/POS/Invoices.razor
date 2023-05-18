@@ -1,6 +1,6 @@
 ﻿@page "/POS/Invoices"
 
-<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 <Loading isLoading="@isLoading"></Loading>
 
 <Modal_RptViewer ReportName=@filterPosVM.ReportName></Modal_RptViewer>
@@ -163,7 +163,7 @@
 								@*
 							<button type="button" class="btn btn-info" @onclick=@(() => InitializeModalUpdate_Voucher(stockVoucherVM.VTypeID,3))><i class="fa-solid fa-file-invoice"></i> Xem</button>
 
-							@if (sysRepo.checkAccessSubFunc(filterPosVM.UserID, "POS_Invoices_Update") && !invoiceVM.INVActive)
+							@if (sysService.CheckAccessSubFunc(filterPosVM.UserID, "POS_Invoices_Update") && !invoiceVM.INVActive)
 							{
 							<button type="button" class="btn btn-secondary" @onclick="(() => InitializeModalUpdate_Voucher(stockVoucherVM.VTypeID,5))"><i class="fa-solid fa-copy"></i> Sao chép</button>
 
@@ -171,12 +171,12 @@
 							}*@
 								@if (!invoiceVM.Reference_VActive)
 								{
-									@if (sysRepo.checkAccessSubFunc(filterPosVM.UserID, "POS_Invoices_Active") && !invoiceVM.INVActive)
+									@if (sysService.CheckAccessSubFunc(filterPosVM.UserID, "POS_Invoices_Active").Result && !invoiceVM.INVActive)
 									{
 										<button type="button" class="btn btn-secondary" @onclick="(() => ActiveInvoice(true))"><i class="fa-solid fa-file-pen"></i> Ghi sổ</button>
 									}
 
-									@if (sysRepo.checkAccessSubFunc(filterPosVM.UserID, "POS_Invoices_CancelActive") && invoiceVM.INVActive)
+									@if (sysService.CheckAccessSubFunc(filterPosVM.UserID, "POS_Invoices_CancelActive").Result && invoiceVM.INVActive)
 									{
 										<button type="button" class="btn btn-secondary" @onclick="(() => ActiveInvoice(false))"><i class="fa-solid fa-file-circle-xmark"></i> Bỏ ghi sổ</button>
 									}

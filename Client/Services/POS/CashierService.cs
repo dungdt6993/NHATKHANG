@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Shared.Models.Entities.POS;
 
-namespace Data.Repositories.POS
+namespace D69soft.Client.Services.POS
 {
     public class CashierService
     {

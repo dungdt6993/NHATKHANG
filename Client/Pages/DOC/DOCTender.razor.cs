@@ -1,42 +1,35 @@
-﻿using Data.Repositories.DOC;
-using Data.Repositories.HR;
-using Data.Repositories.SYSTEM;
-using Model.Entities.HR;
-using Model.ViewModels.DOC;
-using Model.ViewModels.FIN;
-using Model.ViewModels.HR;
-using Utilities;
-using WebApp.Helpers;
-using DevExpress.CodeParser;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
-using System.IO;
-using Data.Repositories.OP;
 using Model.ViewModels.OP;
+using D69soft.Client.Services;
+using D69soft.Client.Services.HR;
+using D69soft.Client.Services.OP;
+using D69soft.Client.Services.DOC;
+using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Models.ViewModels.DOC;
+using D69soft.Client.Helpers;
+using D69soft.Shared.Utilities;
 
-namespace WebApp.Pages.DOC
+namespace D69soft.Client.Pages.DOC
 {
     partial class DOCTender
     {
         [Inject] IJSRuntime js { get; set; }
-        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        [Inject] SysRepository sysRepo { get; set; }
-        [Inject] IWebHostEnvironment env { get; set; }
-
-        [Inject] OrganizationalChartService organizationalChartRepo { get; set; }
-
-        [Inject] OPService opRepository { get; set; }
-        [Inject] DocumentService docRepo { get; set; }
+        [Inject] SysService sysService { get; set; }
+        [Inject] OrganizationalChartService organizationalChartService { get; set; }
+        [Inject] OPService opServicesitory { get; set; }
+        [Inject] DocumentService documentService { get; set; }
 
         protected string UserID;
 
         bool isLoading;
 
-        bool isLoadingPage;
+        bool isLoadingScreen = true;
 
         //Filter
         FilterHrVM filterHrVM = new();
@@ -62,13 +55,13 @@ namespace WebApp.Pages.DOC
 
         protected override async Task OnInitializedAsync()
         {
-            isLoadingPage = true;
+            
 
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (sysRepo.checkPermisFunc(UserID, "DOC_DOCTender"))
+            if (await sysService.CheckAccessFunc(UserID, "DOC_DOCTender"))
             {
-                await sysRepo.insert_LogUserFunc(UserID, "DOC_DOCTender");
+                await sysService.InsertLogUserFunc(UserID, "DOC_DOCTender");
             }
             else
             {
@@ -80,15 +73,15 @@ namespace WebApp.Pages.DOC
 
             filterHrVM.GroupType = "DocTender";
 
-            division_filter_list = await organizationalChartRepo.GetDivisionList(filterHrVM);
+            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
             filterHrVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
 
             filterHrVM.TenderCode = filterHrVM.DepartmentID = string.Empty;
-            tender_filter_list = await opRepository.GetTenders(filterHrVM);
+            tender_filter_list = await opServicesitory.GetTenders(filterHrVM);
 
-            doctype_filter_list = await docRepo.GetDocTypeList(filterHrVM);
+            doctype_filter_list = await documentService.GetDocTypes(filterHrVM);
 
-            isLoadingPage = false;
+            isLoadingScreen = false;
         }
 
         private async void onchange_filter_division(string value)
@@ -98,7 +91,7 @@ namespace WebApp.Pages.DOC
             filterHrVM.DivisionID = value;
 
             filterHrVM.TenderCode = string.Empty;
-            tender_filter_list = await opRepository.GetTenders(filterHrVM);
+            tender_filter_list = await opServicesitory.GetTenders(filterHrVM);
 
             documentVMs = null;
 
@@ -148,7 +141,7 @@ namespace WebApp.Pages.DOC
         {
             isLoading = true;
 
-            documentVMs = await docRepo.GetDocList(filterHrVM);
+            documentVMs = await documentService.GetDocs(filterHrVM);
 
             isLoading = false;
         }
@@ -211,7 +204,7 @@ namespace WebApp.Pages.DOC
             {
                 if (documentVM.IsDelFileScan && !String.IsNullOrEmpty(documentVM.FileScan))
                 {
-                    LibraryFunc.DelFileFrom(Path.Combine(env.ContentRootPath, $"{UrlDirectory.Upload_DOC_Private}{documentVM.FileScan}"));
+                    LibraryFunc.DelFileFrom(Path.Combine(Directory.GetCurrentDirectory(), $"{UrlDirectory.Upload_DOC_Private}{documentVM.FileScan}"));
                     documentVM.FileScan = String.Empty;
                 }
 
@@ -226,7 +219,7 @@ namespace WebApp.Pages.DOC
                     documentVM.FileScan = filename + ".pdf";
                 }
 
-                await docRepo.UpdateDocument(documentVM);
+                await documentService.UpdateDocument(documentVM);
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Document");
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
@@ -237,9 +230,9 @@ namespace WebApp.Pages.DOC
                 {
                     if (!String.IsNullOrEmpty(documentVM.FileScan))
                     {
-                        LibraryFunc.DelFileFrom(Path.Combine(env.ContentRootPath, $"{UrlDirectory.Upload_DOC_Private}{documentVM.FileScan}"));
+                        LibraryFunc.DelFileFrom(Path.Combine(Directory.GetCurrentDirectory(), $"{UrlDirectory.Upload_DOC_Private}{documentVM.FileScan}"));
                     }
-                    await docRepo.UpdateDocument(documentVM);
+                    await documentService.UpdateDocument(documentVM);
 
                     await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Document");
                     await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
@@ -309,7 +302,7 @@ namespace WebApp.Pages.DOC
 
             if (doctypeVM.IsTypeUpdate != 2)
             {
-                await docRepo.UpdateDocType(doctypeVM);
+                await documentService.UpdateDocType(doctypeVM);
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_DocType");
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
@@ -318,12 +311,12 @@ namespace WebApp.Pages.DOC
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
                 {
-                    int affectedRows = await docRepo.UpdateDocType(doctypeVM);
+                    int affectedRows = await documentService.UpdateDocType(doctypeVM);
 
                     if (affectedRows > 0)
                     {
                         doctypeVM.DocTypeID = 0;
-                        doctype_filter_list = await docRepo.GetDocTypeList(filterHrVM);
+                        doctype_filter_list = await documentService.GetDocTypes(filterHrVM);
 
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_DocType");
                         await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
@@ -340,7 +333,7 @@ namespace WebApp.Pages.DOC
                 }
             }
 
-            doctype_filter_list = await docRepo.GetDocTypeList(filterHrVM);
+            doctype_filter_list = await documentService.GetDocTypes(filterHrVM);
 
             isLoading = false;
         }

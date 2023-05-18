@@ -1,35 +1,31 @@
-﻿using Data.Repositories.HR;
-using Data.Repositories.SYSTEM;
-using Model.ViewModels.FIN;
-using Model.ViewModels.HR;
-using Model.ViewModels.SYSTEM;
-using WebApp.Helpers;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
-using Model.Entities.HR;
+using D69soft.Client.Services;
+using D69soft.Client.Services.HR;
+using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Client.Helpers;
 
-namespace WebApp.Pages.HR
+namespace D69soft.Client.Pages.HR
 {
     partial class AgreementText
     {
         [Inject] IJSRuntime js { get; set; }
+        [Inject] NavigationManager navigationManager { get; set; }
         [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        [Inject] NavigationManager navigationManager { get; set; }
-
-        [Inject] SysRepository sysRepo { get; set; }
-
-        [Inject] OrganizationalChartService organizationalChartRepo { get; set; }
-
-        [Inject] DutyRosterService dutyRosterRepo { get; set; }
-        [Inject] AgreementTextService agreementTextRepo { get; set; }
+        [Inject] SysService sysService { get; set; }
+        [Inject] OrganizationalChartService organizationalChartService { get; set; }
+        [Inject] DutyRosterService dutyRosterService { get; set; }
+        [Inject] AgreementTextService agreementTextService { get; set; }
 
         protected string UserID;
 
         bool isLoading;
 
-        bool isLoadingPage;
+        bool isLoadingScreen = true;
 
         FilterHrVM filterHrVM = new();
 
@@ -63,13 +59,13 @@ namespace WebApp.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            isLoadingPage = true;
+            
 
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (sysRepo.checkPermisFunc(UserID, "HR_AgreementText"))
+            if (await sysService.CheckAccessFunc(UserID, "HR_AgreementText"))
             {
-                await sysRepo.insert_LogUserFunc(UserID, "HR_AgreementText");
+                await sysService.InsertLogUserFunc(UserID, "HR_AgreementText");
             }
             else
             {
@@ -79,42 +75,42 @@ namespace WebApp.Pages.HR
             //Initialize Filter
             filterHrVM.UserID = UserID;
 
-            year_filter_list = await sysRepo.GetYearFilter();
+            year_filter_list = await sysService.GetYearFilter();
             filterHrVM.Year = DateTime.Now.Year;
 
-            month_filter_list = await sysRepo.GetMonthFilter();
+            month_filter_list = await sysService.GetMonthFilter();
             filterHrVM.Month = DateTime.Now.Month;
 
-            division_filter_list = await organizationalChartRepo.GetDivisionList(filterHrVM);
+            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
             filterHrVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
 
             filterHrVM.SectionID = string.Empty;
-            section_filter_list = await organizationalChartRepo.GetSectionList();
+            section_filter_list = await organizationalChartService.GetSectionList();
 
             filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartRepo.GetDepartmentList(filterHrVM);
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
 
             filterHrVM.PositionGroupID = string.Empty;
-            position_filter_list = await organizationalChartRepo.GetPositionList();
+            position_filter_list = await organizationalChartService.GetPositionList();
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
-            agreementtexttype_filter_list = await agreementTextRepo.GetAgreementTextTypeList();
+            agreementtexttype_filter_list = await agreementTextService.GetAgreementTextTypeList();
 
-            isLoadingPage = false;
+            isLoadingScreen = false;
         }
 
         private async void onchange_filter_month(int value)
         {
             isLoading = true;
 
-            await dutyRosterRepo.InitializeAttendanceRecordDutyRoster(filterHrVM);
+            await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterHrVM);
 
             filterHrVM.Month = value;
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
             agreementTextVMs = null;
 
             isLoading = false;
@@ -126,12 +122,12 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            await dutyRosterRepo.InitializeAttendanceRecordDutyRoster(filterHrVM);
+            await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterHrVM);
 
             filterHrVM.Year = value;
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
             agreementTextVMs = null;
 
             isLoading = false;
@@ -155,13 +151,13 @@ namespace WebApp.Pages.HR
             filterHrVM.is2625 = divisionFilterVM.is2625;
 
             filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartRepo.GetDepartmentList(filterHrVM);
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
 
             filterHrVM.PositionGroupID = string.Empty;
             filterHrVM.arrPositionID = new string[] { };
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
             agreementTextVMs = null;
 
@@ -180,7 +176,7 @@ namespace WebApp.Pages.HR
             filterHrVM.arrPositionID = new string[] { };
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
             agreementTextVMs = null;
 
@@ -196,7 +192,7 @@ namespace WebApp.Pages.HR
             filterHrVM.SectionID = value;
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
             agreementTextVMs = null;
 
@@ -241,7 +237,7 @@ namespace WebApp.Pages.HR
         private async void reload_filter_eserial()
         {
             filterHrVM.Eserial = String.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
             StateHasChanged();
         }
@@ -263,7 +259,7 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            agreementTextVMs = await agreementTextRepo.GetAgreementTextList(filterHrVM);
+            agreementTextVMs = await agreementTextService.GetAgreementTextList(filterHrVM);
 
             isLoading = false;
         }
@@ -277,23 +273,23 @@ namespace WebApp.Pages.HR
 
         private async Task PrintAgreementText()
         {
-            IEnumerable<SysRptVM> sysReports = await agreementTextRepo.PrintAgreementText(agreementTextVMs.Where(x => x.IsChecked == true), UserID);
+            IEnumerable<SysRptVM> sysServicerts = await agreementTextService.PrintAgreementText(agreementTextVMs.Where(x => x.IsChecked == true), UserID);
 
-            foreach (var sysReport in sysReports)
+            foreach (var sysServicert in sysServicerts)
             {
-                await js.InvokeAsync<object>("openInNewTab", "/RPT/SysReportViewer/" + sysReport.RptUrl + "");
+                await js.InvokeAsync<object>("openInNewTab", "/RPT/sysServicertViewer/" + sysServicert.RptUrl + "");
             }
 
             filterHrVM.IsChecked = false;
-            agreementTextVMs = await agreementTextRepo.GetAgreementTextList(filterHrVM);
+            agreementTextVMs = await agreementTextService.GetAgreementTextList(filterHrVM);
         }
 
         private async Task InitializeModal_AgreementText()
         {
             isLoading = true;
 
-            adjustProfileVMs = await agreementTextRepo.GetAdjustProfileList();
-            adjustProfileRptVMs = await agreementTextRepo.GetAdjustProfileRptList();
+            adjustProfileVMs = await agreementTextService.GetAdjustProfileList();
+            adjustProfileRptVMs = await agreementTextService.GetAdjustProfileRptList();
 
             isLoading = false;
         }
@@ -306,7 +302,7 @@ namespace WebApp.Pages.HR
 
             adjustProfileVM = _adjustProfileVM;
 
-            sysRptVMs = await sysRepo.GetSysReportList("HR",0, UserID);
+            sysRptVMs = await sysService.GetSysReportList("HR",0, UserID);
 
             adjustProfileVM.arrRptID = adjustProfileRptVMs.Where(x => x.AdjustProfileID == _adjustProfileVM.AdjustProfileID).Select(x => x.RptID).ToArray();
             adjustProfileVM.strRpt = string.Join(",", (int[])adjustProfileVM.arrRptID);
@@ -336,20 +332,20 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            await agreementTextRepo.UpdateAdjustProfile(adjustProfileVM);
+            await agreementTextService.UpdateAdjustProfile(adjustProfileVM);
 
             await js.InvokeAsync<object>("CloseModal", "#InitializeModal_AdjustProfileRpt");
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
-            adjustProfileVMs = await agreementTextRepo.GetAdjustProfileList();
-            adjustProfileRptVMs = await agreementTextRepo.GetAdjustProfileRptList();
+            adjustProfileVMs = await agreementTextService.GetAdjustProfileList();
+            adjustProfileRptVMs = await agreementTextService.GetAdjustProfileRptList();
 
             isLoading = false;
         }
 
         private async Task CloseAdjustProfileRpt()
         {
-            adjustProfileVMs = await agreementTextRepo.GetAdjustProfileList();
+            adjustProfileVMs = await agreementTextService.GetAdjustProfileList();
         }
     }
 }

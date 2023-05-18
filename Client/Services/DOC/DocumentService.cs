@@ -2,7 +2,7 @@
 using D69soft.Shared.Models.ViewModels.HR;
 using System.Net.Http.Json;
 
-namespace Data.Repositories.DOC
+namespace D69soft.Client.Services.DOC
 {
     public class DocumentService
     {
@@ -34,11 +34,11 @@ namespace Data.Repositories.DOC
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<bool> UpdateDocType(DocumentTypeVM _documentTypeVM)
+        public async Task<int> UpdateDocType(DocumentTypeVM _documentTypeVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/Document/UpdateDocType", _documentTypeVM);
 
-            return await response.Content.ReadFromJsonAsync<bool>();
+            return await response.Content.ReadFromJsonAsync<int>();
         }
 
     }

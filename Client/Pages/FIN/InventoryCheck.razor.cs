@@ -1,36 +1,36 @@
 ﻿using BlazorDateRangePicker;
 using Blazored.Typeahead;
-using Data.Repositories.FIN;
-using Data.Repositories.HR;
-using Data.Repositories.SYSTEM;
-using Model.ViewModels.FIN;
-using Model.ViewModels.HR;
-using Utilities;
-using WebApp.Helpers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using System.Text.RegularExpressions;
+using D69soft.Client.Services;
+using D69soft.Client.Services.HR;
+using D69soft.Client.Services.FIN;
+using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Client.Helpers;
+using D69soft.Shared.Utilities;
 
-namespace WebApp.Pages.FIN
+namespace D69soft.Client.Pages.FIN
 {
     partial class InventoryCheck
     {
         [Inject] IJSRuntime js { get; set; }
-        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
-        [Inject] SysRepository sysRepo { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        [Inject] OrganizationalChartService organizationalChartRepo { get; set; }
-        [Inject] VoucherService voucherRepo { get; set; }
-        [Inject] PurchasingService purchasingRepo { get; set; }
-        [Inject] InventoryService inventoryRepo { get; set; }
+        [Inject] SysService sysService { get; set; }
+        [Inject] OrganizationalChartService organizationalChartService { get; set; }
+        [Inject] VoucherService voucherService { get; set; }
+        [Inject] PurchasingService purchasingService { get; set; }
+        [Inject] InventoryService inventoryService { get; set; }
 
         protected string UserID;
 
         bool isLoading;
 
-        bool isLoadingPage;
+        bool isLoadingScreen = true;
 
         //Filter
         FilterFinVM filterFinVM = new();
@@ -76,13 +76,13 @@ namespace WebApp.Pages.FIN
 
         protected override async Task OnInitializedAsync()
         {
-            isLoadingPage = true;
+            
 
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (sysRepo.checkPermisFunc(UserID, "STOCK_InventoryCheck"))
+            if (await sysService.CheckAccessFunc(UserID, "STOCK_InventoryCheck"))
             {
-                await sysRepo.insert_LogUserFunc(UserID, "STOCK_InventoryCheck");
+                await sysService.InsertLogUserFunc(UserID, "STOCK_InventoryCheck");
             }
             else
             {
@@ -91,7 +91,7 @@ namespace WebApp.Pages.FIN
 
             filterHrVM.UserID = UserID;
 
-            filter_divisionVMs = await organizationalChartRepo.GetDivisionList(filterHrVM);
+            filter_divisionVMs = await organizationalChartService.GetDivisionList(filterHrVM);
             filterFinVM.DivisionID = filter_divisionVMs.Count() > 0 ? filter_divisionVMs.ElementAt(0).DivisionID : string.Empty;
 
             filterFinVM.FuncID = "STOCK_InventoryCheck";
@@ -101,12 +101,12 @@ namespace WebApp.Pages.FIN
             filterFinVM.StartDate = DateTime.Now;
             filterFinVM.EndDate = DateTime.Now;
 
-            filter_vTypeVMs = await voucherRepo.GetVTypeVMs("STOCK_InventoryCheck");
-            filter_vSubTypeVMs = await voucherRepo.GetVSubTypeVMs("STOCK_InventoryCheck");
+            filter_vTypeVMs = await voucherService.GetVTypeVMs("STOCK_InventoryCheck");
+            filter_vSubTypeVMs = await voucherService.GetVSubTypeVMs("STOCK_InventoryCheck");
 
             await GetVouchers();
 
-            isLoadingPage = false;
+            isLoadingScreen = false;
         }
 
         public void OnRangeSelect(DateRange _range)
@@ -119,7 +119,7 @@ namespace WebApp.Pages.FIN
         {
             isLoading = true;
 
-            stockVoucherVMs = await voucherRepo.GetStockVouchers(filterFinVM);
+            stockVoucherVMs = await voucherService.GetStockVouchers(filterFinVM);
 
             ReportName = "CustomNewReport";
 
@@ -146,7 +146,7 @@ namespace WebApp.Pages.FIN
 
             vSubTypeVMs = filter_vSubTypeVMs.Where(x => x.VTypeID == _vTypeID);
 
-            stockVMs = await inventoryRepo.GetStockList();
+            stockVMs = await inventoryService.GetStockList();
 
             if (_isTypeUpdate == 0)
             {
@@ -156,7 +156,7 @@ namespace WebApp.Pages.FIN
 
             if (_isTypeUpdate != 0)
             {
-                stockVoucherDetailVMs = await voucherRepo.GetStockVoucherDetails(stockVoucherVM.VNumber);
+                stockVoucherDetailVMs = await voucherService.GetStockVoucherDetails(stockVoucherVM.VNumber);
             }
 
             if (_isTypeUpdate == 0 || _isTypeUpdate == 5)
@@ -172,7 +172,7 @@ namespace WebApp.Pages.FIN
             {
                 foreach (var _stockVoucherDetailVM in stockVoucherDetailVMs)
                 {
-                    _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryRepo.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM.InventoryCheck_StockCode, _stockVoucherDetailVM.ICode);
+                    _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM.InventoryCheck_StockCode, _stockVoucherDetailVM.ICode);
                 }
             }
 
@@ -199,7 +199,7 @@ namespace WebApp.Pages.FIN
             {
                 foreach (var _stockVoucherDetailVM in stockVoucherDetailVMs)
                 {
-                    _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryRepo.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM.InventoryCheck_StockCode, _stockVoucherDetailVM.ICode);
+                    _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM.InventoryCheck_StockCode, _stockVoucherDetailVM.ICode);
                 }
             }
         }
@@ -208,7 +208,7 @@ namespace WebApp.Pages.FIN
         {
             filterFinVM.searchText = searchText;
             filterFinVM.IActive = true;
-            return await voucherRepo.GetSearchItems(filterFinVM);
+            return await voucherService.GetSearchItems(filterFinVM);
         }
 
         private async Task SelectedItem(StockVoucherDetailVM result)
@@ -297,7 +297,7 @@ namespace WebApp.Pages.FIN
 
             foreach (var _stockVoucherDetailVM_0 in stockVoucherDetailVMs.Where(x => x.SeqVD > _stockVoucherDetailVM.SeqVD))
             {
-                _stockVoucherDetailVM_0.InventoryCheck_Qty = await inventoryRepo.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM_0.InventoryCheck_StockCode, _stockVoucherDetailVM_0.ICode);
+                _stockVoucherDetailVM_0.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM_0.InventoryCheck_StockCode, _stockVoucherDetailVM_0.ICode);
             }
 
             isLoading = false;
@@ -396,7 +396,7 @@ namespace WebApp.Pages.FIN
                     stockVoucherDetailVMs.ToList().Where(x => x.InventoryCheck_ActualQty < x.InventoryCheck_Qty).ToList().ForEach(x => { x.FromStockCode = x.InventoryCheck_StockCode; x.Qty = Math.Abs(x.InventoryCheck_ActualQty - x.InventoryCheck_Qty); });
                 }
 
-                stockVoucherVM.VNumber = await voucherRepo.UpdateVoucher(stockVoucherVM, stockVoucherDetailVMs);
+                stockVoucherVM.VNumber = await voucherService.UpdateVoucher(stockVoucherVM, stockVoucherDetailVMs);
 
                 stockVoucherVM.IsTypeUpdate = 3;
 
@@ -408,7 +408,7 @@ namespace WebApp.Pages.FIN
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
                 {
-                    await voucherRepo.UpdateVoucher(stockVoucherVM, stockVoucherDetailVMs);
+                    await voucherService.UpdateVoucher(stockVoucherVM, stockVoucherDetailVMs);
 
                     await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Voucher");
                     await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
@@ -436,7 +436,7 @@ namespace WebApp.Pages.FIN
                 stockVoucherVM.IsTypeUpdate = _isTypeUpdate;
                 stockVoucherVM.VActive = _VActive;
 
-                await voucherRepo.UpdateVoucher(stockVoucherVM, stockVoucherDetailVMs);
+                await voucherService.UpdateVoucher(stockVoucherVM, stockVoucherDetailVMs);
 
                 stockVoucherVM.IsTypeUpdate = 3;
 
@@ -462,7 +462,7 @@ namespace WebApp.Pages.FIN
 
             foreach (var _stockVoucherDetailVM in stockVoucherDetailVMs)
             {
-                _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryRepo.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM.InventoryCheck_StockCode, _stockVoucherDetailVM.ICode);
+                _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM.InventoryCheck_StockCode, _stockVoucherDetailVM.ICode);
             }
 
             isLoading = false;
@@ -470,7 +470,7 @@ namespace WebApp.Pages.FIN
 
         private async Task UpdateInventoryCheck_Qty(StockVoucherDetailVM _stockVoucherDetailVM)
         {
-            _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryRepo.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM.InventoryCheck_StockCode, _stockVoucherDetailVM.ICode);
+            _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM.InventoryCheck_StockCode, _stockVoucherDetailVM.ICode);
         }
 
         private async Task InitializeModalClose_Voucher()
@@ -480,7 +480,7 @@ namespace WebApp.Pages.FIN
             stockVoucherVM = new();
             stockVoucherDetailVMs = new();
 
-            stockVoucherVMs = await voucherRepo.GetStockVouchers(filterFinVM);
+            stockVoucherVMs = await voucherService.GetStockVouchers(filterFinVM);
 
             isLoading = false;
         }

@@ -10,26 +10,33 @@ using WebApp.Helpers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
+using D69soft.Client.Services;
+using D69soft.Client.Services.FIN;
+using D69soft.Client.Services.HR;
+using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Shared.Models.ViewModels.EA;
+using D69soft.Client.Helpers;
 
-namespace WebApp.Pages.EA
+namespace D69soft.Client.Pages.EA
 {
     partial class Cart
     {
         [Inject] IJSRuntime js { get; set; }
-        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
-        [Inject] SysRepository sysRepo { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        [Inject] InventoryService inventoryRepo { get; set; }
-        [Inject] RequestService requestRepo { get; set; }
+        [Inject] SysService sysService { get; set; }
 
-        [Inject] OrganizationalChartService organizationalChartRepo { get; set; }
+        [Inject] InventoryService inventoryService { get; set; }
+        [Inject] RequestService requestService { get; set; }
+        [Inject] OrganizationalChartService organizationalChartService { get; set; }
 
         protected string UserID;
 
         bool isLoading;
 
-        bool isLoadingPage;
+        bool isLoadingScreen = true;
 
         //Filter
         FilterHrVM filterHrVM = new();
@@ -60,13 +67,13 @@ namespace WebApp.Pages.EA
 
         protected override async Task OnInitializedAsync()
         {
-            isLoadingPage = true;
+            
 
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (sysRepo.checkPermisFunc(UserID, "EA_Request"))
+            if (await sysService.CheckAccessFunc(UserID, "EA_Request"))
             {
-                await sysRepo.insert_LogUserFunc(UserID, "EA_Request");
+                await sysService.InsertLogUserFunc(UserID, "EA_Request");
             }
             else
             {
@@ -75,15 +82,15 @@ namespace WebApp.Pages.EA
 
             filterHrVM.DivisionID = "Bhaya";
             filterHrVM.UserID = String.Empty;
-            departments = await organizationalChartRepo.GetDepartmentList(filterHrVM);
+            departments = await organizationalChartService.GetDepartmentList(filterHrVM);
 
-            cartVMs = await requestRepo.GetCarts(UserID);
+            cartVMs = await requestService.GetCarts(UserID);
 
             filterFinVM.IActive = true;
 
-            search_itemsVMs = itemsVMs = await inventoryRepo.GetItemsList(filterFinVM);
+            search_itemsVMs = itemsVMs = await inventoryService.GetItemsList(filterFinVM);
 
-            isLoadingPage = false;
+            isLoadingScreen = false;
         }
 
         private string onchange_SearchValues
@@ -100,9 +107,9 @@ namespace WebApp.Pages.EA
         {
             isLoading = true;
 
-            await requestRepo.UpdateItemsCart(_itemsVM, UserID);
+            await requestService.UpdateItemsCart(_itemsVM, UserID);
 
-            cartVMs = await requestRepo.GetCarts(UserID);
+            cartVMs = await requestService.GetCarts(UserID);
 
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
@@ -115,9 +122,9 @@ namespace WebApp.Pages.EA
             {
                 isLoading = true;
 
-                await requestRepo.DelItemsCart(_cartVM);
+                await requestService.DelItemsCart(_cartVM);
 
-                cartVMs = await requestRepo.GetCarts(UserID);
+                cartVMs = await requestService.GetCarts(UserID);
 
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
@@ -131,7 +138,7 @@ namespace WebApp.Pages.EA
 
             _cartVM.UserID = UserID;
 
-            await requestRepo.UpdateQtyItemsCart(_cartVM);
+            await requestService.UpdateQtyItemsCart(_cartVM);
 
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
@@ -144,7 +151,7 @@ namespace WebApp.Pages.EA
 
             _cartVM.UserID = UserID;
 
-            await requestRepo.UpdateNoteItemsCart(_cartVM);
+            await requestService.UpdateNoteItemsCart(_cartVM);
 
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
@@ -165,7 +172,7 @@ namespace WebApp.Pages.EA
         {
             isLoading = true;
 
-            await requestRepo.SendRequest(requestVM, UserID);
+            await requestService.SendRequest(requestVM, UserID);
 
             await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Request");
 

@@ -1,12 +1,12 @@
-﻿using Data.Repositories.SYSTEM;
-using Model.ViewModels.SYSTEM;
-using WebApp.Helpers;
+﻿using D69soft.Client.Helpers;
+using D69soft.Client.Services;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Shared.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
-using Utilities;
 
-namespace WebApp.Pages.RPT
+namespace D69soft.Client.Pages.RPT
 {
     partial class SysReports
     {
@@ -14,16 +14,13 @@ namespace WebApp.Pages.RPT
         [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
 
-        [Inject] SysRepository sysRepo { get; set; }
-        [Inject] UserRepository userRepo { get; set; }
-
-        [Inject] IWebHostEnvironment env { get; set; }
+        [Inject] SysService sysService { get; set; }
 
         protected string UserID;
 
         bool isLoading;
 
-        bool isLoadingPage;
+        bool isLoadingScreen;
 
         [Parameter] public string ReportName { get; set; }
 
@@ -50,27 +47,25 @@ namespace WebApp.Pages.RPT
 
         protected override async Task OnInitializedAsync()
         {
-            isLoadingPage = true;
-
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (sysRepo.CkPermisSysRpt(UserID))
+            if (await sysService.CheckPermisSysRpt(UserID))
             {
-                await sysRepo.insert_LogUserFunc(UserID, "SysRpt");
+                await sysService.InsertLogUserFunc(UserID, "SysRpt");
             }
             else
             {
                 navigationManager.NavigateTo("/");
             }
 
-            modules = await sysRepo.GetModule(UserID);
+            modules = await sysService.GetModuleRpt(UserID);
             filterRptVM.ModuleID = modules.First().ModuleID;
 
-            rptgrps = await sysRepo.GetSysReportGroupByID(filterRptVM.ModuleID, UserID);
+            rptgrps = await sysService.GetSysReportGroupByID(filterRptVM.ModuleID, UserID);
 
-            rpts = await sysRepo.GetSysReportList(filterRptVM.ModuleID, filterRptVM.RptGrpID, UserID);
+            rpts = await sysService.GetSysReportList(filterRptVM.ModuleID, filterRptVM.RptGrpID, UserID);
 
-            isLoadingPage = false;
+            isLoadingScreen = false;
         }
 
         private async void onchange_filter_module(string value)
@@ -83,9 +78,9 @@ namespace WebApp.Pages.RPT
 
             filterRptVM.RptID = 0;
 
-            rptgrps = await sysRepo.GetSysReportGroupByID(filterRptVM.ModuleID, UserID);
+            rptgrps = await sysService.GetSysReportGroupByID(filterRptVM.ModuleID, UserID);
 
-            rpts = await sysRepo.GetSysReportList(filterRptVM.ModuleID, filterRptVM.RptGrpID, UserID);
+            rpts = await sysService.GetSysReportList(filterRptVM.ModuleID, filterRptVM.RptGrpID, UserID);
 
             isLoading = false;
 
@@ -100,7 +95,7 @@ namespace WebApp.Pages.RPT
 
             filterRptVM.RptID = 0;
 
-            rpts = await sysRepo.GetSysReportList(filterRptVM.ModuleID, filterRptVM.RptGrpID, UserID);
+            rpts = await sysService.GetSysReportList(filterRptVM.ModuleID, filterRptVM.RptGrpID, UserID);
 
             isLoading = false;
 
@@ -111,7 +106,7 @@ namespace WebApp.Pages.RPT
         {
             isLoading = true;
 
-            rptVM = value == 0 ? new() : await sysRepo.GetSysReport(value);
+            rptVM = value == 0 ? new() : await sysService.GetSysReport(value);
 
             if(rptVM.PassUserID)
             {
@@ -140,9 +135,9 @@ namespace WebApp.Pages.RPT
         {
             isLoading = true;
 
-            string ReportDirectory = Path.Combine(env.ContentRootPath, $"{UrlDirectory.Reports}");
+            string ReportDirectory = Path.Combine(Directory.GetCurrentDirectory(), $"{UrlDirectory.Reports}");
             String[] FileExtension = { "repx" };
-            rptUrls = Utilities.LibraryFunc.GetFilesNameFrom(ReportDirectory, FileExtension, false);
+            rptUrls = LibraryFunc.GetFilesNameFrom(ReportDirectory, FileExtension, false);
 
             if (typeUpdate == 0)
             {
@@ -166,14 +161,14 @@ namespace WebApp.Pages.RPT
             if (rptVM.IsTypeUpdate != 2)
             {
                 rptVM.UserID = UserID;
-                await sysRepo.UpdateRpt(rptVM);
+                await sysService.UpdateRpt(rptVM);
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Rpt");
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
                 ReportName = rptVM.RptUrl;
 
-                rpts = await sysRepo.GetSysReportList(filterRptVM.ModuleID, filterRptVM.RptGrpID, UserID);
+                rpts = await sysService.GetSysReportList(filterRptVM.ModuleID, filterRptVM.RptGrpID, UserID);
 
 
                 onchange_filter_rpt(rptVM.RptID);
@@ -182,11 +177,11 @@ namespace WebApp.Pages.RPT
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn muốn xóa?", SweetAlertMessageType.question))
                 {
-                    await sysRepo.DelRpt(rptVM.RptID);
+                    await sysService.DelRpt(rptVM.RptID);
 
-                    string ReportFilePath = Path.Combine(env.ContentRootPath, $"{UrlDirectory.Reports}/" + rptVM.RptUrl + ".repx");
+                    string ReportFilePath = Path.Combine(Directory.GetCurrentDirectory(), $"{UrlDirectory.Reports}/" + rptVM.RptUrl + ".repx");
 
-                    Utilities.LibraryFunc.DelFileFrom(ReportFilePath);
+                    LibraryFunc.DelFileFrom(ReportFilePath);
 
                     await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Rpt");
                     await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
@@ -194,7 +189,7 @@ namespace WebApp.Pages.RPT
                     ReportName = null;
 
                     filterRptVM.RptID = 0;
-                    rpts = await sysRepo.GetSysReportList(filterRptVM.ModuleID, filterRptVM.RptGrpID, UserID);
+                    rpts = await sysService.GetSysReportList(filterRptVM.ModuleID, filterRptVM.RptGrpID, UserID);
                 }
             }
 
@@ -213,7 +208,7 @@ namespace WebApp.Pages.RPT
             }
             else
             {
-                rptGrpVM = await sysRepo.GetSysReportGroup(filterRptVM.RptGrpID);
+                rptGrpVM = await sysService.GetSysReportGroup(filterRptVM.RptGrpID);
                 rptGrpVM.IsTypeUpdate = 1;
             }
             rptGrpVM.ModuleID = filterRptVM.ModuleID;
@@ -227,26 +222,26 @@ namespace WebApp.Pages.RPT
 
             if (rptGrpVM.IsTypeUpdate != 2)
             {
-                await sysRepo.UpdateGrtRpt(rptGrpVM);
+                await sysService.UpdateGrtRpt(rptGrpVM);
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModal_GrtRpt");
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
                 filterRptVM.RptID = 0;
-                rptgrps = await sysRepo.GetSysReportGroupByID(filterRptVM.ModuleID, UserID);
+                rptgrps = await sysService.GetSysReportGroupByID(filterRptVM.ModuleID, UserID);
             }
             else
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn muốn xóa?", SweetAlertMessageType.question))
                 {
-                    await sysRepo.DelGrtRpt(rptGrpVM.RptGrpID);
+                    await sysService.DelGrtRpt(rptGrpVM.RptGrpID);
 
                     await js.InvokeAsync<object>("CloseModal", "#InitializeModal_GrtRpt");
                     await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
 
                     filterRptVM.RptGrpID = 0;
-                    rptgrps = await sysRepo.GetSysReportGroupByID(filterRptVM.ModuleID, UserID);
-                    rpts = await sysRepo.GetSysReportList(filterRptVM.ModuleID, filterRptVM.RptGrpID, UserID);
+                    rptgrps = await sysService.GetSysReportGroupByID(filterRptVM.ModuleID, UserID);
+                    rpts = await sysService.GetSysReportList(filterRptVM.ModuleID, filterRptVM.RptGrpID, UserID);
                 }
             }
 

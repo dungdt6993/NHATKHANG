@@ -4,7 +4,7 @@ using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using System.Net.Http.Json;
 
-namespace Data.Repositories.FIN
+namespace D69soft.Client.Services.FIN
 {
     public class RequestService
     {

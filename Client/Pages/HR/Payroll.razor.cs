@@ -1,32 +1,31 @@
-﻿using Data.Repositories.HR;
-using Data.Repositories.SYSTEM;
-using Model.ViewModels.FIN;
-using Model.ViewModels.HR;
-using WebApp.Helpers;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using System.Data;
+using D69soft.Client.Services;
+using D69soft.Client.Services.HR;
+using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Client.Helpers;
 
-namespace WebApp.Pages.HR
+namespace D69soft.Client.Pages.HR
 {
     partial class Payroll
     {
         [Inject] IJSRuntime js { get; set; }
-        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        [Inject] SysRepository sysRepo { get; set; }
-
-        [Inject] OrganizationalChartService organizationalChartRepo { get; set; }
-        [Inject] DutyRosterService dutyRosterRepo { get; set; }
-        [Inject] PayrollService payrollRepo { get; set; }
+        [Inject] SysService sysService { get; set; }
+        [Inject] OrganizationalChartService organizationalChartService { get; set; }
+        [Inject] DutyRosterService dutyRosterService { get; set; }
+        [Inject] PayrollService payrollService { get; set; }
 
         protected string UserID;
 
         bool isLoading;
 
-        bool isLoadingPage;
+        bool isLoadingScreen = true;
 
         //Filter
         FilterHrVM filterHrVM = new();
@@ -58,13 +57,13 @@ namespace WebApp.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            isLoadingPage = true;
+            
 
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (sysRepo.checkPermisFunc(UserID, "HR_DutyRoster"))
+            if (await sysService.CheckAccessFunc(UserID, "HR_DutyRoster"))
             {
-                await sysRepo.insert_LogUserFunc(UserID, "HR_DutyRoster");
+                await sysService.InsertLogUserFunc(UserID, "HR_DutyRoster");
             }
             else
             {
@@ -74,38 +73,38 @@ namespace WebApp.Pages.HR
             //Initialize Filter
             filterHrVM.UserID = UserID;
 
-            year_filter_list = await sysRepo.GetYearFilter();
+            year_filter_list = await sysService.GetYearFilter();
             filterHrVM.Year = DateTime.Now.Year;
 
-            month_filter_list = await sysRepo.GetMonthFilter();
+            month_filter_list = await sysService.GetMonthFilter();
             filterHrVM.Month = DateTime.Now.Month;
 
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
 
-            division_filter_list = await organizationalChartRepo.GetDivisionList(filterHrVM);
+            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
             filterHrVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
 
             filterHrVM.SectionID = string.Empty;
-            section_filter_list = await organizationalChartRepo.GetSectionList();
+            section_filter_list = await organizationalChartService.GetSectionList();
 
             filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartRepo.GetDepartmentList(filterHrVM);
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
 
             filterHrVM.PositionGroupID = string.Empty;
-            position_filter_list = await organizationalChartRepo.GetPositionList();
+            position_filter_list = await organizationalChartService.GetPositionList();
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
-            trngrp_filter_list = await payrollRepo.GetTrnGroupCodeList();
+            trngrp_filter_list = await payrollService.GetTrnGroupCodeList();
 
             //DataExcel
             filterHrVM.strDataFromExcel = string.Empty;
 
             //LockSal
-            lockSalaryVM = await payrollRepo.GetLockSalary(filterHrVM);
+            lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
 
-            isLoadingPage = false;
+            isLoadingScreen = false;
         }
 
         private async void onchange_filter_month(int value)
@@ -117,10 +116,10 @@ namespace WebApp.Pages.HR
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
 
             //LockSal
-            lockSalaryVM = await payrollRepo.GetLockSalary(filterHrVM);
+            lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
             filterHrVM.TrnCode = 0;
             filterHrVM.TrnSubCode = 0;
@@ -141,10 +140,10 @@ namespace WebApp.Pages.HR
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
 
             //LockSal
-            lockSalaryVM = await payrollRepo.GetLockSalary(filterHrVM);
+            lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
             filterHrVM.TrnCode = 0;
             filterHrVM.TrnSubCode = 0;
@@ -163,16 +162,16 @@ namespace WebApp.Pages.HR
             filterHrVM.DivisionID = value;
 
             //LockSal
-            lockSalaryVM = await payrollRepo.GetLockSalary(filterHrVM);
+            lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
 
             filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartRepo.GetDepartmentList(filterHrVM);
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
 
             filterHrVM.PositionGroupID = string.Empty;
             filterHrVM.arrPositionID = new string[] { };
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
             filterHrVM.TrnCode = 0;
             filterHrVM.TrnSubCode = 0;
@@ -194,7 +193,7 @@ namespace WebApp.Pages.HR
             filterHrVM.arrPositionID = new string[] { };
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
             dtPayroll = null;
 
@@ -213,7 +212,7 @@ namespace WebApp.Pages.HR
             filterHrVM.arrPositionID = new string[] { };
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
             dtPayroll = null;
 
@@ -247,7 +246,7 @@ namespace WebApp.Pages.HR
         private async void reload_filter_eserial()
         {
             filterHrVM.Eserial = String.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
             StateHasChanged();
         }
@@ -272,7 +271,7 @@ namespace WebApp.Pages.HR
             filterHrVM.TrnCode = value;
 
             filterHrVM.TrnSubCode = 0;
-            trn_filter_list = await payrollRepo.GetTrnCodeList(filterHrVM.TrnCode);
+            trn_filter_list = await payrollService.GetTrnCodeList(filterHrVM.TrnCode);
 
             dtPayroll = null;
 
@@ -300,7 +299,7 @@ namespace WebApp.Pages.HR
 
             await Task.Yield();
 
-            dtPayroll = payrollRepo.GetPayrollList(filterHrVM);
+            dtPayroll = await payrollService.GetPayrollList(filterHrVM);
 
             isLoading = false;
             StateHasChanged();
@@ -315,11 +314,11 @@ namespace WebApp.Pages.HR
                 dtPayroll = null;
                 StateHasChanged();
 
-                await payrollRepo.CalcSalary(filterHrVM);
+                await payrollService.CalcSalary(filterHrVM);
 
-                dtPayroll = payrollRepo.GetPayrollList(filterHrVM);
+                dtPayroll = await payrollService.GetPayrollList(filterHrVM);
 
-                lockSalaryVM = await payrollRepo.GetLockSalary(filterHrVM);
+                lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
 
                 isLoading = false;
                 StateHasChanged();
@@ -336,11 +335,11 @@ namespace WebApp.Pages.HR
 
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn hủy tính lương?", SweetAlertMessageType.question))
             {
-                await payrollRepo.CancelCalcSalary(filterHrVM);
+                await payrollService.CancelCalcSalary(filterHrVM);
 
                 dtPayroll = null;
 
-                lockSalaryVM = await payrollRepo.GetLockSalary(filterHrVM);
+                lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
 
                 await js.Toast_Alert("Hủy tính lương thành công!", SweetAlertMessageType.success);
             }
@@ -354,9 +353,9 @@ namespace WebApp.Pages.HR
 
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn khóa lương Tháng " + filterHrVM.Month + " năm " + filterHrVM.Year + "?", SweetAlertMessageType.question))
             {
-                await payrollRepo.LockSalary(filterHrVM);
+                await payrollService.LockSalary(filterHrVM);
 
-                lockSalaryVM = await payrollRepo.GetLockSalary(filterHrVM);
+                lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
 
                 await js.Swal_Message("Thông báo.", "Khóa lương thành công!", SweetAlertMessageType.success);
             }
@@ -370,9 +369,9 @@ namespace WebApp.Pages.HR
 
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn hủy khóa lương?", SweetAlertMessageType.question))
             {
-                await payrollRepo.CancelLockSalary(filterHrVM);
+                await payrollService.CancelLockSalary(filterHrVM);
 
-                lockSalaryVM = await payrollRepo.GetLockSalary(filterHrVM);
+                lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
 
                 await js.Toast_Alert("Hủy khóa lương thành công!", SweetAlertMessageType.success);
             }
@@ -390,9 +389,9 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            salaryDefVMs = await payrollRepo.GetSalaryDefList();
+            salaryDefVMs = await payrollService.GetSalaryDefList();
 
-            trngrp_list = await payrollRepo.GetTrnGroupCodeList();
+            trngrp_list = await payrollService.GetTrnGroupCodeList();
 
             isLoading = false;
         }
@@ -404,7 +403,7 @@ namespace WebApp.Pages.HR
             salaryDefVM.TrnCode = value;
 
             salaryDefVM.TrnSubCode = 0;
-            trn_list = await payrollRepo.GetTrnCodeList(salaryDefVM.TrnCode);
+            trn_list = await payrollService.GetTrnCodeList(salaryDefVM.TrnCode);
 
             isLoading = false;
 
@@ -431,7 +430,7 @@ namespace WebApp.Pages.HR
             salaryDefVM = _salaryDefVM;
             salaryDefVM.isUpdate = true;
 
-            trn_list = await payrollRepo.GetTrnCodeList(salaryDefVM.TrnCode);
+            trn_list = await payrollService.GetTrnCodeList(salaryDefVM.TrnCode);
 
             isLoading = false;
         }
@@ -442,7 +441,7 @@ namespace WebApp.Pages.HR
 
             if (!salaryDefVM.isUpdate)
             {
-                salaryDefVMs = await payrollRepo.GetSalaryDefList();
+                salaryDefVMs = await payrollService.GetSalaryDefList();
             }
 
             if (salaryDefVM.isSave)
@@ -453,8 +452,8 @@ namespace WebApp.Pages.HR
                     salaryDefVM.TrnSubCode = 0;
                 }
 
-                await payrollRepo.UpdateSalaryDef(salaryDefVM);
-                salaryDefVMs = await payrollRepo.GetSalaryDefList();
+                await payrollService.UpdateSalaryDef(salaryDefVM);
+                salaryDefVMs = await payrollService.GetSalaryDefList();
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
             }
 
@@ -469,9 +468,9 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            salaryTransactionCodeVMs = await payrollRepo.GetSalTrnCodeList();
+            salaryTransactionCodeVMs = await payrollService.GetSalTrnCodeList();
 
-            trngrp_list = await payrollRepo.GetTrnGroupCodeList();
+            trngrp_list = await payrollService.GetTrnGroupCodeList();
 
             isLoading = false;
         }
@@ -481,7 +480,7 @@ namespace WebApp.Pages.HR
             isLoading = true;
 
             salaryTransactionCodeVM = new();
-            salaryTransactionCodeVMs = await payrollRepo.GetSalTrnCodeList();
+            salaryTransactionCodeVMs = await payrollService.GetSalTrnCodeList();
 
             if (_isTypeUpdate == 0)
             {
@@ -547,7 +546,7 @@ namespace WebApp.Pages.HR
 
             if (salaryTransactionCodeVM.IsTypeUpdate != 2)
             {
-                await payrollRepo.UpdateSalTrnCode(salaryTransactionCodeVM);
+                await payrollService.UpdateSalTrnCode(salaryTransactionCodeVM);
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_SalTrnCode");
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
@@ -556,7 +555,7 @@ namespace WebApp.Pages.HR
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
                 {
-                    int affectedRows = await payrollRepo.UpdateSalTrnCode(salaryTransactionCodeVM);
+                    int affectedRows = await payrollService.UpdateSalTrnCode(salaryTransactionCodeVM);
 
                     if (affectedRows > 0)
                     {
@@ -575,7 +574,7 @@ namespace WebApp.Pages.HR
                 }
             }
 
-            salaryTransactionCodeVMs = await payrollRepo.GetSalTrnCodeList();
+            salaryTransactionCodeVMs = await payrollService.GetSalTrnCodeList();
 
             isLoading = false;
         }
@@ -584,7 +583,7 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            salaryTransactionCodeVMs = await payrollRepo.GetSalTrnCodeList();
+            salaryTransactionCodeVMs = await payrollService.GetSalTrnCodeList();
 
             isLoading = false;
         }
@@ -595,7 +594,7 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            wdDefaultVMs = await payrollRepo.GetWDDefautList(filterHrVM);
+            wdDefaultVMs = await payrollService.GetWDDefautList(filterHrVM);
 
             isLoading = false;
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Utilities.AmLich
+namespace D69soft.Shared.Utilities.AmLich
 {
     public class Solar
     {

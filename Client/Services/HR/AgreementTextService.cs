@@ -3,7 +3,7 @@ using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using System.Net.Http.Json;
 
-namespace Data.Repositories.HR
+namespace D69soft.Client.Services.HR
 {
     public class AgreementTextService
     {

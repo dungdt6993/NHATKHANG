@@ -5,7 +5,7 @@ using D69soft.Shared.Models.ViewModels.DOC;
 using System.Net.Http.Json;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 
-namespace Data.Repositories.OP
+namespace D69soft.Client.Services.OP
 {
     public class OPService
     {

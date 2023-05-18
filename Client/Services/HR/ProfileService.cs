@@ -154,19 +154,19 @@ namespace D69soft.Server.Services.HR
             return await _httpClient.GetFromJsonAsync<IEnumerable<DepartmentVM>>($"api/Profile/GetDepartmentPermis/{_Eserial}");
         }
 
-        public async Task<IEnumerable<SysRptVM>> GetSysReportGroupPermis(string _Eserial)
+        public async Task<IEnumerable<SysRptVM>> GetsysServicertGroupPermis(string _Eserial)
         {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<SysRptVM>>($"api/Profile/GetSysReportGroupPermis/{_Eserial}");
+            return await _httpClient.GetFromJsonAsync<IEnumerable<SysRptVM>>($"api/Profile/GetsysServicertGroupPermis/{_Eserial}");
         }
 
-        public async Task<IEnumerable<SysRptVM>> GetSysReportPermis(string _Eserial)
+        public async Task<IEnumerable<SysRptVM>> GetsysServicertPermis(string _Eserial)
         {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<SysRptVM>>($"api/Profile/GetSysReportPermis/{_Eserial}");
+            return await _httpClient.GetFromJsonAsync<IEnumerable<SysRptVM>>($"api/Profile/GetsysServicertPermis/{_Eserial}");
         }
 
-        public async Task<bool> UpdatePermis(IEnumerable<FuncVM> _funcVMs, IEnumerable<FuncVM> _subFuncVMs, IEnumerable<DepartmentVM> _departmentVMs, IEnumerable<SysRptVM> _sysReportsVMs, string _Eserial)
+        public async Task<bool> UpdatePermis(IEnumerable<FuncVM> _funcVMs, IEnumerable<FuncVM> _subFuncVMs, IEnumerable<DepartmentVM> _departmentVMs, IEnumerable<SysRptVM> _sysServicertsVMs, string _Eserial)
         {
-            return await _httpClient.GetFromJsonAsync<bool>($"api/Profile/UpdatePermis/{_funcVMs}/{_subFuncVMs}/{_departmentVMs}/{_sysReportsVMs}/{_Eserial}");
+            return await _httpClient.GetFromJsonAsync<bool>($"api/Profile/UpdatePermis/{_funcVMs}/{_subFuncVMs}/{_departmentVMs}/{_sysServicertsVMs}/{_Eserial}");
         }
 
         //EmplTrn
@@ -205,11 +205,11 @@ namespace D69soft.Server.Services.HR
             return await _httpClient.GetFromJsonAsync<bool>($"api/Profile/ContainsContractTypeID/{id}");
         }
 
-        public async Task<bool> UpdateContractType(ContractTypeVM _contractTypeVM)
+        public async Task<int> UpdateContractType(ContractTypeVM _contractTypeVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/Profile/UpdateContractType", _contractTypeVM);
 
-            return await response.Content.ReadFromJsonAsync<bool>();
+            return await response.Content.ReadFromJsonAsync<int>();
         }
 
         //WorkType
@@ -223,11 +223,11 @@ namespace D69soft.Server.Services.HR
             return await _httpClient.GetFromJsonAsync<bool>($"api/Profile/ContainsWorkTypeID/{id}");
         }
 
-        public async Task<bool> UpdateWorkType(WorkTypeVM _workTypeVM)
+        public async Task<int> UpdateWorkType(WorkTypeVM _workTypeVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/Profile/UpdateWorkType", _workTypeVM);
 
-            return await response.Content.ReadFromJsonAsync<bool>();
+            return await response.Content.ReadFromJsonAsync<int>();
         }
 
         //ProfileRelationship

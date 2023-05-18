@@ -2,7 +2,7 @@
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using System.Net.Http.Json;
 
-namespace Data.Repositories.CRM
+namespace D69soft.Client.Services.CRM
 {
     public class CustomerService
     {

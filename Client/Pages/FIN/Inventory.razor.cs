@@ -1,33 +1,32 @@
 ﻿using BlazorDateRangePicker;
 using Blazored.Typeahead;
-using Data.Repositories.FIN;
-using Data.Repositories.HR;
-using Data.Repositories.SYSTEM;
-using Model.ViewModels.FIN;
-using Model.ViewModels.HR;
-using Utilities;
-using WebApp.Helpers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
+using D69soft.Client.Services;
+using D69soft.Client.Services.HR;
+using D69soft.Client.Services.FIN;
+using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Client.Helpers;
 
-namespace WebApp.Pages.FIN
+namespace D69soft.Client.Pages.FIN
 {
     partial class Inventory
     {
         [Inject] IJSRuntime js { get; set; }
-        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
-        [Inject] SysRepository sysRepo { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        [Inject] OrganizationalChartService organizationalChartRepo { get; set; }
-        [Inject] InventoryService inventoryRepo { get; set; }
+        [Inject] SysService sysService { get; set; }
+        [Inject] OrganizationalChartService organizationalChartService { get; set; }
+        [Inject] InventoryService inventoryService { get; set; }
 
         protected string UserID;
 
         bool isLoading;
 
-        bool isLoadingPage;
+        bool isLoadingScreen = true;
 
         //Filter
         FilterFinVM filterFinVM = new();
@@ -63,13 +62,13 @@ namespace WebApp.Pages.FIN
 
         protected override async Task OnInitializedAsync()
         {
-            isLoadingPage = true;
+            
 
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (sysRepo.checkPermisFunc(UserID, "Stock_Inventory"))
+            if (await sysService.CheckAccessFunc(UserID, "Stock_Inventory"))
             {
-                await sysRepo.insert_LogUserFunc(UserID, "Stock_Inventory");
+                await sysService.InsertLogUserFunc(UserID, "Stock_Inventory");
             }
             else
             {
@@ -78,20 +77,20 @@ namespace WebApp.Pages.FIN
 
             filterHrVM.UserID = UserID;
 
-            divisionVMs = await organizationalChartRepo.GetDivisionList(filterHrVM);
+            divisionVMs = await organizationalChartService.GetDivisionList(filterHrVM);
             filterFinVM.DivisionID = divisionVMs.Count() > 0 ? divisionVMs.ElementAt(0).DivisionID : string.Empty;
 
             filterFinVM.StartDate = DateTime.Now;
             filterFinVM.EndDate = DateTime.Now;
 
-            stockTypeVMs = await inventoryRepo.GetStockTypeList();
+            stockTypeVMs = await inventoryService.GetStockTypeList();
             filterFinVM.StockTypeCode = stockTypeVMs.ElementAt(0).StockTypeCode;
 
-            stockVMs = await inventoryRepo.GetStockList();
+            stockVMs = await inventoryService.GetStockList();
 
             await GetInventorys();
 
-            isLoadingPage = false;
+            isLoadingScreen = false;
         }
 
         public void OnRangeSelect(DateRange _range)
@@ -117,7 +116,7 @@ namespace WebApp.Pages.FIN
         {
             filterFinVM.searchText = searchText;
             filterFinVM.IActive = true;
-            return await inventoryRepo.GetItemsList(filterFinVM);
+            return await inventoryService.GetItemsList(filterFinVM);
         }
 
         private async Task SelectedItem(ItemsVM result)
@@ -140,7 +139,7 @@ namespace WebApp.Pages.FIN
 
             IsViewInventoryBookDetail = false;
 
-            inventoryVMs = await inventoryRepo.GetInventorys(filterFinVM);
+            inventoryVMs = await inventoryService.GetInventorys(filterFinVM);
 
             isLoading = false;
         }
@@ -154,7 +153,7 @@ namespace WebApp.Pages.FIN
 
             inventoryVM = _inventory;
 
-            inventoryBookDetailVMs = await inventoryRepo.GetInventoryBookDetails(filterFinVM, inventoryVM);
+            inventoryBookDetailVMs = await inventoryService.GetInventoryBookDetails(filterFinVM, inventoryVM);
 
             isLoading = false;
         }

@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Json;
 
-namespace Data.Repositories.CRUISES
+namespace D69soft.Client.Services.CRUISES
 {
     public class OccupancyService
     {

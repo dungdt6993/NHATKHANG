@@ -1,42 +1,35 @@
-﻿using Data.Repositories.HR;
-using Data.Repositories.SYSTEM;
-using Model.ViewModels.HR;
-using Model.ViewModels.SYSTEM;
-using Utilities;
-using WebApp.Helpers;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
-using Model.ViewModels.FIN;
-using Model.ViewModels.KPI;
 using System.Data;
-using WebApp.Data.Reports;
+using D69soft.Client.Services;
+using D69soft.Server.Services.HR;
+using D69soft.Client.Services.HR;
+using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Client.Helpers;
+using D69soft.Shared.Utilities;
 
-namespace WebApp.Pages.HR
+namespace D69soft.Client.Pages.HR
 {
     public partial class Profile
     {
         [Inject] IJSRuntime js { get; set; }
-
-        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        [Inject] SysRepository sysRepo { get; set; }
-        [Inject] UserRepository userRepo { get; set; }
-
-        [Inject] IWebHostEnvironment env { get; set; }
-
-        [Inject] ProfileRepository profileRepo { get; set; }
-        [Inject] OrganizationalChartService organizationalChartRepo { get; set; }
-
-        [Inject] DutyRosterService dutyRosterRepo { get; set; }
+        [Inject] SysService sysService { get; set; }
+        [Inject] AuthService authService { get; set; }
+        [Inject] ProfileService profileService { get; set; }
+        [Inject] OrganizationalChartService organizationalChartService { get; set; }
+        [Inject] DutyRosterService dutyRosterService { get; set; }
 
         protected string UserID;
 
         bool isLoading;
-        bool isLoadingPage;
+        bool isLoadingScreen = true;
 
         bool disabled_btnUpdateProfile = true;
 
@@ -99,13 +92,13 @@ namespace WebApp.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            isLoadingPage = true;
+
 
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (sysRepo.checkPermisFunc(UserID, "HR_Profile"))
+            if (await sysService.CheckAccessFunc(UserID, "HR_Profile"))
             {
-                await sysRepo.insert_LogUserFunc(UserID, "HR_Profile");
+                await sysService.InsertLogUserFunc(UserID, "HR_Profile");
             }
             else
             {
@@ -119,26 +112,26 @@ namespace WebApp.Pages.HR
             //Initialize Filter
             filterHrVM.UserID = UserID;
 
-            division_filter_list = await organizationalChartRepo.GetDivisionList(filterHrVM);
+            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
             filterHrVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
 
             filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartRepo.GetDepartmentList(filterHrVM);
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
 
             filterHrVM.SectionID = string.Empty;
-            section_filter_list = await organizationalChartRepo.GetSectionList();
+            section_filter_list = await organizationalChartService.GetSectionList();
 
             filterHrVM.PositionGroupID = string.Empty;
-            position_filter_list = await organizationalChartRepo.GetPositionList();
+            position_filter_list = await organizationalChartService.GetPositionList();
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await profileRepo.GetEserialListByID(filterHrVM);
+            eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
 
             //Báo cáo biên động nhân sự
             filterHrVM.Year = DateTime.Now.Year;
-            dtEmplChange = profileRepo.GetEmplChangeList(filterHrVM);
+            dtEmplChange = await profileService.GetEmplChangeList(filterHrVM);
 
-            isLoadingPage = false;
+            isLoadingScreen = false;
         }
 
         private async void onchange_filter_division(string value)
@@ -150,18 +143,18 @@ namespace WebApp.Pages.HR
             filterHrVM.TypeProfile = 0;
 
             filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartRepo.GetDepartmentList(filterHrVM);
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
 
             filterHrVM.PositionGroupID = string.Empty;
             filterHrVM.arrPositionID = new string[] { };
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await profileRepo.GetEserialListByID(filterHrVM);
+            eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
 
             filterHrVM.selectedEserial = string.Empty;
             profileVMs = null;
 
-            dtEmplChange = profileRepo.GetEmplChangeList(filterHrVM);
+            dtEmplChange = await profileService.GetEmplChangeList(filterHrVM);
 
             isLoading = false;
 
@@ -178,7 +171,7 @@ namespace WebApp.Pages.HR
             filterHrVM.arrPositionID = new string[] { };
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await profileRepo.GetEserialListByID(filterHrVM);
+            eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
 
             filterHrVM.selectedEserial = string.Empty;
             profileVMs = null;
@@ -195,7 +188,7 @@ namespace WebApp.Pages.HR
             filterHrVM.SectionID = value;
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await profileRepo.GetEserialListByID(filterHrVM);
+            eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
 
             filterHrVM.selectedEserial = string.Empty;
             profileVMs = null;
@@ -234,7 +227,7 @@ namespace WebApp.Pages.HR
             filterHrVM.TypeProfile = int.Parse(args.Value.ToString());
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await profileRepo.GetEserialListByID(filterHrVM);
+            eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
 
             filterHrVM.selectedEserial = string.Empty;
             profileVMs = null;
@@ -261,7 +254,7 @@ namespace WebApp.Pages.HR
             filterHrVM.selectedEserial = string.Empty;
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await profileRepo.GetEserialListByID(filterHrVM);
+            eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
 
             StateHasChanged();
         }
@@ -270,9 +263,9 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            profileVMs = await profileRepo.GetProfileList(filterHrVM, UserID);
+            profileVMs = await profileService.GetProfileList(filterHrVM, UserID);
 
-            dtEmplChange = profileRepo.GetEmplChangeList(filterHrVM);
+            dtEmplChange = await profileService.GetEmplChangeList(filterHrVM);
 
             await virtualizeProfileList.RefreshDataAsync();
             StateHasChanged();
@@ -399,7 +392,7 @@ namespace WebApp.Pages.HR
 
             profileManagament.ContractTypeID = value;
 
-            int NumMonth = await profileRepo.GetNumMonthLC(profileManagament.ContractTypeID);
+            int NumMonth = await profileService.GetNumMonthLC(profileManagament.ContractTypeID);
             if (NumMonth != 0)
             {
                 profileManagament.EndContractDate = Convert.ToDateTime(profileManagament.StartContractDate).AddMonths(NumMonth).AddDays(-1);
@@ -768,21 +761,21 @@ namespace WebApp.Pages.HR
 
             divisionSelected = division_filter_list.First(x => x.DivisionID == filterHrVM.DivisionID);
 
-            countrys = await profileRepo.GetCountryList();
-            ethnics = await profileRepo.GetEthnicList();
+            countrys = await profileService.GetCountryList();
+            ethnics = await profileService.GetEthnicList();
 
-            sections = await organizationalChartRepo.GetSectionList();
-            departments = await organizationalChartRepo.GetDepartmentList(filterHrVM);
-            positions = await organizationalChartRepo.GetPositionList();
+            sections = await organizationalChartService.GetSectionList();
+            departments = await organizationalChartService.GetDepartmentList(filterHrVM);
+            positions = await organizationalChartService.GetPositionList();
 
-            laborContractTypes = await profileRepo.GetContractTypeList();
-            workTypes = await profileRepo.GetWorkTypeList();
-            shifts = await dutyRosterRepo.GetShiftList();
+            laborContractTypes = await profileService.GetContractTypeList();
+            workTypes = await profileService.GetWorkTypeList();
+            shifts = await dutyRosterService.GetShiftList();
             shifts = shifts.Where(x => x.isOFF == 0);
 
-            salaryDefs = await profileRepo.GetSalaryDef();
+            salaryDefs = await profileService.GetSalaryDef();
 
-            permissionUsers = await userRepo.GetPermissionUser(filterHrVM.selectedEserial, UserID);
+            permissionUsers = await authService.GetPermissionUser(filterHrVM.selectedEserial, UserID);
 
             if (typeView == 0 || typeView == 4)
             {
@@ -808,7 +801,7 @@ namespace WebApp.Pages.HR
 
                 if (typeView == 4)
                 {
-                    profileManagament = await profileRepo.GetProfileByEserial(filterHrVM);
+                    profileManagament = await profileService.GetProfileByEserial(filterHrVM);
                     profileManagament.Eserial = null;
                     profileManagament.JoinDate = null;
                     profileManagament.StartDayAL = null;
@@ -837,15 +830,15 @@ namespace WebApp.Pages.HR
             }
             else
             {
-                profileManagament = await profileRepo.GetProfileByEserial(filterHrVM);
+                profileManagament = await profileService.GetProfileByEserial(filterHrVM);
 
                 profileManagament.IsUpdateUrlAvatar = false;
 
-                profileHistorys = await profileRepo.GetProfileHistory(profileManagament.Eserial);
+                profileHistorys = await profileService.GetProfileHistory(profileManagament.Eserial);
 
                 profileManagament.isTypeSave = typeView;
 
-                if (!profileRepo.CkUpdateJobHistory(profileManagament.Eserial))
+                if (!await profileService.CkUpdateJobHistory(profileManagament.Eserial))
                 {
                     disabled_StartContractDate = true;
                     disabled_ContractTypeID = true;
@@ -853,7 +846,7 @@ namespace WebApp.Pages.HR
                     disabled_JobStartDate = true;
                 }
 
-                if (!profileRepo.CkUpdateSalHistory(profileManagament.Eserial))
+                if (!await profileService.CkUpdateSalHistory(profileManagament.Eserial))
                 {
                     disabled_BasicSalary = true;
                     disabled_Benefit4 = true;
@@ -937,13 +930,6 @@ namespace WebApp.Pages.HR
             disabled_btnUpdateProfile = false;
         }
 
-        //KPI
-        //private async Task<IEnumerable<ProfileManagamentVM>> SearchEmpl(string searchText)
-        //{
-        //    filterHrVM.searchEmpl = searchText;
-        //    return await profileRepo.GetSearchEmpl(filterHrVM);
-        //}
-
         MemoryStream memoryStream;
         Stream stream;
         private async Task OnInputFileChange(InputFileChangeEventArgs e)
@@ -981,11 +967,11 @@ namespace WebApp.Pages.HR
 
             profileManagament.UserID = UserID;
 
-            profileManagament.Eserial = await profileRepo.UpdateProfile(profileManagament);
+            profileManagament.Eserial = await profileService.UpdateProfile(profileManagament);
 
             if (profileManagament.IsUpdateUrlAvatar)
             {
-                LibraryFunc.DelFileFrom(Path.Combine(env.ContentRootPath, $"{UrlDirectory.Upload_HR_Images_Profile_Private}{profileManagament.Eserial}.png"));
+                LibraryFunc.DelFileFrom(Path.Combine(Directory.GetCurrentDirectory(), $"{UrlDirectory.Upload_HR_Images_Profile_Private}{profileManagament.Eserial}.png"));
 
                 if (memoryStream != null)
                 {
@@ -996,7 +982,7 @@ namespace WebApp.Pages.HR
                     profileManagament.UrlAvatar = $"{UrlDirectory.Upload_HR_Images_Profile_Public}{profileManagament.Eserial}.png";
                 }
 
-                await profileRepo.UpdateUrlAvatar(profileManagament.Eserial, profileManagament.UrlAvatar);
+                await profileService.UpdateUrlAvatar(profileManagament.Eserial, profileManagament.UrlAvatar);
             }
 
             if (profileManagament.isTypeSave == 1)
@@ -1005,8 +991,7 @@ namespace WebApp.Pages.HR
 
                 disabled_btnUpdateProfile = false;
 
-                userSysLogVM.DescUserSysLog = "Cập nhật thông tin nhân viên mã " + profileManagament.Eserial + "";
-            }
+           }
 
             if (profileManagament.isTypeSave == 2)
             {
@@ -1016,8 +1001,6 @@ namespace WebApp.Pages.HR
                 disable_ckContractExtension = true;
                 disable_ckJob = true;
                 disable_ckSal = true;
-
-                userSysLogVM.DescUserSysLog = "Điều chỉnh hồ sơ nhân viên mã " + profileManagament.Eserial + "";
             }
 
             if (profileManagament.isTypeSave == 0)
@@ -1026,17 +1009,12 @@ namespace WebApp.Pages.HR
 
                 profileManagament.isTypeSave = 1;
                 disabled_btnUpdateProfile = false;
-
-                userSysLogVM.DescUserSysLog = "Thêm mới nhân viên mã " + profileManagament.Eserial + "";
             }
 
-            await sysRepo.insert_UserSysLog(userSysLogVM);
-            await sysRepo.notifi_UserSysLogByPermis(userSysLogVM);
-
-            profileHistorys = await profileRepo.GetProfileHistory(profileManagament.Eserial);
+            profileHistorys = await profileService.GetProfileHistory(profileManagament.Eserial);
 
             await GetProfileList();
-            eserial_filter_list = await profileRepo.GetEserialListByID(filterHrVM);
+            eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
 
             isLoading = false;
         }
@@ -1045,15 +1023,8 @@ namespace WebApp.Pages.HR
         {
             if (await js.Swal_Confirm("Xác nhận!", $"Đặt lại mật khẩu đăng nhập hệ thống?", SweetAlertMessageType.question))
             {
-                if (await profileRepo.ResetPass(profileManagament) == 1)
-                {
-                    userSysLogVM.DescUserSysLog = "Đặt lại mật khẩu đăng nhập hệ thống mã " + profileManagament.Eserial + "";
-
-                    await sysRepo.insert_UserSysLog(userSysLogVM);
-                    await sysRepo.notifi_UserSysLogByPermis(userSysLogVM);
-
-                    await js.Swal_Message("Thông báo!", "Đặt lại mật khẩu đăng nhập thành công.", SweetAlertMessageType.success);
-                }
+                await profileService.ResetPass(profileManagament);
+                await js.Swal_Message("Thông báo!", "Đặt lại mật khẩu đăng nhập thành công.", SweetAlertMessageType.success);
             }
         }
 
@@ -1061,13 +1032,8 @@ namespace WebApp.Pages.HR
         {
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
             {
-                if (await profileRepo.DelProfileHistory(profilehistory))
+                if (await profileService.DelProfileHistory(profilehistory))
                 {
-                    userSysLogVM.DescUserSysLog = "Xóa lịch sử nhân viên mã " + profileManagament.Eserial + "";
-
-                    await sysRepo.insert_UserSysLog(userSysLogVM);
-                    await sysRepo.notifi_UserSysLogByPermis(userSysLogVM);
-
                     await js.Swal_Message("Thông báo!", "Xóa thành công.", SweetAlertMessageType.success);
 
                     Close_ModalProfile();
@@ -1083,13 +1049,8 @@ namespace WebApp.Pages.HR
         {
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa nhân viên mã " + filterHrVM.selectedEserial + "?", SweetAlertMessageType.question))
             {
-                if (await profileRepo.DelProfile(filterHrVM.selectedEserial))
+                if (await profileService.DelProfile(filterHrVM.selectedEserial))
                 {
-                    userSysLogVM.DescUserSysLog = "Xóa hồ sơ nhân viên mã " + filterHrVM.selectedEserial + "";
-
-                    await sysRepo.insert_UserSysLog(userSysLogVM);
-                    await sysRepo.notifi_UserSysLogByPermis(userSysLogVM);
-
                     await js.Swal_Message("Thông báo!", "Xóa thành công.", SweetAlertMessageType.success);
 
                     await GetProfileList();
@@ -1108,7 +1069,7 @@ namespace WebApp.Pages.HR
 
             profileManagament = new ProfileManagamentVM();
 
-            profileManagament = await profileRepo.GetProfileByEserial(filterHrVM);
+            profileManagament = await profileService.GetProfileByEserial(filterHrVM);
 
             profileManagament.isTypeSave = 4;
 
@@ -1119,13 +1080,8 @@ namespace WebApp.Pages.HR
 
         private async Task TerminateProfile()
         {
-            if (await profileRepo.TerminateProfile(profileManagament))
+            if (await profileService.TerminateProfile(profileManagament))
             {
-                userSysLogVM.DescUserSysLog = "Chấm dứt hợp đồng mã " + filterHrVM.selectedEserial + "";
-
-                await sysRepo.insert_UserSysLog(userSysLogVM);
-                await sysRepo.notifi_UserSysLogByPermis(userSysLogVM);
-
                 await js.Swal_Message("Thông báo!", "Chấm dứt hợp đồng thành công.", SweetAlertMessageType.success);
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModal_TerminateProfile");
@@ -1141,13 +1097,8 @@ namespace WebApp.Pages.HR
         {
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắc chắn hủy chấm dứt hợp đồng?", SweetAlertMessageType.question))
             {
-                if (await profileRepo.RestoreTerminateProfile(filterHrVM.selectedEserial, UserID))
+                if (await profileService.RestoreTerminateProfile(filterHrVM.selectedEserial, UserID))
                 {
-                    userSysLogVM.DescUserSysLog = "Hủy chấm dứt hợp đồng mã " + filterHrVM.selectedEserial + "";
-
-                    await sysRepo.insert_UserSysLog(userSysLogVM);
-                    await sysRepo.notifi_UserSysLogByPermis(userSysLogVM);
-
                     await js.Swal_Message("Thông báo!", "Hủy chấm dứt hợp đồng thành công.", SweetAlertMessageType.success);
                     await js.InvokeAsync<object>("CloseModal", "#InitializeModal_TerminateProfile");
 
@@ -1175,15 +1126,15 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            permis_funcGroups = await profileRepo.GetFuncGroupPermis(profileManagament.Eserial);
-            permis_funcs = await profileRepo.GetFuncPermis(profileManagament.Eserial);
-            permis_subFuncs = await profileRepo.GetSubFuncPermis(profileManagament.Eserial);
+            permis_funcGroups = await profileService.GetFuncGroupPermis(profileManagament.Eserial);
+            permis_funcs = await profileService.GetFuncPermis(profileManagament.Eserial);
+            permis_subFuncs = await profileService.GetSubFuncPermis(profileManagament.Eserial);
 
-            permis_divs = await profileRepo.GetDivisionPermis(profileManagament.Eserial);
-            permis_depts = await profileRepo.GetDepartmentPermis(profileManagament.Eserial);
+            permis_divs = await profileService.GetDivisionPermis(profileManagament.Eserial);
+            permis_depts = await profileService.GetDepartmentPermis(profileManagament.Eserial);
 
-            permis_rptgrps = await profileRepo.GetSysReportGroupPermis(profileManagament.Eserial);
-            permis_rpts = await profileRepo.GetSysReportPermis(profileManagament.Eserial);
+            permis_rptgrps = await profileService.GetsysServicertGroupPermis(profileManagament.Eserial);
+            permis_rpts = await profileService.GetsysServicertPermis(profileManagament.Eserial);
 
             isLoading = false;
         }
@@ -1254,15 +1205,9 @@ namespace WebApp.Pages.HR
 
         private async Task UpdatePermis()
         {
-            await profileRepo.UpdatePermis(permis_funcs.Where(x => x.IsChecked), permis_subFuncs.Where(x => x.IsChecked), permis_depts.Where(x => x.IsChecked), permis_rpts.Where(x => x.IsChecked), filterHrVM.selectedEserial);
+            await profileService.UpdatePermis(permis_funcs.Where(x => x.IsChecked), permis_subFuncs.Where(x => x.IsChecked), permis_depts.Where(x => x.IsChecked), permis_rpts.Where(x => x.IsChecked), filterHrVM.selectedEserial);
 
             await js.Swal_Message("Thông báo!", "Cập nhật phân quyền thành công.", SweetAlertMessageType.success);
-
-            userSysLogVM.DescUserSysLog = "Cập nhật phân quyền nhân viên mã " + profileManagament.Eserial + "";
-
-            await sysRepo.insert_UserSysLog(userSysLogVM);
-            await sysRepo.notifi_UserSysLogByPermis(userSysLogVM);
-
         }
 
         //EmployeeTransaction
@@ -1272,8 +1217,8 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            salTrnGrps = await profileRepo.GetSalTrnGrp(profileManagament.Eserial);
-            salTrnCodes = await profileRepo.GetSalTrnCode(profileManagament.Eserial);
+            salTrnGrps = await profileService.GetSalTrnGrp(profileManagament.Eserial);
+            salTrnCodes = await profileService.GetSalTrnCode(profileManagament.Eserial);
 
             isLoading = false;
         }
@@ -1297,15 +1242,9 @@ namespace WebApp.Pages.HR
 
         private async Task UpdateEmplTrn()
         {
-            await profileRepo.UpdateEmplTrn(salTrnCodes.Where(x => x.IsChecked), filterHrVM.selectedEserial);
+            await profileService.UpdateEmplTrn(salTrnCodes.Where(x => x.IsChecked), filterHrVM.selectedEserial);
 
             await js.Swal_Message("Thông báo!", "Cập nhật thiết lập giao dịch lương thành công.", SweetAlertMessageType.success);
-
-            userSysLogVM.DescUserSysLog = "Cập nhật thiết lập giao dịch lương nhân viên mã " + profileManagament.Eserial + "";
-
-            await sysRepo.insert_UserSysLog(userSysLogVM);
-            await sysRepo.notifi_UserSysLogByPermis(userSysLogVM);
-
         }
 
         //ContractType
@@ -1316,7 +1255,7 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            contractTypeVMs = await profileRepo.GetContractTypeList();
+            contractTypeVMs = await profileService.GetContractTypeList();
 
             isLoading = false;
         }
@@ -1327,7 +1266,7 @@ namespace WebApp.Pages.HR
 
             contractTypeVM = new();
 
-            contractTypeGroupVMs = await profileRepo.GetContractTypeGroupList();
+            contractTypeGroupVMs = await profileService.GetContractTypeGroupList();
 
             if (_isTypeUpdate == 1)
             {
@@ -1345,7 +1284,7 @@ namespace WebApp.Pages.HR
 
             if (contractTypeVM.IsTypeUpdate != 2)
             {
-                await profileRepo.UpdateContractType(contractTypeVM);
+                await profileService.UpdateContractType(contractTypeVM);
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ContractType");
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
@@ -1354,7 +1293,7 @@ namespace WebApp.Pages.HR
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
                 {
-                    int affectedRows = await profileRepo.UpdateContractType(contractTypeVM);
+                    int affectedRows = await profileService.UpdateContractType(contractTypeVM);
 
                     if (affectedRows > 0)
                     {
@@ -1373,7 +1312,7 @@ namespace WebApp.Pages.HR
                 }
             }
 
-            contractTypeVMs = await profileRepo.GetContractTypeList();
+            contractTypeVMs = await profileService.GetContractTypeList();
 
             isLoading = false;
         }
@@ -1382,7 +1321,7 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            contractTypeVMs = await profileRepo.GetContractTypeList();
+            contractTypeVMs = await profileService.GetContractTypeList();
 
             isLoading = false;
         }
@@ -1394,7 +1333,7 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            workTypeVMs = await profileRepo.GetWorkTypeList();
+            workTypeVMs = await profileService.GetWorkTypeList();
 
             isLoading = false;
         }
@@ -1438,7 +1377,7 @@ namespace WebApp.Pages.HR
 
             if (workTypeVM.IsTypeUpdate != 2)
             {
-                await profileRepo.UpdateWorkType(workTypeVM);
+                await profileService.UpdateWorkType(workTypeVM);
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_WorkType");
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
@@ -1447,7 +1386,7 @@ namespace WebApp.Pages.HR
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
                 {
-                    int affectedRows = await profileRepo.UpdateWorkType(workTypeVM);
+                    int affectedRows = await profileService.UpdateWorkType(workTypeVM);
 
                     if (affectedRows > 0)
                     {
@@ -1466,7 +1405,7 @@ namespace WebApp.Pages.HR
                 }
             }
 
-            workTypeVMs = await profileRepo.GetWorkTypeList();
+            workTypeVMs = await profileService.GetWorkTypeList();
 
             isLoading = false;
         }
@@ -1475,7 +1414,7 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            workTypeVMs = await profileRepo.GetWorkTypeList();
+            workTypeVMs = await profileService.GetWorkTypeList();
 
             isLoading = false;
         }
@@ -1488,7 +1427,7 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            profileRelationshipVMs = await profileRepo.GetProfileRelationshipList(filterHrVM.selectedEserial);
+            profileRelationshipVMs = await profileService.GetProfileRelationshipList(filterHrVM.selectedEserial);
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModal_ProfileRelationship");
 
@@ -1501,7 +1440,7 @@ namespace WebApp.Pages.HR
 
             profileRelationshipVM = new();
 
-            relationshipVMs = await profileRepo.GetRelationshipList();
+            relationshipVMs = await profileService.GetRelationshipList();
             profileRelationshipVM.RelationshipID = relationshipVMs.ElementAt(0).RelationshipID;
 
             profileRelationshipVM.Eserial = filterHrVM.selectedEserial;
@@ -1561,7 +1500,7 @@ namespace WebApp.Pages.HR
                     profileRelationshipVM.Rela_ValidTo = string.Empty;
                 }
 
-                await profileRepo.UpdateProfileRelationship(profileRelationshipVM);
+                await profileService.UpdateProfileRelationship(profileRelationshipVM);
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ProfileRelationship");
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
@@ -1570,7 +1509,7 @@ namespace WebApp.Pages.HR
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
                 {
-                    await profileRepo.UpdateProfileRelationship(profileRelationshipVM);
+                    await profileService.UpdateProfileRelationship(profileRelationshipVM);
 
                     await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ProfileRelationship");
                     await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
@@ -1581,7 +1520,7 @@ namespace WebApp.Pages.HR
                 }
             }
 
-            profileRelationshipVMs = await profileRepo.GetProfileRelationshipList(filterHrVM.selectedEserial);
+            profileRelationshipVMs = await profileService.GetProfileRelationshipList(filterHrVM.selectedEserial);
 
             isLoading = false;
         }
@@ -1590,7 +1529,7 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            profileRelationshipVMs = await profileRepo.GetProfileRelationshipList(filterHrVM.selectedEserial);
+            profileRelationshipVMs = await profileService.GetProfileRelationshipList(filterHrVM.selectedEserial);
 
             isLoading = false;
         }
@@ -1604,7 +1543,7 @@ namespace WebApp.Pages.HR
 
             if (!String.IsNullOrEmpty(filterHrVM.searchEmpl))
             {
-                empls = await profileRepo.GetSearchEmpl(filterHrVM);
+                empls = await profileService.GetSearchEmpl(filterHrVM);
             }
             else
             {

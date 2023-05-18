@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Data.Repositories.CRUISES
+namespace D69soft.Server.Controllers.CRUISES
 {
     [Route("api/[controller]")]
     [ApiController]

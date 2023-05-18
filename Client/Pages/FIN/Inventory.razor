@@ -1,9 +1,7 @@
 ﻿@page "/FIN/Inventory"
+@using D69soft.Shared.Models.ViewModels.FIN;
 
-@using Blazored.FluentValidation
-@using Model.ViewModels.FIN
-
-<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 <Loading isLoading="@isLoading"></Loading>
 
 <EditForm Model="@filterFinVM">

@@ -1,12 +1,11 @@
-﻿using System;
-using D69soft.Shared.Models.Entities.FIN;
+﻿using D69soft.Shared.Models.Entities.FIN;
 using D69soft.Shared.Models.Entities.HR;
-using D69soft.Shared.Models.Entities.OP;
 using D69soft.Shared.Models.Entities.SYSTEM;
+using Model.Entities.OP;
 
 namespace D69soft.Shared.Models.ViewModels.HR
 {
-    public class FilterHrVM : Period, Profile, Division, Department, Section, Position, PositionGroup, Rpt, Shift, SalaryTransactionGroup, SalaryTransactionCode, Cruise
+    public class FilterHrVM : Period, Profile, Division, Department, Section, Position, PositionGroup, Rpt, Shift, SalaryTransactionGroup, SalaryTransactionCode, Tender
     {
         //Parameter
         public string UserID { get; set; }
@@ -115,8 +114,8 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public int PositionGroupNo { get; set; }
         public string PositionGroupID { get; set; }
         public string PositionGroupName { get; set; }
-        public string CruiseCode { get; set; }
-        public string CruiseName { get; set; }
-        public bool CruiseActive { get; set; }
+        public string TenderCode { get; set; }
+        public string TenderName { get; set; }
+        public bool TenderActive { get; set; }
     }
 }

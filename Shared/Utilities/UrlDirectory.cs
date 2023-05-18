@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Utilities
+namespace D69soft.Shared.Utilities
 {
     public class UrlDirectory
     {

@@ -1,35 +1,28 @@
-﻿using Data.Repositories.HR;
-using Data.Repositories.SYSTEM;
-using Model.Entities.HR;
-using Model.ViewModels.DOC;
-using Model.ViewModels.HR;
-using WebApp.Helpers;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Web.Virtualization;
 using Microsoft.JSInterop;
-using DevExpress.XtraRichEdit.Model;
 using Blazored.TextEditor;
+using D69soft.Client.Services;
+using D69soft.Client.Services.HR;
+using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Client.Helpers;
 
-namespace WebApp.Pages.HR
+namespace D69soft.Client.Pages.HR
 {
     partial class OrganizationalChart
     {
         [Inject] IJSRuntime js { get; set; }
-
-        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        [Inject] SysRepository sysRepo { get; set; }
-        [Inject] UserRepository userRepo { get; set; }
-
-        [Inject] OrganizationalChartService organizationalChartRepo { get; set; }
+        [Inject] SysService sysService { get; set; }
+        [Inject] OrganizationalChartService organizationalChartService { get; set; }
 
         protected string UserID;
 
         bool isLoading;
 
-        bool isLoadingPage;
+        bool isLoadingScreen = true;
 
         FilterHrVM filterHrVM = new();
 
@@ -68,13 +61,11 @@ namespace WebApp.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            isLoadingPage = true;
-
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (sysRepo.checkPermisFunc(UserID, "HR_OrganizationalChart"))
+            if (await sysService.CheckAccessFunc(UserID, "HR_OrganizationalChart"))
             {
-                await sysRepo.insert_LogUserFunc(UserID, "HR_OrganizationalChart");
+                await sysService.InsertLogUserFunc(UserID, "HR_OrganizationalChart");
             }
             else
             {
@@ -85,16 +76,16 @@ namespace WebApp.Pages.HR
 
             filterHrVM.searchValues = string.Empty;
 
-            divisionVMs = await organizationalChartRepo.GetDivisionList(filterHrVM);
+            divisionVMs = await organizationalChartService.GetDivisionList(filterHrVM);
 
-            departmentGroupVMs = await organizationalChartRepo.GetDepartmentGroupList();
+            departmentGroupVMs = await organizationalChartService.GetDepartmentGroupList();
 
-            sectionVMs = await organizationalChartRepo.GetSectionList();
+            sectionVMs = await organizationalChartService.GetSectionList();
 
-            positionVMs = await organizationalChartRepo.GetPositionList();
-            positionGroups = await organizationalChartRepo.GetPositionGroupList();
+            positionVMs = await organizationalChartService.GetPositionList();
+            positionGroups = await organizationalChartService.GetPositionGroupList();
 
-            isLoadingPage = false;
+            isLoadingScreen = false;
         }
 
         //Division
@@ -140,7 +131,7 @@ namespace WebApp.Pages.HR
 
             if (divisionVM.IsTypeUpdate != 2)
             {
-                await organizationalChartRepo.UpdateDivision(divisionVM);
+                await organizationalChartService.UpdateDivision(divisionVM);
                 divisionVM.IsTypeUpdate = 1;
 
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
@@ -149,7 +140,7 @@ namespace WebApp.Pages.HR
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
                 {
-                    int affectedRows = await organizationalChartRepo.UpdateDivision(divisionVM);
+                    int affectedRows = await organizationalChartService.UpdateDivision(divisionVM);
 
                     if (affectedRows > 0)
                     {
@@ -178,7 +169,7 @@ namespace WebApp.Pages.HR
             isLoading = true;
 
             filterHrVM.DivisionID = String.Empty;
-            divisionVMs = await organizationalChartRepo.GetDivisionList(filterHrVM);
+            divisionVMs = await organizationalChartService.GetDivisionList(filterHrVM);
 
             isLoading = false;
         }
@@ -220,7 +211,7 @@ namespace WebApp.Pages.HR
 
             if (departmentVM.IsTypeUpdate != 2)
             {
-                await organizationalChartRepo.UpdateDepartment(departmentVM);
+                await organizationalChartService.UpdateDepartment(departmentVM);
                 departmentVM.IsTypeUpdate = 1;
 
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
@@ -229,7 +220,7 @@ namespace WebApp.Pages.HR
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
                 {
-                    int affectedRows = await organizationalChartRepo.UpdateDepartment(departmentVM);
+                    int affectedRows = await organizationalChartService.UpdateDepartment(departmentVM);
 
                     if (affectedRows > 0)
                     {
@@ -258,7 +249,7 @@ namespace WebApp.Pages.HR
             isLoading = true;
 
             filterHrVM.DepartmentID = String.Empty;
-            departmentVMs = await organizationalChartRepo.GetDepartmentList(filterHrVM);
+            departmentVMs = await organizationalChartService.GetDepartmentList(filterHrVM);
 
             isLoading = false;
         }
@@ -290,7 +281,7 @@ namespace WebApp.Pages.HR
 
             if (departmentGroupVM.IsTypeUpdate != 2)
             {
-                await organizationalChartRepo.UpdateDepartmentGroup(departmentGroupVM);
+                await organizationalChartService.UpdateDepartmentGroup(departmentGroupVM);
                 departmentGroupVM.IsTypeUpdate = 1;
 
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
@@ -299,7 +290,7 @@ namespace WebApp.Pages.HR
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
                 {
-                    int affectedRows = await organizationalChartRepo.UpdateDepartmentGroup(departmentGroupVM);
+                    int affectedRows = await organizationalChartService.UpdateDepartmentGroup(departmentGroupVM);
 
                     if (affectedRows > 0)
                     {
@@ -327,7 +318,7 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            departmentGroupVMs = await organizationalChartRepo.GetDepartmentGroupList();
+            departmentGroupVMs = await organizationalChartService.GetDepartmentGroupList();
 
             isLoading = false;
         }
@@ -365,7 +356,7 @@ namespace WebApp.Pages.HR
 
             if (sectionVM.IsTypeUpdate != 2)
             {
-                await organizationalChartRepo.UpdateSection(sectionVM);
+                await organizationalChartService.UpdateSection(sectionVM);
                 sectionVM.IsTypeUpdate = 1;
 
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
@@ -374,7 +365,7 @@ namespace WebApp.Pages.HR
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
                 {
-                    int affectedRows = await organizationalChartRepo.UpdateSection(sectionVM);
+                    int affectedRows = await organizationalChartService.UpdateSection(sectionVM);
 
                     if (affectedRows > 0)
                     {
@@ -403,7 +394,7 @@ namespace WebApp.Pages.HR
             isLoading = true;
 
             filterHrVM.SectionID = String.Empty;
-            sectionVMs = await organizationalChartRepo.GetSectionList();
+            sectionVMs = await organizationalChartService.GetSectionList();
 
             isLoading = false;
         }
@@ -454,7 +445,7 @@ namespace WebApp.Pages.HR
             {
                 positionVM.JobDesc = await QuillHtml.GetHTML();
 
-                await organizationalChartRepo.UpdatePosition(positionVM);
+                await organizationalChartService.UpdatePosition(positionVM);
                 positionVM.IsTypeUpdate = 1;
 
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
@@ -463,7 +454,7 @@ namespace WebApp.Pages.HR
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
                 {
-                    int affectedRows = await organizationalChartRepo.UpdatePosition(positionVM);
+                    int affectedRows = await organizationalChartService.UpdatePosition(positionVM);
 
                     if (affectedRows > 0)
                     {
@@ -501,7 +492,7 @@ namespace WebApp.Pages.HR
             isLoading = true;
 
             filterHrVM.PositionID = String.Empty;
-            positionVMs = await organizationalChartRepo.GetPositionList();
+            positionVMs = await organizationalChartService.GetPositionList();
 
             isLoading = false;
         }
@@ -533,7 +524,7 @@ namespace WebApp.Pages.HR
 
             if (positionGroupVM.IsTypeUpdate != 2)
             {
-                await organizationalChartRepo.UpdatePositionGroup(positionGroupVM);
+                await organizationalChartService.UpdatePositionGroup(positionGroupVM);
                 positionGroupVM.IsTypeUpdate = 1;
 
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
@@ -542,7 +533,7 @@ namespace WebApp.Pages.HR
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
                 {
-                    int affectedRows = await organizationalChartRepo.UpdatePositionGroup(positionGroupVM);
+                    int affectedRows = await organizationalChartService.UpdatePositionGroup(positionGroupVM);
 
                     if (affectedRows > 0)
                     {
@@ -570,7 +561,7 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            positionGroups = await organizationalChartRepo.GetPositionGroupList();
+            positionGroups = await organizationalChartService.GetPositionGroupList();
 
             isLoading = false;
         }

@@ -7,7 +7,7 @@ using Utilities;
 using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.HR;
 
-namespace Data.Repositories.HR
+namespace D69soft.Server.Controllers.HR
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -708,6 +708,22 @@ namespace Data.Repositories.HR
                 await conn.ExecuteAsync(sql, _payslipVM);
             }
             return true;
+        }
+
+        [HttpGet("GetPayslipUser/{_UserID}")]
+        public async Task<ActionResult<IEnumerable<PayslipVM>>> GetPayslipUser(string _UserID)
+        {
+            var sql = "select top 12 mss.ID, mss.Period, mss.Eserial, p.Eserial + ' - ' + p.LastName + ' ' + p.MiddleName + ' ' + p.FirstName as FullNameSalaryReply, p.UrlAvatar as UrlAvatarSalaryReply, case when coalesce(SalaryQuestion,'') = '' then 0 else 1 end as TypeUpdateSalaryQuestion, * from HR.MonthlySalaryStaff mss ";
+            sql += "left join HR.LockSalary ls on ls.Period = mss.Period and ls.DivisionID = mss.DivisionID ";
+            sql += "left join HR.Profile p on p.Eserial = mss.EserialSalaryReply where ls.isSalLock = 1 and mss.Eserial = @Eserial order by mss.Period desc ";
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                var result = await conn.QueryAsync<PayslipVM>(sql, new { Eserial = _UserID });
+                return Ok(result);
+            }
         }
 
     }

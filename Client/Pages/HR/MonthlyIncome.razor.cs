@@ -1,30 +1,30 @@
-﻿using Data.Repositories.HR;
-using Data.Repositories.SYSTEM;
-using Model.ViewModels.FIN;
-using Model.ViewModels.HR;
-using WebApp.Helpers;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
+using D69soft.Client.Services;
+using D69soft.Client.Services.HR;
+using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Client.Helpers;
 
-namespace WebApp.Pages.HR
+namespace D69soft.Client.Pages.HR
 {
     partial class MonthlyIncome
     {
         [Inject] IJSRuntime js { get; set; }
-        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        [Inject] SysRepository sysRepo { get; set; }
-        [Inject] OrganizationalChartService organizationalChartRepo { get; set; }
-        [Inject] DutyRosterService dutyRosterRepo { get; set; }
-        [Inject] PayrollService payrollRepo { get; set; }
+        [Inject] SysService sysService { get; set; }
+        [Inject] OrganizationalChartService organizationalChartService { get; set; }
+        [Inject] DutyRosterService dutyRosterService { get; set; }
+        [Inject] PayrollService payrollService { get; set; }
 
         protected string UserID;
 
         bool isLoading;
 
-        bool isLoadingPage;
+        bool isLoadingScreen = true;
 
         //Filter
         FilterHrVM filterHrVM = new();
@@ -55,13 +55,13 @@ namespace WebApp.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            isLoadingPage = true;
+            
 
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (sysRepo.checkPermisFunc(UserID, "HR_DutyRoster"))
+            if (await sysService.CheckAccessFunc(UserID, "HR_DutyRoster"))
             {
-                await sysRepo.insert_LogUserFunc(UserID, "HR_DutyRoster");
+                await sysService.InsertLogUserFunc(UserID, "HR_DutyRoster");
             }
             else
             {
@@ -71,35 +71,35 @@ namespace WebApp.Pages.HR
             //Initialize Filter
             filterHrVM.UserID = monthlyIncomeTrnOtherVM.UserID = UserID;
 
-            year_filter_list = await sysRepo.GetYearFilter();
+            year_filter_list = await sysService.GetYearFilter();
             filterHrVM.Year = DateTime.Now.Year;
 
-            month_filter_list = await sysRepo.GetMonthFilter();
+            month_filter_list = await sysService.GetMonthFilter();
             filterHrVM.Month = DateTime.Now.Month;
 
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
 
-            division_filter_list = await organizationalChartRepo.GetDivisionList(filterHrVM);
+            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
             filterHrVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
 
             filterHrVM.SectionID = string.Empty;
-            section_filter_list = await organizationalChartRepo.GetSectionList();
+            section_filter_list = await organizationalChartService.GetSectionList();
 
             filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartRepo.GetDepartmentList(filterHrVM);
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
 
             filterHrVM.PositionGroupID = string.Empty;
-            position_filter_list = await organizationalChartRepo.GetPositionList();
+            position_filter_list = await organizationalChartService.GetPositionList();
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
-            trngrp_filter_list = await payrollRepo.GetTrnGroupCodeList();
+            trngrp_filter_list = await payrollService.GetTrnGroupCodeList();
 
             //DataExcel
             filterHrVM.strDataFromExcel = string.Empty;
 
-            isLoadingPage = false;
+            isLoadingScreen = false;
         }
 
         private async void onchange_filter_month(int value)
@@ -111,7 +111,7 @@ namespace WebApp.Pages.HR
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
             filterHrVM.TrnCode = 0;
             filterHrVM.TrnSubCode = 0;
@@ -133,7 +133,7 @@ namespace WebApp.Pages.HR
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
             filterHrVM.TrnCode = 0;
             filterHrVM.TrnSubCode = 0;
@@ -153,13 +153,13 @@ namespace WebApp.Pages.HR
             filterHrVM.DivisionID = value;
 
             filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartRepo.GetDepartmentList(filterHrVM);
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
 
             filterHrVM.PositionGroupID = string.Empty;
             filterHrVM.arrPositionID = new string[] { };
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
             filterHrVM.TrnCode = 0;
             filterHrVM.TrnSubCode = 0;
@@ -182,7 +182,7 @@ namespace WebApp.Pages.HR
             filterHrVM.arrPositionID = new string[] { };
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
             filterHrVM.IsChecked = false;
             monthlyIncomeTrnOtherVMs = null;
@@ -202,7 +202,7 @@ namespace WebApp.Pages.HR
             filterHrVM.arrPositionID = new string[] { };
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
             filterHrVM.IsChecked = false;
             monthlyIncomeTrnOtherVMs = null;
@@ -237,7 +237,7 @@ namespace WebApp.Pages.HR
         private async void reload_filter_eserial()
         {
             filterHrVM.Eserial = String.Empty;
-            eserial_filter_list = await dutyRosterRepo.GetEserialByID(filterHrVM, UserID);
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
             StateHasChanged();
         }
@@ -249,7 +249,7 @@ namespace WebApp.Pages.HR
             filterHrVM.Eserial = value;
 
             filterHrVM.IsChecked = false;
-            monthlyIncomeTrnOtherVMs = await payrollRepo.GetMonthlyIncomeTrnOtherList(filterHrVM);
+            monthlyIncomeTrnOtherVMs = await payrollService.GetMonthlyIncomeTrnOtherList(filterHrVM);
 
             isLoading = false;
 
@@ -263,7 +263,7 @@ namespace WebApp.Pages.HR
             filterHrVM.TrnCode = value;
 
             filterHrVM.TrnSubCode = 0;
-            trn_filter_list = await payrollRepo.GetTrnCodeList(filterHrVM.TrnCode);
+            trn_filter_list = await payrollService.GetTrnCodeList(filterHrVM.TrnCode);
 
             isLoading = false;
 
@@ -299,7 +299,7 @@ namespace WebApp.Pages.HR
             }
 
             filterHrVM.IsChecked = false;
-            monthlyIncomeTrnOtherVMs = await payrollRepo.GetMonthlyIncomeTrnOtherList(filterHrVM);
+            monthlyIncomeTrnOtherVMs = await payrollService.GetMonthlyIncomeTrnOtherList(filterHrVM);
 
             isLoading = false;
         }
@@ -360,13 +360,13 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            await payrollRepo.UpdateMITrnOther(monthlyIncomeTrnOtherVM);
+            await payrollService.UpdateMITrnOther(monthlyIncomeTrnOtherVM);
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
             await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_MonthlyIncomeTrnOther");
 
             filterHrVM.IsChecked = false;
             filterHrVM.isTypeSearch = 0;
-            monthlyIncomeTrnOtherVMs = await payrollRepo.GetMonthlyIncomeTrnOtherList(filterHrVM);
+            monthlyIncomeTrnOtherVMs = await payrollService.GetMonthlyIncomeTrnOtherList(filterHrVM);
 
             isLoading = false;
         }
@@ -386,13 +386,13 @@ namespace WebApp.Pages.HR
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa dữ liệu đã chọn?", SweetAlertMessageType.question))
                 {
-                    await payrollRepo.UpdateMITrnOther(monthlyIncomeTrnOtherVM);
+                    await payrollService.UpdateMITrnOther(monthlyIncomeTrnOtherVM);
 
                     await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Shift");
                     await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
 
                     filterHrVM.IsChecked = false;
-                    monthlyIncomeTrnOtherVMs = await payrollRepo.GetMonthlyIncomeTrnOtherList(filterHrVM);
+                    monthlyIncomeTrnOtherVMs = await payrollService.GetMonthlyIncomeTrnOtherList(filterHrVM);
                 }
             }
 
@@ -418,7 +418,7 @@ namespace WebApp.Pages.HR
         {
             isLoading = true;
 
-            if (await payrollRepo.GetDataMITrnOtherFromExcel(filterHrVM))
+            if (await payrollService.GetDataMITrnOtherFromExcel(filterHrVM))
             {
                 filterHrVM.IsChecked = false;
                 await GetMonthlyIncomeTrnOtherList(1);

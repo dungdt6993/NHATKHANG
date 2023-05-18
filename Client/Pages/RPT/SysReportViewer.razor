@@ -1,7 +1,7 @@
-﻿@page "/RPT/SysReportViewer/{id}"
+﻿@page "/RPT/sysServicertViewer/{id}"
 @layout RptLayout
 
-<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 
 <DxDocumentViewer ReportName=@ReportName Height="calc(100vh - 0px)" Width="100%">
     <DxDocumentViewerExportSettings ShowPrintNotificationDialog="false" />
@@ -12,7 +12,7 @@
 
 @code {
 
-    bool isLoadingPage;
+    bool isLoadingScreen = true;
 
     [Parameter]
     public string ReportName { get; set; }
@@ -22,7 +22,7 @@
 
     protected override void OnInitialized()
     {
-        isLoadingPage = true;
+        
 
         ReportName = id.Replace("~", "?");
 

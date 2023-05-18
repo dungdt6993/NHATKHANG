@@ -1,31 +1,30 @@
 ﻿using BlazorDateRangePicker;
-using Data.Repositories.FIN;
-using Data.Repositories.POS;
-using Data.Repositories.SYSTEM;
-using Model.ViewModels.FIN;
-using Model.ViewModels.POS;
-using WebApp.Helpers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
+using D69soft.Client.Services;
+using D69soft.Client.Services.FIN;
+using D69soft.Client.Services.POS;
+using D69soft.Shared.Models.ViewModels.POS;
+using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Client.Helpers;
 
-namespace WebApp.Pages.POS
+namespace D69soft.Client.Pages.POS
 {
     partial class Invoices
     {
         [Inject] IJSRuntime js { get; set; }
-
-        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        [Inject] SysRepository sysRepo { get; set; }
+        [Inject] SysService sysService { get; set; }
 
-        [Inject] VoucherService voucherRepo { get; set; }
-        [Inject] CashierService cashierRepo { get; set; }
+        [Inject] VoucherService voucherService { get; set; }
+        [Inject] CashierService cashierService { get; set; }
 
         bool isLoading;
 
-        bool isLoadingPage;
+        bool isLoadingScreen = true;
 
         //Filter
         FilterPosVM filterPosVM = new();
@@ -52,20 +51,20 @@ namespace WebApp.Pages.POS
 
         protected override async Task OnInitializedAsync()
         {
-            isLoadingPage = true;
+            
 
             filterPosVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (sysRepo.checkPermisFunc(filterPosVM.UserID, "POS_Invoices"))
+            if (await sysService.CheckAccessFunc(filterPosVM.UserID, "POS_Invoices"))
             {
-                await sysRepo.insert_LogUserFunc(filterPosVM.UserID, "POS_Invoices");
+                await sysService.InsertLogUserFunc(filterPosVM.UserID, "POS_Invoices");
             }
             else
             {
                 navigationManager.NavigateTo("/");
             }
 
-            pointOfSaleVMs = await cashierRepo.GetPointOfSale();
+            pointOfSaleVMs = await cashierService.GetPointOfSale();
 
             filterPosVM.StartDate = DateTime.Now;
             filterPosVM.EndDate = DateTime.Now;
@@ -74,14 +73,14 @@ namespace WebApp.Pages.POS
 
             GetInvoices();
 
-            isLoadingPage = false;
+            isLoadingScreen = false;
         }
 
         private async void GetInvoices()
         {
             isLoading = true;
 
-            invoiceVMs = await cashierRepo.GetInvoices(filterPosVM);
+            invoiceVMs = await cashierService.GetInvoices(filterPosVM);
 
             invoiceVM = new();
 
@@ -144,7 +143,7 @@ namespace WebApp.Pages.POS
             {
                 invoiceVM.INVActive = _INVActive;
 
-                await cashierRepo.ActiveInvoice(invoiceVM);
+                await cashierService.ActiveInvoice(invoiceVM);
 
                 if(invoiceVM.INVActive)
                 {
@@ -164,9 +163,9 @@ namespace WebApp.Pages.POS
                     stockVoucherVM.VDesc = $"Xuất kho theo hóa đơn bán hàng - {invoiceVM.CheckNo} ";
                     stockVoucherVM.VDate = invoiceVM.IDate;
 
-                    stockVoucherDetailVMs = await cashierRepo.QI_StockVoucherDetails(invoiceVM.CheckNo);
+                    stockVoucherDetailVMs = await cashierService.QI_StockVoucherDetails(invoiceVM.CheckNo);
 
-                    await voucherRepo.UpdateVoucher(stockVoucherVM, stockVoucherDetailVMs);
+                    await voucherService.UpdateVoucher(stockVoucherVM, stockVoucherDetailVMs);
                 }
 
                 GetInvoices();
@@ -187,7 +186,7 @@ namespace WebApp.Pages.POS
         {
             isLoading = true;
 
-            await cashierRepo.SyncDataSmile();
+            await cashierService.SyncDataSmile();
 
             GetInvoices();
 

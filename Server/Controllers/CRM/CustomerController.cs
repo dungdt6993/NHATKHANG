@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.CRM;
 
-namespace Data.Repositories.CRM
+namespace D69soft.Server.Controllers.CRM
 {
     [Route("api/[controller]")]
     [ApiController]

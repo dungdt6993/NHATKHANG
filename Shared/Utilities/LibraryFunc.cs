@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Utilities
+namespace D69soft.Shared.Utilities
 {
     public class LibraryFunc
     {

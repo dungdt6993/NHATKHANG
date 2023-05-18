@@ -1,37 +1,33 @@
 ﻿using BlazorDateRangePicker;
 using Blazored.TextEditor;
-using Data.Repositories.HR;
-using Data.Repositories.SYSTEM;
-using Model.ViewModels.FIN;
-using Model.ViewModels.HR;
-using Utilities;
-using WebApp.Helpers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using Model.ViewModels.OP;
-using Data.Repositories.OP;
+using D69soft.Client.Services;
+using D69soft.Client.Services.HR;
+using D69soft.Client.Services.OP;
+using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Client.Helpers;
 
-namespace WebApp.Pages.OP
+namespace D69soft.Client.Pages.OP
 {
     partial class EmplTrf
     {
         [Inject] IJSRuntime js { get; set; }
-        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        [Inject] SysRepository sysRepo { get; set; }
-        [Inject] OrganizationalChartService organizationalChartRepo { get; set; }
-
-        [Inject] DutyRosterService dutyRosterRepo { get; set; }
-
-        [Inject] OPService opRepo { get; set; }
+        [Inject] SysService sysService { get; set; }
+        [Inject] OrganizationalChartService organizationalChartService { get; set; }
+        [Inject] DutyRosterService dutyRosterService { get; set; }
+        [Inject] OPService opService { get; set; }
 
         protected string UserID;
 
         bool isLoading;
 
-        bool isLoadingPage;
+        bool isLoadingScreen = true;
 
         //Filter
         FilterHrVM filterHrVM = new();
@@ -66,18 +62,17 @@ namespace WebApp.Pages.OP
             {
                 await QuillHtml.LoadHTMLContent(dutyRosterVM.DutyRosterNote);
             }
-
         }
 
         protected override async Task OnInitializedAsync()
         {
-            isLoadingPage = true;
+            
 
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (sysRepo.checkPermisFunc(UserID, "OP_EmplTrf"))
+            if (await sysService.CheckAccessFunc(UserID, "OP_EmplTrf"))
             {
-                await sysRepo.insert_LogUserFunc(UserID, "OP_EmplTrf");
+                await sysService.InsertLogUserFunc(UserID, "OP_EmplTrf");
             }
             else
             {
@@ -89,16 +84,16 @@ namespace WebApp.Pages.OP
 
             filterHrVM.dDate = DateTime.Now;
 
-            division_filter_list = await organizationalChartRepo.GetDivisionList(filterHrVM);
+            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
             filterHrVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
 
             filterHrVM.ShiftID = string.Empty;
-            shiftVMs = await dutyRosterRepo.GetShiftList();
+            shiftVMs = await dutyRosterService.GetShiftList();
 
             filterHrVM.PositionGroupID = string.Empty;
-            position_filter_list = await organizationalChartRepo.GetPositionList();
+            position_filter_list = await organizationalChartService.GetPositionList();
 
-            isLoadingPage = false;
+            isLoadingScreen = false;
         }
 
         public async Task OnRangeSelect_dDate(DateRange _range)
@@ -122,7 +117,7 @@ namespace WebApp.Pages.OP
             filterHrVM.PositionGroupID = string.Empty;
             filterHrVM.arrPositionID = new string[] { };
 
-            position_filter_list = await organizationalChartRepo.GetPositionList();
+            position_filter_list = await organizationalChartService.GetPositionList();
 
             dutyRosterVMs = null;
 
@@ -175,11 +170,11 @@ namespace WebApp.Pages.OP
         {
             isLoading = true;
 
-            dutyRosterVMs = await dutyRosterRepo.GetEmplTrfList(filterHrVM);
+            dutyRosterVMs = await dutyRosterService.GetEmplTrfList(filterHrVM);
 
-            dutyRosterNotes = await dutyRosterRepo.GetDutyRosterNotes(filterHrVM);
+            dutyRosterNotes = await dutyRosterService.GetDutyRosterNotes(filterHrVM);
 
-            tenderScheduleVMs = await opRepo.GetTenderSchedules(filterHrVM);
+            tenderScheduleVMs = await opService.GetTenderSchedules(filterHrVM);
 
             isLoading = false;
         }
@@ -218,7 +213,7 @@ namespace WebApp.Pages.OP
                 _dutyRosterVM.SecondShiftID = arrShift[1].ToString();
             }
 
-            var result = await dutyRosterRepo.UpdateShiftWork(_dutyRosterVM);
+            var result = await dutyRosterService.UpdateShiftWork(_dutyRosterVM);
 
             switch (result)
             {
@@ -242,7 +237,7 @@ namespace WebApp.Pages.OP
                     filterHrVM.SectionID = String.Empty;
                     filterHrVM.DepartmentID = String.Empty;
 
-                    DutyRosterVM tmpDutyRosterVM = await dutyRosterRepo.GetDutyRosterByEserial(filterHrVM, _dutyRosterVM);
+                    DutyRosterVM tmpDutyRosterVM = await dutyRosterService.GetDutyRosterByEserial(filterHrVM, _dutyRosterVM);
 
                     _dutyRosterVM.WorkShift = tmpDutyRosterVM.WorkShift;
                     _dutyRosterVM.ColorHEX = tmpDutyRosterVM.ColorHEX;
@@ -265,7 +260,7 @@ namespace WebApp.Pages.OP
 
             dutyRosterVM.PositionID = value;
 
-            await dutyRosterRepo.UpdatePositionWork(dutyRosterVM);
+            await dutyRosterService.UpdatePositionWork(dutyRosterVM);
 
             await GetEmplTrfList();
 
@@ -301,7 +296,7 @@ namespace WebApp.Pages.OP
 
             dutyRosterVM.DutyRosterNote = await QuillHtml.GetHTML() != "<p><br></p>" ? await QuillHtml.GetHTML() : String.Empty;
 
-            await dutyRosterRepo.UpdateDutyRosterNote(dutyRosterVM);
+            await dutyRosterService.UpdateDutyRosterNote(dutyRosterVM);
 
             await GetEmplTrfList();
 
@@ -330,7 +325,7 @@ namespace WebApp.Pages.OP
 
             tenderScheduleVM.ShiftID = value.Replace("/", ",").Trim().ToUpper();
 
-            await opRepo.UpdateTenderShift(tenderScheduleVM);
+            await opService.UpdateTenderShift(tenderScheduleVM);
 
             await GetEmplTrfList();
 
@@ -347,7 +342,7 @@ namespace WebApp.Pages.OP
 
             tenderScheduleVM.TenderStatus = _tenderStatus;
 
-            await opRepo.UpdateTenderStatus(tenderScheduleVM);
+            await opService.UpdateTenderStatus(tenderScheduleVM);
 
             await GetEmplTrfList();
 

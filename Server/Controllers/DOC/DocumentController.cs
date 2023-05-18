@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.DOC;
 using D69soft.Shared.Models.ViewModels.HR;
 
-namespace Data.Repositories.DOC
+namespace D69soft.Server.Controllers.DOC
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -121,7 +121,7 @@ namespace Data.Repositories.DOC
         }
 
         [HttpPost("UpdateDocType")]
-        public async Task<ActionResult<bool>> UpdateDocType(DocumentTypeVM _documentTypeVM)
+        public async Task<ActionResult<int>> UpdateDocType(DocumentTypeVM _documentTypeVM)
         {
             var sql = "";
             if (_documentTypeVM.IsTypeUpdate == 0)
@@ -144,8 +144,7 @@ namespace Data.Repositories.DOC
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                await conn.ExecuteAsync(sql, _documentTypeVM);
-                return true;
+                return await conn.ExecuteAsync(sql, _documentTypeVM); ;
             }
         }
     }

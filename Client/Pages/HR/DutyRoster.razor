@@ -1,10 +1,7 @@
 ﻿@page "/HR/DutyRoster"
 
-@using Blazored.FluentValidation
-@using Utilities
-
 <Loading isLoading="@isLoading"></Loading>
-<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_Shift">
     <div class="modal-dialog modal-lg">
@@ -16,7 +13,7 @@
                 </h5>
 
                 <div class="ml-auto">
-                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_DutyRoster_UpdateShift"))
+                    @if (sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_UpdateShift").Result)
                     {
                         <button type="button" class="btn btn-sm btn-success" data-target="#InitializeModalUpdate_Shift" data-toggle="modal" @onclick="(() => InitializeModalUpdate_Shift(0, shiftVM))"><i class="fas fa-plus-circle"></i> Thêm mới</button>
                     }
@@ -100,7 +97,7 @@
     </div>
 </div>
 
-@if (sysRepo.checkAccessSubFunc(UserID, "HR_DutyRoster_UpdateShift"))
+@if (sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_UpdateShift").Result)
 {
     <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Shift">
         <div class="modal-dialog">
@@ -502,13 +499,13 @@
 
             <div class="card-header text-right">
                 <button type="button" class="btn btn-info" data-target="#InitializeModal_Shift" data-toggle="modal" @onclick="()=>InitializeModal_Shift()"><i class="fa-solid fa-clipboard-list"></i> Bảng ca</button>
-                @if (payrollRepo.IsOpenFunc(filterHrVM))
+                @if (payrollService.IsOpenFunc(filterHrVM).Result)
                 {
-                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_DutyRoster_ControlOFF"))
+                    @if (sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_ControlOFF").Result)
                     {
                         <button type="button" class="btn btn-success" @onclick="()=>CalcControlDAYOFF()"><i class="fa-solid fa-calculator"></i> Kiểm soát ngày nghỉ</button>
                     }
-                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_DutyRoster_Lock"))
+                    @if (sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_Lock").Result)
                     {
                         <button type="button" class="btn btn-danger" data-target="#InitializeModal_LockDutyRoster" data-toggle="modal" @onclick="()=>InitializeModal_LockDutyRoster()"><i class="fas fa-lock"></i> Khóa bảng công</button>
                     }
@@ -591,7 +588,7 @@
                                         <td>@_dutyRosterVM_0.PositionName</td>
                                         @if (_dutyRosterVM_0.isLock == 0)
                                         {
-                                            if (sysRepo.checkAccessSubFunc(UserID, "HR_DutyRoster_Update") == false)
+                                            if (!sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_Update").Result)
                                             {
                                                 <td class="text-danger">
                                                     <i class="fa-solid fa-lock"></i>
@@ -633,7 +630,7 @@
 
                                             _dutyRosterVM_1.InputAttributes = new Dictionary<string, object>() { { "style", colorDayoff }, { "onpaste", "focusInputNextID('" + _dutyRosterVM_1.InputNextID + "')" } };
 
-                                            if (_dutyRosterVM_1.ckJoined == 0 || _dutyRosterVM_1.ckTerminated == 1 || _dutyRosterVM_1.isLock == 1 || sysRepo.checkAccessSubFunc(UserID, "HR_DutyRoster_Update") == false)
+                                            if (_dutyRosterVM_1.ckJoined == 0 || _dutyRosterVM_1.ckTerminated == 1 || _dutyRosterVM_1.isLock == 1 || !sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_Update").Result)
                                             {
 
                                                 @if (_dutyRosterVM_1.ckJoined == 0 || _dutyRosterVM_1.ckTerminated == 1)

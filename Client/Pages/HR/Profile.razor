@@ -1,10 +1,7 @@
 ﻿@page "/HR/Profile"
-
-@using Blazored.FluentValidation
 @using System.Data;
-@using Utilities;
 
-<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 <Loading isLoading="@isLoading"></Loading>
 
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_Profile">
@@ -56,7 +53,7 @@
                                 }
                             </li>
 
-                            @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_EditSal") && profileManagament.isTypeSave == 1 || sysRepo.checkAccessSubFunc(UserID, "HR_Profile_ChangeSal") && profileManagament.isTypeSave == 2 || sysRepo.checkAccessSubFunc(UserID, "HR_Profile_ViewSal") && profileManagament.isTypeSave == 3 || profileManagament.isTypeSave == 0)
+                            @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_EditSal").Result && profileManagament.isTypeSave == 1 || sysService.CheckAccessSubFunc(UserID, "HR_Profile_ChangeSal").Result && profileManagament.isTypeSave == 2 || sysService.CheckAccessSubFunc(UserID, "HR_Profile_ViewSal").Result && profileManagament.isTypeSave == 3 || profileManagament.isTypeSave == 0)
                             {
                                 <li class="nav-item">
                                     <a class="nav-link" id="custom-tabs-three-salary-tab" data-toggle="pill" href="#custom-tabs-three-salary" role="tab" aria-controls="custom-tabs-three-salary" aria-selected="false">Lương</a>
@@ -521,13 +518,13 @@
                                                     </InputSelectNumber>
                                                 </td>
                                                 <td style="width:20%">
-                                                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_User_Permis") && profileManagament.isTypeSave == 1)
+                                                    @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_User_Permis").Result && profileManagament.isTypeSave == 1)
                                                     {
                                                         <button type="button" class="btn btn-block btn btn-secondary" data-target="#InitializeModal_Permis" data-toggle="modal" @onclick="()=>InitializeModal_Permis()"><i class="fas fa-wrench"></i> Phân quyền</button>
                                                     }
                                                 </td>
                                                 <td style="width:20%">
-                                                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_User_ResetPass") && profileManagament.isTypeSave == 1)
+                                                    @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_User_ResetPass").Result && profileManagament.isTypeSave == 1)
                                                     {
                                                         if (profileManagament.User_isChangePass == 1)
                                                         {
@@ -802,7 +799,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_EmployeeTransaction") && (profileManagament.isTypeSave == 1 || profileManagament.isTypeSave == 2))
+                                                @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_EmployeeTransaction").Result && (profileManagament.isTypeSave == 1 || profileManagament.isTypeSave == 2))
                                                 {
                                                     <button type="button" class="btn btn-secondary" data-target="#InitializeModal_EmployeeTransaction" data-toggle="modal" @onclick="()=>InitializeModal_EmployeeTransaction()"><i class="fas fa-wrench"></i> Thiết lập tài khoản giao dịch</button>
                                                 }
@@ -873,7 +870,7 @@
                                                     <td class="text-right">@string.Format("{0:#,#.}", ph.TotalSalary)</td>
                                                     <td class="text-center">@(ph.BeginSalaryDate.HasValue ? ph.BeginSalaryDate.Value.ToString("dd/MM/yyyy") : "")</td>
                                                     <td>
-                                                        @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_UpdateHistory") && profileManagament.isTypeSave == 1 && filterHrVM.TypeProfile == 0)
+                                                        @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_UpdateHistory").Result && profileManagament.isTypeSave == 1 && filterHrVM.TypeProfile == 0)
                                                         {
                                                             if (profileHistorys.Count > 1 && profileHistorys.IndexOf(ph) == 0)
                                                             {
@@ -1178,7 +1175,7 @@
                 </h5>
 
                 <div class="ml-auto">
-                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_UpdateContractType"))
+                    @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_UpdateContractType").Result)
                     {
                         <button type="button" class="btn btn-sm btn-success" data-target="#InitializeModalUpdate_ContractType" data-toggle="modal" @onclick="(() => InitializeModalUpdate_ContractType(0, contractTypeVM))"><i class="fas fa-plus-circle"></i> Thêm mới</button>
                     }
@@ -1227,7 +1224,7 @@
     </div>
 </div>
 
-@if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_UpdateContractType"))
+@if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_UpdateContractType").Result)
 {
     <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_ContractType">
         <div class="modal-dialog">
@@ -1330,7 +1327,7 @@
                 </h5>
 
                 <div class="ml-auto">
-                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_UpdateWorkType"))
+                    @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_UpdateWorkType").Result)
                     {
                         <button type="button" class="btn btn-sm btn-success" data-target="#InitializeModalUpdate_WorkType" data-toggle="modal" @onclick="(() => InitializeModalUpdate_WorkType(0, workTypeVM))"><i class="fas fa-plus-circle"></i> Thêm mới</button>
                     }
@@ -1413,7 +1410,7 @@
     </div>
 </div>
 
-@if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_UpdateWorkType"))
+@if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_UpdateWorkType").Result)
 {
     <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_WorkType">
         <div class="modal-dialog">
@@ -1566,7 +1563,7 @@
                 </h5>
 
                 <div class="ml-auto">
-                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_Edit"))
+                    @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_Edit").Result)
                     {
                         <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_ProfileRelationship(0, profileRelationshipVM))"><i class="fas fa-plus-circle"></i> Thêm mới</button>
                     }
@@ -1638,7 +1635,7 @@
     </div>
 </div>
 
-@if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_Edit"))
+@if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_Edit").Result)
 {
     <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_ProfileRelationship">
         <div class="modal-dialog">
@@ -1964,7 +1961,7 @@
 
                 <button type="button" class="btn btn-secondary" data-target="#InitializeModalList_WorkType" data-toggle="modal" @onclick="()=>InitializeModalList_WorkType()"><i class="fa-solid fa-person-digging"></i> Loại công việc</button>
                 <button type="button" class="btn btn-secondary" data-target="#InitializeModalList_ContractType" data-toggle="modal" @onclick="()=>InitializeModal_ContractType()"><i class="fa-solid fa-file-contract"></i> Loại hợp đồng</button>
-                @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_New"))
+                @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_New").Result)
                 {
                     <button type="button" class="btn btn-success" data-target="#InitializeModal_Profile" data-toggle="modal" @onclick="()=>Initialize_ModalProfile(0)"><i class="fa-solid fa-user-plus"></i> Thêm mới</button>
                 }
@@ -1980,7 +1977,7 @@
                         </div>
                     </div>
 
-                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_Edit"))
+                    @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_Edit").Result)
                     {
                         <button type="button" class="btn btn-secondary" data-target="#InitializeModal_Profile" data-toggle="modal" @onclick="()=>Initialize_ModalProfile(1)"><i class="fa-solid fa-user-pen"></i> Sửa</button>
                         <button type="button" class="btn btn-secondary" data-target="#InitializeModal_Profile" data-toggle="modal" @onclick="()=>Initialize_ModalProfile(4)"><i class="fa-solid fa-copy"></i> Sao chép</button>
@@ -1988,18 +1985,18 @@
 
                     if (filterHrVM.TypeProfile != 1)
                     {
-                        @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_Del"))
+                        @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_Del").Result)
                         {
                             <button type="button" class="btn btn-danger" @onclick="()=>DelProfile()"><i class="fa-solid fa-user-xmark"></i> Xóa</button>
                         }
 
-                        @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_Adjust"))
+                        @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_Adjust").Result)
                         {
                             <button type="button" class="btn btn-secondary" data-target="#InitializeModal_Profile" data-toggle="modal" @onclick="() => Initialize_ModalProfile(2)"><i class="fas fa-exchange-alt"></i> Điều chỉnh</button>
                         }
                     }
 
-                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_Terminate"))
+                    @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_Terminate").Result)
                     {
                         if (filterHrVM.TypeProfile != 1)
                         {

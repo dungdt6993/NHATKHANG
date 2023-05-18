@@ -1,33 +1,31 @@
-﻿using Data.Repositories.HR;
-using Data.Repositories.KPI;
-using Data.Repositories.SYSTEM;
-using Model.ViewModels.FIN;
-using Model.ViewModels.HR;
-using Model.ViewModels.KPI;
-using WebApp.Helpers;
-using DevExpress.CodeParser;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
+using D69soft.Client.Services;
+using D69soft.Client.Services.HR;
+using D69soft.Client.Services.KPI;
+using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Shared.Models.ViewModels.KPI;
+using D69soft.Client.Helpers;
 
-namespace WebApp.Pages.KPI
+namespace D69soft.Client.Pages.KPI
 {
     partial class KPIs
     {
         [Inject] IJSRuntime js { get; set; }
-        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        [Inject] SysRepository sysRepo { get; set; }
-        [Inject] OrganizationalChartService organizationalChartRepo { get; set; }
-
-        [Inject] KPIService kpiRepo { get; set; }
+        [Inject] SysService sysService { get; set; }
+        [Inject] OrganizationalChartService organizationalChartService { get; set; }
+        [Inject] KPIService kpiService { get; set; }
 
         protected string UserID;
 
         bool isLoading;
 
-        bool isLoadingPage;
+        bool isLoadingScreen = true;
 
         //Filter
         FilterHrVM filterHrVM = new();
@@ -57,13 +55,13 @@ namespace WebApp.Pages.KPI
 
         protected override async Task OnInitializedAsync()
         {
-            isLoadingPage = true;
+            
 
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (sysRepo.checkPermisFunc(UserID, "KPI_KPIs"))
+            if (await sysService.CheckAccessFunc(UserID, "KPI_KPIs"))
             {
-                await sysRepo.insert_LogUserFunc(UserID, "KPI_KPIs");
+                await sysService.InsertLogUserFunc(UserID, "KPI_KPIs");
             }
             else
             {
@@ -73,29 +71,29 @@ namespace WebApp.Pages.KPI
             //Initialize Filter
             filterHrVM.UserID = UserID;
 
-            month_filter_list = await kpiRepo.GetMonthFilter(filterHrVM);
+            month_filter_list = await kpiService.GetMonthFilter(filterHrVM);
             filterHrVM.Month = month_filter_list.OrderByDescending(x => x.Month).ToList().ElementAt(0).Month;
 
-            year_filter_list = await kpiRepo.GetYearFilter(filterHrVM);
+            year_filter_list = await kpiService.GetYearFilter(filterHrVM);
             filterHrVM.Year = year_filter_list.OrderByDescending(x => x.Year).ToList().ElementAt(0).Year;
 
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
 
-            division_filter_list = await kpiRepo.GetDivisions(filterHrVM);
+            division_filter_list = await kpiService.GetDivisions(filterHrVM);
             filterHrVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
 
             filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await kpiRepo.GetDepartments(filterHrVM);
+            department_filter_list = await kpiService.GetDepartments(filterHrVM);
 
             filterHrVM.PositionGroupID = string.Empty;
-            position_filter_list = await organizationalChartRepo.GetPositionList();
+            position_filter_list = await organizationalChartService.GetPositionList();
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await kpiRepo.GetEserials(filterHrVM);
+            eserial_filter_list = await kpiService.GetEserials(filterHrVM);
 
             await GetKPIs();
 
-            isLoadingPage = false;
+            isLoadingScreen = false;
         }
 
         private async void onchange_filter_month(int value)
@@ -107,7 +105,7 @@ namespace WebApp.Pages.KPI
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await kpiRepo.GetEserials(filterHrVM);
+            eserial_filter_list = await kpiService.GetEserials(filterHrVM);
 
             await GetKPIs();
 
@@ -124,13 +122,13 @@ namespace WebApp.Pages.KPI
 
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
 
-            month_filter_list = await kpiRepo.GetMonthFilter(filterHrVM);
+            month_filter_list = await kpiService.GetMonthFilter(filterHrVM);
             filterHrVM.Month = month_filter_list.OrderByDescending(x => x.Month).ToList().ElementAt(0).Month;
 
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await kpiRepo.GetEserials(filterHrVM);
+            eserial_filter_list = await kpiService.GetEserials(filterHrVM);
 
             await GetKPIs();
 
@@ -146,13 +144,13 @@ namespace WebApp.Pages.KPI
             filterHrVM.DivisionID = value;
 
             filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await kpiRepo.GetDepartments(filterHrVM);
+            department_filter_list = await kpiService.GetDepartments(filterHrVM);
 
             filterHrVM.PositionGroupID = string.Empty;
             filterHrVM.arrPositionID = new string[] { };
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await kpiRepo.GetEserials(filterHrVM);
+            eserial_filter_list = await kpiService.GetEserials(filterHrVM);
 
             await GetKPIs();
 
@@ -171,7 +169,7 @@ namespace WebApp.Pages.KPI
             filterHrVM.arrPositionID = new string[] { };
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await kpiRepo.GetEserials(filterHrVM);
+            eserial_filter_list = await kpiService.GetEserials(filterHrVM);
 
             await GetKPIs();
 
@@ -207,7 +205,7 @@ namespace WebApp.Pages.KPI
             isLoading = true;
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await kpiRepo.GetEserials(filterHrVM);
+            eserial_filter_list = await kpiService.GetEserials(filterHrVM);
 
             await GetKPIs();
 
@@ -239,12 +237,12 @@ namespace WebApp.Pages.KPI
 
             if (!String.IsNullOrEmpty(filterHrVM.Eserial))
             {
-                kPIVMs = await kpiRepo.GetKPIs(filterHrVM);
-                rankVM = await kpiRepo.GetRank(filterHrVM);
+                kPIVMs = await kpiService.GetKPIs(filterHrVM);
+                rankVM = await kpiService.GetRank(filterHrVM);
             }
             else
             {
-                rankVMs = await kpiRepo.GetRanks(filterHrVM);
+                rankVMs = await kpiService.GetRanks(filterHrVM);
             }
 
             isLoading = false;
@@ -253,9 +251,9 @@ namespace WebApp.Pages.KPI
         private async void onchange_StaffScore(ChangeEventArgs e, KPIVM _kpiVM)
         {
             _kpiVM.StaffScore = float.Parse(e.Value.ToString());
-            await kpiRepo.UpdateStaffScore(_kpiVM);
+            await kpiService.UpdateStaffScore(_kpiVM);
 
-            rankVM = await kpiRepo.GetRank(filterHrVM);
+            rankVM = await kpiService.GetRank(filterHrVM);
 
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
@@ -265,9 +263,9 @@ namespace WebApp.Pages.KPI
         private async void onchange_FinalScore(ChangeEventArgs e, KPIVM _kpiVM)
         {
             _kpiVM.FinalScore = float.Parse(e.Value.ToString());
-            await kpiRepo.UpdateFinalScore(_kpiVM);
+            await kpiService.UpdateFinalScore(_kpiVM);
 
-            rankVM = await kpiRepo.GetRank(filterHrVM);
+            rankVM = await kpiService.GetRank(filterHrVM);
 
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
@@ -277,7 +275,7 @@ namespace WebApp.Pages.KPI
         private async void onchange_ActualDescription(ChangeEventArgs e, KPIVM _kpiVM)
         {
             _kpiVM.ActualDescription = e.Value.ToString();
-            await kpiRepo.UpdateActualDescription(_kpiVM);
+            await kpiService.UpdateActualDescription(_kpiVM);
 
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
@@ -287,7 +285,7 @@ namespace WebApp.Pages.KPI
         private async void onchange_ManagerComment(ChangeEventArgs e, KPIVM _kpiVM)
         {
             _kpiVM.ManagerComment = e.Value.ToString();
-            await kpiRepo.UpdateManagerComment(_kpiVM);
+            await kpiService.UpdateManagerComment(_kpiVM);
 
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
@@ -297,7 +295,7 @@ namespace WebApp.Pages.KPI
         private async void onchange_StaffNote(ChangeEventArgs e, RankVM _rankVM)
         {
             _rankVM.StaffNote = e.Value.ToString();
-            await kpiRepo.UpdateStaffNote(_rankVM);
+            await kpiService.UpdateStaffNote(_rankVM);
 
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
@@ -307,7 +305,7 @@ namespace WebApp.Pages.KPI
         private async void onchange_ManagerNote(ChangeEventArgs e, RankVM _rankVM)
         {
             _rankVM.ManagerNote = e.Value.ToString();
-            await kpiRepo.UpdateManagerNote(_rankVM);
+            await kpiService.UpdateManagerNote(_rankVM);
 
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
@@ -317,7 +315,7 @@ namespace WebApp.Pages.KPI
         private async void onchange_Target(ChangeEventArgs e, KPIVM _kpiVM)
         {
             _kpiVM.DescriptionName = e.Value.ToString();
-            await kpiRepo.UpdateTarget(_kpiVM);
+            await kpiService.UpdateTarget(_kpiVM);
 
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
@@ -330,7 +328,7 @@ namespace WebApp.Pages.KPI
 
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn cập nhật lại Form KPI?", SweetAlertMessageType.question))
             {
-                await kpiRepo.InitializeKPI(filterHrVM, _Eserial);
+                await kpiService.InitializeKPI(filterHrVM, _Eserial);
 
                 kPIVMs = null;
                 rankVM = new();
@@ -422,7 +420,7 @@ namespace WebApp.Pages.KPI
                     rankVM.TimeSendApprove = DateTime.Now;
                 }
 
-                await kpiRepo.SendKPI(rankVM, type);
+                await kpiService.SendKPI(rankVM, type);
 
                 await js.Toast_Alert("" + str + " thành công!", SweetAlertMessageType.success);
             }

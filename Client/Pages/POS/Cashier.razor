@@ -1,10 +1,7 @@
 ﻿@page "/POS/Cashier"
+@using D69soft.Shared.Models.ViewModels.CRM;
 
-@using Blazored.FluentValidation
-
-@using Model.ViewModels.CRM
-
-<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 <Loading isLoading="@isLoading"></Loading>
 
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_Customer">
