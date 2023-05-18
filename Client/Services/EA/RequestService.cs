@@ -1,0 +1,92 @@
+﻿using D69soft.Shared.Models.ViewModels.DOC;
+using D69soft.Shared.Models.ViewModels.EA;
+using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
+using System.Net.Http.Json;
+
+namespace Data.Repositories.FIN
+{
+    public class RequestService
+    {
+        private readonly HttpClient _httpClient;
+
+        public RequestService(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
+
+        public async Task<IEnumerable<CartVM>> GetCarts(string _UserID)
+        {
+            return await _httpClient.GetFromJsonAsync<IEnumerable<CartVM>>($"api/Request/GetCarts/{_UserID}");
+        }
+
+        public async Task<bool> UpdateItemsCart(ItemsVM _itemsVM, string _UserID)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/Document/UpdateDocument/{_UserID}", _itemsVM);
+
+            return await response.Content.ReadFromJsonAsync<bool>();
+        }
+
+        public async Task<bool> DelItemsCart(CartVM _cartVM)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/Document/DelItemsCart", _cartVM);
+
+            return await response.Content.ReadFromJsonAsync<bool>();
+        }
+
+        public async Task<bool> UpdateQtyItemsCart(CartVM _cartVM)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/Document/UpdateQtyItemsCart", _cartVM);
+
+            return await response.Content.ReadFromJsonAsync<bool>();
+        }
+
+        public async Task<bool> UpdateNoteItemsCart(CartVM _cartVM)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/Document/UpdateNoteItemsCart", _cartVM);
+
+            return await response.Content.ReadFromJsonAsync<bool>();
+        }
+
+        public async Task<bool> SendRequest(RequestVM _requestVM, string _UserID)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/Document/SendRequest/{_UserID}", _requestVM);
+
+            return await response.Content.ReadFromJsonAsync<bool>();
+        }
+
+        public async Task<List<RequestVM>> GetRequest(FilterFinVM _filterFinVM)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/Document/GetRequest", _filterFinVM);
+
+            return await response.Content.ReadFromJsonAsync<List<RequestVM>>();
+        }
+
+        public async Task<bool> SendApprove(RequestVM _requestVM, string _type)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/Document/SendApprove{_type}", _requestVM);
+
+            return await response.Content.ReadFromJsonAsync<bool>();
+        }
+
+        public async Task<bool> UpdateQtyApproved(RequestVM _requestVM)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/Document/UpdateQtyApproved", _requestVM);
+
+            return await response.Content.ReadFromJsonAsync<bool>();
+        }
+
+        public async Task<bool> UpdateRDNote(RequestVM _requestVM)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/Document/UpdateRDNote", _requestVM);
+
+            return await response.Content.ReadFromJsonAsync<bool>();
+        }
+
+        //Get RequestDetail to Stock
+        public async Task<List<StockVoucherDetailVM>> GetRequestDetailToStockVoucherDetail(string _RequestCode)
+        {
+            return await _httpClient.GetFromJsonAsync<List<StockVoucherDetailVM>>($"api/Request/GetRequestDetailToStockVoucherDetail/{_RequestCode}");
+        }
+    }
+}

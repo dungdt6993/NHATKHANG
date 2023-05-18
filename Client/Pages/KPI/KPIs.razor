@@ -1,0 +1,621 @@
+﻿@page "/KPI/KPIs"
+@using Model.ViewModels.KPI
+
+<Loading isLoading="@isLoading"></Loading>
+<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+
+<section class="content-header">
+
+    <EditForm Model="@filterHrVM">
+        <div class="row">
+
+            <div class="col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Tháng:</label>
+                    <div class="col-sm-9">
+                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                           ValueExpression="@(()=>filterHrVM.Month)"
+                                           Value="@filterHrVM.Month"
+                                           ValueChanged="@((int value) => onchange_filter_month(value))">
+                            @if (month_filter_list != null)
+                            {
+                                @foreach (var month in month_filter_list)
+                                {
+                                    <option value="@month.Month">@month.Month</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Năm:</label>
+                    <div class="col-sm-9">
+                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                           ValueExpression="@(()=>filterHrVM.Year)"
+                                           Value="@filterHrVM.Year"
+                                           ValueChanged="@((int value) => onchange_filter_year(value))">
+                            @if (year_filter_list != null)
+                            {
+                                @foreach (var year in year_filter_list)
+                                {
+                                    <option value="@year.Year">@year.Year</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
+                                 Value="@filterHrVM.DivisionID"
+                                 ValueChanged="@((string value) => onchange_filter_division(value))">
+                        @if (division_filter_list != null)
+                        {
+                            @foreach (var division_filter in division_filter_list)
+                            {
+                                <option data-subtext="@division_filter.DivisionID" value="@division_filter.DivisionID">@division_filter.DivisionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DepartmentID)"
+                                 Value="@filterHrVM.DepartmentID"
+                                 ValueChanged="@((string value) => onchange_filter_department(value))">
+                        <option value=@string.Empty>-----Bộ phận-----</option>
+                        @if (department_filter_list != null)
+                        {
+                            @foreach (var department_filter in department_filter_list)
+                            {
+                                <option data-subtext="@department_filter.DepartmentID" value="@department_filter.DepartmentID">@department_filter.DepartmentName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                        @if (position_filter_list != null)
+                        {
+                            @foreach (var positiongroup_filter in position_filter_list.Select(x => new { x.PositionGroupID, x.PositionGroupName }).Distinct())
+                            {
+                                <option value="@positiongroup_filter.PositionGroupID">@positiongroup_filter.PositionGroupName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                 ValueExpression="@(()=>filterHrVM.Eserial)"
+                                 Value="@filterHrVM.Eserial"
+                                 ValueChanged="@((string value) => onchange_filter_eserial(value))">
+                        <option value=@string.Empty>-----Nhân viên-----</option>
+                        @if (eserial_filter_list != null)
+                        {
+                            @foreach (var eserial_filter in eserial_filter_list)
+                            {
+                                <option data-subtext="@eserial_filter.Eserial" value="@eserial_filter.Eserial">@eserial_filter.LastName @eserial_filter.MiddleName @eserial_filter.FirstName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-1">
+                <button type="button" class="btn btn-block bg-purple" @onclick="(() => onchange_filter_eserial(String.Empty))">
+                    <i class="fa-solid fa-list-check"></i> Bảng tổng hợp
+                </button>
+            </div>
+        </div>
+    </EditForm>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-purple card-outline">
+
+            <div class="card-header text-right">
+            </div>
+            <!-- /.card-header -->
+            @if (!String.IsNullOrEmpty(filterHrVM.Eserial))
+            {
+                @if (kPIVMs != null)
+                {
+                    <div class="card-body table-responsive p-1">
+                        <table class="table table-sm table-bordered" style="font-size: .8em;">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th style="text-align: center; font-weight:normal;">Nhân viên: <b>@rankVM.Eserial - @rankVM.FullName</b><br>Vị trí: <b>(@rankVM.PositionID) @rankVM.PositionName</b></th>
+                                    @if (!String.IsNullOrEmpty(@rankVM.Appraiser_Eserial))
+                                    {
+                                        <th style="text-align: center; font-weight:normal;">Người đánh giá: <b>@rankVM.Appraiser_Eserial - @rankVM.Appraiser_FullName</b><br>Vị trí: <b>@rankVM.Appraiser_PositionName</b></th>
+                                    }
+                                    @if (!String.IsNullOrEmpty(@rankVM.DirectManager_Eserial))
+                                    {
+                                        <th style="text-align: center; font-weight:normal;">Quản lý trực tiếp: <b>@rankVM.DirectManager_Eserial - @rankVM.DirectManager_FullName</b><br>Vị trí: <b>@rankVM.DirectManager_PositionName</b></th>
+                                    }
+                                    @if (!String.IsNullOrEmpty(@rankVM.ControlDept_Eserial))
+                                    {
+                                        <th style="text-align: center; font-weight:normal;">Phụ trách bộ phận: <b>@rankVM.ControlDept_Eserial - @rankVM.ControlDept_FullName</b><br>Vị trí: <b>@rankVM.ControlDept_PositionName</b></th>
+                                    }
+                                    @if (!String.IsNullOrEmpty(@rankVM.Approve_Eserial))
+                                    {
+                                        <th style="text-align: center; font-weight:normal;">Phê duyệt: <b>@rankVM.Approve_Eserial - @rankVM.Approve_FullName</b><br>Vị trí: <b>@rankVM.Approve_PositionName</b></th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th style="text-align: center;">
+                                        @if (rankVM.isSendKPI)
+                                        {
+                                            <span class="text-success">Đã gửi duyệt<br>(@rankVM.TimeSendKPI.ToString("dd/MM/yyyy HH:mm"))</span>
+                                            @if (@rankVM.Eserial == UserID)
+                                            {
+                                                if ((rankVM.isSendAppraiser ? 1 : 0) + (rankVM.isSendDirectManager ? 1 : 0) + (rankVM.isSendControlDept ? 1 : 0) + (rankVM.isSendApprove ? 1 : 0) == 0)
+                                                {
+                                                    <button class="btn btn-block btn-danger" @onclick="@(() => SendKPI(false,"SendKPI"))"><i class="fa-solid fa-ban"></i> Hủy</button>
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (@rankVM.Eserial == UserID)
+                                            {
+                                                if ((rankVM.isSendAppraiser ? 1 : 0) + (rankVM.isSendDirectManager ? 1 : 0) + (rankVM.isSendControlDept ? 1 : 0) + (rankVM.isSendApprove ? 1 : 0) == 0)
+                                                {
+                                                    <button class="btn btn-block btn-success" @onclick="@(() => SendKPI(true,"SendKPI"))"><i class="fa-solid fa-paper-plane"></i> Gửi duyệt</button>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-danger">Chưa gửi duyệt</span>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span class="text-danger">Chưa gửi duyệt</span>
+                                            }
+                                        }
+                                    </th>
+
+                                    @if (!String.IsNullOrEmpty(@rankVM.Appraiser_Eserial))
+                                    {
+                                        <th style="text-align: center;">
+                                            @if (@rankVM.isSendAppraiser)
+                                            {
+                                                <span class="text-success">Đã duyệt<br>(@rankVM.TimeSendAppraiser.ToString("dd/MM/yyyy HH:mm"))</span>
+                                                if (@rankVM.Appraiser_Eserial == UserID)
+                                                {
+                                                    if ((rankVM.isSendDirectManager ? 1 : 0) + (rankVM.isSendControlDept ? 1 : 0) + (rankVM.isSendApprove ? 1 : 0) == 0)
+                                                    {
+                                                        <button class="btn btn-block btn-danger" @onclick="@(() => SendKPI(false,"SendAppraiser"))"><i class="fa-solid fa-ban"></i> Hủy</button>
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (@rankVM.Appraiser_Eserial == UserID)
+                                                {
+                                                    if ((rankVM.isSendDirectManager ? 1 : 0) + (rankVM.isSendControlDept ? 1 : 0) + (rankVM.isSendApprove ? 1 : 0) == 0)
+                                                    {
+                                                        <button class="btn btn-block btn-success" @onclick="@(() => SendKPI(true,"SendAppraiser"))"><i class="fa-solid fa-check"></i> Duyệt</button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-danger">Chưa duyệt</span>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-danger">Chưa duyệt</span>
+                                                }
+                                            }
+                                        </th>
+                                    }
+
+                                    @if (!String.IsNullOrEmpty(@rankVM.DirectManager_Eserial))
+                                    {
+                                        <th style="text-align: center;">
+                                            @if (@rankVM.isSendDirectManager)
+                                            {
+                                                <span class="text-success">Đã duyệt<br>(@rankVM.TimeSendDirectManager.ToString("dd/MM/yyyy HH:mm"))</span>
+                                                @if (@rankVM.DirectManager_Eserial == UserID)
+                                                {
+                                                    if ((rankVM.isSendControlDept ? 1 : 0) + (rankVM.isSendApprove ? 1 : 0) == 0)
+                                                    {
+                                                        <button class="btn btn-block btn-danger" @onclick="@(() => SendKPI(false,"SendDirectManager"))"><i class="fa-solid fa-ban"></i> Hủy</button>
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (@rankVM.DirectManager_Eserial == UserID)
+                                                {
+                                                    if ((rankVM.isSendControlDept ? 1 : 0) + (rankVM.isSendApprove ? 1 : 0) == 0)
+                                                    {
+                                                        <button class="btn btn-block btn-success" @onclick="@(() => SendKPI(true,"SendDirectManager"))"><i class="fa-solid fa-check"></i> Duyệt</button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-danger">Chưa duyệt</span>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-danger">Chưa duyệt</span>
+                                                }
+                                            }
+                                        </th>
+                                    }
+
+                                    @if (!String.IsNullOrEmpty(@rankVM.ControlDept_Eserial))
+                                    {
+                                        <th style="text-align: center;">
+                                            @if (@rankVM.isSendControlDept)
+                                            {
+                                                <span class="text-success">Đã duyệt<br>(@rankVM.TimeSendControlDept.ToString("dd/MM/yyyy HH:mm"))</span>
+                                                @if (@rankVM.ControlDept_Eserial == UserID)
+                                                {
+                                                    if ((rankVM.isSendApprove ? 1 : 0) == 0)
+                                                    {
+                                                        <button class="btn btn-block btn-danger" @onclick="@(() => SendKPI(false,"SendControlDept"))"><i class="fa-solid fa-ban"></i> Hủy</button>
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (@rankVM.ControlDept_Eserial == UserID)
+                                                {
+                                                    if ((rankVM.isSendApprove ? 1 : 0) == 0)
+                                                    {
+                                                        <button class="btn btn-block btn-success" @onclick="@(() => SendKPI(true,"SendControlDept"))"><i class="fa-solid fa-check"></i> Duyệt</button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-danger">Chưa duyệt</span>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-danger">Chưa duyệt</span>
+                                                }
+                                            }
+                                        </th>
+                                    }
+
+                                    @if (!String.IsNullOrEmpty(@rankVM.Approve_Eserial))
+                                    {
+                                        <th style="text-align: center;">
+                                            @if (@rankVM.isSendApprove)
+                                            {
+                                                <span class="text-success">Đã duyệt<br>(@rankVM.TimeSendApprove.ToString("dd/MM/yyyy HH:mm"))</span>
+                                                @if (@rankVM.Approve_Eserial == UserID)
+                                                {
+                                                    <button class="btn btn-block btn-danger" @onclick="@(() => SendKPI(false,"SendApprove"))"><i class="fa-solid fa-ban"></i> Hủy</button>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (@rankVM.Approve_Eserial == UserID)
+                                                {
+                                                    <button class="btn btn-block btn-success" @onclick="@(() => SendKPI(true,"SendApprove"))"><i class="fa-solid fa-check"></i> Duyệt</button>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-danger">Chưa duyệt</span>
+                                                }
+                                            }
+                                        </th>
+                                    }
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-sm table-bordered" style="font-size: .8em;">
+                            <thead>
+                                <tr style="background-color: #b3b0f7;">
+                                    <th class="text-center align-middle">Nhóm chỉ tiêu (Evaluation criteria)</th>
+                                    <th class="text-center align-middle">Các nội dung/ nhiệm vụ được giao (Objectives/Tasks assigned in the appraisal period)</th>
+                                    <th class="text-center align-middle">Tỷ lệ Portion</th>
+                                    <th class="text-center align-middle">% Trọng số (Weight)</th>
+                                    <th class="text-center align-middle">Điểm yêu cầu hoàn thành (Score)</th>
+                                    <th class="text-center align-middle">Mô tả kết quả mong đợi về số lượng/chất lượng/thời gian hoặc chi phí (Describe the expected results about quantity / quality / time or cost)</th>
+                                    <th class="text-center align-middle">Diễn tả kết quả thực tế (Evidence for Actual achivement)</th>
+                                    <th class="text-center align-middle">Tự đánh giá (Staff' score)</th>
+                                    <th class="text-center align-middle">Quản lý đánh giá (Final score)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @{
+                                    bool disabled_manager = false;
+                                    bool disabled_staff = false;
+
+                                    if (rankVM.Eserial == UserID)
+                                    {
+                                        disabled_manager = true;
+
+                                        disabled_staff = rankVM.isSendKPI ? true : false;
+
+                                        if ((rankVM.isSendAppraiser ? 1 : 0) + (rankVM.isSendDirectManager ? 1 : 0) + (rankVM.isSendControlDept ? 1 : 0) + (rankVM.isSendApprove ? 1 : 0) > 0)
+                                        {
+                                            disabled_staff = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        disabled_staff = true;
+
+                                        if (rankVM.Appraiser_Eserial == UserID)
+                                        {
+                                            disabled_manager = rankVM.isSendAppraiser ? true : false;
+                                        }
+
+                                        if (rankVM.DirectManager_Eserial == UserID)
+                                        {
+                                            disabled_manager = rankVM.isSendDirectManager ? true : false;
+                                        }
+
+                                        if (rankVM.ControlDept_Eserial == UserID)
+                                        {
+                                            disabled_manager = rankVM.isSendControlDept ? true : false;
+                                        }
+
+                                        if (rankVM.Approve_Eserial == UserID)
+                                        {
+                                            disabled_manager = rankVM.isSendApprove ? true : false;
+                                        }
+                                    }
+
+                                }
+
+                                @foreach (var _kpi_0 in kPIVMs.Select(x => new { x.CriteriaGroupID, x.CriteriaGroupName, x.Portion }).Distinct())
+                                {
+                                    int i = 0;
+                                    @foreach (var _kpi_1 in kPIVMs.Where(x => x.CriteriaGroupID == _kpi_0.CriteriaGroupID).Select(x => new { x.MissionID, x.MissionName }).Distinct())
+                                    {
+                                        int j = 0;
+                                        @foreach (var _kpi in kPIVMs.Where(x => x.MissionID == _kpi_1.MissionID))
+                                        {
+                                            <tr>
+                                                @if (i == 0)
+                                                {
+                                                    <td class="text-center text-bold" style="min-width: 200px;" rowspan="@kPIVMs.Where(x => x.CriteriaGroupID == _kpi_0.CriteriaGroupID).Count()">@((MarkupString)_kpi_0.CriteriaGroupName)</td>
+                                                }
+
+                                                @if (j == 0)
+                                                {
+                                                    <td style="min-width: 200px;" rowspan="@kPIVMs.Where(x => x.CriteriaGroupID == _kpi_0.CriteriaGroupID && x.MissionID == _kpi_1.MissionID).Count()">@((MarkupString)_kpi_1.MissionName)</td>
+                                                }
+
+                                                @if (i == 0)
+                                                {
+                                                    <td class="text-center text-bold" style="min-width: 50px;" rowspan="@kPIVMs.Where(x => x.CriteriaGroupID == _kpi_0.CriteriaGroupID).Count()">@_kpi_0.Portion</td>
+                                                }
+
+                                                <td class="text-center" style="min-width: 50px;">@(_kpi.Score / _kpi_0.Portion * 100)%</td>
+                                                <td class="text-center text-bold" style="min-width: 70px; background-color: #b3b0f7;">@_kpi.Score</td>
+                                                <td style="min-width: 250px;">
+                                                    @if (_kpi.isTarget)
+                                                    {
+                                                        <textarea class="form-control text-danger text-bold" disabled>@_kpi.TargetCurrent</textarea>
+
+                                                        <br />
+
+                                                        <textarea class="form-control text-danger text-bold" placeholder="Mục tiêu ưu tiên tháng tới"
+                                          @onchange="@((ChangeEventArgs e) => onchange_Target(e, _kpi))"
+                                          disabled="@disabled_staff">@_kpi.DescriptionName</textarea>
+                                                    }
+                                                    else
+                                                    {
+                                                        @((MarkupString)_kpi.DescriptionName)
+                                                    }
+                                                </td>
+                                                <td style="min-width: 200px;">
+                                                    <textarea class="form-control text-danger text-bold" placeholder="Ý kiến nhân viên"
+                                          @onchange="@((ChangeEventArgs e) => onchange_ActualDescription(e, _kpi))"
+                                          disabled="@disabled_staff">@_kpi.ActualDescription</textarea><br />
+
+                                                    <textarea class="form-control text-danger text-bold" placeholder="Ý kiến người đánh giá"
+                                          @onchange="@((ChangeEventArgs e) => onchange_ManagerComment(e, _kpi))"
+                                          disabled="@disabled_manager">@_kpi.ManagerComment</textarea>
+                                                </td>
+
+                                                <td style="font-size: 14px; background-color: #b3b0f7;">
+                                                    <input class="form-control text-center text-bold @(_kpi.StaffScore>_kpi.Score?"text-success":"") @(_kpi.StaffScore<_kpi.Score?"text-danger":"")"
+                                       @onchange="@((ChangeEventArgs e) => onchange_StaffScore(e, _kpi))" value="@_kpi.StaffScore"
+                                       disabled="@disabled_staff" onClick="this.select();" />
+                                                </td>
+
+                                                <td style="font-size: 14px; background-color: #FABF8F;">
+                                                    <input class="form-control text-center text-bold @(_kpi.FinalScore>_kpi.Score?"text-success":"") @(_kpi.FinalScore<_kpi.Score?"text-danger":"")"
+                                       @onchange="@((ChangeEventArgs e) => onchange_FinalScore(e, _kpi))" value="@_kpi.FinalScore"
+                                       disabled="@disabled_manager" onClick="this.select();" />
+                                                </td>
+                                            </tr>
+                                            j++;
+                                            i++;
+                                        }
+                                        i++;
+                                    }
+                                    <tr style="background-color: #b3b0f7;">
+                                        <th colspan="2"></th>
+                                        <th></th>
+                                        <th class="text-center">@(kPIVMs.Where(x => x.CriteriaGroupID == _kpi_0.CriteriaGroupID).Select(x => x.Score).Sum() / _kpi_0.Portion * 100)%</th>
+                                        <th class="text-center">@kPIVMs.Where(x => x.CriteriaGroupID == _kpi_0.CriteriaGroupID).Select(x => x.Score).Sum()</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th style="min-width: 70px; text-align: center; font-size: 14px; background: #b3b0f7;">@kPIVMs.Where(x => x.CriteriaGroupID == _kpi_0.CriteriaGroupID).Select(x => x.StaffScore).Sum()</th>
+                                        <th style="min-width: 70px; text-align: center; font-size: 14px; background: #b3b0f7;">@kPIVMs.Where(x => x.CriteriaGroupID == _kpi_0.CriteriaGroupID).Select(x => x.FinalScore).Sum()</th>
+                                    </tr>
+                                }
+
+                                <tr>
+                                    <th colspan="6"></th>
+                                    <th class="text-right" style="font-size:14px; background: #FFC000;" colspan="1">TỔNG ĐIỂM (TOTAL SCORE)</th>
+                                    <th style="min-width:70px;text-align: center; font-size:14px; background: #FFC000;">@rankVM.TotalGrandStaffScore</th>
+                                    <th style="min-width:70px;text-align: center; font-size:14px; background: #FFC000;">@rankVM.TotalGrandFinalScore</th>
+                                </tr>
+                                <tr>
+                                    <th colspan="6"></th>
+                                    <th class="text-right" style="font-size:14px; background: #e26b0a;" colspan="1">XẾP LOẠI (RANGE)</th>
+                                    <th style="min-width:70px;text-align: center;font-weight: bold; font-size:14px; background: #e26b0a;">@rankVM.StaffRanking</th>
+                                    <th style="min-width:70px;text-align: center;font-weight: bold; font-size:14px; background: #e26b0a;">@rankVM.FinalRanking</th>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr style="background-color: #b3b0f7;">
+                                    <th class="text-center" colspan="5">Ý kiến của nhân viên (đề xuất nguyện vọng để cải thiện công việc, đào tạo nâng cao kiến thức, quy trình làm việc…)/Staff's comments (suggestions for improving work, training, SOPs...)</th>
+                                    <th class="text-center" colspan="4">Nhận xét của quản lý trực tiếp về các điểm mạnh và điểm cần cải thiện/Direct manager comments about the strength as the point need to be improved.</th>
+                                </tr>
+                                <tr>
+                                    <td colspan="5">
+                                        <textarea class="form-control text-danger text-bold"
+                                          @onchange="@((ChangeEventArgs e) => onchange_StaffNote(e, rankVM))"
+                                          disabled="@disabled_staff">@rankVM.StaffNote</textarea>
+                                    </td>
+                                    <td colspan="4">
+                                        <textarea class="form-control text-danger text-bold"
+                                          @onchange="@((ChangeEventArgs e) => onchange_ManagerNote(e, rankVM))"
+                                          disabled="@disabled_manager">@rankVM.ManagerNote</textarea>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                }
+            }
+            else
+            {
+                if (rankVMs != null)
+                {
+                    <div class="card-body table-responsive p-0" style="height: calc(100vh - 258px);">
+                        <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-center">Mã NV</th>
+                                    <th>Họ tên</th>
+                                    <th>Vị trí</th>
+                                    <th class="text-center">Tự đánh giá</th>
+                                    <th class="text-center">Người đánh giá</th>
+                                    <th class="text-center">Quản lý trực tiếp</th>
+                                    <th class="text-center">Phụ trách bộ phận</th>
+                                    <th class="text-center">Duyệt</th>
+                                    <th class="text-center">Điểm số</th>
+                                    @if (sysRepo.checkAccessSubFunc(UserID, "KPI_KPIs_Management"))
+                                    {
+                                        <th class="text-center">
+                                            <button type="button" class="btn btn-warning" @onclick="(() => InitializeKPI(String.Empty))"><i class="fa-solid fa-retweet"></i></button>
+                                        </th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (rankVMs != null)
+                                {
+                                    var _departmentGroupID = String.Empty;
+
+                                    var _departmentID = String.Empty;
+
+                                    <Virtualize Items="@rankVMs" Context="_rankVM" OverscanCount="50">
+
+                                        @if (_rankVM.DepartmentGroupID != _departmentGroupID)
+                                        {
+                                            <tr class="text-white bg-secondary">
+                                                <th colspan="10">@_rankVM.DepartmentGroupName</th>
+                                            </tr>
+                                        }
+                                        @{
+                                            _departmentGroupID = _rankVM.DepartmentGroupID;
+                                        }
+
+                                        @if (_rankVM.DepartmentID != _departmentID)
+                                        {
+                                            <tr>
+                                                <th colspan="10">@_rankVM.DepartmentName</th>
+                                            </tr>
+                                        }
+                                        @{
+                                            _departmentID = _rankVM.DepartmentID;
+                                        }
+
+                                        <tr>
+                                            <td class="text-center">@_rankVM.Eserial</td>
+                                            <td><a @onclick="@(() => onchange_filter_eserial(_rankVM.Eserial))">@_rankVM.LastName @_rankVM.MiddleName @_rankVM.FirstName</a></td>
+                                            <td>@_rankVM.PositionName</td>
+                                            <td class="text-center text-bold">
+                                                @if (_rankVM.isSendKPI)
+                                                {
+                                                    @_rankVM.TotalGrandStaffScore <small class="badge badge-success">@_rankVM.StaffRanking</small>
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                @if (!String.IsNullOrEmpty(_rankVM.Appraiser_Eserial))
+                                                {
+                                                    <span class="@(_rankVM.isSendAppraiser?"text-success":"text-danger")">@_rankVM.Appraiser_Eserial - @_rankVM.Appraiser_FullName</span>
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                @if (!String.IsNullOrEmpty(_rankVM.DirectManager_Eserial))
+                                                {
+                                                    <span class="@(_rankVM.isSendDirectManager?"text-success":"text-danger")">@_rankVM.DirectManager_Eserial - @_rankVM.DirectManager_FullName</span>
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                @if (!String.IsNullOrEmpty(_rankVM.ControlDept_Eserial))
+                                                {
+                                                    <span class="@(_rankVM.isSendControlDept?"text-success":"text-danger")">@_rankVM.ControlDept_Eserial - @_rankVM.ControlDept_FullName</span>
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                @if (!String.IsNullOrEmpty(_rankVM.Approve_Eserial))
+                                                {
+                                                    <span class="@(_rankVM.isSendApprove?"text-success":"text-danger")">@_rankVM.Approve_Eserial - @_rankVM.Approve_FullName</span>
+                                                    if (_rankVM.Approve_Eserial == UserID)
+                                                    {
+                                                        <br />
+                                                        @if (!_rankVM.isSendApprove)
+                                                        {
+                                                            <button class="btn btn-block btn-success" @onclick="@(() => SendApproveKPI(true,"SendApprove",_rankVM))"><i class="fa-solid fa-check"></i> Duyệt</button>
+                                                        }
+                                                    }
+                                                }
+                                            </td>
+                                            <td class="text-center text-bold">@_rankVM.TotalGrandFinalScore <small class="badge badge-success">@_rankVM.FinalRanking</small></td>
+
+                                            @if (sysRepo.checkAccessSubFunc(UserID, "KPI_KPIs_Management"))
+                                            {
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-sm btn-warning" @onclick="(() => InitializeKPI(_rankVM.Eserial))"><i class="fa-solid fa-retweet"></i></button>
+                                                </td>
+                                            }
+
+                                        </tr>
+                                    </Virtualize>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            }
+
+            <!-- /.card-body -->
+
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+

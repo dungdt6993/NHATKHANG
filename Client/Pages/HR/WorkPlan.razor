@@ -1,0 +1,325 @@
+﻿@page "/HR/WorkPlan"
+
+@using Blazored.FluentValidation
+@using Utilities
+
+<Loading isLoading="@isLoading"></Loading>
+<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_WorkPlan">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <EditForm Model="@workPlanVM" OnValidSubmit="@UpdateWorkPlan">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>Cập nhật công việc</span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="GetWorkPlans">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <InputText style="font-size: 18px;" class="form-control form-control-border border-width-2" placeholder="Tên đầu mục công việc" @bind-Value="workPlanVM.WorkPlanName" />
+                        <ValidationMessage For="@(() => workPlanVM.WorkPlanName)" />
+                    </div>
+
+                    <div class="form-group">
+                        <BlazoredTextEditor @ref="QuillHtml" Placeholder="Mô tả công việc...">
+                            <ToolbarContent>
+                                <select class="ql-header">
+                                    <option selected=""></option>
+                                    <option value="1"></option>
+                                    <option value="2"></option>
+                                    <option value="3"></option>
+                                    <option value="4"></option>
+                                    <option value="5"></option>
+                                </select>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <select class="ql-color"></select>
+                                    <select class="ql-background"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-link"></button>
+                                </span>
+                            </ToolbarContent>
+                        </BlazoredTextEditor>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Ngày bắt đầu</label>
+                        <div class="col-sm-3">
+                            <div class="input-group date">
+                                <input type="text" class="form-control" name="date-mask" @bind="onchange_WorkPlanStartDate" onClick="this.select();"></input>
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                            </div>
+                            <ValidationMessage For="@(() => workPlanVM.WorkPlanStartDate)" />
+                        </div>
+                        <label class="col-sm-2 col-form-label">Thời hạn</label>
+                        <div class="col-sm-3">
+                            <div class="input-group date">
+                                <input type="text" class="form-control" name="date-mask" @bind="onchange_WorkPlanDeadline" onClick="this.select();"></input>
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                            </div>
+                            <ValidationMessage For="@(() => workPlanVM.WorkPlanDeadline)" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Ghi chú</label>
+                        <div class="col-sm-10">
+                            <InputTextArea class="form-control" placeholder="Ghi chú..." @bind-Value="workPlanVM.WorkPlanNote" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    @if (workPlanVM.IsTypeUpdate == 1)
+                    {
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => workPlanVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                    }
+                </div>
+            </EditForm>
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+
+<section class="content-header">
+
+    <EditForm Model="@filterHrVM">
+        <div class="row">
+
+            <div class="col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Ngày:</label>
+                    <div class="col-sm-9">
+
+                        <div class="input-group">
+                            <DateRangePicker SingleDatePicker="true" class="form-control" name="date-mask"
+                                             Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))"
+                                             @bind-StartDate="filterHrVM.dDate" OnRangeSelect="OnRangeSelect_dDate" />
+
+                            <div class="input-group-append">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
+                                 Value="@filterHrVM.DivisionID"
+                                 ValueChanged="@((string value) => onchange_filter_division(value))">
+                        @if (division_filter_list != null)
+                        {
+                            @foreach (var division_filter in division_filter_list)
+                            {
+                                <option data-subtext="@division_filter.DivisionID" value="@division_filter.DivisionID">@division_filter.DivisionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-7">
+                <div class="form-group">
+                    <select class="selectpicker form-control" data-container="body" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                        @if (position_filter_list != null)
+                        {
+                            @foreach (var positiongroup_filter in position_filter_list.Select(x => new { x.PositionGroupID, x.PositionGroupName }).Distinct())
+                            {
+                                <option value="@positiongroup_filter.PositionGroupID">@positiongroup_filter.PositionGroupName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+
+        <div class="card card-purple card-outline table-responsive p-0">
+            <!-- /.card-header -->
+            @if (workPlanVMs != null)
+            {
+                <div class="card-header text-center">
+                    <h5><b>KẾ HOẠCH LÀM VIỆC NGÀY @filterHrVM.dDate.Value.ToString("dd/MM/yyyy")</b></h5>
+                </div>
+
+                @foreach (var _positionGroup in workPlanVMs.Where(x => filterHrVM.arrPositionID.Contains(x.PositionGroupID) || filterHrVM.arrPositionID.Length == 0).Select(x => new
+                {
+                    x.PositionGroupID,
+                    x.PositionGroupName
+                }).Distinct())
+                {
+                    bool IsFirst = true;
+
+                    <table class="table table-sm table-bordered tblFontSizeMin">
+                        <thead>
+                            <tr>
+                                <th class="text-center text-white bg-warning">@_positionGroup.PositionGroupName</th>
+                                <th class="text-center text-white bg-secondary">Đầu mục công việc <button class="btn btn-xs btn-success" @onclick="@(() => InitializeModalUpdate_WorkPlan(0,_positionGroup.PositionGroupID, workPlanVM))"><i class="fa-solid fa-plus"></i></button></th>
+                                <th class="text-center text-white bg-secondary">Mô tả công việc</th>
+                                <th class="text-center text-white bg-secondary">Bắt đầu</th>
+                                <th class="text-center text-white bg-secondary">Thời hạn</th>
+                                <th class="text-center text-white bg-secondary">Trạng thái</th>
+                                <th class="text-center text-white bg-secondary">Ghi chú</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var _workPlan in workPlanVMs.Select(x => new
+                            {
+                                x.WorkPlanSeq,
+                                x.PositionGroupID,
+                                x.WorkPlanName,
+                                x.WorkPlanDesc,
+                                x.WorkPlanDeadline,
+                                x.WorkPlanStartDate,
+                                x.WorkPlanIsDone,
+                                x.WorkPlanDoneDate,
+                                x.WorkPlanNote
+                            }).Where(x => x.PositionGroupID == _positionGroup.PositionGroupID).Distinct())
+                            {
+                                var _StatusDone = 0;
+                                var _StatusNotDone = 0;
+
+                                if (_workPlan.WorkPlanIsDone && _workPlan.WorkPlanDeadline == null) _StatusDone = 1;//Hoàn thành
+                                if (_workPlan.WorkPlanIsDone && _workPlan.WorkPlanDeadline != null && _workPlan.WorkPlanDoneDate.Value.Date <= _workPlan.WorkPlanDeadline) _StatusDone = 1;//Hoàn thành
+                                if (_workPlan.WorkPlanIsDone && _workPlan.WorkPlanDeadline != null && _workPlan.WorkPlanDoneDate.Value.Date > _workPlan.WorkPlanDeadline) _StatusDone = 2;//Hoàn thành muộn
+
+                                if (!_workPlan.WorkPlanIsDone) _StatusNotDone = 1;//Đang làm
+                                if (!_workPlan.WorkPlanIsDone && _workPlan.WorkPlanDeadline != null && filterHrVM.dDate.Value.Date > _workPlan.WorkPlanDeadline.Value.Date) _StatusNotDone = 2;//Quá hạn
+
+                                <tr>
+                                    @if (IsFirst)
+                                    {
+                                        <th class="text-nowrap" rowspan="@workPlanVMs.Select(x=> new {x.WorkPlanSeq, x.PositionGroupID}).Where(x => x.PositionGroupID == _positionGroup.PositionGroupID).Distinct().Count()">
+                                            @foreach (var _eserial in workPlanVMs.Select(x => new
+                                            {
+                                                x.WorkPlanSeq,
+                                                x.PositionGroupID,
+                                                x.isOFF,
+                                                x.Eserial,
+                                                x.LastName,
+                                                x.MiddleName,
+                                                x.FirstName,
+                                                x.WorkShift
+                                            }).Where(x => x.PositionGroupID == _workPlan.PositionGroupID && x.WorkPlanSeq == _workPlan.WorkPlanSeq))
+                                            {
+                                                <span class="@(_eserial.isOFF==1?"text-danger":"")">@_eserial.Eserial</span> <span class="@(_eserial.isOFF==1?"text-danger":"")">-</span> <span class="@(_eserial.isOFF==1?"text-danger":"")">@_eserial.LastName @_eserial.MiddleName @_eserial.FirstName</span>
+                                                <br />
+                                            }
+                                        </th>
+
+                                        IsFirst = false;
+                                    }
+                                    <th style="min-width: 200px;">
+                                        <a class="text-secondary" style="cursor: pointer; font-size: 12px;" @onclick="(() => InitializeModalUpdate_WorkPlan(1, _positionGroup.PositionGroupID, workPlanVMs.Where(x=>x.WorkPlanSeq==_workPlan.WorkPlanSeq).First()))">
+                                            @if (_workPlan.WorkPlanSeq != 0)
+                                            {
+                                                if(_workPlan.WorkPlanIsDone)
+                                                {
+                                                    <i class="fa-solid fa-circle-check text-success"></i>
+
+                                                    <span>&nbsp;</span>
+                                                }
+                                                else
+                                                {
+                                                    if (_StatusNotDone == 1)
+                                                    {
+                                                        <i class="spinner-grow spinner-grow-sm text-secondary"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="spinner-grow spinner-grow-sm text-danger"></i>
+                                                    }
+                                                }
+                                            }
+                                            @_workPlan.WorkPlanName
+                                        </a>
+                                    </th>
+                                    <td style="min-width: 300px;">
+                                        @((MarkupString)_workPlan.WorkPlanDesc)
+                                    </td>
+                                    <th class="text-center">
+                                        @(_workPlan.WorkPlanStartDate.HasValue ? _workPlan.WorkPlanStartDate.Value.ToString("dd/MM/yyyy") : "")
+                                    </th>
+                                    <th class="text-center">
+                                        @(_workPlan.WorkPlanDeadline.HasValue ? _workPlan.WorkPlanDeadline.Value.ToString("dd/MM/yyyy") : "")
+                                    </th>
+                                    <th class="text-nowrap">
+                                        @if (_workPlan.WorkPlanSeq != 0)
+                                        {
+                                            <div class="form-group clearfix">
+
+                                                <div class="icheck-success d-inline">
+                                                    <input type="checkbox" id="WorkPlanIsDone@_workPlan.WorkPlanSeq" @onchange="@((ChangeEventArgs e) => onchange_WorkPlanIsDone(e, workPlanVMs.Where(x=>x.WorkPlanSeq==_workPlan.WorkPlanSeq).First()))" checked="@_workPlan.WorkPlanIsDone" />
+                                                    <label for="WorkPlanIsDone@_workPlan.WorkPlanSeq">
+                                                        @if (_workPlan.WorkPlanIsDone)
+                                                        {
+                                                            <span class="@(_StatusDone == 1 ? "text-success" : "text-warning")">@(_StatusDone == 1 ? "Hoàn thành" : "Hoàn thành muộn")</span>
+                                                            <br />
+                                                            <span class="@(_StatusDone == 1 ? "text-success" : "text-warning")">@_workPlan.WorkPlanDoneDate.Value.ToString("dd/MM/yyyy")</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="@(_StatusNotDone == 1 ? "text-secondary" : "text-danger")">@(_StatusNotDone == 1 ? "Đang làm" : "Quá hạn")</span>
+                                                        }
+                                                    </label>
+                                                </div>
+                                            </div>
+
+
+
+                                        }
+                                    </th>
+                                    <td style="min-width: 100px;">
+                                        @_workPlan.WorkPlanNote
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                }
+
+
+            }
+
+            <!-- /.card-body -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+
+

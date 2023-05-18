@@ -1,0 +1,799 @@
+﻿@page "/HR/OrganizationalChart"
+
+@using Blazored.FluentValidation
+
+<Loading isLoading="@isLoading"></Loading>
+<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Division">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <EditForm Model="@divisionVM" OnValidSubmit="@UpdateDivision">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>CẬP NHẬT CÔNG TY</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="LoadDivisionList">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label>Mã:</label>
+                            @if (divisionVM.IsTypeUpdate == 0)
+                            {
+                                <InputText class="form-control" placeholder="Mã công ty" @bind-Value:get="divisionVM.DivisionID" @bind-Value:set="(value) => {divisionVM.DivisionID = value.ToUpper();}" autofocus />
+                                <ValidationMessage For="@(() => divisionVM.DivisionID)" />
+                            }
+                            else
+                            {
+                                <input type="text" readonly class="form-control" value="@divisionVM.DivisionID" />
+                            }
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Đầu mã NV:</label>
+                            <InputText class="form-control" placeholder="Đầu Mã NV" @bind-Value:get="divisionVM.CodeDivs" @bind-Value:set="(value) => {divisionVM.CodeDivs = value.ToUpper();}" />
+                            <ValidationMessage For="@(() => divisionVM.CodeDivs)" />
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label></label>
+                            <div class="form-group clearfix">
+                                <div class="icheck-success d-inline">
+                                    <input type="checkbox" id="eserialauto" @bind="divisionVM.isAutoEserial" />
+                                    <label for="eserialauto">
+                                        Mã NV tự động
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tên:</label>
+                        <InputText class="form-control" placeholder="Tên công ty" @bind-Value="@divisionVM.DivisionName" />
+                        <ValidationMessage For="@(() => divisionVM.DivisionName)" />
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group clearfix">
+                            <div class="icheck-success d-inline">
+                                <input type="radio" id="rAttType1" name="rAttType" value="true" checked="@(divisionVM.is2625 == 0)" @onchange="(() => divisionVM.is2625 = 0)">
+                                <label for="rAttType1">Tính công từ đầu tháng đến cuối tháng hiện tại</label>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <div class="icheck-success d-inline">
+                                <input type="radio" id="rAttType26" name="rAttType" value="false" checked="@(divisionVM.is2625 == 1)" @onchange="(() => divisionVM.is2625 = 1)">
+                                <label for="rAttType26">Tính công từ ngày 26 tháng trước đến 25 tháng hiện tại</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Số lần tính chấm công:</label>
+                        <div class="col-sm-3">
+                            <select class="custom-select" @bind="divisionVM.INOUTNumber">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row align-items-center">
+                        <div class="icheck-success d-inline">
+                            <input type="radio" id="division_isActive1" name="division_isActive" checked="@(divisionVM.isActive == true)" @onchange="(() => divisionVM.isActive = true)">
+                            <label for="division_isActive1">
+                                Hoạt động
+                            </label>
+                        </div>
+                        <label>
+                            &nbsp;&nbsp;
+                        </label>
+                        <div class="icheck-danger d-inline">
+                            <input type="radio" id="division_isActive2" name="division_isActive" checked="@(divisionVM.isActive == false)" @onchange="(() => divisionVM.isActive = false)">
+                            <label for="division_isActive2">
+                                Không hoạt động
+                            </label>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    @if (divisionVM.IsTypeUpdate == 1)
+                    {
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => divisionVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                    }
+                </div>
+            </EditForm>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Department">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <EditForm Model="@departmentVM" OnValidSubmit="@UpdateDepartment">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>CẬP NHẬT BỘ PHẬN</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="LoadDepartmentList">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label>Mã:</label>
+                            @if (departmentVM.IsTypeUpdate == 0)
+                            {
+                                <InputText class="form-control" placeholder="Mã bộ phận" @bind-Value:get="departmentVM.DepartmentID" @bind-Value:set="(value) => {departmentVM.DepartmentID = value.ToUpper();}" autofocus />
+                                <ValidationMessage For="@(() => departmentVM.DepartmentID)" />
+                            }
+                            else
+                            {
+                                <input type="text" readonly class="form-control" value="@departmentVM.DepartmentID" />
+                            }
+                        </div>
+                        <div class="form-group col-md-8">
+                            <label>Khối:</label>
+                            <div class="input-group">
+                                <InputSelect class="selectpicker form-control"
+                                             data-style="btn-selectpicker form-control" data-container="body"
+                                             data-live-search="true" data-show-subtext="true"
+                                             @bind-Value="departmentVM.DepartmentGroupID">
+                                    <option value=@String.Empty>-----Chọn-----</option>
+                                    @if (departmentGroupVMs != null)
+                                    {
+                                        @foreach (var _departmentGroupVM in departmentGroupVMs)
+                                        {
+                                            <option data-subtext="@_departmentGroupVM.DepartmentGroupID" value="@_departmentGroupVM.DepartmentGroupID">@_departmentGroupVM.DepartmentGroupName</option>
+                                        }
+                                    }
+                                </InputSelect>
+                                @if (String.IsNullOrEmpty(departmentVM.DepartmentGroupID))
+                                {
+                                    <div class="input-group-append" data-toggle="modal" @onclick="(() => InitializeModalUpdate_DepartmentGroup(0))">
+                                        <span class="input-group-text text-success"><i class="fa-solid fa-circle-plus"></i></span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="input-group-append" data-toggle="modal" @onclick="(() => InitializeModalUpdate_DepartmentGroup(1))">
+                                        <span class="input-group-text"><i class="fas fa-pen"></i></span>
+                                    </div>
+                                }
+                                <ValidationMessage For="@(() => departmentVM.DepartmentGroupID)" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tên:</label>
+                        <InputText class="form-control" placeholder="Tên bộ phận" @bind-Value="@departmentVM.DepartmentName" />
+                        <ValidationMessage For="@(() => departmentVM.DepartmentName)" />
+                    </div>
+
+
+                    <div class="form-row align-items-center">
+                        <div class="icheck-success d-inline">
+                            <input type="radio" id="department_isActive1" name="department_isActive" checked="@(departmentVM.isActive == true)" @onchange="(() => departmentVM.isActive = true)">
+                            <label for="department_isActive1">
+                                Hoạt động
+                            </label>
+                        </div>
+                        <label>
+                            &nbsp;&nbsp;
+                        </label>
+                        <div class="icheck-danger d-inline">
+                            <input type="radio" id="department_isActive2" name="department_isActive" checked="@(departmentVM.isActive == false)" @onchange="(() => departmentVM.isActive = false)">
+                            <label for="department_isActive2">
+                                Không hoạt động
+                            </label>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    @if (departmentVM.IsTypeUpdate == 1)
+                    {
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => departmentVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                    }
+                </div>
+            </EditForm>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_DepartmentGroup">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <EditForm Model="@departmentGroupVM" OnValidSubmit="@UpdateDepartmentGroup">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>CẬP NHẬT NHÓM BỘ PHẬN</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="LoadDepartmentGroupList">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label>Mã:</label>
+                            @if (departmentGroupVM.IsTypeUpdate == 0)
+                            {
+                                <InputText class="form-control" placeholder="Mã nhóm bộ phận" @bind-Value:get="departmentGroupVM.DepartmentGroupID" @bind-Value:set="(value) => {departmentGroupVM.DepartmentGroupID = value.ToUpper();}" autofocus />
+                                <ValidationMessage For="@(() => departmentGroupVM.DepartmentGroupID)" />
+                            }
+                            else
+                            {
+                                <input type="text" readonly class="form-control" value="@departmentGroupVM.DepartmentGroupID" />
+                            }
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tên:</label>
+                        <InputText class="form-control" placeholder="Tên nhóm bộ phận" @bind-Value="departmentGroupVM.DepartmentGroupName" />
+                        <ValidationMessage For="@(() => departmentGroupVM.DepartmentGroupName)" />
+                    </div>
+
+
+                </div>
+
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    @if (departmentGroupVM.IsTypeUpdate == 1)
+                    {
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => departmentGroupVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                    }
+                </div>
+
+            </EditForm>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Section">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <EditForm Model="@sectionVM" OnValidSubmit="@UpdateSection">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>CẬP NHẬT KHU VỰC</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="LoadSectionList">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label>Mã:</label>
+                            @if (sectionVM.IsTypeUpdate == 0)
+                            {
+                                <InputText class="form-control" placeholder="Mã khu vực" @bind-Value:get="sectionVM.SectionID" @bind-Value:set="(value) => {sectionVM.SectionID = value.ToUpper();}" autofocus />
+                                <ValidationMessage For="@(() => sectionVM.SectionID)" />
+                            }
+                            else
+                            {
+                                <input type="text" readonly class="form-control" value="@sectionVM.SectionID" />
+                            }
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tên:</label>
+                        <InputText class="form-control" placeholder="Tên khu vực" @bind-Value="@sectionVM.SectionName" />
+                        <ValidationMessage For="@(() => sectionVM.SectionName)" />
+                    </div>
+
+
+                    <div class="form-row align-items-center">
+                        <div class="icheck-success d-inline">
+                            <input type="radio" id="Section_isActive1" name="Section_isActive" checked="@(sectionVM.isActive == true)" @onchange="(() => sectionVM.isActive = true)">
+                            <label for="Section_isActive1">
+                                Hoạt động
+                            </label>
+                        </div>
+                        <label>
+                            &nbsp;&nbsp;
+                        </label>
+                        <div class="icheck-danger d-inline">
+                            <input type="radio" id="Section_isActive2" name="Section_isActive" checked="@(sectionVM.isActive == false)" @onchange="(() => sectionVM.isActive = false)">
+                            <label for="Section_isActive2">
+                                Không hoạt động
+                            </label>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    @if (sectionVM.IsTypeUpdate == 1)
+                    {
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => sectionVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                    }
+                </div>
+            </EditForm>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Position">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <EditForm Model="@positionVM" OnValidSubmit="@UpdatePosition">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>CẬP NHẬT VỊ TRÍ</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="LoadPositionList">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label>Mã:</label>
+                            @if (positionVM.IsTypeUpdate == 0)
+                            {
+                                <InputText class="form-control" placeholder="Mã vị trí" @bind-Value:get="positionVM.PositionID" @bind-Value:set="(value) => {positionVM.PositionID = value.ToUpper();}" autofocus />
+                                <ValidationMessage For="@(() => positionVM.PositionID)" />
+                            }
+                            else
+                            {
+                                <input type="text" readonly class="form-control" value="@positionVM.PositionID" />
+                            }
+                        </div>
+                        <div class="form-group col-md-8">
+                            <label>Nhóm vị trí:</label>
+                            <div class="input-group">
+                                <InputSelect class="selectpicker form-control"
+                                             data-style="btn-selectpicker form-control" data-container="body"
+                                             data-live-search="true" data-show-subtext="true"
+                                             @bind-Value="positionVM.PositionGroupID">
+                                    <option value=@String.Empty>-----Chọn-----</option>
+                                    @if (positionGroups != null)
+                                    {
+                                        @foreach (var _positionGroup in positionGroups)
+                                        {
+                                            <option data-subtext="@_positionGroup.PositionGroupID" value="@_positionGroup.PositionGroupID">@_positionGroup.PositionGroupName</option>
+                                        }
+                                    }
+                                </InputSelect>
+                                @if (String.IsNullOrEmpty(positionVM.PositionGroupID))
+                                {
+                                    <div class="input-group-append" data-toggle="modal" @onclick="(() => InitializeModalUpdate_PositionGroup(0))">
+                                        <span class="input-group-text text-success"><i class="fa-solid fa-circle-plus"></i></span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="input-group-append" data-toggle="modal" @onclick="(() => InitializeModalUpdate_PositionGroup(1))">
+                                        <span class="input-group-text"><i class="fas fa-pen"></i></span>
+                                    </div>
+                                }
+                                <ValidationMessage For="@(() => positionVM.PositionGroupID)" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tên:</label>
+                        <InputText class="form-control" placeholder="Tên vị trí" @bind-Value="@positionVM.PositionName" />
+                        <ValidationMessage For="@(() => positionVM.PositionName)" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mô tả công việc:</label>
+                        <BlazoredTextEditor @ref="QuillHtml" Placeholder="Mô tả công việc, nghiệp vụ chuyên môn...">
+                            <ToolbarContent>
+                                <select class="ql-header">
+                                    <option selected=""></option>
+                                    <option value="1"></option>
+                                    <option value="2"></option>
+                                    <option value="3"></option>
+                                    <option value="4"></option>
+                                    <option value="5"></option>
+                                </select>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <select class="ql-color"></select>
+                                    <select class="ql-background"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-link"></button>
+                                </span>
+                            </ToolbarContent>
+                        </BlazoredTextEditor>
+                    </div>
+
+                    <div class="form-row align-items-center">
+                        <div class="icheck-success d-inline">
+                            <input type="radio" id="position_isActive1" name="position_isActive" checked="@(positionVM.isActive == true)" @onchange="(() => positionVM.isActive = true)">
+                            <label for="position_isActive1">
+                                Hoạt động
+                            </label>
+                        </div>
+                        <label>
+                            &nbsp;&nbsp;
+                        </label>
+                        <div class="icheck-danger d-inline">
+                            <input type="radio" id="position_isActive2" name="position_isActive" checked="@(positionVM.isActive == false)" @onchange="(() => positionVM.isActive = false)">
+                            <label for="position_isActive2">
+                                Không hoạt động
+                            </label>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    @if (positionVM.IsTypeUpdate == 1)
+                    {
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => positionVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                    }
+                </div>
+            </EditForm>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_PositionGroup">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <EditForm Model="@positionGroupVM" OnValidSubmit="@UpdatePositionGroup">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>CẬP NHẬT NHÓM VỊ TRÍ</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="LoadPositionGroupList">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label>Mã:</label>
+                            @if (positionGroupVM.IsTypeUpdate == 0)
+                            {
+                                <InputText class="form-control" placeholder="Mã nhóm vị trí" @bind-Value:get="positionGroupVM.PositionGroupID" @bind-Value:set="(value) => {positionGroupVM.PositionGroupID = value.ToUpper();}" autofocus />
+                                <ValidationMessage For="@(() => positionGroupVM.PositionGroupID)" />
+                            }
+                            else
+                            {
+                                <input type="text" readonly class="form-control" value="@positionGroupVM.PositionGroupID" />
+                            }
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>STT:</label>
+                            <InputNumber class="form-control" @bind-Value="positionGroupVM.PositionGroupNo" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tên:</label>
+                        <InputText class="form-control" placeholder="Tên nhóm vị trí" @bind-Value="positionGroupVM.PositionGroupName" />
+                        <ValidationMessage For="@(() => positionGroupVM.PositionGroupName)" />
+                    </div>
+
+
+                </div>
+
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    @if (positionGroupVM.IsTypeUpdate == 1)
+                    {
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => positionGroupVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                    }
+                </div>
+
+            </EditForm>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+<section class="content">
+
+    <div class="container-fluid">
+
+        <div class="card-columns">
+
+            <div class="card card-purple card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">CÔNG TY</h3>
+                    <div class="text-right">
+                        @if (String.IsNullOrEmpty(filterHrVM.DivisionID))
+                        {
+                            <button type="button" class="btn btn-sm btn-success" title="Thêm mới" @onclick="(() => InitializeModalUpdate_Division(0))"><i class="fa-solid fa-plus"></i></button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-sm btn-secondary" title="Cập nhật" @onclick="(() => InitializeModalUpdate_Division(1))"><i class="fa-regular fa-pen-to-square"></i></button>
+                        }
+                    </div>
+                </div>
+
+                <div class="card-body table-responsive p-0">
+
+                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Mã</th>
+                                <th>Tên</th>
+                                <th class="text-center">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (divisionVMs != null)
+                            {
+                                @foreach (var _divisionVM in divisionVMs)
+                                {
+                                    <tr class="@(filterHrVM.DivisionID == _divisionVM.DivisionID? "selected":"")" @onclick="() => onclick_selectedDivision(_divisionVM)">
+                                        <td>@_divisionVM.DivisionID</td>
+                                        <td>@_divisionVM.DivisionName</td>
+                                        <td class="text-center">
+                                            @if (_divisionVM.isActive)
+                                            {
+                                                <i class="fas fa-check text-success"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-times"></i>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+            <div class="card card-purple card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">KHU VỰC</h3>
+                    <div class="text-right">
+                        @if (String.IsNullOrEmpty(filterHrVM.SectionID))
+                        {
+                            <button type="button" class="btn btn-sm btn-success" title="Thêm mới" @onclick="(() => InitializeModalUpdate_Section(0))"><i class="fa-solid fa-plus"></i></button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-sm btn-secondary" title="Cập nhật" @onclick="(() => InitializeModalUpdate_Section(1))"><i class="fa-regular fa-pen-to-square"></i></button>
+                        }
+                    </div>
+                </div>
+
+                <div class="card-body table-responsive p-0">
+
+                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Mã</th>
+                                <th>Tên</th>
+                                <th class="text-center">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (sectionVMs != null)
+                            {
+                                @foreach (var _sectionVM in sectionVMs)
+                                {
+                                    <tr class="@(filterHrVM.SectionID == _sectionVM.SectionID? "selected":"")" @onclick="() => onclick_selectedSection(_sectionVM)">
+                                        <td>@_sectionVM.SectionID</td>
+                                        <td>@_sectionVM.SectionName</td>
+                                        <td class="text-center">
+                                            @if (_sectionVM.isActive)
+                                            {
+                                                <i class="fas fa-check text-success"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-times"></i>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+            <div class="card card-purple card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">BỘ PHẬN</h3>
+                    <div class="text-right">
+                        @if (!String.IsNullOrEmpty(filterHrVM.DivisionID))
+                        {
+                            @if (String.IsNullOrEmpty(filterHrVM.DepartmentID))
+                            {
+                                <button type="button" class="btn btn-sm btn-success" title="Thêm mới" @onclick="(() => InitializeModalUpdate_Department(0))"><i class="fa-solid fa-plus"></i></button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-sm btn-secondary" title="Cập nhật" @onclick="(() => InitializeModalUpdate_Department(1))"><i class="fa-regular fa-pen-to-square"></i></button>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 182px); min-height: 500px;">
+
+                    @if ((filterHrVM.DivisionID ?? string.Empty) != string.Empty)
+                    {
+                        <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Mã</th>
+                                    <th>Tên</th>
+                                    <th>Nhóm</th>
+                                    <th class="text-center">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (departmentVMs != null)
+                                {
+                                    @foreach (var _departmentVM in departmentVMs)
+                                    {
+                                        <tr class="@(filterHrVM.DepartmentID == _departmentVM.DepartmentID? "selected":"")" @onclick="() => onclick_selectedDepartment(_departmentVM)">
+                                            <td>@_departmentVM.DepartmentID</td>
+                                            <td>@_departmentVM.DepartmentName</td>
+                                            <td>@_departmentVM.DepartmentGroupName</td>
+                                            <td class="text-center">
+                                                @if (_departmentVM.isActive)
+                                                {
+                                                    <i class="fas fa-check text-success"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fas fa-times"></i>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p style="margin: 10px; color: #dc3545;"><i class="fa-solid fa-circle-exclamation"></i> Chưa chọn Công ty!</p>
+                    }
+                </div>
+            </div>
+
+            <div class="card card-purple card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">VỊ TRÍ</h3>
+                    <div class="input-group input-group-sm" style="width: auto;">
+                        <input type="search" class="form-control form-control-border border-width-2" style="margin: 0 10px;" placeholder="Tìm kiếm vị trí..." @oninput="FilterPosition" />
+                        @if (String.IsNullOrEmpty(filterHrVM.PositionID))
+                        {
+                            <button type="button" class="btn btn-sm btn-success" title="Thêm mới" @onclick="(() => InitializeModalUpdate_Position(0))"><i class="fa-solid fa-plus"></i></button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-sm btn-secondary" title="Cập nhật" @onclick="(() => InitializeModalUpdate_Position(1))"><i class="fa-regular fa-pen-to-square"></i></button>
+                        }
+                    </div>
+                </div>
+
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 182px); min-height: 500px;">
+
+                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Mã</th>
+                                <th>Tên</th>
+                                <th>Nhóm</th>
+                                <th class="text-center">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (positionVMs != null)
+                            {
+                                @foreach (var _positionVM in positionVMs.Where(x => x.PositionName.ToLower().Contains(filterHrVM.searchValues.ToLower())))
+                                {
+                                    <tr class="@(filterHrVM.PositionID == _positionVM.PositionID? "selected":"")" @onclick="() => onclick_selectedPosition(_positionVM)">
+                                        <td>@_positionVM.PositionID</td>
+                                        <td>@_positionVM.PositionName</td>
+                                        <td>@_positionVM.PositionGroupName</td>
+
+                                        <td class="text-center">
+                                            @if (_positionVM.isActive)
+                                            {
+                                                <i class="fas fa-check text-success"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-times"></i>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

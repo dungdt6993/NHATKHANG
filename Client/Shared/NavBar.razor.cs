@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using D69soft.Client.Extension;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace D69soft.Client.Shared

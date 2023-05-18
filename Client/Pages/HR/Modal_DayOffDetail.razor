@@ -1,0 +1,62 @@
+﻿@using Model.ViewModels.HR
+@using global::Data.Repositories.HR;
+
+@inject DayOffService dayOffRepo
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_DayOffDetail">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Bảng tổng hợp ngày nghỉ</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="card-body table-responsive p-0">
+
+                    <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th class="text-center">Tổng</th>
+                                <th class="text-center">Đã sử dụng</th>
+                                <th class="text-center">Còn lại</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (dayOffVMs != null)
+                            {
+                                foreach (var _dayOffVM in dayOffVMs)
+                                {
+                                    <tr>
+                                        <td class="text-center font-weight-bold">@_dayOffVM.dayOffType</td>
+                                        <td class="text-center">@_dayOffVM.DOCurrent</td>
+                                        <td class="text-center">@_dayOffVM.DOTaken</td>
+                                        <td class="text-center">@_dayOffVM.DOBalance</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public IEnumerable<DayOffVM> dayOffVMs { get; set; }
+
+}

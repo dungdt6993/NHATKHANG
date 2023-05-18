@@ -1,0 +1,309 @@
+﻿@page "/DOC/DOCForm"
+@using Blazored.FluentValidation
+@using Utilities;
+
+@inject NavigationManager MyNavigationManager
+
+<Loading isLoading="@isLoading"></Loading>
+<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Document">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <EditForm Model="@documentVM" OnValidSubmit="@UpdateDocument">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>CẬP NHẬT GIẤY TỜ</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Tên tài liệu *</label>
+                        <div class="col-sm-10">
+                            <InputText class="form-control" placeholder="Ghi chú" @bind-Value="documentVM.DocName" />
+                            <ValidationMessage For="@(() => documentVM.DocName)" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Loại tài liệu *</label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <InputSelectNumber class="selectpicker form-control"
+                                                   data-style="btn-selectpicker form-control" data-container="body"
+                                                   data-live-search="true" data-show-subtext="true"
+                                                   @bind-Value="documentVM.DocTypeID">
+                                    <option value=0>-----Chọn-----</option>
+                                    @if (doctype_filter_list != null)
+                                    {
+                                        @foreach (var _doctype_filter in doctype_filter_list)
+                                        {
+                                            <option value="@_doctype_filter.DocTypeID">@_doctype_filter.DocTypeName</option>
+                                        }
+                                    }
+                                </InputSelectNumber>
+                                @if (documentVM.DocTypeID == 0)
+                                {
+                                    <div class="input-group-append" data-toggle="modal" @onclick="(() => InitializeModalUpdate_DocType(0))">
+                                        <span class="input-group-text text-success"><i class="fa-solid fa-circle-plus"></i></span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="input-group-append" data-toggle="modal" @onclick="(() => InitializeModalUpdate_DocType(1))">
+                                        <span class="input-group-text"><i class="fas fa-pen"></i></span>
+                                    </div>
+                                }
+                                <ValidationMessage For="@(() => documentVM.DocTypeID)" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">File Scan</label>
+                        <div class="col-sm-10">
+                            @if (documentVM.IsDelFileScan)
+                            {
+                                <InputFile OnChange="OnInputFileChange" accept=".doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf" />
+                            }
+                            else
+                            {
+                                <h4>
+                                    @documentVM.FileScan
+
+                                    <a class="btn btn-xs btn-danger" @onclick=@(() => documentVM.IsDelFileScan = true)><i class="fas fa-trash-alt"></i></a>
+                                </h4>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Ghi chú</label>
+                        <div class="col-sm-10">
+                            <InputTextArea class="form-control" placeholder="Ghi chú" @bind-Value="documentVM.DocNote" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    @if (documentVM.IsTypeUpdate == 1)
+                    {
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => documentVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                    }
+                </div>
+
+            </EditForm>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_DocType">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <EditForm Model="@doctypeVM" OnValidSubmit="@UpdateDocType">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>CẬP NHẬT LOẠI TÀI LIỆU</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Tên *</label>
+                        <div class="col-sm-9">
+                            <InputText class="form-control" placeholder="Tên loại tài liệu" @bind-Value="doctypeVM.DocTypeName" autofocus />
+                            <ValidationMessage For="@(() => doctypeVM.DocTypeName)" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    @if (doctypeVM.IsTypeUpdate == 1)
+                    {
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => doctypeVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                    }
+                </div>
+
+            </EditForm>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+<section class="content-header">
+
+    <EditForm Model="@filterHrVM">
+        <div class="row">
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
+                                 Value="@filterHrVM.DivisionID"
+                                 ValueChanged="@((string value) => onchange_filter_division(value))">
+                        @if (division_filter_list != null)
+                        {
+                            @foreach (var division_filter in division_filter_list)
+                            {
+                                <option data-subtext="@division_filter.DivisionID" value="@division_filter.DivisionID">@division_filter.DivisionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DocTypeID)"
+                                 Value="@filterHrVM.DocTypeID"
+                                 ValueChanged="@((int value) => onchange_filter_doctype(value))">
+                        <option value=0>-----Loại giấy tờ-----</option>
+                        @if (doctype_filter_list != null)
+                        {
+                            @foreach (var doctype_filter in doctype_filter_list)
+                            {
+                                <option value="@doctype_filter.DocTypeID">@doctype_filter.DocTypeName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="search" class="form-control form-control-border border-width-2" placeholder="Tìm kiếm tài liệu..." @bind="onchange_SearchValues" @bind:event="oninput" />
+                </div>
+            </div>
+
+            <div class="col-sm-1 col-md-1">
+                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetDOCFormList())">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+
+        </div>
+    </EditForm>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-purple card-outline">
+
+            <div class="card-header text-right">
+                @if (sysRepo.checkAccessSubFunc(UserID, "DOC_DOCForm_Update"))
+                {
+                    <button type="button" class="btn btn-success" @onclick="()=>InitializeModalUpdate_Document(0, documentVM)"><i class="fa-solid fa-xl fa-plus"></i> Cật nhật</button>
+                }
+            </div>
+
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0" style="height: calc(100vh - 277px);">
+                @if (documentVMs != null)
+                {
+                    <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Tên tài liệu</th>
+                                <th class="text-center">File</th>
+                                <th>Ghi chú</th>
+                                @if (sysRepo.checkAccessSubFunc(UserID, "DOC_DOCForm_Update"))
+                                {
+                                    <th></th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <Virtualize Items="@search_documentVMs" Context="_documentVM" OverscanCount="50">
+                                <tr class="@(_documentVM.IsExpDoc?"text-danger":"")">
+                                    <td>@_documentVM.DocName</td>
+                                    <td>
+                                        @if (!String.IsNullOrWhiteSpace(_documentVM.FileScan))
+                                        {
+                                            string domainName = MyNavigationManager.BaseUri;
+                                            var urlDocumentViewer = "https://docs.google.com/viewer?url=";
+                                            <a href="@(urlDocumentViewer+domainName+(UrlDirectory.Upload_DOC_Public + _documentVM.FileScan))" target="_blank">
+
+                                                @{
+                                                    var ext = Path.GetExtension(_documentVM.FileScan);
+
+                                                    if (ext == ".pdf")
+                                                    {
+                                                        <i class="fa-regular fa-file-pdf fa-2xl text-danger"></i>
+                                                    }
+
+                                                    if (ext == ".doc" || ext == ".docx")
+                                                    {
+                                                        <i class="fa-regular fa-2xl fa-file-word text-primary"></i>
+                                                    }
+
+                                                    if (ext == ".xls" || ext == ".xlsx")
+                                                    {
+                                                        <i class="fa-regular fa-2xl fa-file-excel text-success"></i>
+                                                    }
+
+                                                    if (ext == ".ppt" || ext == ".pptx")
+                                                    {
+                                                        <i class="fa-regular fa-2xl fa-file-powerpoint text-danger"></i>
+                                                    }
+                                                }
+
+                                                &nbsp;
+
+                                                @_documentVM.FileScan
+
+                                            </a>
+                                        }
+                                    </td>
+                                    <td>@_documentVM.DocNote</td>
+                                    @if (sysRepo.checkAccessSubFunc(UserID, "DOC_DOCForm_Update"))
+                                    {
+                                        <td class="text-center">
+                                            <button class="btn btn-default btn-xs" @onclick="(() => InitializeModalUpdate_Document(1, _documentVM))"><i class="fa-solid fa-pen"></i></button>
+                                        </td>
+                                    }
+                                </tr>
+                            </Virtualize>
+                        </tbody>
+                    </table>
+                }
+            </div>
+            <!-- /.card-body -->
+            @if (documentVMs != null)
+            {
+                <div class="card-footer text-muted">
+                    Tổng số: <b>@documentVMs.Count()</b> bản ghi
+                </div>
+            }
+            <!-- /.card-footer -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>

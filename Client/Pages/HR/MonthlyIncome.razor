@@ -1,0 +1,373 @@
+﻿@page "/HR/MonthlyIncome"
+@using Blazored.FluentValidation
+
+<Loading isLoading="@isLoading"></Loading>
+<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_MonthlyIncomeTrnOther">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <EditForm Model="@monthlyIncomeTrnOtherVM" OnValidSubmit="@UpdateMITrnOther">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Cập nhật giao dịch</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    @if (monthlyIncomeTrnOtherVM.IsTypeUpdate != 3)
+                    {
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Đơn giá:</label>
+                            <div class="col-sm-5">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="currency-mask" @bind="monthlyIncomeTrnOtherVM.UnitPrice" onClick="this.select();"></input>
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="fa-solid fa-dong-sign"></i></div>
+                                    </div>
+                                </div>
+                                <ValidationMessage For="@(() => monthlyIncomeTrnOtherVM.UnitPrice)" />
+                            </div>
+
+                            <label class="col-sm-2 col-form-label">Hệ số:</label>
+                            <div class="col-sm-3">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text"><i class="fa-solid fa-xmark"></i></div>
+                                    </div>
+                                    <input type="text" class="form-control" name="currency-mask" @bind="monthlyIncomeTrnOtherVM.Qty" onClick="this.select();"></input>
+                                </div>
+                                <ValidationMessage For="@(() => monthlyIncomeTrnOtherVM.Qty)" />
+                            </div>
+                        </div>
+                    }
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Ghi chú:</label>
+                        <div class="col-sm-10">
+                            <InputTextArea class="form-control" @bind-Value="monthlyIncomeTrnOtherVM.Note" />
+                            <ValidationMessage For="@(() => monthlyIncomeTrnOtherVM.Note)" />
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times"></i> Thoát</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Thực hiện
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+<section class="content-header">
+
+    <EditForm Model="@filterHrVM">
+        <div class="row">
+
+            <div class="col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Tháng:</label>
+                    <div class="col-sm-9">
+                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                           ValueExpression="@(()=>filterHrVM.Month)"
+                                           Value="@filterHrVM.Month"
+                                           ValueChanged="@((int value) => onchange_filter_month(value))">
+                            @if (month_filter_list != null)
+                            {
+                                @foreach (var month in month_filter_list)
+                                {
+                                    <option value="@month.Month">@month.Month</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Năm:</label>
+                    <div class="col-sm-9">
+                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                           ValueExpression="@(()=>filterHrVM.Year)"
+                                           Value="@filterHrVM.Year"
+                                           ValueChanged="@((int value) => onchange_filter_year(value))">
+                            @if (year_filter_list != null)
+                            {
+                                @foreach (var year in year_filter_list)
+                                {
+                                    <option value="@year.Year">@year.Year</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
+                                 Value="@filterHrVM.DivisionID"
+                                 ValueChanged="@((string value) => onchange_filter_division(value))">
+                        @if (division_filter_list != null)
+                        {
+                            @foreach (var division_filter in division_filter_list)
+                            {
+                                <option data-subtext="@division_filter.DivisionID" value="@division_filter.DivisionID">@division_filter.DivisionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <div class="form-group">
+                        <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                     ValueExpression="@(()=>filterHrVM.DepartmentID)"
+                                     Value="@filterHrVM.DepartmentID"
+                                     ValueChanged="@((string value) => onchange_filter_department(value))">
+                            <option value=@string.Empty>-----Bộ phận-----</option>
+                            @if (department_filter_list != null)
+                            {
+                                @foreach (var department_filter in department_filter_list)
+                                {
+                                    <option data-subtext="@department_filter.DepartmentID" value="@department_filter.DepartmentID">@department_filter.DepartmentName</option>
+                                }
+                            }
+                        </InputSelect>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.SectionID)"
+                                 Value="@filterHrVM.SectionID"
+                                 ValueChanged="@((string value) => onchange_filter_section(value))">
+                        <option value=@string.Empty>-----Khu vực-----</option>
+                        @if (section_filter_list != null)
+                        {
+                            @foreach (var section_filter in section_filter_list)
+                            {
+                                <option data-subtext="@section_filter.SectionID" value="@section_filter.SectionID">@section_filter.SectionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                        @if (position_filter_list != null)
+                        {
+                            @foreach (var positiongroup_filter in position_filter_list.Select(x=> new {x.PositionGroupID, x.PositionGroupName}).Distinct())
+                            {
+                                <option value="@positiongroup_filter.PositionGroupID">@positiongroup_filter.PositionGroupName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                 ValueExpression="@(()=>filterHrVM.Eserial)"
+                                 Value="@filterHrVM.Eserial"
+                                 ValueChanged="@((string value) => onchange_filter_eserial(value))">
+                        <option value=@string.Empty>-----Nhân viên-----</option>
+                        @if (eserial_filter_list != null)
+                        {
+                            @foreach (var eserial_filter in eserial_filter_list)
+                            {
+                                <option data-subtext="@eserial_filter.Eserial" value="@eserial_filter.Eserial">@eserial_filter.LastName @eserial_filter.MiddleName @eserial_filter.FirstName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                 ValueExpression="@(()=>filterHrVM.TrnCode)"
+                                 Value="@filterHrVM.TrnCode"
+                                 ValueChanged="@((int value) => onchange_filter_trncode(value))">
+                        <option value=0>-----Nhóm giao dịch-----</option>
+                        @if (trngrp_filter_list != null)
+                        {
+                            @foreach (var _trngrp_filter in trngrp_filter_list)
+                            {
+                                <option data-subtext="@_trngrp_filter.TrnGroupName" value="@_trngrp_filter.TrnGroupCode">@_trngrp_filter.TrnGroupCode</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                 ValueExpression="@(()=>filterHrVM.TrnSubCode)"
+                                 Value="@filterHrVM.TrnSubCode"
+                                 ValueChanged="@((int value) => onchange_filter_trnsubcode(value))">
+                        <option value=0>-----Giao dịch-----</option>
+                        @if (trn_filter_list != null)
+                        {
+                            @foreach (var _trn_filter in trn_filter_list)
+                            {
+                                <option data-subtext="@_trn_filter.TrnName" value="@_trn_filter.TrnSubCode">@_trn_filter.TrnSubCode</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-1">
+                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetMonthlyIncomeTrnOtherList(0))">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </EditForm>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-purple card-outline">
+
+            <div class="card-header text-right">
+                @if (payrollRepo.IsOpenFunc(filterHrVM))
+                {
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <input type="text" class="form-control form-control-border border-width-2" @bind="filterHrVM.strDataFromExcel" placeholder="Dữ liệu từ Excel...">
+                                <button type="button" class="btn btn-success" @onclick="()=>GetDataPayrollFromExcel()" data-title="Đẩy dữ liệu từ Excel"><i class="fas fa-upload"></i></button>
+                                <button type="button" class="btn bg-purple" @onclick="()=>GetMonthlyIncomeTrnOtherList(1)"><i class="fas fa-search"></i> <i class="fa-solid fa-file-excel"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-success" @onclick="(() => InitializeModalUpdate_MonthlyIncomeTrnOther(0,monthlyIncomeTrnOtherVM))"><i class="fa-solid fa-circle-plus"></i> Tạo giao dịch</button>
+                            @if (monthlyIncomeTrnOtherVMs != null)
+                            {
+                                @if (monthlyIncomeTrnOtherVMs.Where(x => x.IsChecked).Count() > 0)
+                                {
+                                    <button type="button" class="btn btn-secondary" @onclick="()=>UpdateMITrnOtherByIsCheck(3)"><i class="fa-solid fa-pencil"></i> Cập nhật giao dịch</button>
+                                    <button type="button" class="btn btn-danger" @onclick="()=>UpdateMITrnOtherByIsCheck(2)"><i class="fa-solid fa-trash-can"></i> Xóa</button>
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+
+            </div>
+
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0" style="height: calc(100vh - 339px);">
+                @*347*@
+                @if (monthlyIncomeTrnOtherVMs != null)
+                {
+                    <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="text-center">
+                                    @if (monthlyIncomeTrnOtherVMs != null)
+                                    {
+                                        <div class="custom-control custom-checkbox">
+                                            <input class="custom-control-input custom-control-input-purple" type="checkbox" id="ckAll" @onchange="EventArgs => { CheckAll(EventArgs.Value); }" checked="@filterHrVM.IsChecked">
+                                            <label for="ckAll" class="custom-control-label"></label>
+                                        </div>
+                                    }
+                                </th>
+                                <th class="text-center">Mã NV</th>
+                                <th>Họ tên</th>
+                                <th class="text-center">Mã giao dịch</th>
+                                <th>Tên giao dịch</th>
+                                <th class="text-center">Đơn giá</th>
+                                <th class="text-center">Hệ số</th>
+                                <th class="text-center">Tổng tiền</th>
+                                <th>Ghi chú</th>
+                                <th class="text-center">Người cập nhật</th>
+                                <th class="text-center">Trạng thái</th>
+                                <th class="text-center"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <Virtualize Items="@monthlyIncomeTrnOtherVMs" Context="_monthlyIncomeTrnOtherVM" OverscanCount="50">
+                                <tr>
+                                    <td class="text-center">
+                                        <div class="custom-control custom-checkbox">
+                                            <input class="custom-control-input custom-control-input-purple custom-control-input-outline" id="@_monthlyIncomeTrnOtherVM.SeqMITrnOther" type="checkbox" @bind="_monthlyIncomeTrnOtherVM.IsChecked">
+                                            <label for="@_monthlyIncomeTrnOtherVM.SeqMITrnOther" class="custom-control-label"></label>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">@_monthlyIncomeTrnOtherVM.Eserial</td>
+                                    <td>@_monthlyIncomeTrnOtherVM.LastName @_monthlyIncomeTrnOtherVM.MiddleName @_monthlyIncomeTrnOtherVM.FirstName</td>
+                                    <td class="text-center">@_monthlyIncomeTrnOtherVM.TrnCode - @_monthlyIncomeTrnOtherVM.TrnSubCode</td>
+                                    <td>@_monthlyIncomeTrnOtherVM.TrnName</td>
+                                    <td class="text-right">@string.Format("{0:#,#.}",@_monthlyIncomeTrnOtherVM.UnitPrice)</td>
+                                    <td class="text-center">@_monthlyIncomeTrnOtherVM.Qty</td>
+                                    <td class="text-right">@string.Format("{0:#,#.}",(_monthlyIncomeTrnOtherVM.UnitPrice*_monthlyIncomeTrnOtherVM.Qty))</td>
+                                    <td>@_monthlyIncomeTrnOtherVM.Note</td>
+                                    <td class="text-center text-secondary"><i class="fa-solid fa-user-check"></i> @_monthlyIncomeTrnOtherVM.Author - @_monthlyIncomeTrnOtherVM.FirstNameAuthor <i class="fa-solid fa-clock"></i> @_monthlyIncomeTrnOtherVM.DateUpdate.ToString("dd/MM/yyyy")</td>
+                                    <td class="text-center">
+                                        @if (_monthlyIncomeTrnOtherVM.isPostFromExcel)
+                                    {
+                                        <i class="fa-solid fa-file-excel text-success">&nbsp;</i>
+                                    }
+                                    @if (_monthlyIncomeTrnOtherVM.TrnCode == 0)
+                                    {
+                                        <span class="text-warning"><i class="fa-solid fa-circle-exclamation"></i> Mã giao dịch trống!</span>
+                                    }
+                                    else
+                                    {
+                                        @if (_monthlyIncomeTrnOtherVM.SalTrnID == 0)
+                                        {
+                                            <span class="text-warning"><i class="fa-solid fa-circle-exclamation"></i> Kiểm tra lại tài khoản giao dịch lương!</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-success"><i class="fa-solid fa-circle-check"></i></span>
+                                        }
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (payrollRepo.IsOpenFunc(filterHrVM))
+                                    {
+                                        <button class="btn btn-default btn-xs" data-target="#InitializeModalUpdate_MonthlyIncomeTrnOther" data-toggle="modal" @onclick="(() => InitializeModalUpdate_MonthlyIncomeTrnOther(1,_monthlyIncomeTrnOtherVM))"><i class="fa-solid fa-pen"></i></button>
+                                    }
+                                </td>
+                            </tr>
+                        </Virtualize>
+                    </tbody>
+                </table>
+                }
+            </div>
+
+            <!-- /.card-body -->
+            @if (monthlyIncomeTrnOtherVMs != null)
+            {
+                <div class="card-footer text-muted">
+                    Tổng số: <b>@monthlyIncomeTrnOtherVMs.Count()</b> bản ghi
+                </div>
+            }
+            <!-- /.card-footer -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+

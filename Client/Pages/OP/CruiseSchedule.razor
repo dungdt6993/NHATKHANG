@@ -1,0 +1,212 @@
+﻿@page "/OP/CruiseSchedule"
+@using System.Data;
+
+<Loading isLoading="@isLoading"></Loading>
+<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_CruiseSchedule">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <EditForm Model="@cruiseScheduleVM" OnValidSubmit="@UpdateCruiseSchedule">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>@cruiseScheduleVM.CruiseName - @cruiseScheduleVM.dDate.ToString("dd/MM/yyyy")</span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <label>Trạng thái tàu:</label>
+                                <select class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind="cruiseScheduleVM.CruiseStatusCode">
+                                    @if (cruiseStatusVMs != null)
+                                    {
+                                        @foreach (var _cruiseStatusVM in cruiseStatusVMs)
+                                        {
+                                            <option data-subtext="@_cruiseStatusVM.CruiseStatusCode" value="@_cruiseStatusVM.CruiseStatusCode">@_cruiseStatusVM.CruiseStatusName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Số khách:</label>
+                                <input type="text" class="form-control text-center" @bind="cruiseScheduleVM.GuestNumber" onClick="this.select();" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label">Chi phí thực phẩm/1 khách:</label>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <input type="text" class="form-control text-right" name="currency-mask" @bind="@cruiseScheduleVM.BudgetFoodCost" onClick="this.select();" />
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="fa-solid fa-dong-sign"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Ghi chú:</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" @bind="cruiseScheduleVM.CruiseScheduleNote" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Cập nhật</button>
+                </div>
+            </EditForm>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+
+<section class="content-header">
+
+    <EditForm Model="@filterHrVM">
+        <div class="row">
+
+            <div class="col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Tháng:</label>
+                    <div class="col-sm-9">
+                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                           ValueExpression="@(()=>filterHrVM.Month)"
+                                           Value="@filterHrVM.Month"
+                                           ValueChanged="@((int value) => onchange_filter_month(value))">
+                            @if (month_filter_list != null)
+                            {
+                                @foreach (var month in month_filter_list)
+                                {
+                                    <option value="@month.Month">@month.Month</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Năm:</label>
+                    <div class="col-sm-9">
+                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                           ValueExpression="@(()=>filterHrVM.Year)"
+                                           Value="@filterHrVM.Year"
+                                           ValueChanged="@((int value) => onchange_filter_year(value))">
+                            @if (year_filter_list != null)
+                            {
+                                @foreach (var year in year_filter_list)
+                                {
+                                    <option value="@year.Year">@year.Year</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
+                                 Value="@filterHrVM.DivisionID"
+                                 ValueChanged="@((string value) => onchange_filter_division(value))">
+                        @if (division_filter_list != null)
+                        {
+                            @foreach (var division_filter in division_filter_list)
+                            {
+                                <option data-subtext="@division_filter.DivisionID" value="@division_filter.DivisionID">@division_filter.DivisionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+        </div>
+    </EditForm>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-purple card-outline">
+
+            @if (cruiseScheduleVMs != null)
+            {
+                <div class="card-header text-center">
+                    @foreach (var _cruisstatus in cruiseScheduleVMs.Select(x => new { x.CruiseStatusName, x.ColorHEX }).Distinct())
+                    {
+                        <span class="badge" style="font-size: 100%; border: 1px solid #dee2e6; background-color:@_cruisstatus.ColorHEX">@_cruisstatus.CruiseStatusName</span>
+
+                        <span>&nbsp;</span>
+                    }
+                </div>
+                <!-- /.card-header -->
+
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 235px);">
+
+                    <table class="table table-sm table-bordered table-head-fixed table-hover-cursor text-nowrap tblFontSizeMin tblDutyRoster">
+                        <thead>
+                            <tr>
+                                <th>Tàu</th>
+                                @foreach (var _day in cruiseScheduleVMs.Select(x => new { x.dDate }).Distinct())
+                                {
+                                    <th class="text-center">
+                                        @_day.dDate.Day
+                                    </th>
+                                }
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var _cruise in cruiseScheduleVMs.Select(x => new { x.CruiseCode, x.CruiseName }).Distinct())
+                            {
+                                <tr>
+                                    <th>@_cruise.CruiseName</th>
+                                    @foreach (var _cruisestatus in cruiseScheduleVMs.Where(x => x.CruiseCode == _cruise.CruiseCode))
+                                    {
+                                        @if (_cruisestatus.isCI)
+                                        {
+                                            <td class="text-center dutyroster-td" style="background-color: @_cruisestatus.ColorHEX;" @onclick="(() => InitializeModalUpdate_CruiseSchedule(_cruisestatus))">
+                                                <span>@_cruisestatus.CruiseStatusCode</span>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-center dutyroster-td" style="background-color: @_cruisestatus.ColorHEX;">
+                                            </td>
+                                        }
+                                    }
+                                </tr>
+                            }
+
+                            <tr>
+                                <th></th>
+                                @foreach (var _day in cruiseScheduleVMs.Select(x => new { x.dDate }).Distinct())
+                                {
+                                    <td class="text-center bg-danger dutyroster-td">
+                                        @cruiseScheduleVMs.Where(x=>x.dDate == _day.dDate).Select(x=> x.NumDay != 0? 1: 0).Sum()
+                                    </td>
+                                }
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+                <!-- /.card-body -->
+            }
+
+        </div>
+    </div><!-- /.container-fluid -->
+</section>

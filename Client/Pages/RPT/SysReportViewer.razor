@@ -1,0 +1,32 @@
+﻿@page "/RPT/SysReportViewer/{id}"
+@layout RptLayout
+
+<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+
+<DxDocumentViewer ReportName=@ReportName Height="calc(100vh - 0px)" Width="100%">
+    <DxDocumentViewerExportSettings ShowPrintNotificationDialog="false" />
+    <DxDocumentViewerTabPanelSettings Width="340" />
+    <DxDocumentViewerCallbacks BeforeRender="ReportingViewerCustomization.onBeforeRender"
+                               CustomizeParameterEditors="ReportingViewerCustomization.onCustomizeParameterEditors" />
+</DxDocumentViewer>
+
+@code {
+
+    bool isLoadingPage;
+
+    [Parameter]
+    public string ReportName { get; set; }
+
+    [Parameter]
+    public string id { get; set; }
+
+    protected override void OnInitialized()
+    {
+        isLoadingPage = true;
+
+        ReportName = id.Replace("~", "?");
+
+        isLoadingPage = false;
+    }
+
+}

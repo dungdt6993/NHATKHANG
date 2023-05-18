@@ -1,4 +1,5 @@
 ﻿using D69soft.Client.Helpers;
+using D69soft.Server.Services.HR;
 using D69soft.Shared.Models.ViewModels.HR;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -10,7 +11,7 @@ namespace D69soft.Client.Pages.HR
 	{
 		[CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-        [Inject] HttpClient httpClient { get; set; }
+        [Inject] ProfileService profileService { get; set; }
 
         bool isLoadingScreen = true;
 
@@ -26,7 +27,7 @@ namespace D69soft.Client.Pages.HR
         {
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            search_contacts = contacts = await httpClient.GetFromJsonAsync<List<ProfileManagamentVM>>($"api/Profile/GetContacts/{UserID}");
+            search_contacts = contacts = await profileService.GetContacts(UserID);
 
             isLoadingScreen = false;
         }

@@ -1,0 +1,702 @@
+﻿@page "/HR/DutyRoster"
+
+@using Blazored.FluentValidation
+@using Utilities
+
+<Loading isLoading="@isLoading"></Loading>
+<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_Shift">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span>BẢNG CA</span>
+                </h5>
+
+                <div class="ml-auto">
+                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_DutyRoster_UpdateShift"))
+                    {
+                        <button type="button" class="btn btn-sm btn-success" data-target="#InitializeModalUpdate_Shift" data-toggle="modal" @onclick="(() => InitializeModalUpdate_Shift(0, shiftVM))"><i class="fas fa-plus-circle"></i> Thêm mới</button>
+                    }
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="modal-body p-0">
+
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 300px);">
+
+                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Mã ca</th>
+                                <th>Tên ca</th>
+                                <th>Loại ca</th>
+                                <th class="text-center">Giờ vào</th>
+                                <th class="text-center">Giờ ra</th>
+                                <th class="text-center">Ca đêm</th>
+                                <th class="text-center">Ca gãy</th>
+                                <th class="text-center">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (shiftVMs != null)
+                            {
+                                foreach (var _shiftVM in shiftVMs)
+                                {
+                                    <tr data-target="#InitializeModalUpdate_Shift" data-toggle="modal" @onclick=@(()=>InitializeModalUpdate_Shift(1,_shiftVM))>
+                                        <td class="text-center font-weight-bold" style="min-width: 50px; background: @_shiftVM.ColorHEX">@_shiftVM.ShiftID</td>
+                                        <td>@_shiftVM.ShiftName</td>
+                                        <td>@_shiftVM.ShiftTypeName</td>
+                                        <td class="text-center">@(_shiftVM.BeginTime.HasValue ? _shiftVM.BeginTime.Value.ToString("HH:mm") : "")</td>
+                                        <td class="text-center">@(_shiftVM.EndTime.HasValue ? _shiftVM.EndTime.Value.ToString("HH:mm") : "")</td>
+                                        <td class="text-center">
+                                            @if (_shiftVM.isNight)
+                                            {
+                                                <i class="fas fa-check text-success"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-times"></i>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if (_shiftVM.isSplit)
+                                            {
+                                                <i class="fas fa-check text-success"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-times"></i>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if (_shiftVM.isActive)
+                                            {
+                                                <i class="fas fa-check text-success"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-times"></i>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+@if (sysRepo.checkAccessSubFunc(UserID, "HR_DutyRoster_UpdateShift"))
+{
+    <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Shift">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <EditForm Model="@shiftVM" OnValidSubmit="@UpdateShift">
+
+                    <FluentValidationValidator />
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <span>CẬP NHẬT CA</span>
+                        </h5>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => CloseModalUpdate_Shift())">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Mã ca</label>
+                            <div class="col-sm-3">
+                                @if (shiftVM.IsTypeUpdate == 0)
+                                {
+                                    <InputText class="form-control" name="mask-uppercase" placeholder="Mã ca" @bind-Value="shiftVM.ShiftID" autofocus />
+                                    <ValidationMessage For="@(() => shiftVM.ShiftID)" />
+                                }
+                                else
+                                {
+                                    <input type="text" readonly class="form-control" placeholder="Mã ca" value="@shiftVM.ShiftID" />
+                                }
+                            </div>
+
+                            <div class="col-sm-2">
+                                <div class="input-group my-colorpicker colorpicker-element">
+                                    <input type="color" class="form-control" @bind="shiftVM.ColorHEX"></input>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-5">
+                                <div class="form-group clearfix">
+                                    <div class="icheck-success d-inline">
+                                        <input type="checkbox" id="Shift_isNight" @bind="shiftVM.isNight">
+                                        <label for="Shift_isNight">
+                                            Ca đêm
+                                        </label>
+                                    </div>
+                                    <label>
+                                        &nbsp;&nbsp;
+                                    </label>
+                                    <div class="icheck-success d-inline">
+                                        <input type="checkbox" id="Shift_isSplit" @bind="shiftVM.isSplit">
+                                        <label for="Shift_isSplit">
+                                            Ca gãy
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Tên ca</label>
+                            <div class="col-sm-10">
+                                <InputText class="form-control" placeholder="Tên ca" @bind-Value="@shiftVM.ShiftName" />
+                                <ValidationMessage For="@(() => shiftVM.ShiftName)" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Loại ca</label>
+                            <div class="col-sm-10">
+                                <InputSelect class="selectpicker form-control"
+                                         data-style="btn-selectpicker form-control"
+                                         data-container="body"
+                                         data-live-search="true"
+                                         data-show-subtext="true"
+                                         @bind-Value="shiftVM.ShiftTypeID">
+                                    <option value=@string.Empty>-----Loại ca-----</option>
+                                    @if (shiftTypeVMs != null)
+                                    {
+                                    @foreach (var _shiftTypeVM in shiftTypeVMs)
+                                        {
+                                        <option data-subtext="@_shiftTypeVM.ShiftTypeID" value="@_shiftTypeVM.ShiftTypeID">@_shiftTypeVM.ShiftTypeName</option>
+                                        }
+                                    }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => shiftVM.ShiftTypeID)" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Giờ vào</label>
+                        <div class="col-sm-4">
+
+                            <div class="input-group">
+                                <input class="form-control"
+                                       name="time-mask"
+                                       onClick="this.select();"
+                                       @bind="onchange_BeginTime">
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="fa-solid fa-clock"></i></div>
+                                </div>
+                                <ValidationMessage For="@(() => shiftVM.BeginTime)" />
+                            </div>
+
+                        </div>
+
+                        <label class="col-sm-2 col-form-label">Giờ ra</label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input class="form-control"
+                                       name="time-mask"
+                                       onClick="this.select();"
+                                       @bind="onchange_EndTime">
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="fa-solid fa-clock"></i></div>
+                                </div>
+                                <ValidationMessage For="@(() => shiftVM.EndTime)" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <div class="form-group clearfix">
+                                <div class="icheck-success d-inline">
+                                    <input type="radio" id="isActive1" name="isActive" checked="@(shiftVM.isActive == true)" @onchange="(() => shiftVM.isActive = true)">
+                                    <label for="isActive1">
+                                        Hoạt động
+                                    </label>
+                                </div>
+                                <label>
+                                    &nbsp;&nbsp;
+                                </label>
+                                <div class="icheck-danger d-inline">
+                                    <input type="radio" id="isActive2" name="isActive" checked="@(shiftVM.isActive == false)" @onchange="(() => shiftVM.isActive = false)">
+                                    <label for="isActive2">
+                                        Không hoạt động
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    @if (shiftVM.ShiftID != "OFF" && shiftVM.ShiftID != "PH" && shiftVM.ShiftID != "DO" && shiftVM.ShiftID != "AL" && shiftVM.ShiftID != "CLDO" && shiftVM.ShiftID != "CLPH" && shiftVM.ShiftID != "UP")
+                        {
+                            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                            @if (shiftVM.IsTypeUpdate == 1)
+                            {
+                                <button type="submit" class="btn btn-danger" @onclick=@(() => shiftVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                            }
+                        }
+                    </div>
+                </EditForm>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+    </div>
+}
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_LockDutyRoster">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <EditForm Model="@lockDutyRosterVM" OnValidSubmit="@LockDutyRoster">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Khóa bảng công <strong style="color:#6f42c1">Tháng @filterHrVM.Month/@filterHrVM.Year</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    @if (lockDutyRosterVMs != null)
+                    {
+                        <table class="table table-sm table-bordered text-nowrap tblFontSizeMin">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Mã</th>
+                                    <th>Bộ phận</th>
+                                    <th class="text-center">Trạng thái khóa</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var _lockDutyRosterVM in lockDutyRosterVMs)
+                                {
+                                    <tr>
+                                        <td class="text-left">@_lockDutyRosterVM.DepartmentID</td>
+                                        <td class="text-left">@_lockDutyRosterVM.DepartmentName</td>
+                                        @if (_lockDutyRosterVM.LockFrom != null)
+                                        {
+                                            <td class="text-center">@(_lockDutyRosterVM.LockFrom.HasValue ? _lockDutyRosterVM.LockFrom.Value.ToString("dd/MM/yyyy") : "") - @(_lockDutyRosterVM.LockTo.HasValue ? _lockDutyRosterVM.LockTo.Value.ToString("dd/MM/yyyy") : "")</td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Từ ngày:</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="@(lockDutyRosterVM.LockFrom.HasValue ? lockDutyRosterVM.LockFrom.Value.ToString("dd/MM/yyyy") : "")" disabled />
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Đến ngày:</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <input class="form-control"
+                                       data-inputmask="'alias': 'datetime', 'inputFormat': 'dd/mm/yyyy', 'yearrange': { 'minyear': '1900', 'maxyear': '2999' }"
+                                       onClick="this.select();"
+                                       @bind="onchange_LockTo">
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                                <ValidationMessage For="@(() => lockDutyRosterVM.LockTo)" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times"></i> Thoát</button>
+                    <button class="btn btn-success" @onclick=@(()=>lockDutyRosterVM.IsTypeUpdate = 1)>
+                        <i class="fa-solid fa-lock"></i>
+                        Khóa
+                    </button>
+                    <button class="btn btn-danger" @onclick=@(()=>lockDutyRosterVM.IsTypeUpdate = 0)>
+                        <i class="fa-solid fa-lock-open"></i>
+                        Hủy khóa
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+<Modal_DayOffDetail dayOffVMs=@dayOffVMs></Modal_DayOffDetail>
+
+<section class="content-header">
+
+    <EditForm Model="@filterHrVM">
+        <div class="row">
+
+            <div class="col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Tháng:</label>
+                    <div class="col-sm-9">
+                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                           ValueExpression="@(()=>filterHrVM.Month)"
+                                           Value="@filterHrVM.Month"
+                                           ValueChanged="@((int value) => onchange_filter_month(value))">
+                            @if (month_filter_list != null)
+                            {
+                                @foreach (var month in month_filter_list)
+                                {
+                                    <option value="@month.Month">@month.Month</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Năm:</label>
+                    <div class="col-sm-9">
+                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                           ValueExpression="@(()=>filterHrVM.Year)"
+                                           Value="@filterHrVM.Year"
+                                           ValueChanged="@((int value) => onchange_filter_year(value))">
+                            @if (year_filter_list != null)
+                            {
+                                @foreach (var year in year_filter_list)
+                                {
+                                    <option value="@year.Year">@year.Year</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
+                                 Value="@filterHrVM.DivisionID"
+                                 ValueChanged="@((string value) => onchange_filter_division(value))">
+                        @if (division_filter_list != null)
+                        {
+                            @foreach (var division_filter in division_filter_list)
+                            {
+                                <option data-subtext="@division_filter.DivisionID" value="@division_filter.DivisionID">@division_filter.DivisionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DepartmentID)"
+                                 Value="@filterHrVM.DepartmentID"
+                                 ValueChanged="@((string value) => onchange_filter_department(value))">
+                        <option value=@string.Empty>-----Bộ phận-----</option>
+                        @if (department_filter_list != null)
+                        {
+                            @foreach (var department_filter in department_filter_list)
+                            {
+                                <option data-subtext="@department_filter.DepartmentID" value="@department_filter.DepartmentID">@department_filter.DepartmentName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.SectionID)"
+                                 Value="@filterHrVM.SectionID"
+                                 ValueChanged="@((string value) => onchange_filter_section(value))">
+                        <option value=@string.Empty>-----Khu vực-----</option>
+                        @if (section_filter_list != null)
+                        {
+                            @foreach (var section_filter in section_filter_list)
+                            {
+                                <option data-subtext="@section_filter.SectionID" value="@section_filter.SectionID">@section_filter.SectionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-7">
+                <div class="form-group">
+                    <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                        @if (position_filter_list != null)
+                        {
+                            @foreach (var positiongroup_filter in position_filter_list.Select(x=> new {x.PositionGroupID, x.PositionGroupName}).Distinct())
+                            {
+                                <option value="@positiongroup_filter.PositionGroupID">@positiongroup_filter.PositionGroupName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                 ValueExpression="@(()=>filterHrVM.Eserial)"
+                                 Value="@filterHrVM.Eserial"
+                                 ValueChanged="@((string value) => onchange_filter_eserial(value))">
+                        <option value=@string.Empty>-----Nhân viên-----</option>
+                        @if (eserial_filter_list != null)
+                        {
+                            @foreach (var eserial_filter in eserial_filter_list)
+                            {
+                                <option data-subtext="@eserial_filter.Eserial" value="@eserial_filter.Eserial">@eserial_filter.LastName @eserial_filter.MiddleName @eserial_filter.FirstName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-1">
+                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetDutyRosterList())">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </EditForm>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-purple card-outline">
+
+            <div class="card-header text-right">
+                <button type="button" class="btn btn-info" data-target="#InitializeModal_Shift" data-toggle="modal" @onclick="()=>InitializeModal_Shift()"><i class="fa-solid fa-clipboard-list"></i> Bảng ca</button>
+                @if (payrollRepo.IsOpenFunc(filterHrVM))
+                {
+                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_DutyRoster_ControlOFF"))
+                    {
+                        <button type="button" class="btn btn-success" @onclick="()=>CalcControlDAYOFF()"><i class="fa-solid fa-calculator"></i> Kiểm soát ngày nghỉ</button>
+                    }
+                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_DutyRoster_Lock"))
+                    {
+                        <button type="button" class="btn btn-danger" data-target="#InitializeModal_LockDutyRoster" data-toggle="modal" @onclick="()=>InitializeModal_LockDutyRoster()"><i class="fas fa-lock"></i> Khóa bảng công</button>
+                    }
+                }
+            </div>
+            <!-- /.card-header -->
+
+            <EditForm Model="dutyRosterVM">
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 347px);">
+                    @if (dutyRosterVMs != null)
+                    {
+                        <table class="table table-sm table-bordered table-head-fixed text-nowrap tblFontSizeMin tblDutyRoster">
+                            <thead>
+                                <tr>
+                                    <th>Nhân viên</th>
+                                    @if (@filterHrVM.DepartmentID == string.Empty)
+                                    {
+                                        <th>Bộ phận</th>
+                                    }
+                                    <th>Vị trí</th>
+                                    <th></th>
+
+                                    @foreach (var _day in dutyRosterVMs.Select(x => new { x.dDate, x.isPH, x.dayNum }).DistinctBy(x => x.dDate))
+                                    {
+                                        var colorDayoff = string.Empty;
+
+                                        if (_day.isPH == 1)
+                                        {
+                                            colorDayoff = "background-color:#FFC0CB!important";
+                                        }
+                                        else
+                                        {
+                                            if (_day.dayNum == 7)
+                                            {
+                                                colorDayoff = "background-color:#fdff91!important";
+                                            }
+                                            else if (_day.dayNum == 1)
+                                            {
+                                                colorDayoff = "background-color:#ffab91!important";
+                                            }
+                                        }
+
+                                        <th class="text-center" style="@colorDayoff">
+                                            @if (_day.dDate.Month == filterHrVM.Month)
+                                            {
+                                                @_day.dDate.Day
+                                                <br> <span style="font-size: 8.5px;">@LibraryFunc.GetDayName(@_day.dDate)</span>
+                                            }
+                                            else
+                                            {
+                                                @_day.dDate.Day
+                                                <span>/T</span>
+                                                @_day.dDate.Month
+                                                <br> <span style="font-size: 8.5px;">@LibraryFunc.GetDayName(@_day.dDate)</span>
+                                            }
+                                        </th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var _dutyRosterVM_0 in search_dutyRosterVMs.Select(x => new
+                                {
+                                    x.Eserial,
+                                    x.DepartmentName,
+                                    x.PositionName,
+                                    x.LastName,
+                                    x.MiddleName,
+                                    x.FirstName,
+                                    x.isLock,
+                                    x.LockFrom,
+                                    x.LockTo
+                                }).DistinctBy(x => x.Eserial))
+                                {
+                                    <tr>
+                                        <th><a @onclick="()=>InitializeModal_DayOffDetail(_dutyRosterVM_0.Eserial)">@_dutyRosterVM_0.Eserial - @_dutyRosterVM_0.LastName @_dutyRosterVM_0.MiddleName @_dutyRosterVM_0.FirstName</a></th>
+                                        @if (@filterHrVM.DepartmentID == string.Empty)
+                                        {
+                                            <td>@_dutyRosterVM_0.DepartmentName</td>
+                                        }
+                                        <td>@_dutyRosterVM_0.PositionName</td>
+                                        @if (_dutyRosterVM_0.isLock == 0)
+                                        {
+                                            if (sysRepo.checkAccessSubFunc(UserID, "HR_DutyRoster_Update") == false)
+                                            {
+                                                <td class="text-danger">
+                                                    <i class="fa-solid fa-lock"></i>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-success">
+                                                    <i class="fa-solid fa-lock-open"></i>
+                                                </td>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <td class="text-danger">
+                                                <i class="fa-solid fa-lock"></i> @(_dutyRosterVM_0.LockFrom.HasValue ? _dutyRosterVM_0.LockFrom.Value.ToString("dd/MM/yyyy") : "")<span> - </span>@(_dutyRosterVM_0.LockTo.HasValue ? _dutyRosterVM_0.LockTo.Value.ToString("dd/MM/yyyy") : "")
+                                            </td>
+                                        }
+
+                                        @foreach (var _dutyRosterVM_1 in dutyRosterVMs.Where(x => x.Eserial == _dutyRosterVM_0.Eserial))
+                                        {
+                                            var colorDayoff = string.Empty;
+
+                                            if (_dutyRosterVM_1.ColorHEX != "#ffffff" && (_dutyRosterVM_1.ColorHEX ?? string.Empty) != string.Empty)
+                                            {
+                                                colorDayoff = "background-color:" + _dutyRosterVM_1.ColorHEX;
+                                            }
+                                            else
+                                            {
+                                                if (_dutyRosterVM_1.dayNum == 7)
+                                                {
+                                                    colorDayoff = "background-color:#fdff91";
+                                                }
+                                                else if (_dutyRosterVM_1.dayNum == 1)
+                                                {
+                                                    colorDayoff = "background-color:#ffab91";
+                                                }
+                                            }
+
+                                            _dutyRosterVM_1.InputAttributes = new Dictionary<string, object>() { { "style", colorDayoff }, { "onpaste", "focusInputNextID('" + _dutyRosterVM_1.InputNextID + "')" } };
+
+                                            if (_dutyRosterVM_1.ckJoined == 0 || _dutyRosterVM_1.ckTerminated == 1 || _dutyRosterVM_1.isLock == 1 || sysRepo.checkAccessSubFunc(UserID, "HR_DutyRoster_Update") == false)
+                                            {
+
+                                                @if (_dutyRosterVM_1.ckJoined == 0 || _dutyRosterVM_1.ckTerminated == 1)
+                                                {
+                                                    <td class="text-center text-danger dutyroster-td" style="@colorDayoff">
+                                                        <i class="fa-solid fa-user-xmark"></i>
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td class="text-center dutyroster-td" style="@colorDayoff">
+                                                        @_dutyRosterVM_1.WorkShift
+                                                    </td>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <td class="text-center dutyroster-td">
+                                                    @if (_dutyRosterVM_1.inputLoading_updateShift)
+                                                    {
+                                                        <span class="spinner-border text-light" role="status">
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <InputText type="text" class="form-control text-uppercase rounded-0 dutyroster-input"
+                                               id="@_dutyRosterVM_1.InputID"
+                                               @attributes="@_dutyRosterVM_1.InputAttributes"
+                                               onClick="this.select();"
+                                               ValueExpression="@(()=>_dutyRosterVM_1.WorkShift)"
+                                               Value="@_dutyRosterVM_1.WorkShift"
+                                               ValueChanged="@((string value) =>onchange_updateshift(value, _dutyRosterVM_1))">
+                                                        </InputText>
+                                                    }
+                                                </td>
+                                            }
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </EditForm>
+            <!-- /.card-body -->
+            @if (search_dutyRosterVMs != null)
+            {
+                <div class="card-footer text-muted">
+                    Tổng số: <b>@totalRecords</b> bản ghi
+
+                    <ul class="pagination pagination-sm m-0 float-right">
+                        <li class="page-item"><a class="page-link" @onclick=@(()=> NavigateToPage("previous"))>«</a></li>
+                        @for (int i = startPage; i <= endPage; i++)
+                        {
+                            var currentPage = i;
+                            <li class="page-item @(currentPage==curPage?"active":"")"><a class="page-link" @onclick=@(() => refreshRecords(currentPage))>@currentPage</a></li>
+                        }
+                        <li class="page-item"><a class="page-link" @onclick=@(()=> NavigateToPage("next"))>»</a></li>
+                    </ul>
+                </div>
+            }
+            <!-- /.card-footer -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+

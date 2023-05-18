@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace D69soft.Shared.Models.Entities.OP
+namespace Model.Entities.OP
 {
     interface Tender
     {

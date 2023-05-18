@@ -2,6 +2,7 @@
 
 @using Blazored.FluentValidation
 @using D69soft.Client.Helpers;
+@using D69soft.Server.Services;
 @using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_ChangePass">
@@ -49,7 +50,7 @@
 </div>
 
 @code {
-    [Inject] HttpClient httpClient { get; set; }
+    [Inject] AuthService authService { get; set; }
 
     //Change Pass
     ChangePassVM changePassVM = new();
@@ -61,11 +62,7 @@
     {
         changePassVM.Eserial = UserID;
 
-        var response = await httpClient.PostAsJsonAsync($"api/Auth/ChangePass", changePassVM);
-
-        var result = await response.Content.ReadAsStringAsync();
-
-        if (bool.Parse(result))
+        if (await authService.ChangePass(changePassVM))
         {
             await js.Swal_Message("Thông báo!", "Đổi mật khẩu đăng nhập thành công.", SweetAlertMessageType.success);
 

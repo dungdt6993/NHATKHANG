@@ -1,0 +1,460 @@
+﻿@page "/EA/Request"
+
+@using Blazored.FluentValidation
+
+<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+<Loading isLoading="@isLoading"></Loading>
+
+<Modal_RptViewer ReportName=@ReportName></Modal_RptViewer>
+
+<EditForm Model="@filterFinVM">
+    <section class="content-header">
+        <div class="row">
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
+                                 Value="@filterHrVM.DivisionID"
+                                 ValueChanged="@((string value) => onchange_filter_division(value))">
+                        @if (division_filter_list != null)
+                        {
+                            @foreach (var division_filter in division_filter_list)
+                            {
+                                <option data-subtext="@division_filter.DivisionID" value="@division_filter.DivisionID">@division_filter.DivisionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DepartmentID)"
+                                 Value="@filterHrVM.DepartmentID"
+                                 ValueChanged="@((string value) => onchange_filter_department(value))">
+                        <option value="">-----Bộ phận-----</option>
+                        @if (department_filter_list != null)
+                        {
+                            @foreach (var department_filter in department_filter_list)
+                            {
+                                <option data-subtext="@department_filter.DepartmentID" value="@department_filter.DepartmentID">@department_filter.DepartmentName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <DateRangePicker Ranges="DateRanges" Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))" ApplyLabel="Thực hiện" CancelLabel="Hủy" CustomRangeLabel="Chọn ngày" OnRangeSelect="OnRangeSelect">
+                        <PickerTemplate Context="c">
+                            <div id="@c.Id" @onclick="c.Toggle" class="form-control" style="cursor: pointer;">
+                                <i class="fa-solid fa-calendar-days"></i>&nbsp;
+
+                                <span>@c.FormattedRange @(string.IsNullOrEmpty(c.FormattedRange) ? "Chọn ngày..." : "")</span>
+
+                                <span class="float-right">
+                                    <i class="fa-solid fa-angle-down"></i>
+                                </span>
+                            </div>
+                        </PickerTemplate>
+                    </DateRangePicker>
+                </div>
+            </div>
+
+            <div class="col-sm-2">
+                @if (sysRepo.checkAccessSubFunc(UserID, "EA_Request_Create"))
+                {
+                    <a href="/EA/Cart" class="btn btn-block btn-success"><i class="fa-solid fa-xl fa-plus"></i> Tạo mới yêu cầu</a>
+                }
+            </div>
+        </div>
+    </section>
+</EditForm>
+
+<section class="content">
+    <div class="container-fluid">
+
+        <div class="card">
+            <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                    <li class="nav-item"><a class="nav-link active" href="#all" data-toggle="tab" @onclick="@(() => FilterRequest("all"))">Tất cả</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#pending" data-toggle="tab" @onclick="@(() => FilterRequest("pending"))">Đang chờ duyệt</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#approved" data-toggle="tab" @onclick="@(() => FilterRequest("approved"))">Đã duyệt</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#nothandover" data-toggle="tab" @onclick="@(() => FilterRequest("nothandover"))">Chưa bàn giao</a></li>
+                </ul>
+            </div>
+            <div class="card-body table-responsive p-0" style="height: calc(100vh - 284px);">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="all">
+
+                        @if (requestVMs != null)
+                        {
+                            <Virtualize @ref="RequestContainer" ItemsProvider="@LoadRequestVMs" Context="_requestVM" ItemSize="5" OverscanCount="5">
+                                <ItemContent>
+
+                                    <div class="callout callout-@(_requestVM.isSendApprove?"success":"danger") p-1">
+                                        <table class="table table-sm table-bordered tblFontSizeMin">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th class="text-center">
+                                                        Số phiếu
+                                                    </th>
+                                                    <th class="text-center">
+                                                        Bộ phận
+                                                    </th>
+                                                    <th class="text-center">
+                                                        Thời gian
+                                                    </th>
+                                                    <th class="text-center">
+                                                        Lý do
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class="text-center">
+                                                        @_requestVM.RequestCode
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-xs btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <i class="fas fa-print"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item" @onclick="(() => PrintRequest(_requestVM.RequestCode))">Phiếu yêu cầu</a>
+                                                            </div>
+                                                        </div>
+                                                    </th>
+                                                    <th>
+                                                        @_requestVM.Request_DepartmentName
+                                                    </th>
+                                                    <th class="text-center">
+                                                        @_requestVM.DateOfRequest.ToString("HH:mm dd/MM/yyyy")
+                                                    </th>
+                                                    <th>
+                                                        @_requestVM.ReasonOfRequest
+                                                    </th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <table class="table table-sm table-bordered table-head-fixed tblFontSizeMin">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th class="text-center">
+                                                        Tên hàng
+                                                    </th>
+                                                    <th class="text-center">
+                                                        Đơn vị
+                                                    </th>
+                                                    <th style="width: 80px;" class="text-center">
+                                                        Đề xuất
+                                                    </th>
+                                                    <th style="width: 80px;" class="text-center">
+                                                        Duyệt
+                                                    </th>
+                                                    @if (_requestVM.isSendApprove)
+                                                    {
+                                                        <th style="width: 80px;" class="text-center">
+                                                            Bàn giao
+                                                        </th>
+                                                    }
+                                                    <th class="text-center"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                @foreach (var _requestVM_detail in search_requestVMs.Where(x => x.RequestCode == _requestVM.RequestCode))
+                                                {
+                                                    <tr>
+                                                        <td style="min-width: 130px;">
+                                                            @*<small class="mute">@_requestVM_detail.ICode -</small>*@ @_requestVM_detail.IName
+                                                            @if (!String.IsNullOrEmpty(_requestVM_detail.INote))
+                                                            {
+                                                                <br />
+                                                                <span style="font-size: .7rem !important; color: #dc3545;"><i class="fa-solid fa-note-sticky"></i> @_requestVM_detail.INote</span>
+                                                            }
+                                                        </td>
+                                                        <td class="text-center">
+                                                            @_requestVM_detail.IUnitName
+                                                        </td>
+                                                        <td class="text-center">@_requestVM_detail.Qty</td>
+                                                        <td class="text-center">
+                                                            @if (!_requestVM.isSendApprove && (_requestVM.DirectManager_Eserial == UserID || _requestVM.ControlDept_Eserial == UserID || _requestVM.Approve_Eserial == UserID))
+                                                            {
+                                                                <input class="form-control text-center text-bold @(_requestVM_detail.QtyApproved>_requestVM_detail.Qty?"text-success":"") @(_requestVM_detail.QtyApproved<_requestVM_detail.Qty?"text-danger":"")"
+                                                           @onchange="@((ChangeEventArgs e) => onchange_QtyApproved(e, _requestVM_detail))" value="@_requestVM_detail.QtyApproved"
+                                                           onClick="this.select();" style="min-width: 50px;" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="text-bold @(_requestVM_detail.QtyApproved>_requestVM_detail.Qty?"text-success":"") @(_requestVM_detail.QtyApproved<_requestVM_detail.Qty?"text-danger":"")">@_requestVM_detail.QtyApproved</span>
+                                                            }
+                                                        </td>
+                                                        @if (_requestVM.isSendApprove)
+                                                        {
+                                                            <td class="text-center">
+                                                                @if (_requestVM.isSendApprove && _requestVM_detail.QtyApproved > 0)
+                                                                {
+                                                                    @if (_requestVM.VActive)
+                                                                    {
+                                                                        <span class="text-bold text-success"><i class="fa-solid fa-check"></i></span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span class="text-bold text-danger"><i class="fa-solid fa-xmark"></i></span>
+                                                                    }
+                                                                }
+                                                            </td>
+                                                        }
+                                                        <td style="min-width: 100px;">
+                                                            @if (_requestVM.isSendApprove)
+                                                            {
+                                                                <span class="text-danger">@_requestVM_detail.RDNote</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                if (!_requestVM_detail.IsUpdateRDNote)
+                                                                {
+                                                                    if (String.IsNullOrEmpty(_requestVM_detail.RDNote))
+                                                                    {
+                                                                        <a class="text-secondary" style="text-decoration: none; font-size: 12px;" @onclick=@(() => _requestVM_detail.IsUpdateRDNote = true)>
+                                                                            <i class="fas fa-edit"></i>
+                                                                            Ghi chú...
+                                                                        </a>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <a class="text-danger" style="text-decoration: none;" @onclick=@(() => _requestVM_detail.IsUpdateRDNote = true)>@_requestVM_detail.RDNote</a>
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    <textarea class="form-control" placeholder="Ghi chú..." @onchange="@((ChangeEventArgs e) => onchange_RDNote(e, _requestVM_detail))" value="@_requestVM_detail.RDNote" />
+                                                                }
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+
+                                        <table class="table table-sm table-bordered tblFontSizeMin">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th class="text-center">
+                                                        Người yêu cầu
+                                                    </th>
+                                                    @if (!String.IsNullOrEmpty(_requestVM.DirectManager_Eserial))
+                                                    {
+                                                        <th class="text-center">
+                                                            Quản lý trực tiếp
+                                                        </th>
+                                                    }
+                                                    @if (!String.IsNullOrEmpty(_requestVM.ControlDept_Eserial))
+                                                    {
+                                                        <th class="text-center">
+                                                            Phụ trách bộ phận
+                                                        </th>
+                                                    }
+                                                    @if (!String.IsNullOrEmpty(_requestVM.Approve_Eserial))
+                                                    {
+                                                        <th class="text-center">
+                                                            Phê duyệt
+                                                        </th>
+                                                    }
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th class="text-center">
+                                                        @_requestVM.EserialRequest - @_requestVM.Request_FullName<br />
+                                                        @if (_requestVM.EserialRequest == UserID || userRoleAdmin)
+                                                        {
+                                                            if ((_requestVM.isSendApprove ? 1 : 0) == 0)
+                                                            {
+                                                                <button class="btn btn-danger" @onclick="@(() => SendApprove(false,"SendDelRequest",_requestVM))"><i class="fa-solid fa-ban"></i> Hủy</button>
+                                                            }
+                                                        }
+                                                    </th>
+
+                                                    @if (!String.IsNullOrEmpty(_requestVM.DirectManager_Eserial))
+                                                    {
+                                                        <th style="text-align: center;">
+
+                                                            @_requestVM.DirectManager_Eserial - @_requestVM.DirectManager_FullName<br />
+
+                                                            @if (_requestVM.isSendDirectManager)
+                                                            {
+                                                                <span class="text-success">Đã duyệt (@_requestVM.TimeSendDirectManager.ToString("dd/MM/yyyy HH:mm"))</span>
+
+                                                                <br />
+                                                                @if (_requestVM.DirectManager_Eserial == UserID)
+                                                                {
+                                                                    if ((_requestVM.isSendControlDept ? 1 : 0) + (_requestVM.isSendApprove ? 1 : 0) == 0)
+                                                                    {
+                                                                        <button class="btn btn-danger" @onclick="@(() => SendApprove(false,"SendDirectManager",_requestVM))"><i class="fa-solid fa-ban"></i> Hủy</button>
+                                                                    }
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                if (_requestVM.DirectManager_Eserial == UserID)
+                                                                {
+                                                                    if ((_requestVM.isSendControlDept ? 1 : 0) + (_requestVM.isSendApprove ? 1 : 0) == 0)
+                                                                    {
+                                                                        <button class="btn btn-success" @onclick="@(() => SendApprove(true,"SendDirectManager",_requestVM))"><i class="fa-solid fa-check"></i> Duyệt</button>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span class="text-danger">Chưa duyệt</span>
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="text-danger">Chưa duyệt</span>
+                                                                }
+                                                            }
+                                                        </th>
+                                                    }
+
+                                                    @if (!String.IsNullOrEmpty(_requestVM.ControlDept_Eserial))
+                                                    {
+                                                        <th style="text-align: center;">
+
+                                                            @_requestVM.ControlDept_Eserial - @_requestVM.ControlDept_FullName<br />
+
+                                                            @if (_requestVM.isSendControlDept)
+                                                            {
+                                                                <span class="text-success">Đã duyệt (@_requestVM.TimeSendControlDept.ToString("dd/MM/yyyy HH:mm"))</span>
+
+                                                                <br />
+                                                                @if (_requestVM.ControlDept_Eserial == UserID)
+                                                                {
+                                                                    if ((_requestVM.isSendApprove ? 1 : 0) == 0)
+                                                                    {
+                                                                        <button class="btn btn-danger" @onclick="@(() => SendApprove(false,"SendControlDept",_requestVM))"><i class="fa-solid fa-ban"></i> Hủy</button>
+                                                                    }
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                if (_requestVM.ControlDept_Eserial == UserID)
+                                                                {
+                                                                    if ((_requestVM.isSendApprove ? 1 : 0) == 0)
+                                                                    {
+                                                                        <button class="btn btn-success" @onclick="@(() => SendApprove(true,"SendControlDept",_requestVM))"><i class="fa-solid fa-check"></i> Duyệt</button>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span class="text-danger">Chưa duyệt</span>
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="text-danger">Chưa duyệt</span>
+                                                                }
+                                                            }
+                                                        </th>
+                                                    }
+
+                                                    @if (!String.IsNullOrEmpty(_requestVM.Approve_Eserial))
+                                                    {
+                                                        <th style="text-align: center;">
+
+                                                            @_requestVM.Approve_Eserial - @_requestVM.Approve_FullName<br />
+
+                                                            @if (_requestVM.isSendApprove)
+                                                            {
+                                                                <span class="text-success">Đã duyệt (@_requestVM.TimeSendApprove.ToString("dd/MM/yyyy HH:mm"))</span>
+
+                                                                <br />
+                                                                @if (_requestVM.Approve_Eserial == UserID && !_requestVM.VActive)
+                                                                {
+                                                                    <button class="btn btn-danger" @onclick="@(() => SendApprove(false,"SendApprove",_requestVM))"><i class="fa-solid fa-ban"></i> Hủy</button>
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                if (_requestVM.Approve_Eserial == UserID)
+                                                                {
+                                                                    <button class="btn btn-success" @onclick="@(() => SendApprove(true,"SendApprove",_requestVM))"><i class="fa-solid fa-check"></i> Duyệt</button>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="text-danger">Chưa duyệt</span>
+                                                                }
+                                                            }
+                                                        </th>
+                                                    }
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </ItemContent>
+                                <Placeholder>
+                                    <p>Đang tải dữ liệu...</p>
+                                </Placeholder>
+                            </Virtualize>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            @if (requestVMs != null)
+            {
+                <div class="card-footer text-muted">
+                    Hiển thị:
+                    <select class="form-select form-select-sm" style="width: 100px;" @onchange="ShowEntity">
+                        <option value="100" selected>100</option>
+                        <option value="0">Tất cả</option>
+                    </select>
+
+                        <b>@search_requestVMs.DistinctBy(x => new {x.RequestCode}).Count()</b>
+
+                    bản ghi
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+    <!-- /.container-fluid -->
+</section>
+
+
+@code {
+
+    Dictionary<string, DateRange> DateRanges => new Dictionary<string, DateRange> {
+            {"Ngày hôm nay", new DateRange
+                    {
+                        Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),
+                        End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)
+                    }
+                },
+            {"Ngày hôm qua", new DateRange
+                    {
+                        Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(-1),
+                        End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(-1)
+                    }
+                },
+            {"Tháng này", new DateRange
+                    {
+                        Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
+                        End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1).AddTicks(-1)
+                    }
+                },
+            {"Tháng trước", new DateRange
+                    {
+                        Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-1),
+                        End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddTicks(-1)
+                    }
+                },
+            };
+}

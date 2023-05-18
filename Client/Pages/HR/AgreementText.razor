@@ -1,0 +1,378 @@
+﻿@page "/HR/AgreementText"
+@using Blazored.FluentValidation
+
+<Loading isLoading="@isLoading"></Loading>
+<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_AgreementText">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span>BẢNG CẤU HÌNH VĂN BẢN THỎA THUẬN</span>
+                </h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body p-0">
+
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 300px);">
+
+                    <table class="table table-sm table-bordered table-head-fixed text-nowrap tblFontSizeMin">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Mã điều chỉnh</th>
+                                <th>Diễn giải</th>
+                                <th>Báo cáo</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (adjustProfileRptVMs != null)
+                            {
+                                foreach (var _adjustProfileVM in adjustProfileVMs)
+                                {
+                                    <tr>
+                                        <td class="text-center">@_adjustProfileVM.AdjustProfileID</td>
+                                        <td>@_adjustProfileVM.AdjustProfileName</td>
+                                        <td>
+                                            @foreach (var _adjustProfileRptVM in adjustProfileRptVMs.Where(x => x.AdjustProfileID == _adjustProfileVM.AdjustProfileID))
+                                            {
+                                                @_adjustProfileRptVM.RptName
+                                                <br />
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-default btn-xs" data-target="#InitializeModal_AdjustProfileRpt" data-toggle="modal" @onclick="(() => InitializeModal_AdjustProfileRpt(_adjustProfileVM))"><i class="fa-solid fa-pen"></i></button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_AdjustProfileRpt">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <EditForm Model="@adjustProfileVM" OnValidSubmit="@UpdateAdjustProfileRpt">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>CẬP NHẬT</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => CloseAdjustProfileRpt())">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Mã điều chỉnh</label>
+                        <div class="col-sm-5">
+                            <input type="text" readonly class="form-control" placeholder="Mã Công ty" value="@adjustProfileVM.AdjustProfileID" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Diễn giải</label>
+                        <div class="col-sm-9">
+                            <InputText class="form-control" placeholder="Tên Công ty" @bind-Value="@adjustProfileVM.AdjustProfileName" />
+                            <ValidationMessage For="@(() => adjustProfileVM.AdjustProfileName)" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Báo cáo</label>
+                        <div class="col-sm-9">
+                            <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="Chọn báo cáo nhân sự..." @bind="onchange_rpt">
+                                @if (sysRptVMs != null)
+                                {
+                                    @foreach (var _sysRptVM_0 in sysRptVMs.Select(x => new { x.RptGrpID, x.RptGrpName }).Distinct())
+                                    {
+                                        <optgroup label="@_sysRptVM_0.RptGrpName">
+                                            @foreach (var _sysRptVM_1 in sysRptVMs.Where(x => x.RptGrpID == _sysRptVM_0.RptGrpID))
+                                            {
+                                                <option value="@_sysRptVM_1.RptID">@_sysRptVM_1.RptName</option>
+                                            }
+                                        </optgroup>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" @onclick="(() => CloseAdjustProfileRpt())"><i class="fas fa-times"></i> Thoát</button>
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                </div>
+            </EditForm>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<section class="content-header">
+
+    <EditForm Model="@filterHrVM">
+        <div class="row">
+
+            <div class="col-sm-2 col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Tháng:</label>
+                    <div class="col-sm-9">
+                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                           ValueExpression="@(()=>filterHrVM.Month)"
+                                           Value="@filterHrVM.Month"
+                                           ValueChanged="@((int value) => onchange_filter_month(value))">
+                            @if (month_filter_list != null)
+                            {
+                                @foreach (var month in month_filter_list)
+                                {
+                                    <option value="@month.Month">@month.Month</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-2 col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Năm:</label>
+                    <div class="col-sm-9">
+                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                           ValueExpression="@(()=>filterHrVM.Year)"
+                                           Value="@filterHrVM.Year"
+                                           ValueChanged="@((int value) => onchange_filter_year(value))">
+                            @if (year_filter_list != null)
+                            {
+                                @foreach (var year in year_filter_list)
+                                {
+                                    <option value="@year.Year">@year.Year</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
+                                 Value="@filterHrVM.DivisionID"
+                                 ValueChanged="@((string value) => onchange_filter_division(value))">
+                        <option value="">-----Công ty-----</option>
+                        @if (division_filter_list != null)
+                        {
+                            @foreach (var division_filter in division_filter_list)
+                            {
+                                <option data-subtext="@division_filter.DivisionID" value="@division_filter.DivisionID">@division_filter.DivisionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DepartmentID)"
+                                 Value="@filterHrVM.DepartmentID"
+                                 ValueChanged="@((string value) => onchange_filter_department(value))">
+                        <option value="">-----Bộ phận-----</option>
+                        @if (department_filter_list != null)
+                        {
+                            @foreach (var department_filter in department_filter_list)
+                            {
+                                <option data-subtext="@department_filter.DepartmentID" value="@department_filter.DepartmentID">@department_filter.DepartmentName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.SectionID)"
+                                 Value="@filterHrVM.SectionID"
+                                 ValueChanged="@((string value) => onchange_filter_section(value))">
+                        <option value="">-----Khu vực-----</option>
+                        @if (section_filter_list != null)
+                        {
+                            @foreach (var section_filter in section_filter_list)
+                            {
+                                <option data-subtext="@section_filter.SectionID" value="@section_filter.SectionID">@section_filter.SectionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-sm-4 col-md-4">
+                <div class="form-group">
+                    <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                        @if (position_filter_list != null)
+                        {
+                            @foreach (var positiongroup_filter in position_filter_list.Select(x=> new {x.PositionGroupID, x.PositionGroupName}).Distinct())
+                            {
+                                <option data-subtext="@positiongroup_filter.PositionGroupID" value="@positiongroup_filter.PositionGroupID">@positiongroup_filter.PositionGroupName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                 ValueExpression="@(()=>filterHrVM.Eserial)"
+                                 Value="@filterHrVM.Eserial"
+                                 ValueChanged="@((string value) => onchange_filter_eserial(value))">
+                        <option value="">-----Nhân viên-----</option>
+                        @if (eserial_filter_list != null)
+                        {
+                            @foreach (var eserial_filter in eserial_filter_list)
+                            {
+                                <option data-subtext="@eserial_filter.Eserial" value="@eserial_filter.Eserial">@eserial_filter.LastName @eserial_filter.MiddleName @eserial_filter.FirstName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-sm-4 col-md-4">
+                <div class="form-group">
+                    <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                       ValueExpression="@(()=>filterHrVM.RptID)"
+                                       Value="@filterHrVM.RptID"
+                                       ValueChanged="@((int value) => onchange_filter_agreementtext(value))">
+                        <option value="0">-----Loại văn bản thỏa thuận-----</option>
+                        @if (agreementtexttype_filter_list != null)
+                        {
+                            @foreach (var agreementtexttype_filter in agreementtexttype_filter_list)
+                            {
+                                <option value="@agreementtexttype_filter.RptID">@agreementtexttype_filter.RptName</option>
+                            }
+                        }
+                    </InputSelectNumber>
+                </div>
+            </div>
+
+            <div class="col-sm-1 col-md-1">
+                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetAgreementTextList())">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </EditForm>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-purple card-outline">
+
+            <div class="card-header text-right">
+                <button type="button" class="btn btn-secondary" data-target="#InitializeModal_AgreementText" data-toggle="modal" @onclick="()=>InitializeModal_AgreementText()"><i class="fa-solid fa-file-pen"></i> Cấu hình văn bản thỏa thuận</button>
+                @if (agreementTextVMs != null)
+                {
+                    if (agreementTextVMs.Where(x => x.IsChecked).Count() > 0)
+                    {
+                        <button type="button" class="btn bg-purple" @onclick="(() => PrintAgreementText())"><i class="fas fa-print"></i></button>
+                    }
+                }
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0" style="height: calc(100vh - 337px);">
+                @if (agreementTextVMs != null)
+                {
+                    <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="text-center">
+                                    @if (agreementTextVMs != null)
+                                    {
+                                        <div class="custom-control custom-checkbox">
+                                            <input class="custom-control-input custom-control-input-purple" type="checkbox" id="ckAll" @onchange="EventArgs => { CheckAll(EventArgs.Value); }" checked="@filterHrVM.IsChecked">
+                                            <label for="ckAll" class="custom-control-label"></label>
+                                        </div>
+                                    }
+                                </th>
+                                <th class="text-center">Mã NV</th>
+                                <th>Họ tên</th>
+                                <th>Bộ phận</th>
+                                <th>Vị trí</th>
+                                <th class="text-center">Ngày</th>
+                                <th>Văn bản thỏa thuận</th>
+                                <th>Biểu mẫu</th>
+                                <th class="text-center">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <Virtualize Items="@agreementTextVMs" Context="agreementText" OverscanCount="50">
+                                <tr>
+                                    <td class="text-center">
+                                        <div class="custom-control custom-checkbox">
+                                            <input class="custom-control-input custom-control-input-purple custom-control-input-outline" id="@agreementText.Seq" type="checkbox" @bind="agreementText.IsChecked">
+                                            <label for="@agreementText.Seq" class="custom-control-label"></label>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">@agreementText.Eserial</td>
+                                    <td>@agreementText.LastName @agreementText.MiddleName @agreementText.FirstName</td>
+                                    <td>@agreementText.DepartmentName</td>
+                                    <td>@agreementText.PositionName</td>
+                                    <td class="text-center">@agreementText.dDate.ToString("dd/MM/yyyy")</td>
+                                    <td>@agreementText.AdjustProfileName</td>
+                                    <td>@agreementText.RptName</td>
+
+                                    @if (@agreementText.isPrint == 1)
+                                    {
+                                        <td class="text-center text-secondary">
+                                            <i class="fa-solid fa-print"> </i>
+                                            @agreementText.EserialPrint
+                                            <span> - </span>
+                                            @agreementText.FullNamePrint <i class="fa-solid fa-clock"> </i>
+                                            @(agreementText.TimePrint.HasValue ? agreementText.TimePrint.Value.ToString("dd/MM/yyyy HH:mm") : "")
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                </tr>
+                            </Virtualize>
+                        </tbody>
+                    </table>
+                }
+            </div>
+            <!-- /.card-body -->
+            @if (agreementTextVMs != null)
+            {
+                <div class="card-footer text-muted">
+                    Tổng số: <b>@agreementTextVMs.Count()</b> bản ghi
+                </div>
+            }
+            <!-- /.card-footer -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>

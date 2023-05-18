@@ -1,0 +1,476 @@
+﻿@page "/OP/EmplTrf"
+
+@using Blazored.FluentValidation
+@using Utilities
+
+<Loading isLoading="@isLoading"></Loading>
+<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_EmplTrf">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span style="color:#6f42c1">@dutyRosterVM.Eserial - @dutyRosterVM.LastName @dutyRosterVM.MiddleName @dutyRosterVM.FirstName</span>
+                </h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="dutyRosterVM">
+                    <div class="row">
+
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>Phân ca:</label>
+                                <table class="table table-sm table-bordered table-head-fixed text-nowrap tblFontSizeMin tblDutyRoster">
+                                    <tbody>
+                                        <tr>
+                                            @if (dutyRosterVM != null)
+                                            {
+                                                var colorDayoff = string.Empty;
+
+                                                if (dutyRosterVM.ColorHEX != "#ffffff" && (dutyRosterVM.ColorHEX ?? string.Empty) != string.Empty)
+                                                {
+                                                    colorDayoff = "background-color:" + dutyRosterVM.ColorHEX;
+                                                }
+                                                else
+                                                {
+                                                    if (dutyRosterVM.dayNum == 7)
+                                                    {
+                                                        colorDayoff = "background-color:#fdff91";
+                                                    }
+                                                    else if (dutyRosterVM.dayNum == 1)
+                                                    {
+                                                        colorDayoff = "background-color:#ffab91";
+                                                    }
+                                                }
+
+                                                dutyRosterVM.InputAttributes = new Dictionary<string, object>() { { "style", colorDayoff }, { "onpaste", "focusInputNextID('" + dutyRosterVM.InputNextID + "')" } };
+
+                                                if (dutyRosterVM.isLock == 1)
+                                                {
+                                                    <td class="text-center dutyroster-td" style="@colorDayoff">
+                                                        @dutyRosterVM.WorkShift
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td class="text-center dutyroster-td">
+                                                        @if (dutyRosterVM.inputLoading_updateShift)
+                                                        {
+                                                            <span class="spinner-border text-light" role="status">
+                                                            </span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <InputText type="text" class="form-control text-uppercase rounded-0 dutyroster-input"
+                                                           id="@dutyRosterVM.InputID"
+                                                           @attributes="@dutyRosterVM.InputAttributes"
+                                                           onClick="this.select();"
+                                                           ValueExpression="@(()=>dutyRosterVM.WorkShift)"
+                                                           Value="@dutyRosterVM.WorkShift"
+                                                           ValueChanged="@((string value) =>onchange_updateshift(value, dutyRosterVM))">
+                                                            </InputText>
+                                                        }
+                                                    </td>
+                                                }
+                                            }
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-9">
+                            <div class="form-group">
+                                <label>Vị trí làm việc:</label>
+                                <InputSelect class="selectpicker form-control" data-style="btn-selectpicker"
+                                             data-container="body" data-live-search="true"
+                                             ValueExpression="@(()=>dutyRosterVM.PositionID)"
+                                             Value="@dutyRosterVM.PositionID"
+                                             ValueChanged="@((string value) =>onchange_UpdatePositionWork(value))">
+                                    @if (position_filter_list != null)
+                                    {
+                                        @foreach (var _position in position_filter_list)
+                                        {
+                                            <option data-subtext="@_position.PositionID" value="@_position.PositionID">@_position.PositionName</option>
+                                        }
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </EditForm>
+
+            </div>
+            <div class="modal-footer justify-content-center">
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_DutyRosterNote">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <EditForm Model="@dutyRosterVM" OnValidSubmit="@UpdateDutyRosterNote">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>Ghi chú</span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <BlazoredTextEditor @ref="QuillHtml" Placeholder="Ghi chú...">
+                        <ToolbarContent>
+                            <select class="ql-header">
+                                <option selected=""></option>
+                                <option value="1"></option>
+                                <option value="2"></option>
+                                <option value="3"></option>
+                                <option value="4"></option>
+                                <option value="5"></option>
+                            </select>
+                            <span class="ql-formats">
+                                <button class="ql-bold"></button>
+                                <button class="ql-italic"></button>
+                                <button class="ql-underline"></button>
+                                <button class="ql-strike"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <select class="ql-color"></select>
+                                <select class="ql-background"></select>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-list" value="ordered"></button>
+                                <button class="ql-list" value="bullet"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-link"></button>
+                            </span>
+                        </ToolbarContent>
+                    </BlazoredTextEditor>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                </div>
+            </EditForm>
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_TenderTrf">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span style="color:#6f42c1">@tenderScheduleVM.TenderName</span>
+                </h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="tenderScheduleVM">
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Điều động:</label>
+                        <div class="col-sm-9">
+                            <InputSelect class="selectpicker form-control" data-style="btn-selectpicker"
+                                         data-container="body" data-live-search="true"
+                                         ValueExpression="@(()=>tenderScheduleVM.ShiftID)"
+                                         Value="@tenderScheduleVM.ShiftID"
+                                         ValueChanged="@((string value) =>onchange_updateTenderShift(value))">
+                                @if (shiftVMs != null)
+                                {
+                                    @foreach (var _shiftVM in shiftVMs)
+                                    {
+                                        <option data-subtext="@_shiftVM.ShiftID" value="@_shiftVM.ShiftID">@_shiftVM.ShiftName</option>
+                                    }
+                                }
+                            </InputSelect>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-9">
+                            <div class="icheck-success d-inline">
+                                <input type="radio" id="TenderStatus1" name="TenderStatus" checked="@(tenderScheduleVM.TenderStatus == true)" @onchange="(() => onclick_TenderStatus(true))">
+                                <label for="TenderStatus1">
+                                    Hoạt động
+                                </label>
+                            </div>
+                            <label>
+                                &nbsp;&nbsp;
+                            </label>
+                            <div class="icheck-danger d-inline">
+                                <input type="radio" id="TenderStatus2" name="TenderStatus" checked="@(tenderScheduleVM.TenderStatus == false)" @onchange="(() => onclick_TenderStatus(false))">
+                                <label for="TenderStatus2">
+                                    Sửa chữa
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </EditForm>
+
+            </div>
+            <div class="modal-footer justify-content-center">
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+
+<section class="content-header">
+
+    <EditForm Model="@filterHrVM">
+        <div class="row">
+
+            <div class="col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Ngày:</label>
+                    <div class="col-sm-9">
+
+                        <div class="input-group">
+                            <DateRangePicker SingleDatePicker="true" class="form-control" name="date-mask"
+                                             Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))"
+                                             @bind-StartDate="filterHrVM.dDate" OnRangeSelect="OnRangeSelect_dDate" />
+
+                            <div class="input-group-append">
+                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
+                                 Value="@filterHrVM.DivisionID"
+                                 ValueChanged="@((string value) => onchange_filter_division(value))">
+                        @if (division_filter_list != null)
+                        {
+                            @foreach (var division_filter in division_filter_list)
+                            {
+                                <option data-subtext="@division_filter.DivisionID" value="@division_filter.DivisionID">@division_filter.DivisionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <select class="selectpicker form-control" data-container="body" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Ca làm việc-----" @bind="onchange_filter_shift">
+                        @if (shiftVMs != null)
+                        {
+                            @foreach (var _shiftVM in shiftVMs.Where(x => x.isActive))
+                            {
+                                <option data-subtext="@_shiftVM.ShiftID" value="@_shiftVM.ShiftID">@_shiftVM.ShiftName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <select class="selectpicker form-control" data-container="body" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                        @if (position_filter_list != null)
+                        {
+                            @foreach (var positiongroup_filter in position_filter_list.Select(x => new { x.PositionGroupID, x.PositionGroupName }).Distinct())
+                            {
+                                <option value="@positiongroup_filter.PositionGroupID">@positiongroup_filter.PositionGroupName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-1">
+                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetEmplTrfList())">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </EditForm>
+
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+
+        <div class="card card-purple card-outline table-responsive p-0">
+            <!-- /.card-header -->
+            @if (dutyRosterVMs != null)
+            {
+                <div class="card-header text-center">
+                    <h5><b>LỊCH ĐIỀU ĐỘNG NGÀY @filterHrVM.dDate.Value.ToString("dd/MM/yyyy")</b></h5>
+                </div>
+
+                <table class="table table-sm table-bordered text-nowrap tblFontSizeMin">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="background-color: #E26C0A; color: white;">Ca làm việc</th>
+                            <th class="text-center" style="background-color: #E26C0A; color: white;">Trạng thái</th>
+                            <th class="text-center" style="background-color: #E26C0A; color: white;">Số khách</th>
+                            @if (dutyRosterVMs.Where(x => x.PositionGroupID == "LAI").Count() > 0)
+                            {
+                                <th class="text-center" style="background-color: #E26C0A; color: white;">Xuồng</th>
+                            }
+
+                            @foreach (var _positionGrp in dutyRosterVMs.Select(x => new { x.PositionGroupID, x.PositionGroupName }).DistinctBy(x => x.PositionGroupID))
+                            {
+                                <th class="text-center" style="background-color: #C00000; color: white;">
+                                    @_positionGrp.PositionGroupName
+                                </th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var _shift in dutyRosterVMs.Select(x => new { x.ShiftID, x.ShiftName, x.CruiseStatusCode, x.isCI, x.CruiseStatus_ColorHEX, x.GuestNumber, x.isOFF, x.isCheckOFF }).DistinctBy(x => x.ShiftID).OrderBy(x => x.ShiftName).OrderBy(x => x.isOFF))
+                        {
+                            <tr>
+                                <th class="text-center @(_shift.isOFF==1?"text-danger":"")">@_shift.ShiftName</th>
+                                <th class="text-center" style="background-color: @_shift.CruiseStatus_ColorHEX;">@(_shift.isCI ? _shift.CruiseStatusCode : string.Empty)</th>
+                                <th class="text-center" style="background-color: #FFE699;">@_shift.GuestNumber</th>
+
+                                @if (dutyRosterVMs.Where(x => x.PositionGroupID == "LAI").Count() > 0)
+                                {
+                                    <th class="text-center" style="background-color: #FFE699;">
+                                        @foreach (var _tender in tenderScheduleVMs.Where(x => x.ShiftID == _shift.ShiftID))
+                                        {
+                                            @if (_tender.TenderStatus)
+                                            {
+                                                <a style="cursor: pointer;" @onclick="(() => InitializeModalUpdate_TenderTrf(_tender))">
+
+                                                    <span>@_tender.TenderName</span>
+
+                                                    <br />
+                                                </a>
+                                            }
+                                        }
+                                    </th>
+                                }
+
+                                @foreach (var _positionGrp in dutyRosterVMs.Select(x => new { x.PositionGroupNo, x.PositionGroupID, x.PositionGroupName }).DistinctBy(x => x.PositionGroupID).OrderBy(x => x.PositionGroupNo))
+                                {
+                                    <th style="background-color: #C6E0B3;">
+                                        @foreach (var _empl in dutyRosterVMs.Where(x => x.PositionGroupID == _positionGrp.PositionGroupID && x.ShiftID == _shift.ShiftID))
+                                        {
+                                            <a style="cursor: pointer;" @onclick="(() => InitializeModalUpdate_EmplTrf(_empl))">
+
+                                                <span>@_empl.Eserial</span> <span>-</span> <span>@_empl.LastName @_empl.MiddleName @_empl.FirstName</span>
+
+                                                @if (_empl.isCheckOFF)
+                                                {
+                                                    <i class="fa-solid fa-triangle-exclamation text-danger"></i>
+                                                }
+
+                                                <br />
+                                            </a>
+                                        }
+
+                                        @{
+                                            var dutyRosterNote = dutyRosterNotes.Where(x => x.ShiftID == _shift.ShiftID && x.PositionGroupID == _positionGrp.PositionGroupID).Select(x => x.DutyRosterNote).FirstOrDefault();
+                                        }
+
+                                        <a class="text-secondary" style="cursor: pointer; font-size: 12px;" @onclick="(() => InitializeModalUpdate_DutyRosterNote(_shift.ShiftID, _positionGrp.PositionGroupID, dutyRosterNote))">
+
+                                            @if (String.IsNullOrEmpty(dutyRosterNote))
+                                            {
+                                                <span>
+                                                    <i class="fas fa-edit"></i>
+                                                    Ghi chú...
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-danger">@((MarkupString)dutyRosterNote)</span>
+                                            }
+
+                                        </a>
+
+                                    </th>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <table class="table table-sm table-bordered text-nowrap tblFontSizeMin">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="background-color: #C00000; color: white;">Danh sách Xuồng</th>
+                            <th class="text-center" style="background-color: #C00000; color: white;">Điều động</th>
+                            <th class="text-center" style="background-color: #C00000; color: white;">Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var _tender in tenderScheduleVMs)
+                        {
+                            <tr>
+
+                                <th class="text-center" style="background-color: #FFE699;">
+
+                                    <a class="@(!_tender.TenderStatus?"text-danger":"")" style="cursor: pointer;" @onclick="(() => InitializeModalUpdate_TenderTrf(_tender))">
+
+                                        <span>@_tender.TenderName</span>
+
+                                        @if (!_tender.TenderStatus)
+                                        {
+                                            <i class="fa-solid fa-wrench text-danger"></i>
+                                        }
+
+                                    </a>
+
+                                </th>
+
+                                <th class="text-center" style="background-color: #FFE699;">
+                                    @_tender.ShiftID
+                                </th>
+
+                                <th class="text-center" style="background-color: #FFE699;">
+
+                                    @if (!_tender.TenderStatus)
+                                    {
+                                        <span class="text-danger">Sửa chữa</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-success">Hoạt động</span>
+                                    }
+
+                                </th>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            <!-- /.card-body -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+
+

@@ -1,4 +1,7 @@
-﻿using D69soft.Client.Helpers;
+﻿using D69soft.Client.Extension;
+using D69soft.Client.Helpers;
+using D69soft.Server.Services;
+using D69soft.Server.Services.HR;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -10,9 +13,10 @@ namespace D69soft.Client.Pages.Auth
     partial class Login
     {
         [Inject] IJSRuntime js { get; set; }
-        [Inject] HttpClient httpClient { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
         [Inject] AuthenticationStateProvider authenticationStateProvider { get; set; }
+
+        [Inject] AuthService authService { get; set; }
 
 
         UserVM userVM = new();
@@ -32,11 +36,7 @@ namespace D69soft.Client.Pages.Auth
         {
             btnLoading = true;
 
-            var response = await httpClient.PostAsJsonAsync($"api/Auth/LoginRequest", userVM);
-
-            var result = await response.Content.ReadAsStringAsync();
-
-            if (int.Parse(result) > 0)
+            if (await authService.LoginRequest(userVM) > 0)
             {
                 await ((CustomAuthenticationStateProvider)authenticationStateProvider).UpdateAuthenticationState(userVM.Eserial);
 

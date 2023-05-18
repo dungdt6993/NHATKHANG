@@ -4,15 +4,18 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using D69soft.Client.Helpers;
 using System.Net.Http.Json;
+using D69soft.Server.Services;
 
 namespace D69soft.Client.Shared
 {
     partial class NavMenu
     {
         [Inject] IJSRuntime js { get; set; }
-        [Inject] HttpClient httpClient { get; set; }
-        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
+        [Inject] SysService sysService { get; set; }
+
+        bool isLoadingScreen = true;
 
         protected string UserID;
 
@@ -30,34 +33,27 @@ namespace D69soft.Client.Shared
         {
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            userVM = await httpClient.GetFromJsonAsync<UserVM>($"api/Sys/GetInfoUser/{UserID}");
+            userVM = await sysService.GetInfoUser(UserID);
 
-            modules = await httpClient.GetFromJsonAsync<IEnumerable<FuncVM>>($"api/Sys/GetModuleMenu/{UserID}");
+            modules = await sysService.GetModuleMenu(UserID);
 
-            funcMenuGrps = await httpClient.GetFromJsonAsync<IEnumerable<FuncVM>>($"api/Sys/GetFuncMenuGroup/{UserID}");
+            funcMenuGrps = await sysService.GetFuncMenuGroup(UserID);
 
-            funcMenus = await httpClient.GetFromJsonAsync<IEnumerable<FuncVM>>($"api/Sys/GetFuncMenu/{UserID}");
+            funcMenus = await sysService.GetFuncMenu(UserID);
 
-            ckViewFuncMenuRpt = await httpClient.GetFromJsonAsync<bool>($"api/Sys/CheckViewFuncMenuRpt/{UserID}");
+            ckViewFuncMenuRpt = await sysService.CheckViewFuncMenuRpt(UserID);
+
+            isLoadingScreen = false;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await js.InvokeAsync<object>("menu_treeview");
-
-            if (firstRender)
-            {
-                //if (!userRepo.CheckChangePassDefault(UserID))
-                //{
-                //    await js.InvokeAsync<object>("ShowModal", "#InitializeModal_ChangePass");
-                //}
-            }
-
         }
 
         private void ClickMenuFunc(string _urlFunc)
         {
-            navigationManager.NavigateTo(_urlFunc, true);
+            navigationManager.NavigateTo(_urlFunc, false);
         }
     }
 }

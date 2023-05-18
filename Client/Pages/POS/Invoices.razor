@@ -1,0 +1,292 @@
+﻿@page "/POS/Invoices"
+
+<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+<Loading isLoading="@isLoading"></Loading>
+
+<Modal_RptViewer ReportName=@filterPosVM.ReportName></Modal_RptViewer>
+
+<EditForm Model="@filterPosVM">
+
+	<div id="content" style="padding-top:10px">
+		<div class="container-fluid">
+
+			<div class="row">
+
+				<div class="col-12 col-sm-3">
+
+					<div class="card card-purple card-outline">
+						<div class="card-header">
+
+							<div class="d-flex justify-content-between">
+								<h3 class="card-title">Điểm bán hàng</h3>
+							</div>
+
+						</div>
+						<div class="card-body">
+
+							<InputSelect class="selectpicker form-control"
+										 data-style="btn-selectpicker form-control" data-container="body"
+										 data-live-search="true" data-show-subtext="true"
+										 ValueExpression="@(()=>filterPosVM.POSCode)"
+										 Value="@filterPosVM.POSCode"
+										 ValueChanged="@((string value) => onchange_filter_POSCode(value))">
+								<option value=@String.Empty>-----Tất cả-----</option>
+								@if (pointOfSaleVMs != null)
+								{
+									@foreach (var _pointOfSaleVM in pointOfSaleVMs)
+									{
+										<option data-subtext="@_pointOfSaleVM.POSCode" value="@_pointOfSaleVM.POSCode">@_pointOfSaleVM.POSName</option>
+									}
+								}
+							</InputSelect>
+
+						</div>
+					</div>
+
+					<div class="card card-purple card-outline">
+						<div class="card-header">
+							<div class="d-flex justify-content-between">
+								<h3 class="card-title">Thời gian</h3>
+							</div>
+						</div>
+						<div class="card-body">
+							<DateRangePicker Ranges="DateRanges" Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))" ApplyLabel="Thực hiện" CancelLabel="Hủy" CustomRangeLabel="Chọn ngày" OnRangeSelect="OnRangeSelect">
+								<PickerTemplate Context="c">
+									<div id="@c.Id" @onclick="c.Toggle" class="form-control" style="cursor: pointer;">
+										<i class="fa-solid fa-calendar-days"></i>&nbsp;
+										<span>
+											@if (c.TStartDate == null && c.TEndDate == null)
+											{
+												<span>Ngày hôm nay</span>
+											}
+											else if (c.TStartDate != null && c.TEndDate == null)
+											{
+												if (c.HoverDate > c.TStartDate)
+												{
+													@($"{c.TStartDate.Value.ToString(c.DateFormat)} - {c.HoverDate.Value.ToString(c.DateFormat)}")
+												}
+												else
+												{
+													<span>@c.TStartDate.Value.ToString("dd/MM/yyyy")</span>
+												}
+											}
+											else
+											{
+												<span>
+													@c.FormattedRange
+												</span>
+											}
+										</span>
+
+										<span class="float-right">
+											<i class="fa-solid fa-angle-down"></i>
+										</span>
+									</div>
+								</PickerTemplate>
+							</DateRangePicker>
+						</div>
+					</div>
+
+					<div class="card card-purple card-outline">
+						<div class="card-header">
+							<div class="d-flex justify-content-between">
+								<h3 class="card-title">Trạng thái</h3>
+							</div>
+						</div>
+						<div class="card-body">
+							@*                            <div class="form-group clearfix">
+							<div class="icheck-success d-inline">
+							<input type="checkbox" id="checkboxPrimary1" checked="">
+							<label for="checkboxPrimary1">Đã thanh toán</label>
+							</div>
+							</div>
+							<div class="form-group clearfix">
+							<div class="icheck-success d-inline">
+							<input type="checkbox" id="checkboxPrimary2" checked="">
+							<label for="checkboxPrimary2">Chưa thanh toán</label>
+							</div>
+							</div>
+							<div class="form-group clearfix">
+							<div class="icheck-success d-inline">
+							<input type="checkbox" id="checkboxPrimary3" checked="">
+							<label for="checkboxPrimary3">Đã hủy</label>
+							</div>
+							</div>*@
+
+							<div class="form-group">
+								<select class="selectpicker form-control" data-style="btn-selectpicker form-control" @bind="onchange_searchActive">
+									<option value=2>-----Trạng thái ghi sổ-----</option>
+									<option value=1>Đã ghi sổ</option>
+									<option value=0>Chưa ghi sổ</option>
+								</select>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="card card-purple card-outline">
+						<div class="card-header">
+							<div class="d-flex justify-content-between">
+								<h3 class="card-title">Phương thức</h3>
+							</div>
+						</div>
+						<div class="card-body">
+							<div class="form-group clearfix">
+								<div class="icheck-success d-inline">
+									<input type="checkbox" id="ckboxCASH" checked="">
+									<label for="ckboxCASH">Tiền mặt</label>
+								</div>
+							</div>
+							<div class="form-group clearfix">
+								<div class="icheck-success d-inline">
+									<input type="checkbox" id="ckboxCCARD" checked="">
+									<label for="ckboxCCARD">Thẻ</label>
+								</div>
+							</div>
+							<div class="form-group clearfix">
+								<div class="icheck-success d-inline">
+									<input type="checkbox" id="ckboxBANKING" checked="">
+									<label for="ckboxBANKING">Chuyển khoản</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="col-12 col-sm-9">
+					<div class="card card-purple card-outline">
+						<div class="card-header text-right">
+							<button type="button" class="btn btn-secondary" @onclick="(() => SyncDataSmile())"><i class="fa-solid fa-arrows-rotate"></i> Đồng bộ dữ liệu SMILE</button>
+							@if (!String.IsNullOrEmpty(invoiceVM.CheckNo))
+							{
+								@*
+							<button type="button" class="btn btn-info" @onclick=@(() => InitializeModalUpdate_Voucher(stockVoucherVM.VTypeID,3))><i class="fa-solid fa-file-invoice"></i> Xem</button>
+
+							@if (sysRepo.checkAccessSubFunc(filterPosVM.UserID, "POS_Invoices_Update") && !invoiceVM.INVActive)
+							{
+							<button type="button" class="btn btn-secondary" @onclick="(() => InitializeModalUpdate_Voucher(stockVoucherVM.VTypeID,5))"><i class="fa-solid fa-copy"></i> Sao chép</button>
+
+							<button type="button" class="btn btn-secondary" @onclick="(() => InitializeModalUpdate_Voucher(stockVoucherVM.VTypeID,1))"><i class="fa-solid fa-pencil"></i> Sửa</button>
+							}*@
+								@if (!invoiceVM.Reference_VActive)
+								{
+									@if (sysRepo.checkAccessSubFunc(filterPosVM.UserID, "POS_Invoices_Active") && !invoiceVM.INVActive)
+									{
+										<button type="button" class="btn btn-secondary" @onclick="(() => ActiveInvoice(true))"><i class="fa-solid fa-file-pen"></i> Ghi sổ</button>
+									}
+
+									@if (sysRepo.checkAccessSubFunc(filterPosVM.UserID, "POS_Invoices_CancelActive") && invoiceVM.INVActive)
+									{
+										<button type="button" class="btn btn-secondary" @onclick="(() => ActiveInvoice(false))"><i class="fa-solid fa-file-circle-xmark"></i> Bỏ ghi sổ</button>
+									}
+								}
+
+								<button type="button" class="btn bg-purple" @onclick="(() => PrintInvoice())"><i class="fas fa-print"></i> In</button>
+							}
+						</div>
+
+						<div class="card-body table-responsive p-0" style="overflow: auto;height: calc(100vh - 240px);">
+							@if (invoiceVMs != null)
+							{
+								<table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+									<thead>
+										<tr>
+											<th>Điểm bán hàng</th>
+											<th class="text-center">Ngày chứng từ</th>
+											<th class="text-center">Số chứng từ</th>
+											<th class="text-center">Giờ đến</th>
+											<th class="text-center">Giờ đi</th>
+											<th>Khách hàng</th>
+											<th class="text-center">Phòng/bàn</th>
+											<th class="text-center">Tổng tiền</th>
+											<th class="text-center">Trạng thái</th>
+											<th>Thu ngân</th>
+										</tr>
+									</thead>
+									<tbody>
+										<Virtualize Items="@invoiceVMs" Context="_invoiceVM" OverscanCount="50">
+											@{
+												var colorInvoice = !_invoiceVM.INVActive ? "text-danger" : "";
+										}
+										<tr class="@colorInvoice @(SetSelected(_invoiceVM))" @onclick="() => onclick_Selected(_invoiceVM)">
+											<td>@_invoiceVM.POSName</td>
+											<td class="text-center">
+												@(_invoiceVM.IDate.HasValue ? _invoiceVM.IDate.Value.ToString("dd/MM/yyyy") : "")
+											</td>
+											<td class="text-center">@_invoiceVM.CheckNo</td>
+											<td class="text-center">@(_invoiceVM.OpenTime.HasValue ? _invoiceVM.OpenTime.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+											<td class="text-center">@(_invoiceVM.CloseTime.HasValue ? _invoiceVM.CloseTime.Value.ToString("HH:mm dd/MM/yyyy") : "")</td>
+											<td></td>
+											<td></td>
+											<td class="text-right">@String.Format("{0:#,##0.##}", @_invoiceVM.Invoice_TotalPaid)</td>
+											<td class="text-center">
+												@if (_invoiceVM.INVActive)
+													{
+													@if (!String.IsNullOrEmpty(_invoiceVM.Reference_VNumber))
+														{
+														@if (_invoiceVM.Reference_VActive)
+															{
+															<span class="badge badge-success">Đã ghi sổ kho</span>
+															}
+															else
+															{
+															<span class="badge badge-danger">Chưa ghi sổ kho</span>
+															}
+														}
+													}
+											</td>
+											<td></td>
+										</tr>
+									</Virtualize>
+								</tbody>
+							</table>
+							}
+						</div>
+
+						@if (invoiceVMs != null)
+						{
+							<div class="card-footer text-muted">
+								Tổng số: <b>@invoiceVMs.Count()</b> bản ghi
+							</div>
+						}
+
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+</EditForm>
+
+@code {
+	Dictionary<string, DateRange> DateRanges => new Dictionary<string, DateRange> {
+			{"Ngày hôm nay", new DateRange
+					{
+						Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),
+						End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)
+					}
+				},
+			{"Ngày hôm qua", new DateRange
+					{
+						Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(-1),
+						End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(-1)
+					}
+				},
+			{"Tháng này", new DateRange
+					{
+						Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
+						End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1).AddTicks(-1)
+					}
+				},
+			{"Tháng trước", new DateRange
+					{
+						Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-1),
+						End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddTicks(-1)
+					}
+				},
+			};
+}

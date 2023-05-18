@@ -1,0 +1,233 @@
+﻿@page "/SYS/PersonalProfile"
+
+<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+
+<Modal_RptViewer ReportName=@ReportName></Modal_RptViewer>
+
+<Modal_ChangePass UserID=@UserID></Modal_ChangePass>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalList_SalTrn">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span>CHI TIẾT CÁC KHOẢN GIAO DỊCH LƯƠNG</span>
+                </h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+            </div>
+
+            <div class="modal-body p-0">
+
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 300px);">
+
+                    <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin">
+                        <thead>
+                            <tr>
+                                <th>Tên giao dịch</th>
+                                <th class="text-center">Số tiền</th>
+                                <th>Ghi chú</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (monthlyIncomeTrnOtherVMs != null)
+                            {
+                                foreach (var _monthlyIncomeTrnOtherVM in monthlyIncomeTrnOtherVMs)
+                                {
+                                    <tr>
+                                        <td>@_monthlyIncomeTrnOtherVM.TrnName</td>
+                                        <td class="text-right">@string.Format("{0:#,#.}",(_monthlyIncomeTrnOtherVM.UnitPrice*_monthlyIncomeTrnOtherVM.Qty))</td>
+                                        <td>@_monthlyIncomeTrnOtherVM.Note</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h4>Hồ sơ cá nhân</h4>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-md-3">
+
+                @if (userInfo != null)
+                {
+                    <div class="card card-purple card-outline">
+                        <div class="card-body box-profile">
+                            <div class="text-center">
+                                <img class="profile-user-img img-fluid img-circle"
+                                 src="@userInfo.UrlAvatar"
+                                 alt="User profile picture">
+                            </div>
+
+                            <h3 class="profile-username text-center">@userInfo.LastName @userInfo.MiddleName @userInfo.FirstName</h3>
+
+                            <p class="text-muted text-center">@userInfo.Eserial</p>
+
+                            <ul class="list-group list-group-unbordered mb-3">
+                                <li class="list-group-item">
+                                    <span>Công ty:</span> <b>@userInfo.DivisionName</b>
+                                </li>
+                                <li class="list-group-item">
+                                    <span>Bộ phận:</span> <b>@userInfo.DepartmentName</b>
+                                </li>
+                                <li class="list-group-item">
+                                    <span>Vị trí:</span> <b>@userInfo.PositionName</b>
+                                </li>
+                                <li class="list-group-item">
+                                    <span>Ngày vào làm:</span> <b>@(userInfo.JoinDate.HasValue ? userInfo.JoinDate.Value.ToString("dd/MM/yyyy") : "")</b>
+                                </li>
+                            </ul>
+
+                            <a class="btn bg-purple btn-block" data-target="#InitializeModal_ChangePass" data-toggle="modal"><b>Đổi mật khẩu</b></a>
+                        </div>
+                    </div>
+                }
+
+            </div>
+
+            <div class="col-md-9">
+                <div class="card">
+
+                    <div class="card-header p-2">
+                        <ul class="nav nav-pills">
+                            <li class="nav-item"><a class="nav-link active" href="#timeline" data-toggle="tab">Lịch sử</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="active tab-pane" id="timeline">
+
+                                <div class="timeline timeline-inverse">
+                                    @if (payslipUsers != null)
+                                    {
+                                        int iCount = 0;
+                                        @foreach (var _periodPayroll in payslipUsers.Select(x => new { x.Period }).Distinct())
+                                        {
+                                            <div class="time-label">
+                                                <span class="bg-purple">
+                                                    <i class="fa-solid fa-calendar-days"></i> Tháng @_periodPayroll.Period.ToString().Substring(4, 2) năm @_periodPayroll.Period.ToString().Substring(0, 4)
+                                                </span>
+                                            </div>
+
+                                            @foreach (var _payslipUser in payslipUsers.Where(x => x.Period == _periodPayroll.Period))
+                                            {
+                                                <div>
+                                                    <i class="fas fa-file-invoice-dollar bg-yellow"></i>
+
+                                                    <div class="timeline-item">
+
+                                                        @if ((_payslipUser.UrlPaySlipPDF ?? string.Empty) == string.Empty)
+                                                        {
+                                                            <span class="time">
+                                                                <i class="far fa-clock"></i>
+                                                                @string.Format("{0:HH:mm dd/MM/yyyy}", _payslipUser.TimeSalLock)
+                                                            </span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="time">
+                                                                <i class="far fa-clock"></i>
+                                                                @string.Format("{0:HH:mm dd/MM/yyyy}", _payslipUser.TimeUpdatePaySlipPDF)
+                                                            </span>
+                                                        }
+
+                                                        <h3 class="timeline-header"><b>Phiếu lương</b></h3>
+
+                                                        <div class="timeline-body">
+                                                            @if ((_payslipUser.UrlPaySlipPDF ?? string.Empty) == string.Empty)
+                                                            {
+                                                                <a href="javascript:void(0);" @onclick="(() => viewPayslip(_payslipUser.ID))" class="btn btn-warning btn-flat btn-ms"><i class="fas fa-file-invoice-dollar"></i> Xem phiếu lương</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a href="@_payslipUser.UrlPaySlipPDF" target="_blank" class="btn btn-warning btn-flat btn-ms"><i class="fas fa-file-invoice-dollar"></i> Xem phiếu lương</a>
+                                                            }
+                                                            <button @onclick="(() => InitializeModalList_SalTrn(_periodPayroll.Period))" class="btn btn-warning btn-flat btn-ms"><i class="fas fa-file-invoice-dollar"></i> Chi tiết giao dịch lương</button>
+                                                            @if ((_payslipUser.SalaryReply ?? string.Empty) == string.Empty && iCount == 0)
+                                                            {
+                                                                if (_payslipUser.TypeUpdateSalaryQuestion == 0)
+                                                                {
+                                                                    <textarea class="form-control" style="margin-top: 3px;" placeholder='Mọi thắc mắc về thông tin lương vui lòng nhập câu hỏi và ấn gửi. Phòng HCNS sẽ tiếp nhận và trả lời trong vòng 3 ngày làm việc!' @bind="@_payslipUser.SalaryQuestion"></textarea>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <textarea class="form-control" style="margin-top: 3px;" readonly>@_payslipUser.SalaryQuestion</textarea>
+                                                                }
+                                                            }
+
+                                                            @if ((_payslipUser.SalaryReply ?? string.Empty) != string.Empty)
+                                                            {
+                                                                <div class="post">
+                                                                    <div class="user-block" style="margin:5px 0;">
+                                                                        <img class="img-circle img-bordered-sm" src="@_payslipUser.UrlAvatarSalaryReply">
+                                                                        <span class="username">
+                                                                            <a style="font-size: 13px">@_payslipUser.FullNameSalaryReply</a>
+                                                                        </span>
+                                                                        <span class="description">Giải đáp @String.Format("{0:HH:mm dd/MM/yyyy}", _payslipUser.TimeSalaryReply)</span>
+                                                                    </div>
+                                                                    <textarea style="margin-top: 3px; color: green;" class="form-control" readonly>@_payslipUser.SalaryReply</textarea>
+                                                                </div>
+                                                            }
+                                                        </div>
+
+                                                        @if ((_payslipUser.SalaryReply ?? string.Empty) == string.Empty && iCount == 0)
+                                                        {
+                                                            <div class="timeline-footer">
+                                                                @if (_payslipUser.TypeUpdateSalaryQuestion == 0)
+                                                                {
+                                                                    <a @onclick="(() => UpdateSalaryQuestion(0, _payslipUser))" class="btn btn-success btn-sm"><i class="far fa-paper-plane"></i> Gửi</a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a @onclick="(() => UpdateSalaryQuestion(1, _payslipUser))" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Hủy</a>
+                                                                }
+                                                            </div>
+                                                        }
+
+                                                    </div>
+                                                </div>
+                                            }                   iCount++;
+                                        }
+                                    }
+
+                                    <div>
+                                        <i class="far fa-clock bg-gray"></i>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

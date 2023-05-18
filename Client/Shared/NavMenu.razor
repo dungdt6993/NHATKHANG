@@ -1,4 +1,7 @@
-﻿<!-- Main Sidebar Container -->
+﻿@using D69soft.Client.Components
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
+
+<!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-purple elevation-4">
     <!-- Brand Logo -->
     <a href="/" @onclick="@(()=>ClickMenuFunc("/"))" class="brand-link purple navbar-purple">

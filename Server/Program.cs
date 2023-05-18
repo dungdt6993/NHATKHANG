@@ -21,9 +21,6 @@ namespace D69soft
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
-            //Service
-            builder.Services.AddInfrastructure();
-
             builder.Services.AddControllers(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
             var app = builder.Build();

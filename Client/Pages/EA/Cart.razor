@@ -1,0 +1,165 @@
+﻿@page "/EA/Cart"
+
+@using Blazored.FluentValidation
+
+<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+<Loading isLoading="@isLoading"></Loading>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_Request">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <EditForm Model="@requestVM" OnValidSubmit="@SendRequest">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>Gửi yêu cầu cấp hàng</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Bộ phận yêu cầu</label>
+                        <div class="col-sm-9">
+                            <select class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind="requestVM.DeptRequest">
+                                <option value=@string.Empty>-----Chọn-----</option>
+                                @if (departments != null)
+                                {
+                                    @foreach (var department in departments.Where(x => x.isActive))
+                                    {
+                                        <option data-subtext="@department.DepartmentID" value="@department.DepartmentID">@department.DepartmentName</option>
+                                    }
+                                }
+                            </select>
+                            <ValidationMessage For="@(() => requestVM.DeptRequest)" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Lý do</label>
+                        <div class="col-sm-9">
+                            <InputTextArea class="form-control" placeholder="Lý do yêu cầu cấp hàng" @bind-Value="@requestVM.ReasonOfRequest" />
+                            <ValidationMessage For="@(() => requestVM.ReasonOfRequest)" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-success"><i class="fa-solid fa-paper-plane"></i> Gửi phê duyệt</button>
+                </div>
+            </EditForm>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+
+        <div class="row">
+
+            <div class="col-12 col-sm-8">
+                <div class="card card-purple card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa-solid fa-basket-shopping"></i> Giỏ hàng của bạn
+                        </h3>
+                        <div class="card-tools">
+                            <a href="/EA/Request" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-rotate-left"></i> Danh sách yêu cầu</a>
+                        </div>
+                    </div>
+                    @if (cartVMs != null)
+                    {
+                        <!-- /.card-header -->
+                        <div class="card-body table-responsive p-0" style="height: calc(100vh - 241px);">
+
+                            <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Tên hàng</th>
+                                        <th class="text-center" style="width: 80px;">Số lượng</th>
+                                        <th class="text-center">Đơn vị</th>
+                                        <th>Ghi chú</th>
+                                        <th class="text-center"></th>
+                                    </tr>
+                                </thead>
+                                @if (cartVMs != null)
+                                {
+                                    <tbody>
+                                        @foreach (var _cartVM in cartVMs)
+                                        {
+                                            <tr>
+                                                <td style="min-width: 150px;">@_cartVM.IName</td>
+                                                <td class="text-center">
+                                                    <input type="text" class="form-control text-center" @onchange="@((ChangeEventArgs e) => onchange_QtyItemsCart(e, _cartVM))" value="@_cartVM.Qty" onClick="this.select();" style="min-width: 50px;" />
+                                                </td>
+                                                <td class="text-center">@_cartVM.IUnitName</td>
+                                                <td style="min-width: 100px;">
+                                                    <textarea class="form-control" @onchange="@((ChangeEventArgs e) => onchange_NoteItemsCart(e, _cartVM))" placeholder="Ghi chú..." value="@_cartVM.Note" />
+                                                </td>
+                                                <td class="text-center">
+                                                    <a @onclick=@(()=>DelItemsCart(_cartVM))>
+                                                        <span class="badge bg-danger"><i class="fas fa-trash"></i></span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                }
+                            </table>
+
+                        </div>
+                        <!-- /.card-body -->
+                        @if (cartVMs.Select(x=>x.Qty).Sum() > 0)
+                        {
+                            <div class="card-footer text-center">
+                                <button type="submit" class="btn btn-success" @onclick="(() => InitializeModal_Request())"><i class="fa-solid fa-paper-plane"></i> Gửi yêu cầu cấp hàng</button>
+                            </div>
+                        }
+                        <!-- /.card-footer -->
+                    }
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-4">
+                <div class="card card-purple card-outline">
+                    <div class="card-header text-center">
+                        <input type="search" style="font-size: 1.25rem;" class="form-control form-control-lg" placeholder="Tìm kiếm mặt hàng..." @bind="onchange_SearchValues" @bind:event="oninput">
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body p-0" style="overflow: auto; height: calc(100vh - 198px);">
+                        @if (itemsVMs != null)
+                        {
+                            <ul class="products-list product-list-in-card pl-2 pr-2">
+                                <Virtualize Items="@search_itemsVMs" Context="_itemVMs" OverscanCount="50">
+                                    <li class="item">
+                                        <div class="product-img">
+                                            <img src="@_itemVMs.IURLPicture1" alt="Product Image" class="img-size-50">
+                                        </div>
+                                        <div class="product-info">
+                                            <a @onclick=@(()=>UpdateItemsCart(_itemVMs)) class="product-title">
+                                                @_itemVMs.IName
+                                                <span class="badge badge-success float-right"><i class="fa-solid fa-cart-arrow-down"></i> Thêm giỏ hàng</span>
+                                            </a>
+                                            <span class="product-description">
+                                                @_itemVMs.IUnitName
+                                            </span>
+                                        </div>
+                                    </li>
+                                </Virtualize>
+                            </ul>
+                        }
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+
+        </div>
+
+    </div><!-- /.container-fluid -->
+</section>

@@ -1,12 +1,8 @@
 ﻿using D69soft.Shared.Models.Entities.HR;
 using D69soft.Shared.Models.Entities.OP;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Model.Entities.OP;
 
-namespace D69soft.Shared.Models.ViewModels.OP
+namespace Model.ViewModels.OP
 {
     public class TenderScheduleVM : Tender, TenderSchedule, Shift
     {

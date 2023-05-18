@@ -1,0 +1,42 @@
+﻿
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalView_Rpt">
+    <div class="modal-dialog modal-xxl">
+        <div class="modal-content" style="background-color: #f4f6f9;">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                </h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body p-0">
+                @if (ReportName != String.Empty)
+                {
+                    <DxDocumentViewer ReportName=@ReportName Height="calc(100vh - 92px)" Width="100%">
+                        <DxDocumentViewerExportSettings ShowPrintNotificationDialog="false" />
+                        <DxDocumentViewerTabPanelSettings Width="340" />
+                        <DxDocumentViewerCallbacks BeforeRender="ReportingViewerCustomization.onBeforeRender"
+                                               CustomizeParameterEditors="ReportingViewerCustomization.onCustomizeParameterEditors" />
+                    </DxDocumentViewer>
+                }
+            </div>
+
+            <div class="modal-footer justify-content-center">
+            </div>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+
+@code {
+
+    [Parameter]
+    public string ReportName { get; set; }
+
+}

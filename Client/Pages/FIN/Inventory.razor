@@ -1,0 +1,330 @@
+﻿@page "/FIN/Inventory"
+
+@using Blazored.FluentValidation
+@using Model.ViewModels.FIN
+
+<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+<Loading isLoading="@isLoading"></Loading>
+
+<EditForm Model="@filterFinVM">
+    <section class="content-header">
+        <div class="row">
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" data-container="body" @bind="filterFinVM.DivisionID">
+                        @if (divisionVMs != null)
+                        {
+                            @foreach (var _divisionVM in divisionVMs)
+                            {
+                                <option data-subtext="@_divisionVM.DivisionID" value="@_divisionVM.DivisionID">@_divisionVM.DivisionName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <DateRangePicker Ranges="DateRanges" Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))" ApplyLabel="Thực hiện" CancelLabel="Hủy" CustomRangeLabel="Chọn ngày" OnRangeSelect="OnRangeSelect">
+                        <PickerTemplate Context="c">
+                            <div id="@c.Id" @onclick="c.Toggle" class="form-control" style="cursor: pointer;">
+                                <i class="fa-solid fa-calendar-days"></i>&nbsp;
+                                <span>
+                                    @if (c.TStartDate == null && c.TEndDate == null)
+                                    {
+                                        <span>Kỳ báo cáo ngày hôm nay</span>
+                                    }
+                                    else if (c.TStartDate != null && c.TEndDate == null)
+                                    {
+                                        if (c.HoverDate > c.TStartDate)
+                                        {
+                                            @($"{c.TStartDate.Value.ToString(c.DateFormat)} - {c.HoverDate.Value.ToString(c.DateFormat)}")
+                                        }
+                                        else
+                                        {
+                                            <span>@c.TStartDate.Value.ToString("dd/MM/yyyy")</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            @c.FormattedRange
+                                        </span>
+                                    }
+                                </span>
+
+                                <span class="float-right">
+                                    <i class="fa-solid fa-angle-down"></i>
+                                </span>
+                            </div>
+                        </PickerTemplate>
+                    </DateRangePicker>
+                </div>
+            </div>
+
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <select class="selectpicker form-control"
+                            data-style="btn-selectpicker form-control" data-container="body"
+                            data-live-search="true" data-show-subtext="true"
+                            @bind="onchange_StockTypeCode">
+                        @if (stockTypeVMs != null)
+                        {
+                            @foreach (var _stockTypeVM in stockTypeVMs)
+                            {
+                                <option data-subtext="@_stockTypeVM.StockTypeCode" value="@_stockTypeVM.StockTypeCode">@_stockTypeVM.StockTypeName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <select class="selectpicker form-control"
+                            data-style="btn-selectpicker form-control" data-container="body"
+                            data-live-search="true" data-show-subtext="true"
+                            @bind="filterFinVM.StockCode">
+                        <option value=@String.Empty>-----Kho-----</option>
+                        @if (stockVMs != null)
+                        {
+                            @foreach (var _stockVM in stockVMs.Where(x=>x.StockTypeCode==filterFinVM.StockTypeCode))
+                            {
+                                <option data-subtext="@_stockVM.StockCode" value="@_stockVM.StockCode">@_stockVM.StockName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <BlazoredTypeahead SearchMethod="SearchItems"
+                                       Value="itemsVM"
+                                       ValueChanged="@( (ItemsVM i) => SelectedItem(i) )"
+                                       ValueExpression="@( () => itemsVM)"
+                                       Debounce="500"
+                                       MinimumLength="2"
+                                       MaximumSuggestions="6"
+                                       placeholder="Tìm kiếm theo mã hàng hoặc tên hàng...">
+                        <SelectedTemplate Context="_item">
+                            @_item.ICode - @_item.IName
+                        </SelectedTemplate>
+                        <ResultTemplate Context="_item">
+                            <i class="fa-solid fa-barcode"></i> @_item.ICode <i class="fa-solid fa-box"></i> @_item.IName
+                        </ResultTemplate>
+                        <NotFoundTemplate Context="_item">
+                            <i class="fa-solid fa-file-circle-xmark text-danger"></i> Không có dữ liệu
+                        </NotFoundTemplate>
+                    </BlazoredTypeahead>
+                </div>
+            </div>
+
+            <div class="col-md-1">
+                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetInventorys())">
+                    @if (IsViewInventoryBookDetail)
+                    {
+                        <i class="fa-solid fa-rotate-left"></i>
+                    }
+                    else
+                    {
+                        <i class="fas fa-search"></i>
+                    }
+                </button>
+            </div>
+        </div>
+    </section>
+</EditForm>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-purple card-outline">
+
+            @if (IsViewInventoryBookDetail)
+            {
+                <div class="card-header text-center">
+                    <h5><b>SỔ CHI TIẾT VẬT TƯ HÀNG HÓA</b></h5>
+                    <i>
+                        <b>Kho: @inventoryVM.StockCode - @inventoryVM.StockName, Mặt hàng: @inventoryVM.ICode - @inventoryVM.IName</b> <br />
+                        @if (filterFinVM.StartDate.ToString("dd/MM/yyyy") == filterFinVM.EndDate.ToString("dd/MM/yyyy"))
+                        {
+                            <b>Ngày @filterFinVM.StartDate.ToString("dd/MM/yyyy")</b>
+
+                        }
+                        else
+                        {
+                            <b>Từ ngày @filterFinVM.StartDate.ToString("dd/MM/yyyy") đến ngày @filterFinVM.EndDate.ToString("dd/MM/yyyy")</b>
+                        }
+                    </i>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 334px);">
+                    @if (inventoryBookDetailVMs != null)
+                    {
+                        <table class="table table-sm table-bordered table-head-fixed table-hove table-hover tblFontSizeMin">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-center">Ngày chứng từ</th>
+                                    <th class="text-center">Số chứng từ</th>
+                                    <th>Diễn giải</th>
+                                    <th class="text-center">ĐVT</th>
+
+                                    <th class="text-center">Nhập</th>
+                                    <th class="text-center">Xuất</th>
+                                    <th class="text-center">Tồn</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center"></td>
+                                    <td class="text-center"></td>
+                                    <td class="text-bold">Số dư đầu kỳ</td>
+                                    <td class="text-center"></td>
+                                    <td class="text-center"></td>
+                                    <td class="text-center"></td>
+                                    <td class="text-center text-bold">@inventoryVM.QtyOpen</td>
+                                </tr>
+                                @{
+                                    var _QtyEnd = @inventoryVM.QtyOpen;
+                                }
+                                <Virtualize Items="@inventoryBookDetailVMs" Context="_inventoryBookDetailVM" OverscanCount="50">
+
+                                    @{
+                                _QtyEnd = _QtyEnd + _inventoryBookDetailVM.QtyInput - _inventoryBookDetailVM.QtyOutput;
+                            }
+
+                            <tr>
+                                <td class="text-center">@(_inventoryBookDetailVM.VDate.HasValue ? _inventoryBookDetailVM.VDate.Value.ToString("dd/MM/yyyy") : "")</td>
+                                <td class="text-center"><a href="javascript:void(0);">@_inventoryBookDetailVM.VNumber</a></td>
+                                <td>@_inventoryBookDetailVM.VDesc</td>
+                                <td class="text-center">@inventoryVM.IUnitName</td>
+                                <td class="text-center">@_inventoryBookDetailVM.QtyInput</td>
+                                <td class="text-center">@_inventoryBookDetailVM.QtyOutput</td>
+                                <td class="text-center">@_QtyEnd</td>
+                            </tr>
+                        </Virtualize>
+                        <tr>
+                            <td class="text-center"></td>
+                            <td class="text-center"></td>
+                            <td class="text-center"></td>
+                            <td class="text-bold">Cộng</td>
+                            <td class="text-center"></td>
+                            <td class="text-center text-bold">@inventoryBookDetailVMs.Select(x=>x.QtyInput).Sum()</td>
+                            <td class="text-center text-bold">@inventoryBookDetailVMs.Select(x=>x.QtyOutput).Sum()</td>
+                            <td class="text-center text-bold">@inventoryVM.QtyEnd</td>
+                        </tr>
+                    </tbody>
+                </table>
+                    }
+                </div>
+                <!-- /.card-body -->
+                @if (inventoryBookDetailVMs != null)
+                {
+                    <div class="card-footer text-muted">
+                        Tổng số: <b>@inventoryBookDetailVMs.Count()</b> bản ghi
+                    </div>
+                }
+                <!-- /.card-footer -->
+            }
+            else
+            {
+                <div class="card-header text-center">
+                    <h5><b>TỔNG HỢP TỒN KHO</b></h5>
+                    <i>
+                        @if (filterFinVM.StartDate.ToString("dd/MM/yyyy") == filterFinVM.EndDate.ToString("dd/MM/yyyy"))
+                        {
+                            <b>Ngày @filterFinVM.StartDate.ToString("dd/MM/yyyy")</b>
+
+                        }
+                        else
+                        {
+                            <b>Từ ngày @filterFinVM.StartDate.ToString("dd/MM/yyyy") đến ngày @filterFinVM.EndDate.ToString("dd/MM/yyyy")</b>
+                        }
+                    </i>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 313px);">
+                    @if (inventoryVMs != null)
+                    {
+                        <table class="table table-sm table-bordered table-head-fixed table-hove table-hover tblFontSizeMin">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-center">Hình ảnh</th>
+                                    <th>Tên kho</th>
+                                    <th class="text-center">Mã hàng</th>
+                                    <th>Tên hàng</th>
+                                    <th class="text-center">ĐVT</th>
+                                    <th class="text-center">Đầu kỳ</th>
+                                    <th class="text-center">Nhập kho</th>
+                                    <th class="text-center">Xuất kho</th>
+                                    <th class="text-center">Cuối kỳ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <Virtualize Items="@inventoryVMs" Context="_inventoryVM" OverscanCount="50">
+                                    <tr>
+                                        <td class="text-center">
+                                            <img alt="Ảnh" class="table-profile-avatar" src="@_inventoryVM.IURLPicture1">
+                                        </td>
+                                        <td>@_inventoryVM.StockCode - @_inventoryVM.StockName</td>
+                                        <td class="text-center"><a href="javascript:void(0);" @onclick="(() => viewInventoryBookDetail(_inventoryVM))">@_inventoryVM.ICode</a></td>
+                                        <td><a href="javascript:void(0);" @onclick="(() => viewInventoryBookDetail(_inventoryVM))">@_inventoryVM.IName</a></td>
+                                        <td class="text-center">@_inventoryVM.IUnitName</td>
+                                        <td class="text-center">@_inventoryVM.QtyOpen</td>
+                                        <td class="text-center">@_inventoryVM.QtyInput</td>
+                                        <td class="text-center">@_inventoryVM.QtyOutput</td>
+                                        <td class="text-center">@_inventoryVM.QtyEnd</td>
+                                    </tr>
+                                </Virtualize>
+                            </tbody>
+                        </table>
+                    }
+                </div>
+                <!-- /.card-body -->
+                @if (inventoryVMs != null)
+                {
+                    <div class="card-footer text-muted">
+                        Tổng số: <b>@inventoryVMs.Count()</b> bản ghi
+                    </div>
+                }
+                <!-- /.card-footer -->
+            }
+
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+@code {
+    Dictionary<string, DateRange> DateRanges => new Dictionary<string, DateRange> {
+            {"Ngày hôm nay", new DateRange
+                    {
+                        Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),
+                        End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)
+                    }
+                },
+            {"Ngày hôm qua", new DateRange
+                    {
+                        Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(-1),
+                        End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(-1)
+                    }
+                },
+            {"Tháng này", new DateRange
+                    {
+                        Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
+                        End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1).AddTicks(-1)
+                    }
+                },
+            {"Tháng trước", new DateRange
+                    {
+                        Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-1),
+                        End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddTicks(-1)
+                    }
+                },
+            };
+}
+
+
+
+

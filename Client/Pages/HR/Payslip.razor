@@ -1,0 +1,266 @@
+﻿@page "/HR/Payslip"
+
+<Loading isLoading="@isLoading"></Loading>
+<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+
+<Modal_RptViewer ReportName=@ReportName></Modal_RptViewer>
+
+<section class="content-header">
+    <EditForm Model="@filterHrVM">
+        <div class="row">
+
+            <div class="col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Tháng:</label>
+                    <div class="col-sm-9">
+                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                           ValueExpression="@(()=>filterHrVM.Month)"
+                                           Value="@filterHrVM.Month"
+                                           ValueChanged="@((int value) => onchange_filter_month(value))">
+                            @if (month_filter_list != null)
+                            {
+                                @foreach (var month in month_filter_list)
+                                {
+                                    <option value="@month.Month">@month.Month</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Năm:</label>
+                    <div class="col-sm-9">
+                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                           ValueExpression="@(()=>filterHrVM.Year)"
+                                           Value="@filterHrVM.Year"
+                                           ValueChanged="@((int value) => onchange_filter_year(value))">
+                            @if (year_filter_list != null)
+                            {
+                                @foreach (var year in year_filter_list)
+                                {
+                                    <option value="@year.Year">@year.Year</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
+                                 Value="@filterHrVM.DivisionID"
+                                 ValueChanged="@((string value) => onchange_filter_division(value))">
+                        @if (division_filter_list != null)
+                        {
+                            @foreach (var division_filter in division_filter_list)
+                            {
+                                <option data-subtext="@division_filter.DivisionID" value="@division_filter.DivisionID">@division_filter.DivisionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DepartmentID)"
+                                 Value="@filterHrVM.DepartmentID"
+                                 ValueChanged="@((string value) => onchange_filter_department(value))">
+                        <option value=@string.Empty>-----Bộ phận-----</option>
+                        @if (department_filter_list != null)
+                        {
+                            @foreach (var department_filter in department_filter_list)
+                            {
+                                <option data-subtext="@department_filter.DepartmentID" value="@department_filter.DepartmentID">@department_filter.DepartmentName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.SectionID)"
+                                 Value="@filterHrVM.SectionID"
+                                 ValueChanged="@((string value) => onchange_filter_section(value))">
+                        <option value=@string.Empty>-----Khu vực-----</option>
+                        @if (section_filter_list != null)
+                        {
+                            @foreach (var section_filter in section_filter_list)
+                            {
+                                <option data-subtext="@section_filter.SectionID" value="@section_filter.SectionID">@section_filter.SectionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                        @if (position_filter_list != null)
+                        {
+                            @foreach (var positiongroup_filter in position_filter_list.Select(x=> new {x.PositionGroupID, x.PositionGroupName}).Distinct())
+                            {
+                                <option data-subtext="@positiongroup_filter.PositionGroupID" value="@positiongroup_filter.PositionGroupID">@positiongroup_filter.PositionGroupName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                 ValueExpression="@(()=>filterHrVM.Eserial)"
+                                 Value="@filterHrVM.Eserial"
+                                 ValueChanged="@((string value) => onchange_filter_eserial(value))">
+                        <option value=@string.Empty>-----Nhân viên-----</option>
+                        @if (eserial_filter_list != null)
+                        {
+                            @foreach (var eserial_filter in eserial_filter_list)
+                            {
+                                <option data-subtext="@eserial_filter.Eserial" value="@eserial_filter.Eserial">@eserial_filter.LastName @eserial_filter.MiddleName @eserial_filter.FirstName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <!-- radio -->
+                <div class="form-group clearfix">
+                    <div class="icheck-success d-inline">
+                        <input type="radio" id="r1" name="r" value="0" @onchange="onchange_filter_typepayslip" checked="@(filterHrVM.isTypeSearch == 0? true: false)">
+                        <label for="r1">
+                            Tất cả
+                        </label>
+                    </div>
+                    <label>
+                        &nbsp;&nbsp;
+                    </label>
+                    <div class="icheck-warning d-inline">
+                        <input type="radio" id="r2" name="r" value="1" @onchange="onchange_filter_typepayslip" checked="@(filterHrVM.isTypeSearch == 1? true: false)">
+                        <label for="r2">
+                            Thắc mắc lương
+                        </label>
+                    </div>
+                    <label>
+                        &nbsp;&nbsp;
+                    </label>
+                    <div class="icheck-danger d-inline">
+                        <input type="radio" id="r3" name="r" value="2" @onchange="onchange_filter_typepayslip" checked="@(filterHrVM.isTypeSearch == 2? true: false)">
+                        <label for="r3">
+                            Chưa giải đáp
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-1">
+                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetPayslipList())">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </EditForm>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-purple card-outline">
+
+            <!-- /.card-header -->
+            <EditForm Model="@payslipVM">
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 277px);">
+                    @if (payslipVMs != null)
+                    {
+                        <table class="table table-sm table-bordered table-head-fixed tblFontSizeMin">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-center">
+                                    </th>
+                                    <th class="text-center">Mã NV</th>
+                                    <th>Họ tên</th>
+                                    <th>Bộ phận</th>
+                                    <th>Vị trí</th>
+                                    <th>Thắc mắc lương</th>
+                                    <th>Giải đáp</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <Virtualize Items="@payslipVMs" Context="_payslipVM" OverscanCount="50">
+                                    <tr>
+                                        <td class="text-center">
+                                            @if (String.IsNullOrWhiteSpace(_payslipVM.UrlPaySlipPDF))
+                                        {
+                                            <a href="javascript:void(0);" @onclick="(() => viewPayslip(_payslipVM.ID))"><i class="fa-solid fa-file-invoice-dollar fa-2xl"></i></a>
+                                        }
+                                        else
+                                        {
+                                            <a href="@_payslipVM.UrlPaySlipPDF" target="_blank"><i class="fa-solid fa-file-invoice-dollar fa-2xl"></i></a>
+                                        }
+                                    </td>
+                                    <td class="text-center">@_payslipVM.Eserial</td>
+                                    <td>@_payslipVM.LastName @_payslipVM.MiddleName @_payslipVM.FirstName</td>
+                                    <td>@_payslipVM.DepartmentName</td>
+                                    <td>@_payslipVM.PositionName</td>
+
+                                    @if (!String.IsNullOrEmpty(_payslipVM.SalaryQuestion))
+                                    {
+                                        <td class="text-danger">
+                                            <i class="fa-solid fa-clock"></i> @_payslipVM.TimeSalaryQuestion.ToString("dd/MM/yyyy HH:mm")
+                                            <br /><i class="fa-solid fa-comment"></i> @_payslipVM.SalaryQuestion
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center"></td>
+                                    }
+
+                                    @if (!String.IsNullOrEmpty(_payslipVM.SalaryReply))
+                                    {
+                                        <td class="text-success">
+                                            <i class="fa-solid fa-user"></i> @_payslipVM.EserialSalaryReply <i class="fa-solid fa-clock"></i> @_payslipVM.TimeSalaryReply.ToString("dd/MM/yyyy HH:mm")
+                                            <br />
+                                            <InputTextArea type="text" style="min-width:110px;" class="form-control" placeholder="Giải đáp"
+                                                       ValueExpression="@(() => _payslipVM.SalaryReply)"
+                                                       Value="@_payslipVM.SalaryReply"
+                                                       ValueChanged="@((string value) => onchange_salaryReply(value, _payslipVM))"></InputTextArea>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-success">
+                                            <InputTextArea type="text" style="min-width:110px;" class="form-control" placeholder="Giải đáp"
+                                                       ValueExpression="@(() => _payslipVM.SalaryReply)"
+                                                       Value="@_payslipVM.SalaryReply"
+                                                       ValueChanged="@((string value) => onchange_salaryReply(value, _payslipVM))"></InputTextArea>
+                                        </td>
+                                    }
+                                </tr>
+                            </Virtualize>
+
+                        </tbody>
+                    </table>
+                    }
+                </div>
+            </EditForm>
+            <!-- /.card-body -->
+            @if (payslipVMs != null)
+            {
+                <div class="card-footer text-muted">
+                    Tổng số: <b>@payslipVMs.Count()</b> bản ghi
+                </div>
+            }
+            <!-- /.card-footer -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>

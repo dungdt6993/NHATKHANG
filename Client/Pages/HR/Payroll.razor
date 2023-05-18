@@ -1,0 +1,865 @@
+﻿@page "/HR/Payroll"
+@using System.Data
+@using Blazored.FluentValidation
+
+<Loading isLoading="@isLoading"></Loading>
+<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_SalaryDef">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span>LƯƠNG</span>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body p-0">
+
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 300px);">
+                    <EditForm Model="@salaryDefVM" OnValidSubmit="@UpdateSalaryDef">
+                        <FluentValidationValidator />
+                        <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Mã lương</th>
+                                    <th>Diễn giải</th>
+                                    <th class="text-center">Đóng BHXH</th>
+                                    <th class="text-center">Tính theo công</th>
+                                    <th class="text-center">Cập nhật vào TK giao dịch</th>
+                                    <th class="text-center"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (salaryDefVMs != null)
+                                {
+                                    foreach (var _salaryDefVM in salaryDefVMs)
+                                    {
+                                        @if (_salaryDefVM.isUpdate)
+                                        {
+                                            <tr>
+                                                <td class="text-center">@_salaryDefVM.SalaryType</td>
+                                                <td>
+                                                    <InputText class="form-control" placeholder="Diễn giải" @bind-Value="@salaryDefVM.SalaryTypeName" />
+                                                    <ValidationMessage For="@(() => salaryDefVM.SalaryTypeName)" />
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="form-group clearfix">
+                                                        <div class="icheck-success d-inline">
+                                                            <input type="checkbox" id="isSIns" @bind="salaryDefVM.isSIns">
+                                                            <label for="isSIns">
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                                <td class="text-center">
+                                                    <div class="form-group clearfix">
+                                                        <div class="icheck-success d-inline">
+                                                            <input type="checkbox" id="isCalcByShift" @bind="salaryDefVM.isCalcByShift">
+                                                            <label for="isCalcByShift">
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                                <td class="text-center">
+                                                    @if (!_salaryDefVM.isCalcByShift)
+                                                    {
+                                                        <div class="form-group">
+                                                            <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                                         ValueExpression="@(()=>_salaryDefVM.TrnCode)"
+                                                         Value="@_salaryDefVM.TrnCode"
+                                                         ValueChanged="@((int value) => onchange_trncode(value))">
+                                                                <option value=0>-----Nhóm giao dịch-----</option>
+                                                                @if (trngrp_list != null)
+                                                                {
+                                                                    @foreach (var _trngrp in trngrp_list)
+                                                                    {
+                                                                        <option data-subtext="@_trngrp.TrnGroupName" value="@_trngrp.TrnGroupCode">@_trngrp.TrnGroupCode</option>
+                                                                    }
+                                                                }
+                                                            </InputSelect>
+
+                                                            <ValidationMessage For="@(() => salaryDefVM.TrnCode)" />
+
+                                                            <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                                         ValueExpression="@(()=>_salaryDefVM.TrnSubCode)"
+                                                         Value="@_salaryDefVM.TrnSubCode"
+                                                         ValueChanged="@((int value) => onchange_trnsubcode(value))">
+                                                                <option value=0>-----Giao dịch-----</option>
+                                                                @if (trn_list != null)
+                                                                {
+                                                                    @foreach (var _trn in trn_list)
+                                                                    {
+                                                                        <option data-subtext="@_trn.TrnName" value="@_trn.TrnSubCode">@_trn.TrnSubCode</option>
+                                                                    }
+                                                                }
+                                                            </InputSelect>
+
+                                                            <ValidationMessage For="@(() => salaryDefVM.TrnSubCode)" />
+
+                                                        </div>
+                                                    }
+
+                                                </td>
+
+                                                <td class="text-center">
+                                                    <button class="btn btn-success btn-xs" @onclick="(() => salaryDefVM.isSave = true)"><i class="fa-solid fa-circle-check"></i></button>
+                                                    <button class="btn btn-danger btn-xs" @onclick="(() => salaryDefVM.isUpdate = false)"><i class="fa-solid fa-ban"></i></button>
+                                                </td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td class="text-center">@_salaryDefVM.SalaryType</td>
+                                                <td>@_salaryDefVM.SalaryTypeName</td>
+                                                <td class="text-center">
+                                                    @if (_salaryDefVM.isSIns)
+                                                    {
+                                                        <i class="fas fa-check text-success"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="fas fa-times"></i>
+                                                    }
+                                                </td>
+
+                                                <td class="text-center">
+                                                    @if (_salaryDefVM.isCalcByShift)
+                                                    {
+                                                        <i class="fas fa-check text-success"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="fas fa-times"></i>
+                                                    }
+                                                </td>
+
+                                                <td class="text-center">
+                                                    @if (_salaryDefVM.TrnCode != 0)
+                                                    {
+                                                        <span>[</span>
+
+                                                        @_salaryDefVM.TrnCode
+
+                                                        <span> - </span>
+
+                                                        @_salaryDefVM.TrnSubCode
+
+                                                        <span>] </span>
+
+                                                        @_salaryDefVM.TrnName
+                                                    }
+                                                </td>
+
+                                                <td class="text-center">
+                                                    @if (!_salaryDefVM.isNoShowBtnUpdate)
+                                                    {
+                                                        <button class="btn btn-default btn-xs" @onclick="(() => ClickUpdateSalaryDef(_salaryDefVM))"><i class="fa-solid fa-pen"></i></button>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </EditForm>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalList_SalTrnCode">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span>TÀI KHOẢN GIAO DỊCH LƯƠNG</span>
+                </h5>
+
+                <div class="ml-auto">
+                    <button type="button" class="btn btn-sm btn-success" data-target="#InitializeModalUpdate_SalTrnCode" data-toggle="modal" @onclick="(() => InitializeModalUpdate_SalTrnCode(0, salaryTransactionCodeVM))"><i class="fas fa-plus-circle"></i> Thêm mới</button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="modal-body p-0">
+
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 300px);">
+
+                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <thead>
+                            <tr>
+                                <th>Nhóm giao dịch</th>
+                                <th>Giao dịch</th>
+                                <th class="text-center">Thuế</th>
+                                <th class="text-center">Giao dịch theo công tính lương</th>
+                                <th class="text-center">Giao dịch theo % đóng BHXH</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (salaryTransactionCodeVMs != null)
+                            {
+                                foreach (var _salaryTransactionCodeVM in salaryTransactionCodeVMs)
+                                {
+                                    <tr data-target="#InitializeModalUpdate_SalTrnCode" data-toggle="modal" @onclick=@(()=>InitializeModalUpdate_SalTrnCode(1,_salaryTransactionCodeVM))>
+
+                                        <td><span>[</span>@_salaryTransactionCodeVM.TrnGroupCode<span>] </span>@_salaryTransactionCodeVM.TrnGroupName</td>
+                                        <td>
+                                            @if (_salaryTransactionCodeVM.Rate == 1)
+                                            {
+                                                <span class="text-success"><i class="fa-solid fa-plus"></i></span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-danger"><i class="fa-solid fa-minus"></i></span>
+                                            }
+                                            <span> [</span>@_salaryTransactionCodeVM.TrnCode<span> - </span>@_salaryTransactionCodeVM.TrnSubCode<span>]</span> @_salaryTransactionCodeVM.TrnName
+                                        </td>
+                                        <td class="text-center">
+                                            @if (_salaryTransactionCodeVM.isPIT)
+                                            {
+                                                if (_salaryTransactionCodeVM.RatePIT > 0)
+                                                {
+                                                    <span class="text-success"><i class="fa-solid fa-plus"></i> Tính thuế</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-danger"><i class="fa-solid fa-minus"></i> Giảm trừ thuế</span>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span class="text-dark"><i class="fas fa-times"></i> Không tính thuế</span>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if ((_salaryTransactionCodeVM.ShiftTypeID ?? string.Empty) != string.Empty)
+                                            {
+                                                @_salaryTransactionCodeVM.ShiftTypeID
+
+                                                <span> - </span>
+
+                                                @_salaryTransactionCodeVM.ShiftTypeName
+                                            }
+                                        </td>
+                                        <td class="text-center">@(_salaryTransactionCodeVM.InsPercent > 0 ? @_salaryTransactionCodeVM.InsPercent + " %" : string.Empty)</td>
+
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_SalTrnCode">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <EditForm Model="@salaryTransactionCodeVM" OnValidSubmit="@UpdateSalTrnCode">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>CẬP NHẬT TÀI KHOẢN GIAO DỊCH LƯƠNG</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => CloseModalUpdate_SalTrnCode())">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @if (salaryTransactionCodeVM.IsTypeUpdate == 0)
+                    {
+                        <div class="form-group row">
+                            <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                     ValueExpression="@(()=>salaryTransactionCodeVM.TrnGroupCode)"
+                                     Value="@salaryTransactionCodeVM.TrnGroupCode"
+                                     ValueChanged="@((int value) => onchange_trngrpcode(value))">
+                                <option value=0>-----Nhóm giao dịch-----</option>
+                                @if (trngrp_list != null)
+                                {
+                                    @foreach (var _trngrp in trngrp_list)
+                                    {
+                                        <option data-subtext="@_trngrp.TrnGroupName" value="@_trngrp.TrnGroupCode">@_trngrp.TrnGroupCode</option>
+                                    }
+                                }
+                            </InputSelect>
+
+                            <ValidationMessage For="@(() => salaryTransactionCodeVM.TrnGroupCode)" />
+                        </div>
+                    }
+
+                    <div class="form-group row">
+
+                        <div class="col-sm-2">
+                            <input type="text" readonly class="form-control" value="@salaryTransactionCodeVM.TrnGroupCode" />
+                        </div>
+                        <div class="col-sm-2">
+                            @if (salaryTransactionCodeVM.IsTypeUpdate == 0)
+                            {
+                                <InputNumber class="form-control" placeholder="Mã giao dịch" @bind-Value="salaryTransactionCodeVM.TrnSubCode"></InputNumber>
+                                <ValidationMessage For="@(() => salaryTransactionCodeVM.TrnSubCode)" />
+                            }
+                            else
+                            {
+                                <input type="text" readonly class="form-control" value="@salaryTransactionCodeVM.TrnSubCode" />
+                            }
+                        </div>
+
+                        <div class="col-sm-8">
+                            <InputText class="form-control" placeholder="Tên giao dịch" @bind-Value="salaryTransactionCodeVM.TrnName" />
+                            <ValidationMessage For="@(() => salaryTransactionCodeVM.TrnName)" />
+                        </div>
+
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <div class="form-group clearfix">
+                                <div class="icheck-success d-inline">
+                                    <input type="radio" id="Rate1" name="Rate" value="1" checked="@(salaryTransactionCodeVM.Rate == 1? true: false)" @onchange="onchange_Rate">
+                                    <label for="Rate1">
+                                        <span class="text-success">Giao dịch <i class="fa-solid fa-plus"></i></span>
+                                    </label>
+                                </div>
+                                <label>
+                                    &nbsp;&nbsp;
+                                </label>
+                                <div class="icheck-danger d-inline">
+                                    <input type="radio" id="Rate2" name="Rate" value="-1" checked="@(salaryTransactionCodeVM.Rate == -1? true: false)" @onchange="onchange_Rate">
+                                    <label for="Rate2">
+                                        <span class="text-danger">Giao dịch <i class="fa-solid fa-minus"></i></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <div class="form-group clearfix">
+                                <div class="icheck-dark d-inline">
+                                    <input type="radio" id="PIT1" name="PIT" value="0" checked="@(salaryTransactionCodeVM.TypePIT == 0? true: false)" @onchange="onchange_TypePIT">
+                                    <label for="PIT1">
+                                        Không tính thuế
+                                    </label>
+                                </div>
+                                <label>
+                                    &nbsp;&nbsp;
+                                </label>
+                                <div class="icheck-success d-inline">
+                                    <input type="radio" id="PIT2" name="PIT" value="1" checked="@(salaryTransactionCodeVM.TypePIT == 1? true: false)" @onchange="onchange_TypePIT">
+                                    <label for="PIT2">
+                                        Tính thuế
+                                    </label>
+                                </div>
+                                <label>
+                                    &nbsp;&nbsp;
+                                </label>
+                                <div class="icheck-danger d-inline">
+                                    <input type="radio" id="PIT3" name="PIT" value="2" checked="@(salaryTransactionCodeVM.TypePIT == 2? true: false)" @onchange="onchange_TypePIT">
+                                    <label for="PIT3">
+                                        Giảm trừ thuế
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+
+                        <label class="col-sm-5 col-form-label">Giao dịch theo % đóng BHXH</label>
+
+                        <div class="col-sm-5">
+                            <div class="input-group">
+                                <InputNumber class="form-control" @bind-Value="salaryTransactionCodeVM.InsPercent"></InputNumber>
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="fa-solid fa-percent"></i></div>
+                                </div>
+                            </div>
+                            <ValidationMessage For="@(() => salaryTransactionCodeVM.InsPercent)" />
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    @if (salaryTransactionCodeVM.TrnGroupCode != 100)
+                    {
+                        @if (salaryTransactionCodeVM.IsTypeUpdate == 1)
+                        {
+                            <button type="submit" class="btn btn-danger" @onclick=@(() => salaryTransactionCodeVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        }
+                    }
+                </div>
+            </EditForm>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalList_WDDefaut">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span>CÔNG TIÊU CHUẨN</span>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body p-0">
+
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 300px);">
+                    <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Kỳ lương</th>
+                                <th>Loại công việc</th>
+                                <th class="text-center">Ngày nghỉ tuần</th>
+                                <th class="text-center">Công tiêu chuẩn</th>
+                                <th class="text-center">Công tính lương</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (wdDefaultVMs != null)
+                            {
+                                foreach (var _wdDefaultVM in wdDefaultVMs)
+                                {
+                                    <tr>
+                                        <td class="text-center">@_wdDefaultVM.Period</td>
+                                        <td>@_wdDefaultVM.WorkTypeName</td>
+                                        <td class="text-center">@_wdDefaultVM.DODefaultNum</td>
+                                        <td class="text-center">@_wdDefaultVM.WDDefault</td>
+                                        <td class="text-center">@_wdDefaultVM.PaidDefault</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+<section class="content-header">
+
+    <EditForm Model="@filterHrVM">
+        <div class="row">
+
+            <div class="col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Tháng:</label>
+                    <div class="col-sm-9">
+                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                           ValueExpression="@(()=>filterHrVM.Month)"
+                                           Value="@filterHrVM.Month"
+                                           ValueChanged="@((int value) => onchange_filter_month(value))">
+                            @if (month_filter_list != null)
+                            {
+                                @foreach (var month in month_filter_list)
+                                {
+                                    <option value="@month.Month">@month.Month</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Năm:</label>
+                    <div class="col-sm-9">
+                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                           ValueExpression="@(()=>filterHrVM.Year)"
+                                           Value="@filterHrVM.Year"
+                                           ValueChanged="@((int value) => onchange_filter_year(value))">
+                            @if (year_filter_list != null)
+                            {
+                                @foreach (var year in year_filter_list)
+                                {
+                                    <option value="@year.Year">@year.Year</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
+                                 Value="@filterHrVM.DivisionID"
+                                 ValueChanged="@((string value) => onchange_filter_division(value))">
+                        @if (division_filter_list != null)
+                        {
+                            @foreach (var division_filter in division_filter_list)
+                            {
+                                <option data-subtext="@division_filter.DivisionID" value="@division_filter.DivisionID">@division_filter.DivisionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DepartmentID)"
+                                 Value="@filterHrVM.DepartmentID"
+                                 ValueChanged="@((string value) => onchange_filter_department(value))">
+                        <option value=@string.Empty>-----Bộ phận-----</option>
+                        @if (department_filter_list != null)
+                        {
+                            @foreach (var department_filter in department_filter_list)
+                            {
+                                <option data-subtext="@department_filter.DepartmentID" value="@department_filter.DepartmentID">@department_filter.DepartmentName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.SectionID)"
+                                 Value="@filterHrVM.SectionID"
+                                 ValueChanged="@((string value) => onchange_filter_section(value))">
+                        <option value=@string.Empty>-----Khu vực-----</option>
+                        @if (section_filter_list != null)
+                        {
+                            @foreach (var section_filter in section_filter_list)
+                            {
+                                <option data-subtext="@section_filter.SectionID" value="@section_filter.SectionID">@section_filter.SectionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                        @if (position_filter_list != null)
+                        {
+                            @foreach (var positiongroup_filter in position_filter_list.Select(x => new { x.PositionGroupID, x.PositionGroupName }).Distinct())
+                            {
+                                <option data-subtext="@positiongroup_filter.PositionGroupID" value="@positiongroup_filter.PositionGroupID">@positiongroup_filter.PositionGroupName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                 ValueExpression="@(()=>filterHrVM.Eserial)"
+                                 Value="@filterHrVM.Eserial"
+                                 ValueChanged="@((string value) => onchange_filter_eserial(value))">
+                        <option value=@string.Empty>-----Nhân viên-----</option>
+                        @if (eserial_filter_list != null)
+                        {
+                            @foreach (var eserial_filter in eserial_filter_list)
+                            {
+                                <option data-subtext="@eserial_filter.Eserial" value="@eserial_filter.Eserial">@eserial_filter.LastName @eserial_filter.MiddleName @eserial_filter.FirstName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                 ValueExpression="@(()=>filterHrVM.TrnCode)"
+                                 Value="@filterHrVM.TrnCode"
+                                 ValueChanged="@((int value) => onchange_filter_trncode(value))">
+                        <option value=0>-----Nhóm giao dịch-----</option>
+                        @if (trngrp_filter_list != null)
+                        {
+                            @foreach (var _trngrp_filter in trngrp_filter_list)
+                            {
+                                <option data-subtext="@_trngrp_filter.TrnGroupName" value="@_trngrp_filter.TrnGroupCode">@_trngrp_filter.TrnGroupCode</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                 ValueExpression="@(()=>filterHrVM.TrnSubCode)"
+                                 Value="@filterHrVM.TrnSubCode"
+                                 ValueChanged="@((int value) => onchange_filter_trnsubcode(value))">
+                        <option value=0>-----Giao dịch-----</option>
+                        @if (trn_filter_list != null)
+                        {
+                            @foreach (var _trn_filter in trn_filter_list)
+                            {
+                                <option data-subtext="@_trn_filter.TrnName" value="@_trn_filter.TrnSubCode">@_trn_filter.TrnSubCode</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-1">
+                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetSalaryList())">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </EditForm>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-purple card-outline">
+
+            <div class="card-header text-right">
+                @if (sysRepo.checkAccessSubFunc(UserID, "HR_Payroll_Calc"))
+                {
+
+                    @if (lockSalaryVM != null)
+                    {
+                        if (lockSalaryVM.isSalLock)
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                <i class="fa-solid fa-user-lock"></i> @lockSalaryVM.EserialSalLock<span> - </span>@lockSalaryVM.FullNameSalLock đã khóa lương <i class="fa-solid fa-clock"></i> @lockSalaryVM.TimeSalLock.ToString("dd/MM/yyyy HH:mm") <a @onclick="()=>CancelLockSalary()" class="alert-link">Hủy khóa lương</a>
+                            </div>
+                        }
+                        else
+                        {
+                            if (lockSalaryVM.isSalCalc && lockSalaryVM.StatusSalCalc)
+                            {
+                                <div class="alert alert-success" role="alert">
+                                    <i class="fa-solid fa-user-check"></i> @lockSalaryVM.EserialSalCalc<span> - </span>@lockSalaryVM.FullNameSalCalc<span> đã tính lương </span><i class="fa-solid fa-clock"></i> @lockSalaryVM.TimeSalCalc.ToString("dd/MM/yyyy HH:mm") <a @onclick="()=>CancelCalcSalary()" class="alert-link text-danger">Hủy tính lương</a>
+                                    <button type="button" class="btn btn-danger" data-target="#InitializeModal_LockSalary" data-toggle="modal" @onclick="()=>LockSalary()"><i class="fas fa-lock"></i> Khóa bảng lương</button>
+                                </div>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-secondary" data-target="#InitializeModalUpdate_SalaryDef" data-toggle="modal" @onclick="()=>InitializeModalUpdate_SalaryDef()"><i class="fa-solid fa-dollar-sign"></i> Lương</button>
+                                <button type="button" class="btn btn-secondary" data-target="#InitializeModalList_SalTrnCode" data-toggle="modal" @onclick="()=>InitializeModalList_SalTrnCode()"><i class="fa-solid fa-sack-dollar"></i> Tài khoản giao dịch lương</button>
+                                <button type="button" class="btn btn-secondary" data-target="#InitializeModalList_WDDefaut" data-toggle="modal" @onclick="()=>InitializeModalList_WDDefaut()"><i class="fa-solid fa-calendar-day"></i> Công tiêu chuẩn</button>
+                                <button type="button" class="btn btn-success" @onclick="()=>CalcSalary()"><i class="fa-solid fa-calculator"></i> Tính lương</button>
+                            }
+                        }
+                    }
+                }
+
+            </div>
+
+            <!-- /.card-header -->
+            <div class="card-body table-responsive table-fixed p-0" style="height: calc(100vh - 389px);">
+                @if (dtPayroll != null)
+                {
+                    <table class="table table-sm table-bordered table-hover" style="font-size: 11px;">
+                        <thead class="thead-light">
+                            <tr>
+                                <th rowspan="2">Họ tên</th>
+
+                                <th class="text-center" colspan="5">Công việc</th>
+                                <th class="text-center" colspan="11">Lương</th>
+
+                                @{
+                                    var sqlCountShiftTypeCalc = "select Count(ShiftTypeID) + 2 as cShiftTypeID from HR.ShiftType where coalesce(PercentIncome,0) > 0";
+                                    DataTable dtCountShiftTypeCalc = payrollRepo.ExecuteSQLQueryToDataTable(sqlCountShiftTypeCalc);
+                                    if (dtCountShiftTypeCalc.Rows.Count > 0)
+                                    {
+                                        DataRow drCountShiftTypeCalc = dtCountShiftTypeCalc.Rows[0];
+                                        <th class="text-center" colspan=@drCountShiftTypeCalc["cShiftTypeID"]>Công tính lương</th>
+                                    }
+
+                                    var sqlCountTrnGrp = "select '['+cast(stg.TrnGroupCode as varchar)+'] '+ stg.TrnGroupName as TrnGrp, count(TrnCode) as cTrnCode from HR.SalaryTransactionGroup stg ";
+                                    sqlCountTrnGrp += "join HR.SalaryTransactionCode stc on stc.TrnGroupCode = stg.TrnGroupCode group by stg.TrnGroupCode, stg.TrnGroupName order by TrnGrp ";
+
+                                    DataTable dtCountTrnGrp = payrollRepo.ExecuteSQLQueryToDataTable(sqlCountTrnGrp);
+
+                                    if (dtCountTrnGrp.Rows.Count > 0)
+                                    {
+                                        for (int i = 0; i < dtCountTrnGrp.Rows.Count; i++)
+                                        {
+                                            DataRow drCountTrnGrp = dtCountTrnGrp.Rows[i];
+                                            <th class="text-center" colspan="@drCountTrnGrp["cTrnCode"]">@drCountTrnGrp["TrnGrp"]</th>
+                                        }
+                                    }
+                                }
+
+                                <th class="text-center" rowspan="2">Thực lĩnh</th>
+                            </tr>
+
+                            <tr>
+
+                                <th>Bộ phận</th>
+                                <th>Khu vực</th>
+                                <th>Vị trí</th>
+                                <th class="text-center">Ngày vào làm</th>
+                                <th class="text-center">Ngày nghỉ việc</th>
+
+                                @{
+                                    var sqlSalaryDef = "select * from HR.SalaryDef";
+                                    DataTable dtSalaryDef = payrollRepo.ExecuteSQLQueryToDataTable(sqlSalaryDef);
+                                    if (dtSalaryDef.Rows.Count > 0)
+                                    {
+                                        for (int i = 0; i < dtSalaryDef.Rows.Count; i++)
+                                        {
+                                            DataRow drSalaryDef = dtSalaryDef.Rows[i];
+                                            <th class="text-center">@drSalaryDef["SalaryTypeName"]</th>
+                                        }
+                                    }
+                                }
+
+                                <th class="text-center">Tổng</th>
+                                <th class="text-center">Khóa công</th>
+
+                                @{
+                                    var sqlShiftTypeCalc = "select ShiftTypeID, PercentIncome from HR.ShiftType where coalesce(PercentIncome,0) > 0";
+                                    DataTable dtShiftTypeCalc = payrollRepo.ExecuteSQLQueryToDataTable(sqlShiftTypeCalc);
+                                    if (dtShiftTypeCalc.Rows.Count > 0)
+                                    {
+                                        for (int i = 0; i < dtShiftTypeCalc.Rows.Count; i++)
+                                        {
+                                            DataRow drShiftTypeCalc = dtShiftTypeCalc.Rows[i];
+                                            <th class="text-center">@drShiftTypeCalc["ShiftTypeID"]<span>[</span>@drShiftTypeCalc["PercentIncome"]<span>%]</span></th>
+                                        }
+                                    }
+                                }
+
+                                <th class="text-center">Tổng công</th>
+
+                                @{
+                                    var sqlTrn = "select '['+cast(TrnCode as varchar)+'-'+cast(TrnSubCode as varchar)+'] '+ [TrnName] as Trn from HR.SalaryTransactionCode  ";
+                                    sqlTrn += "order by TrnCode, TrnSubCode ";
+                                    DataTable dtTrn = payrollRepo.ExecuteSQLQueryToDataTable(sqlTrn);
+                                    if (dtTrn.Rows.Count > 0)
+                                    {
+                                        for (int i = 0; i < dtTrn.Rows.Count; i++)
+                                        {
+                                            DataRow drTrn = dtTrn.Rows[i];
+                                            <th class="text-center">@drTrn["Trn"]</th>
+                                        }
+                                    }
+                                }
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                for (int i = 0; i < dtPayroll.Rows.Count; i++)
+                                {
+                                    DataRow _drPayroll = dtPayroll.Rows[i];
+
+                                    <tr class="@(_drPayroll["Terminated"].ToString() == "1"?"text-danger":"")">
+                                        <th style="min-width: 200px;">@_drPayroll["Eserial"].ToString()<span> - </span>@_drPayroll["FullName"].ToString()</th>
+
+                                        <td style="min-width: 200px;">@_drPayroll["DepartmentName"].ToString()</td>
+                                        <td style="min-width: 70px;">@_drPayroll["SectionName"].ToString()</td>
+                                        <td style="min-width: 200px;">@_drPayroll["PositionName"].ToString()</td>
+
+                                        <td class="text-center">@string.Format("{0:dd/MM/yyyy}", _drPayroll["JoinDate"])</td>
+                                        <td class="text-center">@string.Format("{0:dd/MM/yyyy}", _drPayroll["TerminateDate"])</td>
+
+                                        <td class="text-right">@string.Format("{0:#,#.}",@_drPayroll["BasicSalary"])</td>
+                                        <td class="text-right">@string.Format("{0:#,#.}",@_drPayroll["Benefit1"])</td>
+                                        <td class="text-right">@string.Format("{0:#,#.}",@_drPayroll["Benefit2"])</td>
+                                        <td class="text-right">@string.Format("{0:#,#.}",@_drPayroll["Benefit3"])</td>
+                                        <td class="text-right">@string.Format("{0:#,#.}",@_drPayroll["Benefit4"])</td>
+                                        <td class="text-right">@string.Format("{0:#,#.}",@_drPayroll["Benefit5"])</td>
+                                        <td class="text-right">@string.Format("{0:#,#.}",@_drPayroll["Benefit6"])</td>
+                                        <td class="text-right">@string.Format("{0:#,#.}",@_drPayroll["Benefit7"])</td>
+                                        <td class="text-right">@string.Format("{0:#,#.}",@_drPayroll["Benefit8"])</td>
+                                        <td class="text-right">@string.Format("{0:#,#.}",@_drPayroll["OtherSalary"])</td>
+                                        <td class="text-right">@string.Format("{0:#,#.}",@_drPayroll["TotalSal"])</td>
+
+                                        <td class="text-center">
+                                            @string.Format("{0:dd/MM/yyyy}", _drPayroll["LockFrom"])<span> - </span>@string.Format("{0:dd/MM/yyyy}", _drPayroll["LockTo"])
+                                        </td>
+
+                                        @{
+                                            var sqlContent_ShiftTypeCalc = "select ShiftTypeID from HR.ShiftType where coalesce(PercentIncome,0) > 0";
+                                            DataTable dtContent_ShiftTypeCalc = payrollRepo.ExecuteSQLQueryToDataTable(sqlContent_ShiftTypeCalc);
+                                            if (dtContent_ShiftTypeCalc.Rows.Count > 0)
+                                            {
+                                                for (int j = 0; j < dtContent_ShiftTypeCalc.Rows.Count; j++)
+                                                {
+                                                    DataRow drContent_ShiftTypeCalc = dtContent_ShiftTypeCalc.Rows[j];
+                                                    <td class="text-center">@_drPayroll[drContent_ShiftTypeCalc["ShiftTypeID"].ToString()]</td>
+                                                }
+                                            }
+                                        }
+                                        <td class="text-center">@_drPayroll["TotalPaidDay"].ToString()</td>
+
+                                        @{
+                                            var sqlContent_Trn = "select 'TRN'+cast(TrnCode as varchar)+'x'+cast(TrnSubCode as varchar)+'' as Trn from HR.SalaryTransactionCode  ";
+                                            sqlContent_Trn += "order by TrnCode, TrnSubCode ";
+                                            DataTable dtContent_Trn = payrollRepo.ExecuteSQLQueryToDataTable(sqlContent_Trn);
+                                            if (dtContent_Trn.Rows.Count > 0)
+                                            {
+                                                for (int j = 0; j < dtContent_Trn.Rows.Count; j++)
+                                                {
+                                                    DataRow drContent_Trn = dtContent_Trn.Rows[j];
+                                                    <td class="text-right">@string.Format("{0:#,#.}", _drPayroll[drContent_Trn["Trn"].ToString()])</td>
+                                                }
+                                            }
+                                        }
+                                        <td class="text-right">@string.Format("{0:#,#.}", _drPayroll["NetPay"])</td>
+
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+
+            <!-- /.card-body -->
+            <div class="card-footer">
+                <ul class="pagination pagination-sm m-0 float-right">
+                    <li class="page-item"><a class="page-link" href="#">«</a></li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">»</a></li>
+                </ul>
+            </div>
+            <!-- /.card-footer -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+

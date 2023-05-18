@@ -1,0 +1,2207 @@
+﻿@page "/HR/Profile"
+
+@using Blazored.FluentValidation
+@using System.Data;
+@using Utilities;
+
+<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+<Loading isLoading="@isLoading"></Loading>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_Profile">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <EditForm Model="@profileManagament" OnValidSubmit="@SaveProfile">
+
+                @if (profileManagament.isTypeSave != 3)
+                {
+                    <FluentValidationValidator />
+                }
+
+                <div class="modal-header" style="border-bottom:none;">
+                    @{
+                        string str = string.Empty;
+                        str = (profileManagament.Eserial ?? string.Empty) != string.Empty ? "-" : string.Empty;
+                    }
+                    <h5 class="modal-title">Hồ sơ nhân viên <strong style="color:#6f42c1">@profileManagament.Eserial @str @profileManagament.LastName @profileManagament.MiddleName @profileManagament.FirstName</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="()=> Close_ModalProfile()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="card-body p-0" style="overflow: auto;">
+
+                    @if (profileManagament.isTypeSave != 3)
+                    {
+                        <ValidationSummary />
+                    }
+
+                    <div class="card-header p-0 pt-1 border-bottom-0">
+                        <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                            @if (profileManagament.isTypeSave != 2)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill" href="#custom-tabs-three-profile" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="true">Tiểu sử</a>
+                                </li>
+                            }
+
+                            <li class="nav-item">
+                                @if (profileManagament.isTypeSave == 2)
+                                {
+                                    <a class="nav-link active" id="custom-tabs-three-job-tab" data-toggle="pill" href="#custom-tabs-three-job" role="tab" aria-controls="custom-tabs-three-job" aria-selected="false">Công việc</a>
+                                }
+                                else
+                                {
+                                    <a class="nav-link" id="custom-tabs-three-job-tab" data-toggle="pill" href="#custom-tabs-three-job" role="tab" aria-controls="custom-tabs-three-job" aria-selected="false">Công việc</a>
+                                }
+                            </li>
+
+                            @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_EditSal") && profileManagament.isTypeSave == 1 || sysRepo.checkAccessSubFunc(UserID, "HR_Profile_ChangeSal") && profileManagament.isTypeSave == 2 || sysRepo.checkAccessSubFunc(UserID, "HR_Profile_ViewSal") && profileManagament.isTypeSave == 3 || profileManagament.isTypeSave == 0)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" id="custom-tabs-three-salary-tab" data-toggle="pill" href="#custom-tabs-three-salary" role="tab" aria-controls="custom-tabs-three-salary" aria-selected="false">Lương</a>
+                                </li>
+                            }
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-three-history-tab" data-toggle="pill" href="#custom-tabs-three-history" role="tab" aria-controls="custom-tabs-three-history" aria-selected="false">Lịch sử làm việc</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="card-body" style="min-width: 1106px;">
+                        <div class="tab-content" id="custom-tabs-three-tabContent">
+                            @{
+                                string active_tabProfile;
+                                active_tabProfile = @profileManagament.isTypeSave != 2 ? "show active" : "";
+                            }
+                            <div class="tab-pane fade @active_tabProfile" id="custom-tabs-three-profile" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
+
+                                <div class="row">
+                                    <div class="col-sm-2 col-md-2 text-center">
+                                        <div class="img-avatar-profile">
+                                            <label>
+                                                <InputFile OnChange="OnInputFileChange" style="display:none;" accept="image/*" />
+                                                <img class="imgUser" src="@profileManagament.UrlAvatar">
+                                            </label>
+                                        </div>
+
+                                        @if (profileManagament.isTypeSave == 1 || profileManagament.UrlAvatar != UrlDirectory.Default_Avatar)
+                                        {
+                                            <a href="@profileManagament.UrlAvatar" download><i class="fa-solid fa-download"></i></a>
+                                            <span>&nbsp;</span>
+                                            <a href="javascript:void(0)" @onclick="(() => FileDefault())"><i class="fa-solid fa-trash-can"></i></a>
+                                        }
+
+                                    </div>
+                                    <div class="col-sm-10 col-md-10">
+                                        <table class="table no-border mb-0">
+                                            <tbody>
+                                                <tr>
+                                                    <th class="text-danger">Mã NV:</th>
+                                                    <td style="width:20%"><InputText class="form-control" placeholder="@placeholder_Eserial" @bind-Value:get="profileManagament.Eserial" @bind-Value:set="(value) => {profileManagament.Eserial = value.ToUpper();}" disabled="@disable_Eserial" /></td>
+                                                    <th class="text-danger">Họ:</th>
+                                                    <td style="width:20%"><InputText class="form-control" placeholder="Họ" @bind-Value="profileManagament.LastName" /></td>
+                                                    <th>Đệm:</th>
+                                                    <td style="width:30%"><InputText class="form-control" placeholder="Đệm" @bind-Value="profileManagament.MiddleName" /></td>
+                                                    <th class="text-danger">Tên:</th>
+                                                    <td style="width:30%"><InputText class="form-control" placeholder="Tên" @bind-Value="profileManagament.FirstName" /></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <table class="table no-border mb-0">
+                                            <tbody>
+                                                <tr>
+                                                    <th class="text-danger">Ngày sinh:</th>
+                                                    <td style="width:30%">
+                                                        <div class="input-group date">
+                                                            <input type="text" class="form-control" name="date-mask" @bind="onchange_Birthday" onClick="this.select();"></input>
+                                                            <div class="input-group-append">
+                                                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <th>Nơi sinh:</th>
+                                                    <td style="width:55%"><InputText class="form-control" placeholder="Nơi sinh" @bind-Value="profileManagament.PlaceOfBirth" /></td>
+                                                    <th>Giới tính:</th>
+                                                    <td style="width:15%">
+                                                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" @bind-Value="profileManagament.Gender">
+                                                            <option value="0">Nam</option>
+                                                            <option value="1">Nữ</option>
+                                                        </InputSelectNumber>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <table class="table no-border mb-0">
+                                            <tbody>
+                                                <tr>
+                                                    <th class="text-danger">Căn cước:</th>
+                                                    <td style="width:35%"><InputText class="form-control" placeholder="Căn cước công dân/ Hộ chiếu" @bind-Value="profileManagament.IDCard" /></td>
+                                                    <th>Ngày cấp:</th>
+                                                    <td style="width:30%">
+                                                        <div class="input-group date">
+                                                            <input type="text" class="form-control" name="date-mask" @bind="onchange_DateOfIssue" onClick="this.select();"></input>
+                                                            <div class="input-group-append">
+                                                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <th>Nơi cấp:</th>
+                                                    <td style="width:35%"><InputText class="form-control" placeholder="Nơi cấp" @bind-Value="profileManagament.PlaceOfIssue" /></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <table class="table no-border mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th>Quốc tịch:</th>
+                                                <td style="width:20%">
+
+                                                    <InputSelect class="selectpicker form-control" data-container="body" data-style="btn-selectpicker" data-live-search="true" @bind-Value="profileManagament.CountryCode">
+                                                        @if (countrys != null)
+                                                        {
+                                                            @foreach (var country in countrys)
+                                                            {
+                                                                <option value="@country.CountryCode">@country.CountryName</option>
+                                                            }
+                                                        }
+                                                    </InputSelect>
+                                                </td>
+                                                <th>Dân tộc:</th>
+                                                <td style="width:20%">
+
+                                                    <InputSelectNumber class="selectpicker form-control" data-container="body" data-style="btn-selectpicker" data-live-search="true" @bind-Value="profileManagament.EthnicID">
+                                                        @if (ethnics != null)
+                                                        {
+                                                            @foreach (var ethnic in ethnics)
+                                                            {
+                                                                <option value="@ethnic.EthnicID">@ethnic.EthnicName</option>
+                                                            }
+                                                        }
+                                                    </InputSelectNumber>
+                                                </td>
+                                                <th>Nguyên quán:</th>
+                                                <td style="width:60%"><InputText class="form-control" placeholder="Nguyên quán" @bind-Value="profileManagament.Hometown" /></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="table no-border mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th>Trình độ:</th>
+                                                <td style="width:35%"><InputText class="form-control" placeholder="Trình độ học vấn" @bind-Value="profileManagament.Qualification" /></td>
+                                                <th>Điện thoại:</th>
+                                                <td style="width:30%"><InputText class="form-control" placeholder="Điện thoại" @bind-Value="profileManagament.Mobile" /></td>
+                                                <th>Email:</th>
+                                                <td style="width:35%"><InputText class="form-control" placeholder="Email cá nhân" @bind-Value="profileManagament.Email" /></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="table no-border mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th>Thường trú:</th>
+                                                <td style="width:50%"><InputText class="form-control" placeholder="Địa chỉ thường trú" @bind-Value="profileManagament.Resident" /></td>
+                                                <th>Tạm trú:</th>
+                                                <td style="width:50%"><InputText class="form-control" placeholder="Địa chỉ tạm trú" @bind-Value="profileManagament.Temporarity" /></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="table no-border mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width:6%">Liên hệ:</th>
+                                                <td style="width:20%"><InputText class="form-control" placeholder="Tên người liên hệ" @bind-Value="profileManagament.Contact_Name" /></td>
+                                                <td style="width:10%"><InputText class="form-control" placeholder="Quan hệ" @bind-Value="profileManagament.Contact_Rela" /></td>
+                                                <td style="width:20%"><InputText class="form-control" placeholder="Số điện thoại" @bind-Value="profileManagament.Contact_Tel" /></td>
+                                                <td style="width:44%"><InputText class="form-control" placeholder="Địa chỉ" @bind-Value="profileManagament.Contact_Address" /></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="table no-border mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width:5%">MST:</th>
+                                                <td style="width:30%"><InputText class="form-control" placeholder="Mã số thuế" @bind-Value="profileManagament.PITTaxCode" /></td>
+                                                <th style="width:10%">Cơ quan thuế:</th>
+                                                <td style="width:55%"><InputText class="form-control" placeholder="Cơ quan thuế" @bind-Value="profileManagament.TaxDept" /></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="table no-border mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width:5%">Số Visa:</th>
+                                                <td style="width:20%"><InputText class="form-control" placeholder="Số Visa" @bind-Value="profileManagament.VisaNumber" /></td>
+                                                <th style="width:10%">Ngày hết hạn visa:</th>
+                                                <td style="width:20%">
+                                                    <div class="input-group date">
+                                                        <input type="text" class="form-control" name="date-mask" @bind="onchange_VisaExpDate" onClick="this.select();"></input>
+                                                        <div class="input-group-append">
+                                                            <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width:30%"></td>
+                                                <th style="width:5%"></th>
+                                                <td style="width:30%"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                            @{
+                                string active_tabJob;
+                                active_tabJob = @profileManagament.isTypeSave == 2 ? "show active" : "";
+                            }
+                            <div class="tab-pane fade @active_tabJob" id="custom-tabs-three-job" role="tabpanel" aria-labelledby="custom-tabs-three-job-tab">
+
+                                <div class="@hidden_adjustProfile">
+
+                                    <div class="form-group clearfix">
+                                        <div class="icheck-purple d-inline">
+                                            <input type="radio" id="ckContractExtension1" name="ckContractExtension" value="1" @onchange="onchange_ckContractExtension" checked="@(profileManagament.ckContractExtension == 1? true: false)" disabled="@disable_ckContractExtension">
+                                            <label for="ckContractExtension1">
+                                                Gia hạn hợp đồng
+                                            </label>
+                                        </div>
+                                        <label>
+                                            &nbsp;&nbsp;
+                                        </label>
+                                        <div class="icheck-purple d-inline">
+                                            <input type="radio" id="ckContractExtension2" name="ckContractExtension" value="2" @onchange="onchange_ckContractExtension" checked="@(profileManagament.ckContractExtension == 2? true: false)" disabled="@disable_ckContractExtension">
+                                            <label for="ckContractExtension2">
+                                                Gia hạn hợp đồng trước thời hạn
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group clearfix">
+                                        @*                                        <div class="icheck-purple d-inline">
+                                        <input type="radio" id="ckJob1" name="ckJob" value="1" @onchange="onchange_ckJob" checked="@(profileManagament.ckJob == 1? true: false)" disabled="@disable_ckJob">
+                                        <label for="ckJob1">
+                                        Thay đổi công việc
+                                        </label>
+                                        </div>
+                                        <label>
+                                        &nbsp;&nbsp;
+                                        </label>*@
+                                        <div class="icheck-purple d-inline">
+                                            <input type="radio" id="ckJob2" name="ckJob" value="2" @onchange="onchange_ckJob" checked="@(profileManagament.ckJob == 2? true: false)" disabled="@disable_ckJob">
+                                            <label for="ckJob2">
+                                                Điều chuyển công việc
+                                            </label>
+                                        </div>
+                                        <label>
+                                            &nbsp;&nbsp;
+                                        </label>
+                                        <div class="icheck-purple d-inline">
+                                            <input type="radio" id="ckJob3" name="ckJob" value="3" @onchange="onchange_ckJob" checked="@(profileManagament.ckJob == 3? true: false)" disabled="@disable_ckJob">
+                                            <label for="ckJob3">
+                                                Bổ nhiệm
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <table class="table no-border mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width:10%" class="text-danger">Ngày vào làm:</th>
+                                                <td style="width:20%">
+                                                    <div class="input-group date">
+                                                        <input type="text" class="form-control" name="date-mask" @bind="onchange_JoinDate" onClick="this.select();" disabled="@disabled_JoinDate"></input>
+                                                        <div class="input-group-append">
+                                                            <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <th style="width:7%" class="text-danger">Công ty:</th>
+                                                <td style="width:33%">
+                                                    <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true">
+                                                        <option data-subtext="@divisionSelected.DivisionID" showSubtext="true">@divisionSelected.DivisionName</option>
+                                                    </select>
+                                                </td>
+                                                <th style="width:10%" class="text-danger">Ngày ký HĐ:</th>
+                                                <td style="width:20%">
+                                                    <div class="input-group date">
+                                                        <input type="text" class="form-control" name="date-mask" @bind="onchange_StartContractDate" onClick="this.select();" disabled="@disabled_StartContractDate"></input>
+                                                        <div class="input-group-append">
+                                                            <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="table no-border mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width:10%">Ngày tính phép năm:</th>
+                                                <td style="width:20%">
+                                                    <div class="input-group date">
+                                                        <input type="text" class="form-control" name="date-mask" @bind="onchange_StartDayAL" onClick="this.select();"></input>
+                                                        <div class="input-group-append">
+                                                            <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <th style="width:7%" class="text-danger">Bộ phận:</th>
+                                                <td style="width:33%">
+
+                                                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                                                 ValueExpression="@(()=>profileManagament.DepartmentID)"
+                                                                 Value="@profileManagament.DepartmentID"
+                                                                 ValueChanged="@((string value) => onchange_department(value))">
+                                                        <option value=@string.Empty>-----Chọn-----</option>
+                                                        @if (departments != null)
+                                                        {
+                                                            @foreach (var department in departments)
+                                                            {
+                                                                <option data-subtext="@department.DepartmentID" value="@department.DepartmentID">@department.DepartmentName</option>
+                                                            }
+                                                        }
+                                                    </InputSelect>
+
+                                                </td>
+                                                <th style="width:10%" class="text-danger">Loại HĐ:</th>
+                                                <td style="width:20%">
+
+                                                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                                                 ValueExpression="@(()=>profileManagament.ContractTypeID)"
+                                                                 Value="@profileManagament.ContractTypeID"
+                                                                 ValueChanged="@((string value) => onchange_contracttype(value))" disabled="@disabled_ContractTypeID">
+                                                        <option value=@string.Empty>-----Chọn-----</option>
+                                                        @if (laborContractTypes != null)
+                                                        {
+                                                            @foreach (var laborContractType in laborContractTypes)
+                                                            {
+                                                                <option data-subtext="@laborContractType.ContractTypeID" value="@laborContractType.ContractTypeID">@laborContractType.ContractTypeName</option>
+                                                            }
+                                                        }
+                                                    </InputSelect>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="table no-border mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width:10%;" class="text-danger">Loại công việc:</th>
+                                                <td style="width:20%">
+
+                                                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind-Value="profileManagament.WorkTypeID">
+                                                        <option value=@string.Empty>-----Chọn-----</option>
+                                                        @if (workTypes != null)
+                                                        {
+                                                            @foreach (var workType in workTypes)
+                                                            {
+                                                                <option data-subtext="@workType.WorkTypeID" value="@workType.WorkTypeID">@workType.WorkTypeName</option>
+                                                            }
+                                                        }
+                                                    </InputSelect>
+                                                </td>
+                                                <th style="width:7%" class="text-danger">Khu vực:</th>
+                                                <td style="width:33%">
+
+                                                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind-Value="profileManagament.SectionID">
+                                                        <option value=@string.Empty>-----Chọn-----</option>
+                                                        @if (sections != null)
+                                                        {
+                                                            @foreach (var sec in sections)
+                                                            {
+                                                                <option data-subtext="@sec.SectionID" value="@sec.SectionID">@sec.SectionName</option>
+                                                            }
+                                                        }
+                                                    </InputSelect>
+
+                                                </td>
+                                                <th style="width:10%;">Ngày hết hạn HĐ:</th>
+                                                <td style="width:20%">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="date-mask" @bind="@onchange_EndContractDate" onClick="this.select();" disabled="@disabled_EndContractDate" />
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="table no-border mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width:10%;">Mã chấm công:</th>
+                                                <td style="width:20%"><InputNumber type="text" class="form-control" placeholder="Mã chấm công" @bind-Value="profileManagament.TimeAttCode" /></td>
+                                                <th style="width:7%;" class="text-danger">Vị trí:</th>
+                                                <td style="width:33%">
+
+                                                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind-Value="profileManagament.PositionID">
+                                                        <option value=@string.Empty>-----Chọn-----</option>
+                                                        @if (positions != null)
+                                                        {
+                                                            @foreach (var position in positions)
+                                                            {
+                                                                <option data-subtext="@position.PositionID" value="@position.PositionID">@position.PositionName</option>
+                                                            }
+                                                        }
+                                                    </InputSelect>
+
+                                                </td>
+                                                <th style="width:10%;" class="text-danger">Ngày bắt đầu CV:</th>
+                                                <td style="width:20%">
+                                                    <div class="input-group date">
+                                                        <input type="text" class="form-control" name="date-mask" @bind="onchange_JobStartDate" onClick="this.select();" disabled="@disabled_JobStartDate"></input>
+                                                        <div class="input-group-append">
+                                                            <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="table no-border mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width:10%;">Email:</th>
+                                                <td style="width:30%"><InputText class="form-control" placeholder="Email công ty" @bind-Value="profileManagament.EmailCompany" /></td>
+                                                <th style="width:10%;">Số BHXH:</th>
+                                                <td style="width:20%"><InputText class="form-control" placeholder="Số sổ BHXH" @bind-Value="profileManagament.SocialInsNumber" /></td>
+                                                <th style="width:10%;">Thẻ BHYT:</th>
+                                                <td style="width:20%"><InputText class="form-control" placeholder="Thẻ BHYT" @bind-Value="profileManagament.HealthInsNumber" /></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="table no-border mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width:10%">Ngân hàng:</th>
+                                                <td style="width:20%"><InputText class="form-control" placeholder="Số tài khoản" @bind-Value="profileManagament.BankAccount" /></td>
+                                                <td style="width:12%"><InputText class="form-control" placeholder="Mã" @bind-Value="profileManagament.BankCode" /></td>
+                                                <td style="width:33%"><InputText class="form-control" placeholder="Tên" @bind-Value="profileManagament.BankName" /></td>
+                                                <td style="width:25%"><InputText class="form-control" placeholder="Chi nhánh" @bind-Value="profileManagament.BankBranch" /></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="table no-border mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width:10%">Quyền:</th>
+                                                <td style="width:30%">
+
+                                                    <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" @bind-Value="profileManagament.PermisId">
+                                                        @if (permissionUsers != null)
+                                                        {
+                                                            @foreach (var permissionUser in permissionUsers)
+                                                            {
+                                                                <option value="@permissionUser.PermisId">@permissionUser.Description</option>
+                                                            }                   }
+                                                    </InputSelectNumber>
+                                                </td>
+                                                <td style="width:20%">
+                                                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_User_Permis") && profileManagament.isTypeSave == 1)
+                                                    {
+                                                        <button type="button" class="btn btn-block btn btn-secondary" data-target="#InitializeModal_Permis" data-toggle="modal" @onclick="()=>InitializeModal_Permis()"><i class="fas fa-wrench"></i> Phân quyền</button>
+                                                    }
+                                                </td>
+                                                <td style="width:20%">
+                                                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_User_ResetPass") && profileManagament.isTypeSave == 1)
+                                                    {
+                                                        if (profileManagament.User_isChangePass == 1)
+                                                        {
+                                                            <button type="button" class="btn btn-block btn-danger" @onclick="(() => ResetPass())"><i class="fa fa-key"></i> Đặt lại mật khẩu</button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <button type="button" class="btn btn-block btn-danger"><i class="fa fa-key"></i> Mật khẩu: <strong>@profileManagament.User_PassReset</strong></button>
+                                                        }
+                                                    }
+                                                </td>
+                                                <th style="width:10%"></th>
+                                                <td style="width:15%"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-3">
+                                                <label>Người đánh giá:</label>
+
+                                                <div class="dropdown dropup">
+                                                    <input class="form-control" placeholder="Tìm kiếm" @oninput="@((ChangeEventArgs e) => onchange_SearchEmpl(e))" value="@profileManagament.Appraiser_Eserial" data-toggle="dropdown" />
+
+                                                    <div class="dropdown-menu">
+                                                        @if (empls != null)
+                                                        {
+                                                            @foreach (var _empl in empls)
+                                                            {
+                                                                <a class="dropdown-item" @onclick=@(() => profileManagament.Appraiser_Eserial = _empl.Eserial)>@_empl.Eserial - @_empl.LastName @_empl.MiddleName @_empl.FirstName - @_empl.PositionName</a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>Không có dữ liệu</span>
+                                                        }
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label>Quản lý trực tiếp:</label>
+
+                                                <div class="dropdown dropup">
+                                                    <input class="form-control" placeholder="Tìm kiếm" @oninput="@((ChangeEventArgs e) => onchange_SearchEmpl(e))" value="@profileManagament.DirectManager_Eserial" data-toggle="dropdown" />
+
+                                                    <div class="dropdown-menu">
+                                                        @if (empls != null)
+                                                        {
+                                                            @foreach (var _empl in empls)
+                                                            {
+                                                                <a class="dropdown-item" @onclick=@(() => profileManagament.DirectManager_Eserial = _empl.Eserial)>@_empl.Eserial - @_empl.LastName @_empl.MiddleName @_empl.FirstName - @_empl.PositionName</a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>Không có dữ liệu</span>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label>Phụ trách bộ phận:</label>
+
+                                                <div class="dropdown dropup">
+                                                    <input class="form-control" placeholder="Tìm kiếm" @oninput="@((ChangeEventArgs e) => onchange_SearchEmpl(e))" value="@profileManagament.ControlDept_Eserial" data-toggle="dropdown" />
+
+                                                    <div class="dropdown-menu">
+                                                        @if (empls != null)
+                                                        {
+                                                            @foreach (var _empl in empls)
+                                                            {
+                                                                <a class="dropdown-item" @onclick=@(() => profileManagament.ControlDept_Eserial = _empl.Eserial)>@_empl.Eserial - @_empl.LastName @_empl.MiddleName @_empl.FirstName - @_empl.PositionName</a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>Không có dữ liệu</span>
+                                                        }
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label>Phê duyệt:</label>
+
+                                                <div class="dropdown dropup">
+                                                    <input class="form-control" placeholder="Tìm kiếm" @oninput="@((ChangeEventArgs e) => onchange_SearchEmpl(e))" value="@profileManagament.Approve_Eserial" data-toggle="dropdown" />
+
+                                                    <div class="dropdown-menu">
+                                                        @if (empls != null)
+                                                        {
+                                                            @foreach (var _empl in empls)
+                                                            {
+                                                                <a class="dropdown-item" @onclick=@(() => profileManagament.Approve_Eserial = _empl.Eserial)>@_empl.Eserial - @_empl.LastName @_empl.MiddleName @_empl.FirstName - @_empl.PositionName</a>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>Không có dữ liệu</span>
+                                                        }
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="tab-pane fade" id="custom-tabs-three-salary" role="tabpanel" aria-labelledby="custom-tabs-three-salary-tab">
+
+                                <div class="@hidden_adjustProfile">
+                                    <div class="form-group clearfix">
+                                        <div class="icheck-purple d-inline">
+                                            <input type="radio" id="ckSal" name="ckSal" value="1" @onchange="onchange_ckSal" checked="@(profileManagament.ckSal == 1? true: false)" disabled="@disable_ckSal">
+                                            <label for="ckSal">
+                                                Điều chỉnh lương
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-sm-8 col-md-8">
+
+                                        @if (salaryDefs != null)
+                                        {
+                                            <table class="table no-border mb-0">
+                                                <tbody>
+                                                    <tr>
+                                                        <th style="width:20%">@salaryDefs[0].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_basicsalary" disabled="@disabled_BasicSalary" onClick="this.select();" /></td>
+
+                                                        <th style="width:20%">@salaryDefs[5].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_benefit5" disabled="@disabled_Benefit5" onClick="this.select();" /></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <table class="table no-border mb-0">
+                                                <tbody>
+                                                    <tr>
+                                                        <th style="width:20%">@salaryDefs[1].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_benefit1" disabled="@disabled_Benefit1" onClick="this.select();" /></td>
+                                                        <th style="width:20%">@salaryDefs[6].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_benefit6" disabled="@disabled_Benefit6" onClick="this.select();" /></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <table class="table no-border mb-0">
+                                                <tbody>
+                                                    <tr>
+                                                        <th style="width:20%">@salaryDefs[2].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_benefit2" disabled="@disabled_Benefit2" onClick="this.select();" /></td>
+                                                        <th style="width:20%">@salaryDefs[7].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_benefit7" disabled="@disabled_Benefit7" onClick="this.select();" /></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <table class="table no-border mb-0">
+                                                <tbody>
+                                                    <tr>
+                                                        <th style="width:20%">@salaryDefs[3].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_benefit3" disabled="@disabled_Benefit3" onClick="this.select();" /></td>
+                                                        <th style="width:20%">@salaryDefs[8].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_benefit8" disabled="@disabled_Benefit8" onClick="this.select();" /></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <table class="table no-border mb-0">
+                                                <tbody>
+                                                    <tr>
+                                                        <th style="width:20%">@salaryDefs[4].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_benefit4" disabled="@disabled_Benefit4" onClick="this.select();" /></td>
+                                                        <th style="width:20%">@salaryDefs[9].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_othersalary" disabled="@disabled_OtherSalary" onClick="this.select();" /></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        }
+
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="form-group row">
+                                                    <label class="col-sm-2 col-form-label">Ghi chú:</label>
+                                                    <div class="col-sm-10">
+                                                        <InputText class="form-control" placeholder="Ghi chú" @bind-Value="profileManagament.Reason" disabled="@disabled_Reason" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row">
+                                                    <label class="col-sm-2 col-form-label">Người duyệt:</label>
+                                                    <div class="col-sm-10">
+                                                        <InputText class="form-control" placeholder="Người duyệt" @bind-Value="profileManagament.ApprovedBy" disabled="@disabled_ApprovedBy" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 col-md-4">
+                                        <div class="card card-secondary">
+                                            <div class="card-header">
+
+                                                <div class="row">
+                                                    <div class="col-sm-9 col-md-9"><h5><strong>Tổng: @string.Format("{0:#,##0.##}", profileManagament.TotalSalary) </strong></h5></div>
+                                                    <div class="col-sm-3 col-md-3">
+                                                        <select class="selectpicker form-control" data-style="btn-selectpicker">
+                                                            <option value="VND">VND</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-sm-5 col-md-5"><strong>Ngày tính lương:</strong></div>
+                                                    <div class="col-sm-7">
+                                                        <div class="form-group">
+                                                            <div class="input-group date">
+                                                                <input type="text" class="form-control" name="date-mask" @bind="onchange_BeginSalaryDate" onClick="this.select();" disabled="@disabled_BeginSalaryDate"></input>
+                                                                <div class="input-group-append">
+                                                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-5 col-md-5"><strong>Hình thức trả lương:</strong></div>
+                                                    <div class="col-sm-7 col-md-7">
+                                                        <div class="form-group row">
+                                                            <div class="custom-control custom-radio">
+                                                                <input class="custom-control-input custom-control-input-success" type="radio" id="rBank" name="rSalaryBy" value="0" @onchange="onchange_salarybybank" checked="@(profileManagament.SalaryByBank == 0? true: false)" disabled="@disabled_SalaryByBank">
+                                                                <label for="rBank" class="custom-control-label">Chuyển khoản</label>
+                                                            </div>
+
+                                                            <label>&nbsp;&nbsp;</label>
+
+                                                            <div class="custom-control custom-radio">
+                                                                <input class="custom-control-input custom-control-input-success" type="radio" id="rCash" name="rSalaryBy" value="0" @onchange="onchange_salarybybank" checked="@(profileManagament.SalaryByBank == 1? true: false)" disabled="@disabled_SalaryByBank">
+                                                                <label for="rCash" class="custom-control-label">Tiền mặt</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-sm-5 col-md-5"><strong>Trả lương theo:</strong></div>
+                                                    <div class="col-sm-7 col-md-7">
+
+                                                        <div class="form-group row">
+                                                            <div class="custom-control custom-radio">
+                                                                <input class="custom-control-input custom-control-input-success" type="radio" id="rMonth" name="rIsPayBy" value="1" @onchange="onchange_ispayby" checked="@(profileManagament.IsPayByMonth == 1? true: false)" disabled="@disabled_IsPayBy">
+                                                                <label for="rMonth" class="custom-control-label">Tháng</label>
+                                                            </div>
+
+                                                            <label>&nbsp;&nbsp;</label>
+
+                                                            <div class="custom-control custom-radio">
+                                                                <input class="custom-control-input custom-control-input-success" type="radio" id="rDay" name="rIsPayBy" value="2" @onchange="onchange_ispayby" checked="@(profileManagament.IsPayByDate == 1? true: false)" disabled="@disabled_IsPayBy">
+                                                                <label for="rDay" class="custom-control-label">Ngày</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_EmployeeTransaction") && (profileManagament.isTypeSave == 1 || profileManagament.isTypeSave == 2))
+                                                {
+                                                    <button type="button" class="btn btn-secondary" data-target="#InitializeModal_EmployeeTransaction" data-toggle="modal" @onclick="()=>InitializeModal_EmployeeTransaction()"><i class="fas fa-wrench"></i> Thiết lập tài khoản giao dịch</button>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="custom-tabs-three-history" role="tabpanel" aria-labelledby="custom-tabs-three-history-tab">
+                                @if (profileHistorys != null)
+                                {
+                                    <table class="table table-sm table-bordered table-hover tblFontSizeMin">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th class="text-center" rowspan="2">Ngày</th>
+                                                <th style="min-width: 200px" rowspan="2">Trạng thái</th>
+                                                <th rowspan="2">Mã NV</th>
+                                                <th style="min-width:100px;" rowspan="2">Họ tên</th>
+                                                <th colspan="6" style="text-align:center;">Công việc</th>
+                                                <th colspan="12" style="text-align:center;">Lương</th>
+                                                <th rowspan="2"></th>
+                                            </tr>
+                                            <tr>
+                                                <th style="min-width:200px;">Bộ phận</th>
+                                                <th style="min-width:200px;">Vị trí</th>
+                                                <th class="text-center">Ngày bắt đầu CV</th>
+                                                <th style="min-width:100px;">Hợp đồng</th>
+                                                <th class="text-center">Ngày bắt đầu HĐ</th>
+                                                <th class="text-center">Ngày kết thúc HĐ</th>
+                                                @foreach (var salarydef in salaryDefs)
+                                                {
+                                                    <th class="text-center">@salarydef.SalaryTypeName</th>
+                                                }
+                                                <th class="text-center">Tổng</th>
+                                                <th class="text-center">Ngày tính lương</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                var color_profilehistory = string.Empty;
+                                            }
+                                            @foreach (var ph in profileHistorys)
+                                            {
+                                                color_profilehistory = profileHistorys.IndexOf(ph) == 0 ? "green" : "";
+
+                                                <tr style="color: @color_profilehistory">
+                                                    <td class="text-center">@ph.DateJSH.ToString("dd/MM/yyyy")</td>
+                                                    <td>@ph.AdjustProfileName</td>
+                                                    <td>@ph.Eserial</td>
+                                                    <td>@ph.LastName @ph.MiddleName @ph.FirstName</td>
+                                                    <td>@ph.DepartmentName</td>
+                                                    <td>@ph.PositionName</td>
+                                                    <td class="text-center">@(ph.JobStartDate.HasValue ? ph.JobStartDate.Value.ToString("dd/MM/yyyy") : "")</td>
+                                                    <td>@ph.ContractTypeName</td>
+                                                    <td class="text-center">@(ph.StartContractDate.HasValue ? ph.StartContractDate.Value.ToString("dd/MM/yyyy") : "")</td>
+                                                    <td class="text-center">@(ph.EndContractDate.HasValue ? ph.EndContractDate.Value.ToString("dd/MM/yyyy") : "")</td>
+                                                    <td class="text-right">@string.Format("{0:#,#.}", ph.BasicSalary)</td>
+                                                    <td class="text-right">@string.Format("{0:#,#.}", ph.Benefit1)</td>
+                                                    <td class="text-right">@string.Format("{0:#,#.}", ph.Benefit2)</td>
+                                                    <td class="text-right">@string.Format("{0:#,#.}", ph.Benefit3)</td>
+                                                    <td class="text-right">@string.Format("{0:#,#.}", ph.Benefit4)</td>
+                                                    <td class="text-right">@string.Format("{0:#,#.}", ph.Benefit5)</td>
+                                                    <td class="text-right">@string.Format("{0:#,#.}", ph.Benefit6)</td>
+                                                    <td class="text-right">@string.Format("{0:#,#.}", ph.Benefit7)</td>
+                                                    <td class="text-right">@string.Format("{0:#,#.}", ph.Benefit8)</td>
+                                                    <td class="text-right">@string.Format("{0:#,#.}", ph.OtherSalary)</td>
+                                                    <td class="text-right">@string.Format("{0:#,#.}", ph.TotalSalary)</td>
+                                                    <td class="text-center">@(ph.BeginSalaryDate.HasValue ? ph.BeginSalaryDate.Value.ToString("dd/MM/yyyy") : "")</td>
+                                                    <td>
+                                                        @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_UpdateHistory") && profileManagament.isTypeSave == 1 && filterHrVM.TypeProfile == 0)
+                                                        {
+                                                            if (profileHistorys.Count > 1 && profileHistorys.IndexOf(ph) == 0)
+                                                            {
+                                                                <a href="javascript:void(0);" @onclick="(()=>DelProfileHistory(ph))">
+                                                                    <span class="badge bg-danger"><i class="fas fa-trash"></i> Xoá</span>
+                                                                </a>
+                                                            }
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    @if (profileManagament.isTypeSave != 3)
+                    {
+                        <button type="button" class="btn btn-default" data-dismiss="modal" @onclick="(() => Close_ModalProfile())"><i class="fas fa-times"></i> Thoát</button>
+                        <button type="submit" class="btn btn-success" disabled="@disabled_btnUpdateProfile">
+                            <i class="fas fa-save"></i>
+                            Lưu
+                        </button>
+                    }
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_TerminateProfile">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <EditForm Model="@profileManagament" OnValidSubmit="@TerminateProfile">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Chấm dứt hợp đồng <strong style="color:#6f42c1">@profileManagament.Eserial</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Ngày nghỉ việc:</label>
+                        <div class="col-sm-5">
+                            <div class="input-group date" name="datepicker">
+                                <input type="text" class="form-control" name="date-mask" @bind="onchange_TerminateDate" onClick="this.select();"></input>
+                                <div class="input-group-append">
+                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                </div>
+                            </div>
+                            <ValidationMessage For="@(() => profileManagament.TerminateDate)" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Lý do:</label>
+                        <div class="col-sm-9">
+                            <InputTextArea class="form-control" @bind-Value="profileManagament.ReasonTerminate" />
+                            <ValidationMessage For="@(() => profileManagament.ReasonTerminate)" />
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times"></i> Thoát</button>
+                    <button type="submit" class="btn btn-success" disabled="@disabled_btnUpdateProfile">
+                        <i class="fas fa-save"></i>
+                        Thực hiện
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_Permis">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Phân quyền</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="card-header p-0 pt-1 border-bottom-0">
+                    <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="custom-tabs-three-func-tab" data-toggle="pill" href="#custom-tabs-three-func" role="tab" aria-controls="custom-tabs-three-func" aria-selected="true">Chức năng</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="custom-tabs-three-dept-tab" data-toggle="pill" href="#custom-tabs-three-dept" role="tab" aria-controls="custom-tabs-three-dept" aria-selected="false">Bộ phận</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="custom-tabs-three-report-tab" data-toggle="pill" href="#custom-tabs-three-report" role="tab" aria-controls="custom-tabs-three-report" aria-selected="false">Báo cáo</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <div class="tab-content" id="custom-tabs-three-tabContent">
+                        <div class="tab-pane fade active show" id="custom-tabs-three-func" role="tabpanel" aria-labelledby="custom-tabs-three-func-tab">
+
+                            <ul>
+                                @if (permis_funcGroups != null)
+                                {
+                                    foreach (var permis_funcGroup in permis_funcGroups)
+                                    {
+                                        <li>
+                                            <div class="custom-control custom-checkbox">
+                                                <input class="custom-control-input custom-control-input-purple" type="checkbox" id="@permis_funcGroup.FuncGrpID" @onchange="EventArgs => { CheckAll_GrpFunc(EventArgs.Value, permis_funcGroup.FuncGrpID); }" checked="@permis_funcGroup.IsChecked">
+                                                <label for="@permis_funcGroup.FuncGrpID" class="custom-control-label">@permis_funcGroup.FuncGrpName</label>
+                                            </div>
+                                            <ul>
+                                                @if (permis_funcs != null)
+                                                {
+                                                    foreach (var permis_func in permis_funcs.Where(x => x.FuncGrpID == permis_funcGroup.FuncGrpID))
+                                                    {
+                                                        <li>
+                                                            <div class="custom-control custom-checkbox">
+                                                                <input class="custom-control-input custom-control-input-purple custom-control-input-outline" type="checkbox" id="@permis_func.FuncID" @onchange="EventArgs => { CheckAll_Func(EventArgs.Value, permis_func, permis_funcGroup); }" checked="@permis_func.IsChecked">
+                                                                <label for="@permis_func.FuncID" class="custom-control-label">@permis_func.FuncName</label>
+                                                            </div>
+                                                            <ul>
+                                                                @foreach (var permis_subFunc in permis_subFuncs.Where(x => x.FuncID == permis_func.FuncID))
+                                                                {
+                                                                    <li>
+                                                                        <div class="custom-control custom-checkbox">
+                                                                            <input class="custom-control-input custom-control-input-purple custom-control-input-outline" type="checkbox" id="@permis_subFunc.SubFuncID" @onchange="EventArgs => { Check_SubFunc(EventArgs.Value, permis_subFunc, permis_func, permis_funcGroup); }" checked="@permis_subFunc.IsChecked">
+                                                                            <label for="@permis_subFunc.SubFuncID" class="custom-control-label">@permis_subFunc.SubFuncName</label>
+                                                                        </div>
+                                                                    </li>
+                                                                }
+
+                                                            </ul>
+                                                        </li>
+                                                    }
+                                                }
+                                            </ul>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+
+                        </div>
+                        <div class="tab-pane fade" id="custom-tabs-three-dept" role="tabpanel" aria-labelledby="custom-tabs-three-dept-tab">
+                            <ul>
+                                @{
+                                    if (permis_divs != null)
+                                    {
+                                        foreach (var permis_div in permis_divs)
+                                        {
+                                            <li>
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input custom-control-input-purple" type="checkbox" id="@permis_div.DivisionID" @onchange="EventArgs => { CheckAll_Division(EventArgs.Value, permis_div.DivisionID); }" checked="@permis_div.IsChecked">
+                                                    <label for="@permis_div.DivisionID" class="custom-control-label">@permis_div.DivisionID - @permis_div.DivisionName</label>
+                                                </div>
+                                                <ul>
+                                                    @{
+                                                        foreach (var permis_dept in permis_depts.Where(x => x.DivisionID == permis_div.DivisionID))
+                                                        {
+                                                            <li>
+                                                                <div class="custom-control custom-checkbox">
+                                                                    <input class="custom-control-input custom-control-input-purple custom-control-input-outline" type="checkbox" id="@permis_dept.DepartmentID" @onchange="EventArgs => { Check_Department(EventArgs.Value, permis_dept, permis_div); }" checked="@permis_dept.IsChecked">
+                                                                    <label for="@permis_dept.DepartmentID" class="custom-control-label">@permis_dept.DepartmentID - @permis_dept.DepartmentName</label>
+                                                                </div>
+                                                            </li>
+                                                        }
+                                                    }
+                                                </ul>
+                                            </li>
+                                        }
+                                    }
+                                }
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" id="custom-tabs-three-report" role="tabpanel" aria-labelledby="custom-tabs-three-report-tab">
+                            <ul>
+                                @{
+                                    if (permis_rptgrps != null)
+                                    {
+                                        foreach (var permis_rptgrp in permis_rptgrps)
+                                        {
+                                            <li>
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input custom-control-input-purple" type="checkbox" id="RG_@permis_rptgrp.RptGrpID" @onchange="EventArgs => { CheckAll_RptGrp(EventArgs.Value, permis_rptgrp.RptGrpID); }" checked="@permis_rptgrp.IsChecked">
+                                                    <label for="RG_@permis_rptgrp.RptGrpID" class="custom-control-label">@permis_rptgrp.RptGrpName</label>
+                                                </div>
+                                                <ul>
+                                                    @{
+                                                        foreach (var permis_rpt in permis_rpts.Where(x => x.RptGrpID == permis_rptgrp.RptGrpID))
+                                                        {
+                                                            <li>
+                                                                <div class="custom-control custom-checkbox">
+                                                                    <input class="custom-control-input custom-control-input-purple custom-control-input-outline" type="checkbox" id="R_@permis_rpt.RptID" @onchange="EventArgs => { Check_Rpt(EventArgs.Value, permis_rpt, permis_rptgrp); }" checked="@permis_rpt.IsChecked">
+                                                                    <label for="R_@permis_rpt.RptID" class="custom-control-label">@permis_rpt.RptName</label>
+                                                                </div>
+                                                            </li>
+                                                        }
+                                                    }
+                                                </ul>
+                                            </li>
+                                        }
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times"></i> Thoát</button>
+                <button type="submit" class="btn btn-success" @onclick="()=>UpdatePermis()">
+                    <i class="fas fa-save"></i>
+                    Lưu
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_EmployeeTransaction">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Thiết lập tài khoản giao dịch lương</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="card-body">
+                    <ul>
+                        @{
+                            if (salTrnGrps != null)
+                            {
+                                foreach (var _salTrnGrp in salTrnGrps)
+                                {
+                                    <li>
+                                        <div class="custom-control custom-checkbox">
+                                            <input class="custom-control-input custom-control-input-purple" type="checkbox" id="@_salTrnGrp.TrnGroupCode" @onchange="EventArgs => { CheckAll_EmplTrn(EventArgs.Value, _salTrnGrp.TrnGroupCode); }" checked="@_salTrnGrp.IsChecked">
+                                            <label for="@_salTrnGrp.TrnGroupCode" class="custom-control-label"><span>[</span>@_salTrnGrp.TrnGroupCode<span>] </span>@_salTrnGrp.TrnGroupName</label>
+                                        </div>
+                                        <ul>
+                                            @{
+                                                foreach (var _salTrnCode in salTrnCodes.Where(x => x.TrnGroupCode == _salTrnGrp.TrnGroupCode))
+                                                {
+                                                    <li>
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input custom-control-input-purple custom-control-input-outline" type="checkbox" id="SalTrn@_salTrnCode.SalTrnID" @onchange="EventArgs => { Check_EmplTrn(EventArgs.Value, _salTrnGrp, _salTrnCode); }" checked="@_salTrnCode.IsChecked">
+                                                            <label for="SalTrn@_salTrnCode.SalTrnID" class="custom-control-label"><span>[</span>@_salTrnCode.TrnCode<span> - </span>@_salTrnCode.TrnSubCode<span>] </span>@_salTrnCode.TrnName</label>
+                                                        </div>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                            }
+                        }
+                    </ul>
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times"></i> Thoát</button>
+                <button type="submit" class="btn btn-success" @onclick="()=>UpdateEmplTrn()">
+                    <i class="fas fa-save"></i>
+                    Lưu
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalList_ContractType">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span>LOẠI HỢP ĐỒNG</span>
+                </h5>
+
+                <div class="ml-auto">
+                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_UpdateContractType"))
+                    {
+                        <button type="button" class="btn btn-sm btn-success" data-target="#InitializeModalUpdate_ContractType" data-toggle="modal" @onclick="(() => InitializeModalUpdate_ContractType(0, contractTypeVM))"><i class="fas fa-plus-circle"></i> Thêm mới</button>
+                    }
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="modal-body p-0">
+
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 300px);">
+
+                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Mã loại hợp đồng</th>
+                                <th>Tên loại hợp đồng</th>
+                                <th>Nhóm HĐ</th>
+                                <th class="text-center">Số tháng hiệu lực</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (contractTypeVMs != null)
+                            {
+                                foreach (var _contractTypeVM in contractTypeVMs)
+                                {
+                                    <tr data-target="#InitializeModalUpdate_ContractType" data-toggle="modal" @onclick=@(()=>InitializeModalUpdate_ContractType(1,_contractTypeVM))>
+                                        <td class="text-center">@_contractTypeVM.ContractTypeID</td>
+                                        <td>@_contractTypeVM.ContractTypeName</td>
+                                        <td>@_contractTypeVM.ContractTypeGroupName</td>
+                                        <td class="text-center">@_contractTypeVM.NumMonth</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+@if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_UpdateContractType"))
+{
+    <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_ContractType">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <EditForm Model="@contractTypeVM" OnValidSubmit="@UpdateContractType">
+
+                    <FluentValidationValidator />
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <span>CẬP NHẬT LOẠI HỢP ĐỒNG</span>
+                        </h5>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => CloseModalUpdate_ContractType())">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Mã</label>
+                            <div class="col-sm-5">
+                                @if (contractTypeVM.IsTypeUpdate == 0)
+                                {
+                                    <InputText class="form-control" placeholder="Mã loại hợp đồng" @bind-Value:get="contractTypeVM.ContractTypeID" @bind-Value:set="(value) => {contractTypeVM.ContractTypeID = value.ToUpper();}" />
+                                    <ValidationMessage For="@(() => contractTypeVM.ContractTypeID)" />
+                                }
+                                else
+                                {
+                                    <input type="text" readonly class="form-control" placeholder="Mã khu vực" value="@contractTypeVM.ContractTypeID" />
+                                }
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Tên</label>
+                            <div class="col-sm-9">
+                                <InputText class="form-control" placeholder="Tên loại hợp đồng" @bind-Value="@contractTypeVM.ContractTypeName" />
+                                <ValidationMessage For="@(() => contractTypeVM.ContractTypeName)" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Nhóm</label>
+                            <div class="col-sm-9">
+                                <InputSelect class="selectpicker form-control"
+                                         data-style="btn-selectpicker form-control"
+                                         data-container="body"
+                                         data-show-subtext="true"
+                                         @bind-Value="contractTypeVM.ContractTypeGroupID">
+                                    <option value=@string.Empty>-----Nhóm HĐ-----</option>
+                                    @if (contractTypeGroupVMs != null)
+                                    {
+                                        @foreach (var _contractTypeGroupVM in contractTypeGroupVMs)
+                                        {
+                                            <option data-subtext="@_contractTypeGroupVM.ContractTypeGroupID" value="@_contractTypeGroupVM.ContractTypeGroupID">@_contractTypeGroupVM.ContractTypeGroupName</option>
+                                        }
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => contractTypeVM.ContractTypeGroupID)" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Hiệu lực</label>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <InputNumber class="form-control" placeholder="Số tháng hiệu lực" @bind-Value="@contractTypeVM.NumMonth" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">Tháng</span>
+                                    </div>
+                                    <ValidationMessage For="@(() => contractTypeVM.NumMonth)" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                        @if (contractTypeVM.IsTypeUpdate == 1)
+                        {
+                            <button type="submit" class="btn btn-danger" @onclick=@(() => contractTypeVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        }
+                    </div>
+                </EditForm>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+}
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalList_WorkType">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span>LOẠI CÔNG VIỆC</span>
+                </h5>
+
+                <div class="ml-auto">
+                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_UpdateWorkType"))
+                    {
+                        <button type="button" class="btn btn-sm btn-success" data-target="#InitializeModalUpdate_WorkType" data-toggle="modal" @onclick="(() => InitializeModalUpdate_WorkType(0, workTypeVM))"><i class="fas fa-plus-circle"></i> Thêm mới</button>
+                    }
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="modal-body p-0">
+
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 300px);">
+
+                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Mã loại công việc</th>
+                                <th>Tên loại công việc</th>
+                                <th class="text-center">Nghỉ thứ 7</th>
+                                <th class="text-center">Nghỉ chủ nhật</th>
+                                <th class="text-center">Nghỉ bù tuần</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (workTypeVMs != null)
+                            {
+                                foreach (var _workTypeVM in workTypeVMs)
+                                {
+                                    <tr data-target="#InitializeModalUpdate_WorkType" data-toggle="modal" @onclick=@(()=>InitializeModalUpdate_WorkType(1,_workTypeVM))>
+                                        <td class="text-center">@_workTypeVM.WorkTypeID</td>
+                                        <td>@_workTypeVM.WorkTypeName</td>
+                                        <td class="text-center">
+                                            @if (@_workTypeVM.BudgetSATConfig == 0)
+                                            {
+                                                <span class="text-danger">Không nghỉ</span>
+                                            }
+                                            @if (@_workTypeVM.BudgetSATConfig == 1)
+                                            {
+                                                <span class="text-success">Nghỉ cả ngày</span>
+                                            }
+                                            @if (@_workTypeVM.BudgetSATConfig == (decimal)0.5)
+                                            {
+                                                <span class="text-warning">Nghỉ nửa ngày</span>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if (@_workTypeVM.BudgetSUNConfig == 0)
+                                            {
+                                                <span class="text-danger">Không nghỉ</span>
+                                            }
+                                            @if (@_workTypeVM.BudgetSUNConfig == 1)
+                                            {
+                                                <span class="text-success">Nghỉ cả ngày</span>
+                                            }
+                                            @if (@_workTypeVM.BudgetSUNConfig == (decimal)0.5)
+                                            {
+                                                <span class="text-warning">Nghỉ nửa ngày</span>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if (_workTypeVM.isCalcCLDO)
+                                            {
+                                                <i class="fas fa-check text-success"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-times"></i>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+@if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_UpdateWorkType"))
+{
+    <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_WorkType">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <EditForm Model="@workTypeVM" OnValidSubmit="@UpdateWorkType">
+
+                    <FluentValidationValidator />
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <span>CẬP NHẬT LOẠI CÔNG VIỆC</span>
+                        </h5>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => CloseModalUpdate_WorkType())">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Mã</label>
+                            <div class="col-sm-5">
+                                @if (workTypeVM.IsTypeUpdate == 0)
+                                {
+                                    <InputText class="form-control" placeholder="Mã loại công việc" @bind-Value:get="workTypeVM.WorkTypeID" @bind-Value:set="(value) => {workTypeVM.WorkTypeID = value.ToUpper();}" />
+                                    <ValidationMessage For="@(() => workTypeVM.WorkTypeID)" />
+                                }
+                                else
+                                {
+                                    <input type="text" readonly class="form-control" placeholder="Mã khu vực" value="@workTypeVM.WorkTypeID" />
+                                }
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Tên</label>
+                            <div class="col-sm-10">
+                                <InputText class="form-control" placeholder="Tên loại công việc" @bind-Value="@workTypeVM.WorkTypeName" />
+                                <ValidationMessage For="@(() => workTypeVM.WorkTypeName)" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <div class="form-group clearfix">
+                                    <div class="icheck-danger d-inline">
+                                        <input type="radio" id="budgetSAT1" name="budgetSAT" value="0" checked="@(workTypeVM.BudgetSATConfig == 0? true: false)" @onchange="onchange_budgetSAT">
+                                        <label for="budgetSAT1">
+                                            Không nghỉ T7
+                                        </label>
+                                    </div>
+                                    <label>
+                                        &nbsp;&nbsp;
+                                    </label>
+                                    <div class="icheck-success d-inline">
+                                        <input type="radio" id="budgetSAT2" name="budgetSAT" value="1" checked="@(workTypeVM.BudgetSATConfig == 1? true: false)" @onchange="onchange_budgetSAT">
+                                        <label for="budgetSAT2">
+                                            Nghỉ cả ngày T7
+                                        </label>
+                                    </div>
+                                    <label>
+                                        &nbsp;&nbsp;
+                                    </label>
+                                    <div class="icheck-warning d-inline">
+                                        <input type="radio" id="budgetSAT3" name="budgetSAT" value="0.5" checked="@(workTypeVM.BudgetSATConfig == (decimal)0.5? true: false)" @onchange="onchange_budgetSAT">
+                                        <label for="budgetSAT3">
+                                            Nghỉ nửa ngày T7
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <div class="form-group clearfix">
+                                    <div class="icheck-danger d-inline">
+                                        <input type="radio" id="budgetSUN1" name="budgetSUN" value="0" checked="@(workTypeVM.BudgetSUNConfig == 0? true: false)" @onchange="onchange_budgetSUN">
+                                        <label for="budgetSUN1">
+                                            Không nghỉ CN
+                                        </label>
+                                    </div>
+                                    <label>
+                                        &nbsp;&nbsp;
+                                    </label>
+                                    <div class="icheck-success d-inline">
+                                        <input type="radio" id="budgetSUN2" name="budgetSUN" value="1" checked="@(workTypeVM.BudgetSUNConfig == 1? true: false)" @onchange="onchange_budgetSUN">
+                                        <label for="budgetSUN2">
+                                            Nghỉ cả ngày CN
+                                        </label>
+                                    </div>
+                                    <label>
+                                        &nbsp;&nbsp;
+                                    </label>
+                                    <div class="icheck-warning d-inline">
+                                        <input type="radio" id="budgetSUN3" name="budgetSUN" value="0.5" checked="@(workTypeVM.BudgetSUNConfig == (decimal)0.5? true: false)" @onchange="onchange_budgetSUN">
+                                        <label for="budgetSUN3">
+                                            Nghỉ nửa ngày CN
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <div class="form-group clearfix">
+                                    <div class="icheck-success d-inline">
+                                        <input type="radio" id="isCalcCLDO1" name="isCalcCLDO" checked="@(workTypeVM.isCalcCLDO == true)" @onchange="(() => workTypeVM.isCalcCLDO = true)">
+                                        <label for="isCalcCLDO1">
+                                            Tính nghỉ bù tuần
+                                        </label>
+                                    </div>
+                                    <label>
+                                        &nbsp;&nbsp;
+                                    </label>
+                                    <div class="icheck-danger d-inline">
+                                        <input type="radio" id="isCalcCLDO2" name="isCalcCLDO" checked="@(workTypeVM.isCalcCLDO == false)" @onchange="(() => workTypeVM.isCalcCLDO = false)">
+                                        <label for="isCalcCLDO2">
+                                            Không tính nghỉ bù tuần
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                        @if (workTypeVM.IsTypeUpdate == 1)
+                        {
+                            <button type="submit" class="btn btn-danger" @onclick=@(() => workTypeVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        }
+                    </div>
+                </EditForm>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+}
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_ProfileRelationship">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span>THÔNG TIN GIA ĐÌNH</span>
+                </h5>
+
+                <div class="ml-auto">
+                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_Edit"))
+                    {
+                        <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_ProfileRelationship(0, profileRelationshipVM))"><i class="fas fa-plus-circle"></i> Thêm mới</button>
+                    }
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="modal-body p-0">
+
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 300px);">
+
+                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Quan hệ</th>
+                                <th>Họ tên</th>
+                                <th class="text-center">Ngày sinh</th>
+                                <th class="text-center">Người phụ thuộc</th>
+                                <th class="text-center">Mã số thuế</th>
+                                <th class="text-center">Hiệu lực</th>
+                                <th class="text-center">Trạng thái</th>
+                                <th>Ghi chú</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (profileRelationshipVMs != null)
+                            {
+                                foreach (var _profileRelationshipVM in profileRelationshipVMs)
+                                {
+                                    <tr @onclick=@(()=>InitializeModalUpdate_ProfileRelationship(1,_profileRelationshipVM))>
+                                        <td class="text-center">@_profileRelationshipVM.RelationshipName</td>
+                                        <td>@_profileRelationshipVM.Rela_FullName</td>
+                                        <td class="text-center">@_profileRelationshipVM.Rela_Birthday.Value.ToString("dd/MM/yyyy")</td>
+                                        <td class="text-center">
+                                            @if (_profileRelationshipVM.isEmployeeTax)
+                                            {
+                                                <i style="color: green;" class="fas fa-check"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-times"></i>
+                                            }
+                                        </td>
+                                        <td class="text-center">@_profileRelationshipVM.Rela_TaxCode</td>
+                                        <td class="text-center">@_profileRelationshipVM.Rela_ValidTo</td>
+                                        <td class="text-center">
+                                            @if (_profileRelationshipVM.isActive)
+                                            {
+                                                <i style="color: green;" class="fas fa-check"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-times"></i>
+                                            }
+                                        </td>
+                                        <td>@_profileRelationshipVM.Rela_Note</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+@if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_Edit"))
+{
+    <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_ProfileRelationship">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <EditForm Model="@profileRelationshipVM" OnValidSubmit="@UpdateProfileRelationship">
+
+                    <FluentValidationValidator />
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <span>CẬP NHẬT THÔNG TIN GIA ĐÌNH</span>
+                        </h5>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => CloseModalUpdate_ProfileRelationship())">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Quan hệ</label>
+                            <div class="col-sm-5">
+                                <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker form-control" data-container="body"
+                                               @bind-Value="profileRelationshipVM.RelationshipID">
+                                    @if (relationshipVMs != null)
+                                    {
+                                        @foreach (var _relationshipVM in relationshipVMs)
+                                        {
+                                            <option value="@_relationshipVM.RelationshipID">@_relationshipVM.RelationshipName</option>
+                                        }
+                                    }
+                                </InputSelectNumber>
+                                <ValidationMessage For="@(() => profileRelationshipVM.RelationshipID)" />
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group clearfix">
+                                    <div class="icheck-success d-inline">
+                                        <input type="checkbox" id="isEmployeeTax" @bind="profileRelationshipVM.isEmployeeTax">
+                                        <label for="isEmployeeTax">
+                                            Người phụ thuộc
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Họ tên</label>
+                            <div class="col-sm-10">
+                                <InputText class="form-control" placeholder="Họ tên" @bind-Value="@profileRelationshipVM.Rela_FullName" />
+                                <ValidationMessage For="@(() => profileRelationshipVM.Rela_FullName)" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Ngày sinh</label>
+                            <div class="col-sm-5">
+                                <div class="input-group date" name="datepicker">
+                                    <input type="text" class="form-control" name="date-mask" @bind="onchange_Rela_Birthday" onClick="this.select();"></input>
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                    </div>
+                                </div>
+                                <ValidationMessage For="@(() => profileRelationshipVM.Rela_Birthday)" />
+                            </div>
+                        </div>
+
+                        @if (profileRelationshipVM.isEmployeeTax)
+                        {
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">MST</label>
+                                <div class="col-sm-5">
+                                    <InputText class="form-control" placeholder="Mã số thuế" @bind-Value="@profileRelationshipVM.Rela_TaxCode" />
+                                </div>
+                                <label class="col-sm-2 col-form-label">Hiệu lực</label>
+                                <div class="col-sm-3">
+                                    <InputText class="form-control" name="mask-period" placeholder="Hiệu lực" @bind-Value="@profileRelationshipVM.Rela_ValidTo" />
+                                    <ValidationMessage For="@(() => profileRelationshipVM.Rela_ValidTo)" />
+                                </div>
+                            </div>
+                        }
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Ghi chú</label>
+                            <div class="col-sm-10">
+                                <InputTextArea class="form-control" placeholder="Ghi chú" @bind-Value="@profileRelationshipVM.Rela_Note" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-10">
+                                <div class="form-group clearfix">
+                                    <div class="icheck-success d-inline">
+                                        <input type="radio" id="isActive1" name="isActive" checked="@(profileRelationshipVM.isActive == true)" @onchange="(() => profileRelationshipVM.isActive = true)">
+                                        <label for="isActive1">
+                                            Hoạt động
+                                        </label>
+                                    </div>
+                                    <label>
+                                        &nbsp;&nbsp;
+                                    </label>
+                                    <div class="icheck-danger d-inline">
+                                        <input type="radio" id="isActive2" name="isActive" checked="@(profileRelationshipVM.isActive == false)" @onchange="(() => profileRelationshipVM.isActive = false)">
+                                        <label for="isActive2">
+                                            Không hoạt động
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                        @if (profileRelationshipVM.IsTypeUpdate == 1)
+                        {
+                            <button type="submit" class="btn btn-danger" @onclick=@(() => profileRelationshipVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        }
+                    </div>
+                </EditForm>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+}
+
+<section class="content-header">
+
+    @if (dtEmplChange != null)
+    {
+        <table class="table table-sm table-bordered text-nowrap tblFontSizeMin">
+            <thead>
+                <tr>
+                    <th class="text-center">Biến động nhân sự</th>
+
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <th class="text-center">Tháng @i</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    for (int i = 0; i < dtEmplChange.Rows.Count; i++)
+                    {
+                        DataRow _drPayroll = dtEmplChange.Rows[i];
+
+                        <tr class="@_drPayroll["TextColor"].ToString()">
+                            <th class="text-center">@_drPayroll["TypeName"].ToString()</th>
+
+                            @for (int j = 1; j <= 12; j++)
+                            {
+                                <th class="text-center">
+                                    @_drPayroll["T"+@j].ToString()
+                                    @if (@_drPayroll["TypeID"].ToString() == "4" && j >= 2)
+                                    {
+                                        if (float.Parse(_drPayroll["T" + j].ToString()) >= float.Parse(_drPayroll["T" + (j - 1)].ToString()))
+                                        {
+                                            <small class="text-success mr-1">
+                                                <i class="fas fa-arrow-up"></i>
+                                                @(Math.Round(Math.Abs((float.Parse(_drPayroll["T" + j].ToString()) / float.Parse(_drPayroll["T" + (j - 1)].ToString()) - 1) * 100), 2))%
+                                            </small>
+                                        }
+                                        else
+                                        {
+                                            <small class="text-danger mr-1">
+                                                <i class="fas fa-arrow-down"></i>
+                                                @(Math.Round(Math.Abs((float.Parse(_drPayroll["T" + j].ToString()) / float.Parse(_drPayroll["T" + (j - 1)].ToString()) - 1) * 100), 2))%
+                                            </small>
+                                        }
+                                    }
+                                </th>
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    }
+
+    <EditForm Model="@filterHrVM">
+        <div class="row">
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
+                                 Value="@filterHrVM.DivisionID"
+                                 ValueChanged="@((string value) => onchange_filter_division(value))">
+                        @if (division_filter_list != null)
+                        {
+                            @foreach (var division_filter in division_filter_list)
+                            {
+                                <option data-subtext="@division_filter.DivisionID" value="@division_filter.DivisionID">@division_filter.DivisionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DepartmentID)"
+                                 Value="@filterHrVM.DepartmentID"
+                                 ValueChanged="@((string value) => onchange_filter_department(value))">
+                        <option value=@string.Empty>-----Bộ phận-----</option>
+                        @if (department_filter_list != null)
+                        {
+                            @foreach (var department_filter in department_filter_list)
+                            {
+                                <option data-subtext="@department_filter.DepartmentID" value="@department_filter.DepartmentID">@department_filter.DepartmentName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.SectionID)"
+                                 Value="@filterHrVM.SectionID"
+                                 ValueChanged="@((string value) => onchange_filter_section(value))">
+                        <option value=@string.Empty>-----Khu vực-----</option>
+                        @if (section_filter_list != null)
+                        {
+                            @foreach (var section_filter in section_filter_list)
+                            {
+                                <option data-subtext="@section_filter.SectionID" value="@section_filter.SectionID">@section_filter.SectionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <select class="selectpicker form-control"
+                            data-style="btn-selectpicker" data-container="body"
+                            data-live-search="true" multiple data-actions-box="true"
+                            title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                        @if (position_filter_list != null)
+                        {
+                            @foreach (var positiongroup_filter in position_filter_list.Select(x => new { x.PositionGroupID, x.PositionGroupName }).Distinct())
+                            {
+                                <option value="@positiongroup_filter.PositionGroupID">@positiongroup_filter.PositionGroupName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-sm-7 col-md-7">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                 ValueExpression="@(()=>filterHrVM.Eserial)"
+                                 Value="@filterHrVM.Eserial"
+                                 ValueChanged="@((string value) => onchange_filter_eserial(value))">
+                        <option value=@string.Empty>-----Nhân viên-----</option>
+                        @if (eserial_filter_list != null)
+                        {
+                            @foreach (var eserial_filter in eserial_filter_list)
+                            {
+                                <option data-subtext="@eserial_filter.Eserial" value="@eserial_filter.Eserial">@eserial_filter.LastName @eserial_filter.MiddleName @eserial_filter.FirstName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="col-sm-3 col-md-3">
+                <!-- radio -->
+                <div class="form-group clearfix">
+                    <div class="icheck-success d-inline">
+                        <input type="radio" id="r1" name="r" value="0" @onchange="onchange_filter_typeprofile" checked="@(filterHrVM.TypeProfile == 0? true: false)">
+                        <label for="r1">
+                            Hiện tại
+                        </label>
+                    </div>
+                    <label>
+                        &nbsp;&nbsp;
+                    </label>
+                    <div class="icheck-danger d-inline">
+                        <input type="radio" id="r2" name="r" value="1" @onchange="onchange_filter_typeprofile" checked="@(filterHrVM.TypeProfile == 1? true: false)">
+                        <label for="r2">
+                            Nhân viên nghỉ việc
+                        </label>
+                    </div>
+                    <label>
+                        &nbsp;&nbsp;
+                    </label>
+                    <div class="icheck-warning d-inline">
+                        <input type="radio" id="r3" name="r" value="2" @onchange="onchange_filter_typeprofile" checked="@(filterHrVM.TypeProfile == 2? true: false)">
+                        <label for="r3">
+                            Hết hạn hợp đồng
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-1 col-md-1">
+                <button class="btn btn-outline-dark btn-sm @(filterHrVM.typeView==1?"active":"")" @onclick=@(() => filterHrVM.typeView = 1)><i class="fa-solid fa-list"></i></button>
+                <button class="btn btn-outline-dark btn-sm @(filterHrVM.typeView==2?"active":"")" @onclick=@(() => filterHrVM.typeView = 2)><i class="fa-solid fa-grip"></i></button>
+            </div>
+
+            <div class="col-sm-1 col-md-1">
+                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetProfileList())">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </EditForm>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-purple card-outline">
+
+            <div class="card-header text-right">
+
+                <button type="button" class="btn btn-secondary" data-target="#InitializeModalList_WorkType" data-toggle="modal" @onclick="()=>InitializeModalList_WorkType()"><i class="fa-solid fa-person-digging"></i> Loại công việc</button>
+                <button type="button" class="btn btn-secondary" data-target="#InitializeModalList_ContractType" data-toggle="modal" @onclick="()=>InitializeModal_ContractType()"><i class="fa-solid fa-file-contract"></i> Loại hợp đồng</button>
+                @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_New"))
+                {
+                    <button type="button" class="btn btn-success" data-target="#InitializeModal_Profile" data-toggle="modal" @onclick="()=>Initialize_ModalProfile(0)"><i class="fa-solid fa-user-plus"></i> Thêm mới</button>
+                }
+                @if ((filterHrVM.selectedEserial ?? string.Empty) != string.Empty)
+                {
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa-solid fa-user"></i> Xem hồ sơ
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-target="#InitializeModal_Profile" data-toggle="modal" @onclick="() => Initialize_ModalProfile(3)">Hồ sơ nhân viên</a>
+                            <a class="dropdown-item" @onclick="()=>InitializeModal_ProfileRelationship()">Thông tin gia đình</a>
+                        </div>
+                    </div>
+
+                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_Edit"))
+                    {
+                        <button type="button" class="btn btn-secondary" data-target="#InitializeModal_Profile" data-toggle="modal" @onclick="()=>Initialize_ModalProfile(1)"><i class="fa-solid fa-user-pen"></i> Sửa</button>
+                        <button type="button" class="btn btn-secondary" data-target="#InitializeModal_Profile" data-toggle="modal" @onclick="()=>Initialize_ModalProfile(4)"><i class="fa-solid fa-copy"></i> Sao chép</button>
+                    }
+
+                    if (filterHrVM.TypeProfile != 1)
+                    {
+                        @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_Del"))
+                        {
+                            <button type="button" class="btn btn-danger" @onclick="()=>DelProfile()"><i class="fa-solid fa-user-xmark"></i> Xóa</button>
+                        }
+
+                        @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_Adjust"))
+                        {
+                            <button type="button" class="btn btn-secondary" data-target="#InitializeModal_Profile" data-toggle="modal" @onclick="() => Initialize_ModalProfile(2)"><i class="fas fa-exchange-alt"></i> Điều chỉnh</button>
+                        }
+                    }
+
+                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_Profile_Terminate"))
+                    {
+                        if (filterHrVM.TypeProfile != 1)
+                        {
+                            <button type="button" class="btn bg-navy" data-target="#InitializeModal_TerminateProfile" data-toggle="modal" @onclick="()=>InitializeModal_TerminateProfile()"><i class="fas fa-ban"></i> Chấm dứt hợp đồng</button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn bg-navy" @onclick="()=>RestoreTerminateProfile()"><i class="fas fa-ban"></i> Hủy chấm dứt hợp đồng</button>
+                        }
+                    }
+                }
+
+            </div>
+
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0" style="height: calc(100vh - 339px);">
+                @if (profileVMs != null)
+                {
+                    if (filterHrVM.typeView == 1)
+                    {
+                        <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Ảnh</th>
+                                    <th class="text-center">Mã NV</th>
+                                    <th>Họ tên</th>
+                                    <th>Vị trí</th>
+                                    <th class="text-center">Ngày sinh</th>
+                                    <th class="text-center">Giới tính</th>
+                                    <th class="text-center">Ngày vào làm</th>
+                                    <th>Hợp đồng</th>
+                                    <th class="text-center">Ngày ký HĐ</th>
+                                    <th class="text-center">Ngày hết hạn HĐ</th>
+                                    <th class="text-center">Quản lý</th>
+                                    @if (filterHrVM.TypeProfile == 1)
+                                    {
+                                        <th>Ngày nghỉ việc</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @{
+                                    var _departmentGroupID = String.Empty;
+
+                                    var _departmentID = String.Empty;
+                                }
+
+                                <Virtualize @ref="virtualizeProfileList" ItemsProvider="LoadProfileList" Context="_profileVM" OverscanCount="20" SpacerElement="tr">
+                                    <ItemContent>
+                                        @if (_profileVM.DepartmentGroupID != _departmentGroupID)
+                                        {
+                                            <tr class="text-white bg-secondary">
+                                                <th colspan="11">@_profileVM.DepartmentGroupName</th>
+                                            </tr>
+                                        }
+                                        @{
+                                            _departmentGroupID = _profileVM.DepartmentGroupID;
+                                        }
+
+                                        @if (_profileVM.DepartmentID != _departmentID)
+                                        {
+                                            <tr>
+                                                <th colspan="11">@_profileVM.DepartmentName</th>
+                                            </tr>
+                                        }
+                                        @{
+                                            _departmentID = _profileVM.DepartmentID;
+                                        }
+
+                                        <tr class="@(filterHrVM.selectedEserial == _profileVM.Eserial? "selected":"")" @onclick="() => onclick_selectedEserial(_profileVM)">
+                                            <td class="text-center">
+                                                <img alt="Avatar" class="table-profile-avatar" src="@_profileVM.UrlAvatar">
+                                            </td>
+                                            <td class="text-center">@_profileVM.Eserial</td>
+                                            <td>@_profileVM.LastName @_profileVM.MiddleName @_profileVM.FirstName</td>
+                                            <td>@_profileVM.PositionName</td>
+                                            <td class="text-center">@(_profileVM.Birthday.HasValue ? _profileVM.Birthday.Value.ToString("dd/MM/yyyy") : "")</td>
+                                            @if (@_profileVM.Gender == 1)
+                                            {
+                                                <td class="text-center">Nữ</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-center">Nam</td>
+                                            }
+
+                                            <td class="text-center">@(_profileVM.JoinDate.HasValue ? _profileVM.JoinDate.Value.ToString("dd/MM/yyyy") : "")</td>
+                                            <td>@_profileVM.ContractTypeName</td>
+                                            <td class="text-center">@(_profileVM.StartContractDate.HasValue ? _profileVM.StartContractDate.Value.ToString("dd/MM/yyyy") : "")</td>
+                                            <td class="text-center">@(_profileVM.EndContractDate.HasValue ? _profileVM.EndContractDate.Value.ToString("dd/MM/yyyy") : "")</td>
+                                            <td>
+                                                <ul class="list-inline">
+                                                    @if (!String.IsNullOrEmpty(_profileVM.Appraiser_Eserial))
+                                                    {
+                                                        <li class="list-inline-item">
+                                                            <img alt="Avatar" class="table-profile-avatar" src="@_profileVM.Appraiser_UrlAvatar">
+                                                        </li>
+                                                    }
+                                                    @if (!String.IsNullOrEmpty(_profileVM.DirectManager_Eserial))
+                                                    {
+                                                        <li class="list-inline-item">
+                                                            <img alt="Avatar" class="table-profile-avatar" src="@_profileVM.DirectManager_UrlAvatar">
+                                                        </li>
+                                                    }
+                                                    @if (!String.IsNullOrEmpty(_profileVM.ControlDept_Eserial))
+                                                    {
+                                                        <li class="list-inline-item">
+                                                            <img alt="Avatar" class="table-profile-avatar" src="@_profileVM.ControlDept_UrlAvatar">
+                                                        </li>
+                                                    }
+                                                    @if (!String.IsNullOrEmpty(_profileVM.Approve_Eserial))
+                                                    {
+                                                        <li class="list-inline-item">
+                                                            <img alt="Avatar" class="table-profile-avatar" src="@_profileVM.Approve_UrlAvatar">
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </td>
+                                            @if (filterHrVM.TypeProfile == 1)
+                                            {
+                                                <td class="text-center">@(_profileVM.TerminateDate.HasValue ? _profileVM.TerminateDate.Value.ToString("dd/MM/yyyy") : "")</td>
+                                            }
+                                        </tr>
+                                    </ItemContent>
+                                    <Placeholder>
+                                        <p>
+                                            Loading&hellip;
+                                        </p>
+                                    </Placeholder>
+                                </Virtualize>
+                            </tbody>
+                        </table>
+                    }
+
+                    if (filterHrVM.typeView == 2)
+                    {
+                        <table class="table table-sm table-bordered table-head-fixed text-nowrap tblFontSizeMin">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Khối</th>
+                                    <th class="text-center">Bộ phận</th>
+
+                                    @foreach (var _positionGrp in position_filter_list.Where(x => filterHrVM.arrPositionID.Contains(x.PositionGroupID) || filterHrVM.arrPositionID.Length == 0).Select(x => new { x.PositionGroupNo, x.PositionGroupID, x.PositionGroupName }).DistinctBy(x => x.PositionGroupID).OrderBy(x => x.PositionGroupNo))
+                                    {
+                                        <th class="text-center" colspan="2">
+                                            @_positionGrp.PositionGroupName
+                                        </th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var _dept in department_filter_list)
+                                {
+                                    <tr>
+                                        <td class="text-center">@_dept.DepartmentGroupName</td>
+                                        <td class="text-center">@_dept.DepartmentName</td>
+
+                                        @foreach (var _positionGrp in position_filter_list.Where(x => filterHrVM.arrPositionID.Contains(x.PositionGroupID) || filterHrVM.arrPositionID.Length == 0).Select(x => new { x.PositionGroupNo, x.PositionGroupID, x.PositionGroupName }).DistinctBy(x => x.PositionGroupID).OrderBy(x => x.PositionGroupNo))
+                                        {
+                                            <td>
+                                                @foreach (var _empl in profileVMs.Where(x => x.PositionGroupID == _positionGrp.PositionGroupID && x.DepartmentID == _dept.DepartmentID))
+                                                {
+                                                    @if (filterHrVM.selectedEserial == _empl.Eserial)
+                                                    {
+                                                        <i class="fa-solid fa-square-check text-success">&nbsp;</i>
+                                                    }
+
+                                                    <a class="@(filterHrVM.selectedEserial == _empl.Eserial? "text-success":"")" @onclick="() => onclick_selectedEserial(_empl)"><span>@_empl.Eserial</span> <span>-</span> <span>@_empl.LastName @_empl.MiddleName @_empl.FirstName</span></a>
+
+                                                    <br />
+                                                }
+                                            </td>
+
+                                            <td class="text-right">
+                                                @foreach (var _empl in profileVMs.Where(x => x.PositionGroupID == _positionGrp.PositionGroupID && x.DepartmentID == _dept.DepartmentID))
+                                                {
+                                                    <span>@String.Format("{0:#,##0.##}", @_empl.TotalSalary)</span>
+
+                                                    <br />
+                                                }
+                                            </td>
+
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+
+                }
+            </div>
+            <!-- /.card-body -->
+            @if (profileVMs != null)
+            {
+                <div class="card-footer text-muted">
+                    Tổng số: <b>@profileVMs.Count()</b> bản ghi
+                </div>
+            }
+            <!-- /.card-footer -->
+
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+

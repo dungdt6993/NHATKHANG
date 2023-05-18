@@ -1,0 +1,431 @@
+﻿@page "/HR/AttendanceRecord"
+@using Utilities
+
+
+<Loading isLoading="@isLoading"></Loading>
+<LoadingPage isLoadingPage="@isLoadingPage"></LoadingPage>
+
+<Modal_DayOffDetail dayOffVMs=@dayOffVMs></Modal_DayOffDetail>
+
+<section class="content-header">
+    <EditForm Model="@filterHrVM">
+        <div class="row">
+
+            <div class="col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Tháng:</label>
+                    <div class="col-sm-9">
+                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                           ValueExpression="@(()=>filterHrVM.Month)"
+                                           Value="@filterHrVM.Month"
+                                           ValueChanged="@((int value) => onchange_filter_month(value))">
+                            @if (month_filter_list != null)
+                            {
+                                @foreach (var month in month_filter_list)
+                                {
+                                    <option value="@month.Month">@month.Month</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Năm:</label>
+                    <div class="col-sm-9">
+                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                           ValueExpression="@(()=>filterHrVM.Year)"
+                                           Value="@filterHrVM.Year"
+                                           ValueChanged="@((int value) => onchange_filter_year(value))">
+                            @if (year_filter_list != null)
+                            {
+                                @foreach (var year in year_filter_list)
+                                {
+                                    <option value="@year.Year">@year.Year</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
+
+            @if (userRepo.GetRole(UserID) < 4)
+            {
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
+                                 Value="@filterHrVM.DivisionID"
+                                 ValueChanged="@((string value) => onchange_filter_division(value))">
+                            <option value=@string.Empty>-----Công ty-----</option>
+                            @if (division_filter_list != null)
+                        {
+                            @foreach (var division_filter in division_filter_list)
+                            {
+                                <option data-subtext="@division_filter.DivisionID" value="@division_filter.DivisionID">@division_filter.DivisionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DepartmentID)"
+                                 Value="@filterHrVM.DepartmentID"
+                                 ValueChanged="@((string value) => onchange_filter_department(value))">
+                            <option value=@string.Empty>-----Bộ phận-----</option>
+                            @if (department_filter_list != null)
+                        {
+                            @foreach (var department_filter in department_filter_list)
+                            {
+                                <option data-subtext="@department_filter.DepartmentID" value="@department_filter.DepartmentID">@department_filter.DepartmentName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.SectionID)"
+                                 Value="@filterHrVM.SectionID"
+                                 ValueChanged="@((string value) => onchange_filter_section(value))">
+                            <option value=@string.Empty>-----Khu vực-----</option>
+                            @if (section_filter_list != null)
+                        {
+                            @foreach (var section_filter in section_filter_list)
+                            {
+                                <option data-subtext="@section_filter.SectionID" value="@section_filter.SectionID">@section_filter.SectionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                            @if (position_filter_list != null)
+                            {
+                                @foreach (var positiongroup_filter in position_filter_list.Select(x=> new {x.PositionGroupID, x.PositionGroupName}).Distinct())
+                                {
+                                    <option data-subtext="@positiongroup_filter.PositionGroupID" value="@positiongroup_filter.PositionGroupID">@positiongroup_filter.PositionGroupName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                 ValueExpression="@(()=>filterHrVM.Eserial)"
+                                 Value="@filterHrVM.Eserial"
+                                 ValueChanged="@((string value) => onchange_filter_eserial(value))">
+                            <option value=@string.Empty>-----Nhân viên-----</option>
+                            @if (eserial_filter_list != null)
+                        {
+                            @foreach (var eserial_filter in eserial_filter_list)
+                            {
+                                <option data-subtext="@eserial_filter.Eserial" value="@eserial_filter.Eserial">@eserial_filter.LastName @eserial_filter.MiddleName @eserial_filter.FirstName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+            }
+            else
+            {
+                if (profileUserVM != null)
+                {
+                    <div class="col-md-7">
+                        <div class="form-group">
+                            <select class="selectpicker form-control" data-style="btn-selectpicker" data-show-subtext="true">
+                                <option data-subtext="@profileUserVM.Eserial">@profileUserVM.LastName @profileUserVM.MiddleName @profileUserVM.FirstName</option>
+                            </select>
+                        </div>
+                    </div>
+                }
+            }
+
+            <div class="col-md-1">
+                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetAttendanceRecordList())">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </EditForm>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-purple card-outline">
+
+            <div class="card-header text-right">
+                @if (payrollRepo.IsOpenFunc(filterHrVM))
+                {
+                    @if (sysRepo.checkAccessSubFunc(UserID, "HR_AttendanceRecord_CalcFingerData"))
+                    {
+                        <button type="button" class="btn btn-secondary" data-target="#InitializeModal_CalcFingerData" data-toggle="modal" @onclick="()=>CalcFingerData()"><i class="fa-solid fa-calculator"></i> Tính dữ liệu chấm công</button>
+                    }
+                }
+                @if(!String.IsNullOrWhiteSpace(filterHrVM.Eserial))
+                {
+                   <button type="button" class="btn btn-info" @onclick="()=>InitializeModal_DayOffDetail(filterHrVM.Eserial)"><i class="fa-solid fa-clipboard-list"></i> Kiểm tra ngày nghỉ</button> 
+                }
+            </div>
+            <!-- /.card-header -->
+
+            <EditForm Model="arVM">
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 316px);">
+                    @if (arVMs != null)
+                    {
+                        <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin tblDayOff">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Ngày</th>
+                                    @if ((filterHrVM.Eserial ?? string.Empty) == string.Empty)
+                                    {
+                                        <th>Nhân viên</th>
+                                    }
+                                    <th class="text-center">Giờ vào</th>
+                                    <th class="text-center">Giờ ra</th>
+                                    <th class="text-center">Tổng (giờ)</th>
+@*                                    <th class="text-center">Ca mặc định</th>
+                                    <th class="text-center">Đi muộn</th>
+                                    <th class="text-center">Về sớm</th>*@
+                                    <th class="text-center" style="width:70px;">Phân ca</th>
+                                    <th style="min-width:110px;">Nhân viên giải trình</th>
+                                    <th class="text-center">Xác nhận</th>
+                                    <th>Ý kiến TBP</th>
+                                    <th>Ý kiến nhân sự</th>
+                                    <th class="text-center">Cảnh cáo</th>
+                                    <th class="text-center"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var _arVM in arVMs)
+                                {
+                                    <tr>
+                                        <th class="text-center" style="min-width:30px;"><strong>@String.Format("{0: dd/MM/yyyy}", @_arVM.dDate)</strong><br>@LibraryFunc.GetDayName(_arVM.dDate)</th>
+                                        @if ((filterHrVM.Eserial ?? string.Empty) == string.Empty)
+                                        {
+                                            <td style="min-width:120px;">@_arVM.Eserial - @_arVM.LastName @_arVM.MiddleName @_arVM.FirstName</td>
+                                        }
+
+                                        <td class="text-center text-success">
+                                            @(_arVM.IN1.HasValue ? _arVM.IN1.Value.ToString("HH:mm") : "")
+
+                                        </td>
+
+                                        <td class="text-center text-success">
+                                            @(_arVM.OUT1.HasValue ? _arVM.OUT1.Value.ToString("HH:mm") : "")
+                                            @if (_arVM.OUT1_isNS == 1)
+                                            {
+                                                <br />
+                                                @(_arVM.OUT1.HasValue ? _arVM.OUT1.Value.ToString("dd/MM/yyyy") : "")
+                                            }
+                                        </td>
+
+                                        @if (@_arVM.TWD != 0)
+                                        {
+                                            <td class="text-center font-weight-bold text-success">@_arVM.TWD</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-center"></td>
+                                        }
+                                        @*<td class="text-center">@_arVM.JobShift</td>
+
+                                        @if (@_arVM.Late != 0)
+                                        {
+                                            <td class="text-center text-danger">@_arVM.Late</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-center"></td>
+                                        }
+
+                                        @if (@_arVM.Soon != 0)
+                                        {
+                                            <td class="text-center text-danger">@_arVM.Soon</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-center"></td>
+                                        }*@
+
+                                        @{
+                                            var colorDayoff = string.Empty;
+
+                                            if (_arVM.ColorHEX != "#ffffff" && (_arVM.ColorHEX ?? string.Empty) != string.Empty)
+                                            {
+                                                colorDayoff = "background-color:" + _arVM.ColorHEX;
+                                            }
+
+                                            _arVM.InputAttributes = new Dictionary<string, object>() { { "style", colorDayoff }, { "onpaste", "focusInputNextID('" + _arVM.InputNextID + "')" } };
+
+                                            if (_arVM.ckJoined == 0 || _arVM.ckTerminated == 1 || _arVM.isLock == 1 || sysRepo.checkAccessSubFunc(UserID, "HR_DutyRoster_Update") == false)
+                                            {
+
+                                                @if (_arVM.ckJoined == 0 || _arVM.ckTerminated == 1)
+                                                {
+                                                    <td class="text-center text-danger dutyroster-td">
+                                                        <i class="fa-solid fa-user-xmark"></i>
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td class="text-center dutyroster-td" style="@colorDayoff">
+                                                        @_arVM.WorkShift
+                                                    </td>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <td class="text-center">
+                                                    @if (_arVM.inputLoading_updateShift)
+                                                    {
+                                                        <span class="spinner-border text-light" role="status">
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <InputText type="text" class="form-control text-uppercase rounded-0 dutyroster-input"
+                                               id="@_arVM.InputID"
+                                                   @attributes="@_arVM.InputAttributes"
+                                               onClick="this.select();"
+                                               ValueExpression="@(()=>_arVM.WorkShift)"
+                                               Value="@_arVM.WorkShift"
+                                               ValueChanged="@((string value) =>onchange_updateshift(value, _arVM))">
+                                                        </InputText>
+                                                    }
+                                                </td>
+                                            }
+
+                                        }
+
+                                        <td>
+                                            @if (_arVM.ckJoined == 1 && _arVM.ckTerminated == 0)
+                                            {
+                                                @if (_arVM.isLock == 0)
+                                                {
+                                                    <InputTextArea type="text" style="min-width:110px;" class="form-control" placeholder="Giải trình chấm công"
+                                                   ValueExpression="@(() => _arVM.Explain)"
+                                                   Value="@_arVM.Explain"
+                                                   ValueChanged="@((string value) => onchange_explain(value, _arVM))"></InputTextArea>
+                                                }
+                                                else
+                                                {
+                                                    <textarea type="text" style="min-width:110px;" class="form-control" value="@_arVM.Explain" placeholder="Ghi chú chấm công" disabled></textarea>
+                                                }
+                                            }
+                                        </td>
+
+                                        <td class="text-center">
+                                            @if (_arVM.ckJoined == 1 && _arVM.ckTerminated == 0)
+                                            {
+                                                @if (_arVM.isLock == 0)
+                                                {
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input class="custom-control-input custom-control-input-success custom-control-input-outline" type="checkbox" id="isConfirmExplain@_arVM.ARID" @onchange="()=>onchange_confirmExplain(_arVM)" checked="@_arVM.isConfirmExplain">
+                                                        <label for="isConfirmExplain@_arVM.ARID" class="custom-control-label"></label>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input class="custom-control-input custom-control-input-success custom-control-input-outline" type="checkbox" id="isConfirmExplain@_arVM.ARID" checked="@_arVM.isConfirmExplain" disabled>
+                                                        <label for="isConfirmExplain@_arVM.ARID" class="custom-control-label"></label>
+                                                    </div>
+                                                }
+                                            }
+                                        </td>
+
+                                        <td>
+                                            @if (_arVM.ckJoined == 1 && _arVM.ckTerminated == 0)
+                                            {
+                                                @if (_arVM.isLock == 0)
+                                                {
+                                                    <InputTextArea type="text" style="min-width:110px;" class="form-control" placeholder="Ý kiến TBP"
+                                                   ValueExpression="@(() => _arVM.ExplainHOD)"
+                                                   Value="@_arVM.ExplainHOD"
+                                                   ValueChanged="@((string value) => onchange_explainHOD(value, _arVM))"></InputTextArea>
+                                                }
+                                                else
+                                                {
+                                                    <textarea type="text" style="min-width:110px;" class="form-control" value="@_arVM.ExplainHOD" placeholder="Ý kiến TBP" disabled></textarea>
+                                                }
+                                            }
+                                        </td>
+
+                                        <td>
+                                            @if (_arVM.ckJoined == 1 && _arVM.ckTerminated == 0)
+                                            {
+                                                @if (_arVM.isLock == 0)
+                                                {
+                                                    <InputTextArea type="text" style="min-width:110px;" class="form-control" placeholder="Ý kiến nhân sự"
+                                                   ValueExpression="@(() => _arVM.ExplainHR)"
+                                                   Value="@_arVM.ExplainHR"
+                                                   ValueChanged="@((string value) => onchange_explainHR(value, _arVM))"></InputTextArea>
+                                                }
+                                                else
+                                                {
+                                                    <textarea type="text" style="min-width:110px;" class="form-control" value="@_arVM.ExplainHR" placeholder="Ý kiến nhân sự" disabled></textarea>
+                                                }
+                                            }
+                                        </td>
+
+                                        <td class="text-center">
+                                            @if (_arVM.ckJoined == 1 && _arVM.ckTerminated == 0)
+                                            {
+                                                @if (_arVM.isLock == 0)
+                                                {
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input class="custom-control-input custom-control-input-danger custom-control-input-outline" type="checkbox" id="isConfirmLateSoon@_arVM.ARID" @onchange="()=>onchange_confirmLateSoon(_arVM)" checked="@_arVM.isConfirmLateSoon">
+                                                        <label for="isConfirmLateSoon@_arVM.ARID" class="custom-control-label"></label>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input class="custom-control-input custom-control-input-danger custom-control-input-outline" type="checkbox" id="isConfirmLateSoon@_arVM.ARID" checked="@_arVM.isConfirmLateSoon" disabled>
+                                                        <label for="isConfirmLateSoon@_arVM.ARID" class="custom-control-label"></label>
+                                                    </div>
+                                                }
+                                            }
+                                        </td>
+
+                                        <td class="text-center">
+                                            @if (_arVM.isLock == 1)
+                                            {
+                                                <i class="fas fa-lock text-danger"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-lock-open text-success"></i>
+                                            }
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    }
+
+                </div>
+            </EditForm>
+            <!-- /.card-body -->
+            <div class="card-footer">
+            </div>
+            <!-- /.card-footer -->
+
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
