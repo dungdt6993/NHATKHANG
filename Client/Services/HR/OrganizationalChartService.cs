@@ -84,7 +84,7 @@ namespace D69soft.Client.Services.HR
         //Position
         public async Task<List<PositionVM>> GetPositionList()
         {
-            return await _httpClient.GetFromJsonAsync<List<PositionVM>>($"api/GetPositionList/GetSectionList");
+            return await _httpClient.GetFromJsonAsync<List<PositionVM>>($"api/GetPositionList/GetPositionList");
         }
         public async Task<bool> CheckContainsPositionID(string id)
         {

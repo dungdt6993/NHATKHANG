@@ -1,12 +1,10 @@
 ﻿using D69soft.Client.Extension;
 using D69soft.Client.Helpers;
-using D69soft.Server.Services;
-using D69soft.Server.Services.HR;
+using D69soft.Client.Services;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
-using System.Net.Http.Json;
 
 namespace D69soft.Client.Pages.Auth
 {

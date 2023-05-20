@@ -90,7 +90,7 @@ namespace D69soft.Server.Controllers.POS
         }
 
         [HttpPost("OpenRoomTable/{_invoiceVM}")]
-        public async Task<ActionResult<bool>> OpenRoomTable(FilterPosVM _filterPosVM, InvoiceVM _invoiceVM)
+        public async Task<ActionResult<bool>> OpenRoomTable(FilterPosVM _filterPosVM, [FromRouteAttribute] InvoiceVM _invoiceVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {

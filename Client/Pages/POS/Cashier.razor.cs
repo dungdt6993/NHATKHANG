@@ -27,7 +27,7 @@ namespace D69soft.Client.Pages.POS
 
         bool isLoadingScreen = true;
 
-        private HubConnection hubConnection;
+        //private HubConnection hubConnection;
 
         //Filter
         FilterPosVM filterPosVM = new();
@@ -93,30 +93,30 @@ namespace D69soft.Client.Pages.POS
                 search_itemsVMs = itemsVMs = await cashierService.GetItems(filterPosVM);
             }
 
-            hubConnection = new HubConnectionBuilder()
-                    .WithUrl(navigationManager.ToAbsoluteUri("/cashierHub"))
-                    .Build();
+            //hubConnection = new HubConnectionBuilder()
+            //        .WithUrl(navigationManager.ToAbsoluteUri("/cashierHub"))
+            //        .Build();
 
-            hubConnection.On<string, string, string>("Receive_LoadRoomTable", (POSCode, roomTableID, userID) =>
-            {
-                if (POSCode == filterPosVM.POSCode)
-                {
-                    if (!String.IsNullOrEmpty(infoInvoice.CheckNo))
-                    {
-                        if (filterPosVM.UserID != userID && infoInvoice.RoomTableID == roomTableID && roomTableID != "TakeOut")
-                        {
-                            js.Swal_Message("" + infoInvoice.RoomTableAreaName + "/" + infoInvoice.RoomTableName + "", "Nhân viên mã <strong>#" + userID + "</strong> đang cập nhật!.", SweetAlertMessageType.warning);
-                            infoInvoice = new();
-                        }
-                    }
+            //hubConnection.On<string, string, string>("Receive_LoadRoomTable", (POSCode, roomTableID, userID) =>
+            //{
+            //    if (POSCode == filterPosVM.POSCode)
+            //    {
+            //        if (!String.IsNullOrEmpty(infoInvoice.CheckNo))
+            //        {
+            //            if (filterPosVM.UserID != userID && infoInvoice.RoomTableID == roomTableID && roomTableID != "TakeOut")
+            //            {
+            //                js.Swal_Message("" + infoInvoice.RoomTableAreaName + "/" + infoInvoice.RoomTableName + "", "Nhân viên mã <strong>#" + userID + "</strong> đang cập nhật!.", SweetAlertMessageType.warning);
+            //                infoInvoice = new();
+            //            }
+            //        }
 
-                    FilterRoomTable(filterPosVM.RoomTableAreaID);
-                }
+            //        FilterRoomTable(filterPosVM.RoomTableAreaID);
+            //    }
 
-                StateHasChanged();
-            });
+            //    StateHasChanged();
+            //});
 
-            await hubConnection.StartAsync();
+            //await hubConnection.StartAsync();
 
 
             isLoadingScreen = false;
@@ -200,7 +200,7 @@ namespace D69soft.Client.Pages.POS
 
                 filterPosVM.ICode = String.Empty;
 
-                await hubConnection.SendAsync("Send_LoadRoomTable", filterPosVM.POSCode, filterPosVM.RoomTableID, filterPosVM.UserID);
+                //await hubConnection.SendAsync("Send_LoadRoomTable", filterPosVM.POSCode, filterPosVM.RoomTableID, filterPosVM.UserID);
             }
 
             isLoading = false;
@@ -218,7 +218,7 @@ namespace D69soft.Client.Pages.POS
             {
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
-                await hubConnection.SendAsync("Send_LoadRoomTable", filterPosVM.POSCode, infoInvoice.RoomTableID, filterPosVM.UserID);
+                //await hubConnection.SendAsync("Send_LoadRoomTable", filterPosVM.POSCode, infoInvoice.RoomTableID, filterPosVM.UserID);
             }
 
             infoInvoice = await cashierService.GetInfoInvoice(filterPosVM);
@@ -273,7 +273,7 @@ namespace D69soft.Client.Pages.POS
             {
                 await cashierService.DelInvoice(infoInvoice.CheckNo);
 
-                await hubConnection.SendAsync("Send_LoadRoomTable", filterPosVM.POSCode, infoInvoice.RoomTableID, filterPosVM.UserID);
+                //await hubConnection.SendAsync("Send_LoadRoomTable", filterPosVM.POSCode, infoInvoice.RoomTableID, filterPosVM.UserID);
 
                 infoInvoice = new();
             }
@@ -649,7 +649,7 @@ namespace D69soft.Client.Pages.POS
             await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Payment");
             await js.Toast_Alert("Thanh toán thành công!", SweetAlertMessageType.success);
 
-            await hubConnection.SendAsync("Send_LoadRoomTable", filterPosVM.POSCode, infoInvoice.RoomTableID, filterPosVM.UserID);
+            //await hubConnection.SendAsync("Send_LoadRoomTable", filterPosVM.POSCode, infoInvoice.RoomTableID, filterPosVM.UserID);
 
             payment.isPayment = 1;
 
@@ -679,10 +679,10 @@ namespace D69soft.Client.Pages.POS
 
         private async ValueTask DisposeAsync()
         {
-            if (hubConnection is not null)
-            {
-                await hubConnection.DisposeAsync();
-            }
+            //if (hubConnection is not null)
+            //{
+            //    await hubConnection.DisposeAsync();
+            //}
         }
     }
 }

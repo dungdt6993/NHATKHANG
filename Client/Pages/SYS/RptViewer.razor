@@ -1,0 +1,31 @@
+﻿@page "/SYS/RptViewer/{id}"
+@layout RptLayout
+
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
+
+    <DxWasmDocumentViewer ReportName="@ReportName" Height="calc(100vh - 0px)" Width="100%">
+        <DxDocumentViewerExportSettings ShowPrintNotificationDialog="false" />
+        <DxDocumentViewerTabPanelSettings Width="340" />
+        <DxWasmDocumentViewerRequestOptions InvokeAction="DXXRDV"></DxWasmDocumentViewerRequestOptions>
+        <DxDocumentViewerCallbacks BeforeRender="ReportingViewerCustomization.onBeforeRender"
+                            CustomizeParameterEditors="ReportingViewerCustomization.onCustomizeParameterEditors" />
+    </DxWasmDocumentViewer>
+
+@code {
+
+    bool isLoadingScreen = true;
+
+    [Parameter]
+    public string ReportName { get; set; }
+
+    [Parameter]
+    public string id { get; set; }
+
+    protected override void OnInitialized()
+    {
+        ReportName = id.Replace("~", "?");
+
+        isLoadingScreen = false;
+    }
+
+}

@@ -20,7 +20,7 @@ namespace D69soft.Client.Services
         //Log Err
         public async Task ErrorLog(ErrorLogVM _errorLogVM)
         {
-
+            await _httpClient.PostAsJsonAsync($"api/Sys/ErrorLog", _errorLogVM);
         }
 
         //Log
@@ -107,19 +107,19 @@ namespace D69soft.Client.Services
         {
             return await _httpClient.GetFromJsonAsync<List<SysRptVM>>($"api/Sys/GetModuleRpt/{_UserID}");
         }
-        public async Task<List<SysRptVM>> GetSysReportGroupByID(string _ModuleID, string _UserID)
+        public async Task<List<SysRptVM>> GetRptGrpByID(string _ModuleID, string _UserID)
         {
-            return await _httpClient.GetFromJsonAsync<List<SysRptVM>>($"api/Sys/GetSysReportGroupByID/{_ModuleID}/{_UserID}");
+            return await _httpClient.GetFromJsonAsync<List<SysRptVM>>($"api/Sys/GetRptGrpByID/{_ModuleID}/{_UserID}");
         }
 
-        public async Task<IEnumerable<SysRptVM>> GetSysReportList(string _ModuleID, int _RptGrptID, string _UserID)
+        public async Task<IEnumerable<SysRptVM>> GetRptList(string _ModuleID, int _RptGrptID, string _UserID)
         {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<SysRptVM>>($"api/Sys/GetSysReportGroupByID/{_ModuleID}/{_RptGrptID}/{_UserID}");
+            return await _httpClient.GetFromJsonAsync<IEnumerable<SysRptVM>>($"api/Sys/GetRptList/{_ModuleID}/{_RptGrptID}/{_UserID}");
         }
 
-        public async Task<RptVM> GetSysReport(int _RptID)
+        public async Task<RptVM> GetRpt(int _RptID)
         {
-            return await _httpClient.GetFromJsonAsync<RptVM>($"api/Sys/GetSysReport/{_RptID}");
+            return await _httpClient.GetFromJsonAsync<RptVM>($"api/Sys/GetRpt/{_RptID}");
         }
 
         public async Task<bool> UpdateRpt(RptVM _rptVM)
@@ -134,26 +134,26 @@ namespace D69soft.Client.Services
             return await _httpClient.GetFromJsonAsync<bool>($"api/Sys/DelRpt/{_RptID}");
         }
 
-        public async Task<RptGrpVM> GetSysReportGroup(int _RptGrpID)
+        public async Task<RptGrpVM> GetRptGrp(int _RptGrpID)
         {
-            return await _httpClient.GetFromJsonAsync<RptGrpVM>($"api/Sys/GetSysReportGroup/{_RptGrpID}");
+            return await _httpClient.GetFromJsonAsync<RptGrpVM>($"api/Sys/GetRptGrp/{_RptGrpID}");
         }
 
-        public async Task<string> UpdateGrtRpt(RptGrpVM _rptGrpVM)
+        public async Task<string> UpdateRptGrp(RptGrpVM _rptGrpVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Sys/UpdateGrtRpt", _rptGrpVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Sys/UpdateRptGrp", _rptGrpVM);
 
             return await response.Content.ReadFromJsonAsync<string>();
         }
 
-        public async Task<bool> DelGrtRpt(int _RptGrpID)
+        public async Task<bool> DelRptGrp(int _RptGrpID)
         {
-            return await _httpClient.GetFromJsonAsync<bool>($"api/Sys/DelGrtRpt/{_RptGrpID}");
+            return await _httpClient.GetFromJsonAsync<bool>($"api/Sys/DelRptGrp/{_RptGrpID}");
         }
 
-        public async Task<bool> CheckPermisSysRpt(string _UserID)
+        public async Task<bool> CheckPermisRpt(string _UserID)
         {
-            return await _httpClient.GetFromJsonAsync<bool>($"api/Sys/CheckPermisSysRpt/{_UserID}");
+            return await _httpClient.GetFromJsonAsync<bool>($"api/Sys/CheckPermisRpt/{_UserID}");
         }
     }
 }

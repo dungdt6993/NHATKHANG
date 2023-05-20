@@ -1,6 +1,10 @@
+using D69soft.Client.Extension;
 using D69soft.Server.Services;
 using Data.Infrastructure;
+using DevExpress.AspNetCore;
+using DevExpress.AspNetCore.Reporting;
 using DevExpress.XtraCharts;
+using DevExpress.XtraReports.Web.Extensions;
 using Microsoft.Extensions.FileProviders;
 
 namespace D69soft
@@ -23,6 +27,10 @@ namespace D69soft
 
             builder.Services.AddControllers(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
+            //Report
+            builder.Services.AddDevExpressControls();
+            builder.Services.AddScoped<ReportStorageWebExtension, CustomReportStorageWebExtension>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -39,22 +47,30 @@ namespace D69soft
 
             app.UseHttpsRedirection();
 
+            app.UseReporting(builder => {
+                builder.UserDesignerOptions.DataBindingMode =
+                    DevExpress.XtraReports.UI.DataBindingMode.ExpressionsAdvanced;
+            });
+            app.UseDevExpressControls();
+
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
 
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
-                Path.Combine(Directory.GetCurrentDirectory(), "DataProtection")),
+                Path.Combine(app.Environment.ContentRootPath, "DataProtection")),
                 RequestPath = "/Data"
             });
 
             app.UseRouting();
 
-
             app.MapRazorPages();
             app.MapControllers();
             app.MapFallbackToFile("index.html");
+
+            string contentPath = app.Environment.ContentRootPath;
+            AppDomain.CurrentDomain.SetData("DXResourceDirectory", contentPath);
 
             app.Run();
         }

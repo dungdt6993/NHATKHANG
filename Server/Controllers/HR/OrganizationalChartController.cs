@@ -103,7 +103,7 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                return conn.ExecuteScalar<bool>(sql, new { DepartmentID = id });
+                return await conn.ExecuteScalarAsync<bool>(sql, new { DepartmentID = id });
             }
         }
 

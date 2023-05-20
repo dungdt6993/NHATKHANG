@@ -274,7 +274,7 @@
         <div class="card card-purple card-outline">
 
             <div class="card-header text-right">
-                @if (sysService.CheckAccessSubFunc(UserID, "DOC_DOCLegal_Update"))
+                @if (sysService.CheckAccessSubFunc(UserID, "DOC_DOCLegal_Update").Result)
                 {
                     <button type="button" class="btn btn-success" @onclick="()=>InitializeModalUpdate_Document(0, documentVM)"><i class="fa-solid fa-xl fa-plus"></i> Cật nhật</button>
                 }
@@ -293,7 +293,7 @@
                                 <th class="text-center">Ngày cấp</th>
                                 <th class="text-center">Ngày hết hạn</th>
                                 <th>Ghi chú</th>
-                                @if (sysService.CheckAccessSubFunc(UserID, "DOC_DOCLegal_Update"))
+                                @if (sysService.CheckAccessSubFunc(UserID, "DOC_DOCLegal_Update").Result)
                                 {
                                     <th></th>
                                 }
@@ -313,7 +313,7 @@
                                     <td class="text-center">@(_documentVM.DateOfIssue.HasValue ? _documentVM.DateOfIssue.Value.ToString("dd/MM/yyyy") : "")</td>
                                     <td class="text-center">@(_documentVM.ExpDate.HasValue ? _documentVM.ExpDate.Value.ToString("dd/MM/yyyy") : "")</td>
                                     <td>@_documentVM.DocNote</td>
-                                    @if (sysService.CheckAccessSubFunc(UserID, "DOC_DOCLegal_Update"))
+                                    @if (sysService.CheckAccessSubFunc(UserID, "DOC_DOCLegal_Update").Result)
                                     {
                                         <td class="text-center">
                                             <button class="btn btn-default btn-xs" data-target="#InitializeModalUpdate_Document" data-toggle="modal" @onclick="(() => InitializeModalUpdate_Document(1, _documentVM))"><i class="fa-solid fa-pen"></i></button>

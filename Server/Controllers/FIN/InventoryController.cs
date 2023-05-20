@@ -1,13 +1,7 @@
 ﻿using Data.Infrastructure;
-using Model.ViewModels.FIN;
 using Dapper;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Task<ActionResults;
 using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.FIN;
 
@@ -218,7 +212,7 @@ namespace D69soft.Server.Controllers.FIN
         }
 
         [HttpPost("UpdateItems/{_quantitativeItemsVMs}")]
-        public async Task<ActionResult<string>> UpdateItems(ItemsVM _itemsVM, IEnumerable<QuantitativeItemsVM> _quantitativeItemsVMs)
+        public async Task<ActionResult<string>> UpdateItems(ItemsVM _itemsVM, [FromRouteAttribute] IEnumerable<QuantitativeItemsVM> _quantitativeItemsVMs)
         {
             var sql = String.Empty;
             if (_itemsVM.IsTypeUpdate == 0)
@@ -354,7 +348,7 @@ namespace D69soft.Server.Controllers.FIN
         }
 
         [HttpPost("GetInventoryBookDetails/{_inventoryVM}")]
-        public async Task<ActionResult<List<InventoryBookDetailVM>>> GetInventoryBookDetails(FilterFinVM _filterFinVM, InventoryVM _inventoryVM)
+        public async Task<ActionResult<List<InventoryBookDetailVM>>> GetInventoryBookDetails(FilterFinVM _filterFinVM, [FromRouteAttribute] InventoryVM _inventoryVM)
         {
             var sql = "select sv.VDate, sv.VNumber, sv.VDesc, ";
             sql += "case when svd.ToStockCode = @StockCode then svd.Qty else 0 end as QtyInput, ";

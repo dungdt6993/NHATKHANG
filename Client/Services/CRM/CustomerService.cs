@@ -26,20 +26,12 @@ namespace D69soft.Client.Services.CRM
 
         public async Task<IEnumerable<CustomerVM>> GetCustomers()
         {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<CustomerVM>>($"api/Customer/GetCustomerByID");
+            return await _httpClient.GetFromJsonAsync<IEnumerable<CustomerVM>>($"api/Customer/GetCustomers");
         }
 
         public async Task<IEnumerable<CustomerVM>> SearchCustomers(string searchText)
         {
-            var sql = "select * from CRM.Customer where Tel LIKE CONCAT('%',@searchText,'%') order by CustomerName ";
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == System.Data.ConnectionState.Closed)
-                    conn.Open();
-
-                var result = await conn.QueryAsync<CustomerVM>(sql, new { searchText = searchText });
-                return result;
-            }
+            return await _httpClient.GetFromJsonAsync<IEnumerable<CustomerVM>>($"api/Customer/SearchCustomers/{searchText}");
         }
 
         public async Task<bool> CheckContains_Customer(string _CustomerID)

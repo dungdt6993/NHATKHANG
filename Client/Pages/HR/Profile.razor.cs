@@ -1133,8 +1133,8 @@ namespace D69soft.Client.Pages.HR
             permis_divs = await profileService.GetDivisionPermis(profileManagament.Eserial);
             permis_depts = await profileService.GetDepartmentPermis(profileManagament.Eserial);
 
-            permis_rptgrps = await profileService.GetsysServicertGroupPermis(profileManagament.Eserial);
-            permis_rpts = await profileService.GetsysServicertPermis(profileManagament.Eserial);
+            permis_rptgrps = await profileService.GetSysReportGroupPermis(profileManagament.Eserial);
+            permis_rpts = await profileService.GetSysReportPermis(profileManagament.Eserial);
 
             isLoading = false;
         }

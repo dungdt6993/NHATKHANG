@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using D69soft.Client.Helpers;
-using System.Net.Http.Json;
-using D69soft.Server.Services;
+using D69soft.Client.Services;
 
 namespace D69soft.Client.Shared
 {
@@ -13,7 +12,8 @@ namespace D69soft.Client.Shared
         [Inject] IJSRuntime js { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
         [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
-        [Inject] authService authService { get; set; }
+        [Inject] SysService sysService { get; set; }
+        [Inject] AuthService authService { get; set; }
 
         bool isLoadingScreen = true;
 
@@ -33,15 +33,15 @@ namespace D69soft.Client.Shared
         {
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            userVM = await authService.GetInfoUser(UserID);
+            userVM = await sysService.GetInfoUser(UserID);
 
-            modules = await authService.GetModuleMenu(UserID);
+            modules = await sysService.GetModuleMenu(UserID);
 
-            funcMenuGrps = await authService.GetFuncMenuGroup(UserID);
+            funcMenuGrps = await sysService.GetFuncMenuGroup(UserID);
 
-            funcMenus = await authService.GetFuncMenu(UserID);
+            funcMenus = await sysService.GetFuncMenu(UserID);
 
-            ckViewFuncMenuRpt = await authService.CheckViewFuncMenuRpt(UserID);
+            ckViewFuncMenuRpt = await sysService.CheckViewFuncMenuRpt(UserID);
 
             isLoadingScreen = false;
         }
@@ -53,7 +53,7 @@ namespace D69soft.Client.Shared
 
         private void ClickMenuFunc(string _urlFunc)
         {
-            navigationManager.NavigateTo(_urlFunc, false);
+            navigationManager.NavigateTo(_urlFunc, true);
         }
     }
 }

@@ -7,10 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="DataProtection\Reports\Bang_cham_cong.repx" />
+    <None Remove="DataProtection\Reports\Bang_ke_ban_hang_NCC.repx" />
+    <None Remove="PredefinedReports\CustomNewReport.vsrepx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="DataProtection\Reports\Bang_cham_cong.repx" />
+    <EmbeddedResource Include="DataProtection\Reports\Bang_ke_ban_hang_NCC.repx" />
+    <EmbeddedResource Include="PredefinedReports\CustomNewReport.vsrepx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
-    <PackageReference Include="DevExpress.Blazor.Reporting.JSBasedControls.BlazorServer" Version="22.2.4" />
+    <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="22.2.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.5" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
@@ -24,6 +35,27 @@
   <ItemGroup>
     <Folder Include="DataProtection\Export\" />
     <Folder Include="DataProtection\Upload\DOC\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="DataProtection\Reports\Bang_cham_cong.cs">
+      <DependentUpon>Bang_cham_cong.repx</DependentUpon>
+    </Compile>
+    <Compile Update="DataProtection\Reports\Bang_cham_cong.Designer.cs">
+      <DependentUpon>Bang_cham_cong.repx</DependentUpon>
+    </Compile>
+    <Compile Update="DataProtection\Reports\Bang_ke_ban_hang_NCC.cs">
+      <DependentUpon>Bang_ke_ban_hang_NCC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="DataProtection\Reports\Bang_ke_ban_hang_NCC.Designer.cs">
+      <DependentUpon>Bang_ke_ban_hang_NCC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="PredefinedReports\CustomNewReport.cs">
+      <DependentUpon>CustomNewReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="PredefinedReports\CustomNewReport.Designer.cs">
+      <DependentUpon>CustomNewReport.vsrepx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 

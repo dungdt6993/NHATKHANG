@@ -65,7 +65,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("GetDutyRosterByDay/{_dutyRosterVM}")]
-        public async Task<ActionResult<DutyRosterVM>> GetDutyRosterByDay(FilterHrVM _filterHrVM, DutyRosterVM _dutyRosterVM)
+        public async Task<ActionResult<DutyRosterVM>> GetDutyRosterByDay(FilterHrVM _filterHrVM, [FromRouteAttribute] DutyRosterVM _dutyRosterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -104,7 +104,7 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<LockDutyRosterVM>(sql, new { Period = _filterHrVM.Year * 100 + _filterHrVM.Month, DivisionID = _filterHrVM.DivisionID, DepartmentID = _filterHrVM.DepartmentID });
-                return result;
+                return Ok(result);
             }
         }
 
@@ -137,7 +137,7 @@ namespace D69soft.Server.Controllers.HR
                     }
                     else
                     {
-                        sqlInsert += "Insert into HR.LockDutyRoster select @Period,DivisionID, DepartmentID,@LockFrom,@LockTo,'" + _UserID + "',GETDATE() from SYSTEM.PermissionDepartment where UserID='" + UserID + "' and DivisionID=@DivisionID ";
+                        sqlInsert += "Insert into HR.LockDutyRoster select @Period,DivisionID, DepartmentID,@LockFrom,@LockTo,'" + _UserID + "',GETDATE() from SYSTEM.PermissionDepartment where UserID='" + _UserID + "' and DivisionID=@DivisionID ";
                     }
                     await conn.ExecuteAsync(sqlInsert, _filterHrVM);
                 }
@@ -197,7 +197,7 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<ShiftTypeVM>(sql);
-                return result;
+                return Ok(result);
             }
         }
 
@@ -212,7 +212,7 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<ShiftVM>(sql);
-                return result;
+                return Ok(result);
             }
         }
 
@@ -225,7 +225,7 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                return conn.ExecuteScalar<bool>(sql, new { ShiftID = id });
+                return await conn.ExecuteScalarAsync<bool>(sql, new { ShiftID = id });
             }
         }
 
@@ -297,7 +297,7 @@ namespace D69soft.Server.Controllers.HR
                 parm.Add("@UserID", _filterHrVM.UserID);
 
                 var result = await conn.QueryAsync<DutyRosterVM>("HR.DutyRoster_viewDutyRosterList", parm, commandType: CommandType.StoredProcedure);
-                return result;
+                return Ok(result);
             }
         }
 
@@ -405,12 +405,12 @@ namespace D69soft.Server.Controllers.HR
                 parm.Add("@PositionGroupID", _filterHrVM.PositionGroupID);
 
                 var result = await conn.QueryAsync<DutyRosterVM>("OP.EmplTrf_view", parm, commandType: CommandType.StoredProcedure);
-                return result;
+                return Ok(result);
             }
         }
 
         [HttpPost("GetDutyRosterByEserial/{_dutyRosterVM}")]
-        public async Task<ActionResult<DutyRosterVM>> GetDutyRosterByEserial(FilterHrVM _filterHrVM, DutyRosterVM _dutyRosterVM)
+        public async Task<ActionResult<DutyRosterVM>> GetDutyRosterByEserial(FilterHrVM _filterHrVM, [FromRouteAttribute] DutyRosterVM _dutyRosterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -457,7 +457,7 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<DutyRosterVM>(sql, _filterHrVM);
-                return result;
+                return Ok(result);
             }
         }
 
@@ -494,7 +494,7 @@ namespace D69soft.Server.Controllers.HR
                 parm.Add("@DivisionID", _filterHrVM.DivisionID);
 
                 var result = await conn.QueryAsync<DutyRosterVM>("HR.WorkPlan_viewList", parm, commandType: CommandType.StoredProcedure);
-                return result;
+                return Ok(result);
             }
         }
 

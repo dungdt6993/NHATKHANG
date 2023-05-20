@@ -1,4 +1,4 @@
-﻿@page "/RPT/SysReports"
+﻿@page "/SYS/Rpt"
 
 <Loading isLoading="@isLoading"></Loading>
 <LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
@@ -203,7 +203,7 @@
                             }
                         </InputSelectNumber>
 
-                        @if (userRepo.GetRole(UserID) <= 2)
+                        @if (Role <= 2)
                         {
                             @if (filterRptVM.RptGrpID == 0)
                             {
@@ -240,7 +240,7 @@
                                 }
                             }
                         </InputSelectNumber>
-                        @if (userRepo.GetRole(UserID) <= 2)
+                        @if (Role <= 2)
                         {
                             @if (rptgrps.Count() > 0)
                             {
@@ -271,7 +271,7 @@
     <div class="container-fluid">
         <div class="card card-purple card-outline">
 
-            @if (userRepo.GetRole(UserID) <= 2)
+            @if (Role <= 2)
             {
                 <div class="card-header text-right">
 
@@ -292,26 +292,25 @@
 
                 @if (IsEditRpt)
                 {
-                    <DxReportDesigner ReportName=@ReportName Height="calc(100vh - 289px)" Width="100%">
-                        <DxReportDesignerWizardSettings UseFullscreenWizard="true" />
-
-                        <DxReportDesignerCallbacks CustomizeElements="ReportingDesignerCustomization.onCustomizeElements"
-                                               CustomizeMenuActions="ReportingDesignerCustomization.onCustomizeMenuActions"
-                                               ReportOpened="ReportingDesignerCustomization.onReportOpened"
-                                               BeforeRender="ReportingDesignerCustomization.onBeforeRender"
-                                               CustomizeWizard="ReportingDesignerCustomization.onCustomizeWizard" />
-                    </DxReportDesigner>
+                    <DxWasmReportDesigner ReportName="@ReportName" Height="calc(100vh - 289px)" Width="100%" DevelopmentMode=true>
+                        <DxWasmReportDesignerRequestOptions GetDesignerModelAction="DXXRD/GetReportDesignerModel">
+                        </DxWasmReportDesignerRequestOptions>
+                        <DxReportDesignerModelSettings AllowMDI=true>
+                            <DxReportDesignerWizardSettings UseFullscreenWizard=true />
+                        </DxReportDesignerModelSettings>
+                    </DxWasmReportDesigner>
                 }
                 else
                 {
                     if (filterRptVM.RptID != 0)
                     {
-                        <DxDocumentViewer ReportName=@ReportName Height="calc(100vh - 289px)" Width="100%">
+                        <DxWasmDocumentViewer ReportName="@ReportName" Height="calc(100vh - 289px)" Width="100%">
                             <DxDocumentViewerExportSettings ShowPrintNotificationDialog="false" />
                             <DxDocumentViewerTabPanelSettings Width="340" />
+                            <DxWasmDocumentViewerRequestOptions InvokeAction="DXXRDV"></DxWasmDocumentViewerRequestOptions>
                             <DxDocumentViewerCallbacks BeforeRender="ReportingViewerCustomization.onBeforeRender"
                                                CustomizeParameterEditors="ReportingViewerCustomization.onCustomizeParameterEditors" />
-                        </DxDocumentViewer>
+                        </DxWasmDocumentViewer>
                     }
                 }
 

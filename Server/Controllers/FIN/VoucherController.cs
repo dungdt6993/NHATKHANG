@@ -125,7 +125,7 @@ namespace D69soft.Server.Controllers.FIN
         }
 
         [HttpPost("UpdateVoucher/{_stockVoucherDetailVMs}")]
-        public async Task<ActionResult<string>> UpdateVoucher(StockVoucherVM _stockVoucherVM, IEnumerable<StockVoucherDetailVM> _stockVoucherDetailVMs)
+        public async Task<ActionResult<string>> UpdateVoucher(StockVoucherVM _stockVoucherVM, [FromRouteAttribute] IEnumerable<StockVoucherDetailVM> _stockVoucherDetailVMs)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {

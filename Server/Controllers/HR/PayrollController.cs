@@ -3,9 +3,9 @@ using Dapper;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
-using Utilities;
 using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Utilities;
 
 namespace D69soft.Server.Controllers.HR
 {

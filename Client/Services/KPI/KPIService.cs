@@ -57,7 +57,7 @@ namespace D69soft.Client.Services.KPI
         {
             var response = await _httpClient.PostAsJsonAsync($"api/KPI/GetKPIs", _filterHrVM);
 
-            return await response.Content.ReadFromJsonAsync<IEnumerable<ProfileVM>>();
+            return await response.Content.ReadFromJsonAsync<IEnumerable<KPIVM>>();
         }
 
         public async Task<RankVM> GetRank(FilterHrVM _filterHrVM)

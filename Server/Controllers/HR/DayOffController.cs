@@ -1,11 +1,10 @@
 ﻿using Data.Infrastructure;
-using Model.ViewModels.HR;
-using Utilities.AmLich;
 using Dapper;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Utilities.AmLich;
 
 namespace D69soft.Server.Controllers.HR
 {
@@ -29,15 +28,15 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@Y", entity.Year);
-                parm.Add("@M", entity.Month);
-                parm.Add("@DivsID", entity.DivisionID);
-                parm.Add("@SectionID", entity.SectionID);
-                parm.Add("@DeptID", entity.DepartmentID);
-                parm.Add("@arrPos", entity.PositionGroupID);
-                parm.Add("@Eserial", entity.Eserial);
-                parm.Add("@DayOffType", entity.ShiftID);
-                parm.Add("@UserID", entity.UserID);
+                parm.Add("@Y", _filterHrVM.Year);
+                parm.Add("@M", _filterHrVM.Month);
+                parm.Add("@DivsID", _filterHrVM.DivisionID);
+                parm.Add("@SectionID", _filterHrVM.SectionID);
+                parm.Add("@DeptID", _filterHrVM.DepartmentID);
+                parm.Add("@arrPos", _filterHrVM.PositionGroupID);
+                parm.Add("@Eserial", _filterHrVM.Eserial);
+                parm.Add("@DayOffType", _filterHrVM.ShiftID);
+                parm.Add("@UserID", _filterHrVM.UserID);
 
                 var result = await conn.QueryAsync<DayOffVM>("HR.DayOff_viewMain", parm, commandType: CommandType.StoredProcedure);
                 return result.ToList();
@@ -54,7 +53,7 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<ShiftVM>(sql);
-                return result;
+                return Ok(result);
             }
         }
 
@@ -254,8 +253,8 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<DayOffVM>(sql, new {Period = _period, Eserial = _eserial});
-                return result;
+                var result = await conn.QueryAsync<DayOffVM>(sql, new {Period = _Period, Eserial = _Eserial});
+                return Ok(result);
             }
         }
 
@@ -295,7 +294,7 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<PublicHolidayDefVM>(sql);
-                return result;
+                return Ok(result);
             }
         }
 
@@ -308,7 +307,7 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                return conn.ExecuteScalar<bool>(sql, new { PHDay = _PHDay, PHMonth = _PHMonth, isLunar = _isLunar });
+                return await conn.ExecuteScalarAsync<bool>(sql, new { PHDay = _PHDay, PHMonth = _PHMonth, isLunar = _isLunar });
             }
         }
 

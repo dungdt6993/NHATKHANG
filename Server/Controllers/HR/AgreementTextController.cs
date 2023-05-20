@@ -1,5 +1,4 @@
 ﻿using Data.Infrastructure;
-using Model.ViewModels.HR;
 using Dapper;
 using System.Data;
 using System.Data.SqlClient;
@@ -30,7 +29,7 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<AgreementTextTypeVM>(sql);
-                return result;
+                return Ok(result);
             }
         }
 
@@ -93,7 +92,7 @@ namespace D69soft.Server.Controllers.HR
                 sql += "order by AdjustProfileID ";
 
                 var result = await conn.QueryAsync<AdjustProfileVM>(sql);
-                return result;
+                return Ok(result);
             }
         }
 
@@ -111,7 +110,7 @@ namespace D69soft.Server.Controllers.HR
                 sql += "order by ap.AdjustProfileName ";
 
                 var result = await conn.QueryAsync<AdjustProfileRptVM>(sql);
-                return result;
+                return Ok(result);
             }
         }
 

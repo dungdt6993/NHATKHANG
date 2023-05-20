@@ -35,7 +35,7 @@ namespace D69soft.Server.Controllers
             return true;
         }
 
-        //Insert ErrorLog
+        //ErrorLog
         [HttpPost("ErrorLog")]
         public async Task<ActionResult<bool>> ErrorLog(ErrorLogVM _errorLogVM)
         {
@@ -294,12 +294,12 @@ namespace D69soft.Server.Controllers
                     conn.Open();
 
                 var result = await conn.QueryAsync<SysRptVM>(sql, new { UserID = _UserID });
-                return result.AsList();
+                return result.ToList();
             }
         }
 
-        [HttpGet("GetSysReportGroupByID/{_ModuleID}/{_UserID}")]
-        public async Task<ActionResult<List<SysRptVM>>> GetSysReportGroupByID(string _ModuleID, string _UserID)
+        [HttpGet("GetRptGrpByID/{_ModuleID}/{_UserID}")]
+        public async Task<ActionResult<List<SysRptVM>>> GetRptGrpByID(string _ModuleID, string _UserID)
         {
             var sql = "Declare @roleUser int ";
             sql += "select @roleUser = User_Role from HR.Profile where Eserial=@UserID ";
@@ -328,8 +328,8 @@ namespace D69soft.Server.Controllers
             }
         }
 
-        [HttpGet("GetSysReportList/{_ModuleID}/{_RptGrptID}/{_UserID}")]
-        public async Task<ActionResult<IEnumerable<SysRptVM>>> GetSysReportList(string _ModuleID, int _RptGrptID, string _UserID)
+        [HttpGet("GetRptList/{_ModuleID}/{_RptGrptID}/{_UserID}")]
+        public async Task<ActionResult<IEnumerable<SysRptVM>>> GetRptList(string _ModuleID, int _RptGrptID, string _UserID)
         {
             var sql = "select r.RptID, r.RptName, r.RptUrl, rg.RptGrpID, rg.RptGrpName from SYSTEM.Rpt r ";
             sql += "join SYSTEM.RptGrp rg on rg.RptGrpID = r.RptGrpID  ";
@@ -350,8 +350,8 @@ namespace D69soft.Server.Controllers
             }
         }
 
-        [HttpGet("GetSysReport/{_RptID}")]
-        public async Task<ActionResult<RptVM>> GetSysReport(int _RptID)
+        [HttpGet("GetRpt/{_RptID}")]
+        public async Task<ActionResult<RptVM>> GetRpt(int _RptID)
         {
             var sql = "select rg.RptGrpID, rg.RptGrpName, r.RptID, r.RptName, r.RptUrl, r.PassUserID from SYSTEM.Rpt r ";
             sql += "join SYSTEM.RptGrp rg on rg.RptGrpID = r.RptGrpID ";
@@ -406,8 +406,8 @@ namespace D69soft.Server.Controllers
             }
         }
 
-        [HttpGet("GetSysReportGroup/{_RptGrpID}")]
-        public async Task<ActionResult<RptGrpVM>> GetSysReportGroup(int _RptGrpID)
+        [HttpGet("GetRptGrp/{_RptGrpID}")]
+        public async Task<ActionResult<RptGrpVM>> GetRptGrp(int _RptGrpID)
         {
             var sql = "select * from SYSTEM.RptGrp ";
             sql += "where RptGrpID=@RptGrpID ";
@@ -421,8 +421,8 @@ namespace D69soft.Server.Controllers
             }
         }
 
-        [HttpPost("UpdateGrtRpt")]
-        public async Task<ActionResult<string>> UpdateGrtRpt(RptGrpVM _rptGrpVM)
+        [HttpPost("UpdateRptGrp")]
+        public async Task<ActionResult<string>> UpdateRptGrp(RptGrpVM _rptGrpVM)
         {
             var sql = "";
             if (_rptGrpVM.IsTypeUpdate == 0)
@@ -444,8 +444,8 @@ namespace D69soft.Server.Controllers
             }
         }
 
-        [HttpGet("DelGrtRpt/{_RptGrpID}")]
-        public async Task<ActionResult<bool>> DelGrtRpt(int _RptGrpID)
+        [HttpGet("DelRptGrp/{_RptGrpID}")]
+        public async Task<ActionResult<bool>> DelRptGrp(int _RptGrpID)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -459,8 +459,8 @@ namespace D69soft.Server.Controllers
             }
         }
 
-        [HttpGet("CheckPermisSysRpt/{_UserID}")]
-        public async Task<ActionResult<bool>> CheckPermisSysRpt(string _UserID)
+        [HttpGet("CheckPermisRpt/{_UserID}")]
+        public async Task<ActionResult<bool>> CheckPermisRpt(string _UserID)
         {
             var sql = "SELECT CAST(CASE WHEN EXISTS (select 1 from SYSTEM.PermissionRpt where UserID=@UserID) THEN 1 ELSE 0 END as BIT)";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -468,7 +468,7 @@ namespace D69soft.Server.Controllers
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                return await conn.ExecuteScalarAsync<bool>(sql, new { UserID = _UserID });
+                return Ok(await conn.ExecuteScalarAsync<bool>(sql, new { UserID = _UserID }));
             }
         }
 

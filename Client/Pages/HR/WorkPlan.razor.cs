@@ -1,16 +1,8 @@
 ﻿using BlazorDateRangePicker;
 using Blazored.TextEditor;
-using Data.Repositories.HR;
-using Data.Repositories.SYSTEM;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using Model.ViewModels.HR;
-using WebApp.Helpers;
-using Model.Entities.HR;
-using Model.ViewModels.DOC;
-using Utilities;
-using Model.ViewModels.KPI;
 using D69soft.Client.Services;
 using D69soft.Client.Services.HR;
 using D69soft.Shared.Models.ViewModels.HR;

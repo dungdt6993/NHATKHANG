@@ -1,13 +1,4 @@
-﻿using Data.Repositories.FIN;
-using Data.Repositories.HR;
-using Data.Repositories.SYSTEM;
-using Model.Entities.HR;
-using Model.ViewModels.EA;
-using Model.ViewModels.FIN;
-using Model.ViewModels.HR;
-using Model.ViewModels.POS;
-using WebApp.Helpers;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using D69soft.Client.Services;

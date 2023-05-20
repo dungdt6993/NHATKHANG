@@ -46,7 +46,7 @@ namespace D69soft.Client.Services.HR
 
         public async Task<IEnumerable<SalaryTransactionCodeVM>> GetTrnCodeList(int _TrnGroupCode)
         {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<SalaryTransactionCodeVM>>($"api/Payroll/GetTrnGroupCodeList/{_TrnGroupCode}");
+            return await _httpClient.GetFromJsonAsync<IEnumerable<SalaryTransactionCodeVM>>($"api/Payroll/GetTrnCodeList/{_TrnGroupCode}");
         }
 
         public async Task<bool> CalcSalary(FilterHrVM _filterHrVM)

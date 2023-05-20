@@ -97,7 +97,7 @@ namespace D69soft.Client.Services.HR
 
         public async Task<bool> ContainsPublicHoliday(int _PHDay, int _PHMonth, bool _isLunar)
         {
-            return await _httpClient.GetFromJsonAsync<bool>($"api/DayOff/GetDayOffDetail/{_PHDay}/{_PHMonth}/{_isLunar}");
+            return await _httpClient.GetFromJsonAsync<bool>($"api/DayOff/ContainsPublicHoliday/{_PHDay}/{_PHMonth}/{_isLunar}");
         }
 
         public async Task<bool> UpdatePublicHoliday(PublicHolidayDefVM _publicHolidayDefVM)

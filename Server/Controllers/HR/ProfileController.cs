@@ -5,7 +5,7 @@ using System.Data;
 using Data.Infrastructure;
 using Dapper;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
-using Utilities;
+using D69soft.Shared.Utilities;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -283,7 +283,7 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                return conn.ExecuteScalar<bool>(sql, new { Eserial = _Eserial });
+                return await conn.ExecuteScalarAsync<bool>(sql, new { Eserial = _Eserial });
             }
         }
 
@@ -324,7 +324,7 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                return conn.ExecuteScalar<bool>(sql, new { Eserial = _Eserial });
+                return await conn.ExecuteScalarAsync<bool>(sql, new { Eserial = _Eserial });
             }
         }
 
@@ -337,7 +337,7 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                return conn.ExecuteScalar<bool>(sql, new { Eserial = _Eserial });
+                return await conn.ExecuteScalarAsync<bool>(sql, new { Eserial = _Eserial });
             }
         }
 
@@ -541,8 +541,8 @@ namespace D69soft.Server.Controllers.HR
             }
         }
 
-        [HttpGet("GetsysServicertGroupPermis/{_Eserial}")]
-        public async Task<IEnumerable<SysRptVM>> GetsysServicertGroupPermis(string _Eserial)
+        [HttpGet("GetRptGrpPermis/{_Eserial}")]
+        public async Task<IEnumerable<SysRptVM>> GetSysReportGroupPermis(string _Eserial)
         {
             var sql = "select rg.RptGrpID, rg.RptGrpName, case when sum(case when coalesce(pr.RptID,'') != '' then 1 else 0 end) > 0 then 1 else 0 end as IsChecked from SYSTEM.RptGrp rg ";
             sql += "join (select * from SYSTEM.Rpt) r on rg.RptGrpID = r.RptGrpID ";
@@ -558,8 +558,8 @@ namespace D69soft.Server.Controllers.HR
             }
         }
 
-        [HttpGet("GetsysServicertPermis/{_Eserial}")]
-        public async Task<IEnumerable<SysRptVM>> GetsysServicertPermis(string _Eserial)
+        [HttpGet("GetRptPermis/{_Eserial}")]
+        public async Task<IEnumerable<SysRptVM>> GetSysReportPermis(string _Eserial)
         {
             var sql = "select r.RptGrpID, r.RptID, r.RptName, case when coalesce(pr.RptID,'') != '' then 1 else 0 end as IsChecked from SYSTEM.Rpt r ";
             sql += "left join (select * from SYSTEM.PermissionRpt where UserID=@Eserial) pr on pr.RptID = r.RptID  ";
@@ -574,8 +574,8 @@ namespace D69soft.Server.Controllers.HR
             }
         }
 
-        [HttpGet("UpdatePermis/{_funcVMs}/{_subFuncVMs}/{_departmentVMs}/{_sysServicertsVMs}/{_Eserial}")]
-        public async Task<bool> UpdatePermis(IEnumerable<FuncVM> _funcVMs, IEnumerable<FuncVM> _subFuncVMs, IEnumerable<DepartmentVM> _departmentVMs, IEnumerable<SysRptVM> _sysServicertsVMs, string _Eserial)
+        [HttpGet("UpdatePermis/{_funcVMs}/{_subFuncVMs}/{_departmentVMs}/{_sysRptVMs}/{_Eserial}")]
+        public async Task<bool> UpdatePermis(IEnumerable<FuncVM> _funcVMs, [FromRouteAttribute] IEnumerable<FuncVM> _subFuncVMs, [FromRouteAttribute] IEnumerable<DepartmentVM> _departmentVMs, [FromRouteAttribute] IEnumerable<SysRptVM> _sysRptVMs, string _Eserial)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -604,9 +604,9 @@ namespace D69soft.Server.Controllers.HR
                 await conn.ExecuteAsync(sqlDept, new { Eserial = _Eserial });
 
                 var sqlRpt = "Delete from SYSTEM.PermissionRpt where UserID=@Eserial ";
-                foreach (var sysServicertsVM in _sysServicertsVMs)
+                foreach (var _sysRptVM in _sysRptVMs)
                 {
-                    sqlRpt += "Insert into SYSTEM.PermissionRpt(UserID, RptID) Values(@Eserial,'" + sysServicertsVM.RptID + "') ";
+                    sqlRpt += "Insert into SYSTEM.PermissionRpt(UserID, RptID) Values(@Eserial,'" + _sysRptVM.RptID + "') ";
                 }
                 await conn.ExecuteAsync(sqlRpt, new { Eserial = _Eserial });
 

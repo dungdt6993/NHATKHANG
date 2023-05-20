@@ -273,11 +273,11 @@ namespace D69soft.Client.Pages.HR
 
         private async Task PrintAgreementText()
         {
-            IEnumerable<SysRptVM> sysServicerts = await agreementTextService.PrintAgreementText(agreementTextVMs.Where(x => x.IsChecked == true), UserID);
+            IEnumerable<SysRptVM> sysRptVMs = await agreementTextService.PrintAgreementText(agreementTextVMs.Where(x => x.IsChecked == true), UserID);
 
-            foreach (var sysServicert in sysServicerts)
+            foreach (var sysReport in sysRptVMs)
             {
-                await js.InvokeAsync<object>("openInNewTab", "/RPT/sysServicertViewer/" + sysServicert.RptUrl + "");
+                await js.InvokeAsync<object>("openInNewTab", "/RPT/RptViewer/" + sysReport.RptUrl + "");
             }
 
             filterHrVM.IsChecked = false;
@@ -302,7 +302,7 @@ namespace D69soft.Client.Pages.HR
 
             adjustProfileVM = _adjustProfileVM;
 
-            sysRptVMs = await sysService.GetSysReportList("HR",0, UserID);
+            sysRptVMs = await sysService.GetRptList("HR",0, UserID);
 
             adjustProfileVM.arrRptID = adjustProfileRptVMs.Where(x => x.AdjustProfileID == _adjustProfileVM.AdjustProfileID).Select(x => x.RptID).ToArray();
             adjustProfileVM.strRpt = string.Join(",", (int[])adjustProfileVM.arrRptID);

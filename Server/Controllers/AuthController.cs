@@ -1,13 +1,10 @@
-﻿using D69soft.Server.Services;
-using D69soft.Server.Services.HR;
-using D69soft.Shared.Models.ViewModels.HR;
-using D69soft.Shared.Models.ViewModels.SYSTEM;
+﻿using D69soft.Shared.Models.ViewModels.SYSTEM;
 using Dapper;
 using Data.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 using System.Data;
-using Utilities;
+using D69soft.Shared.Utilities;
 
 namespace D69soft.Server.Controllers
 {

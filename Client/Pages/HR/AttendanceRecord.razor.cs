@@ -1,25 +1,23 @@
-﻿using Data.Repositories.HR;
-using Data.Repositories.SYSTEM;
-using Model.ViewModels.FIN;
-using Model.ViewModels.HR;
-using WebApp.Helpers;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
+using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Client.Services;
+using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Client.Services.HR;
+using D69soft.Client.Helpers;
 
 namespace D69soft.Client.Pages.HR
 {
     partial class AttendanceRecord
     {
         [Inject] IJSRuntime js { get; set; }
-        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
+        [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
         [Inject] SysService sysService { get; set; }
         [Inject] AuthService authService { get; set; }
-
         [Inject] OrganizationalChartService organizationalChartService { get; set; }
-
         [Inject] PayrollService payrollService { get; set; }
         [Inject] DutyRosterService dutyRosterService { get; set; }
         [Inject] DayOffService dayOffService { get; set; }
@@ -58,8 +56,6 @@ namespace D69soft.Client.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            
-
             UserID = (await authenticationStateTask).User.GetUserId();
 
             if (await sysService.CheckAccessFunc(UserID, "HR_AttendanceRecord"))
@@ -114,7 +110,7 @@ namespace D69soft.Client.Pages.HR
 
             arVMs = await dutyRosterService.GetAttendanceRecordList(filterHrVM);
 
-            isLoadingPage = false;
+            isLoadingScreen = false;
         }
 
         private async void onchange_filter_month(int value)
