@@ -7,7 +7,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
-            <EditForm Model="@documentVM" OnValidSubmit="@UpdateDocument">
+            <EditForm Model="@documentVM" Context="formDocumentVM">
 
                 <FluentValidationValidator />
 
@@ -135,10 +135,10 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdateDocument(formDocumentVM, documentVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (documentVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => documentVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateDocument(formDocumentVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
 
@@ -311,7 +311,7 @@
         <div class="card card-purple card-outline">
 
             <div class="card-header text-right">
-                @if (sysService.CheckAccessSubFunc(UserID, "DOC_DOCBoat_Update").Result)
+                @if (DOC_DOCBoat_Update)
                 {
                     <button type="button" class="btn btn-success" @onclick="()=>InitializeModalUpdate_Document(0, documentVM)"><i class="fa-solid fa-xl fa-plus"></i> Cật nhật</button>
                 }
@@ -331,7 +331,7 @@
                                 <th class="text-center">Ngày cấp</th>
                                 <th class="text-center">Ngày hết hạn</th>
                                 <th>Ghi chú</th>
-                                @if (sysService.CheckAccessSubFunc(UserID, "DOC_DOCBoat_Update").Result)
+                                @if (DOC_DOCBoat_Update)
                                 {
                                     <th></th>
                                 }
@@ -352,7 +352,7 @@
                                     <td class="text-center">@(_documentVM.DateOfIssue.HasValue ? _documentVM.DateOfIssue.Value.ToString("dd/MM/yyyy") : "")</td>
                                     <td class="text-center">@(_documentVM.ExpDate.HasValue ? _documentVM.ExpDate.Value.ToString("dd/MM/yyyy") : "")</td>
                                     <td>@_documentVM.DocNote</td>
-                                    @if (sysService.CheckAccessSubFunc(UserID, "DOC_DOCBoat_Update").Result)
+                                    @if (DOC_DOCBoat_Update)
                                     {
                                         <td class="text-center">
                                             <button class="btn btn-default btn-xs" @onclick="(() => InitializeModalUpdate_Document(1, _documentVM))"><i class="fa-solid fa-pen"></i></button>

@@ -8,6 +8,7 @@ using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.KPI;
 using D69soft.Client.Helpers;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Client.Pages.KPI
 {
@@ -26,6 +27,8 @@ namespace D69soft.Client.Pages.KPI
         bool isLoading;
 
         bool isLoadingScreen = true;
+
+        LogVM logVM = new();
 
         //Filter
         FilterHrVM filterHrVM = new();
@@ -55,13 +58,14 @@ namespace D69soft.Client.Pages.KPI
 
         protected override async Task OnInitializedAsync()
         {
-            
-
             UserID = (await authenticationStateTask).User.GetUserId();
 
             if (await sysService.CheckAccessFunc(UserID, "KPI_KPIs"))
             {
-                await sysService.InsertLogUserFunc(UserID, "KPI_KPIs");
+                logVM.LogType = "FUNC";
+                logVM.LogName = "KPI_KPIs";
+                logVM.LogUser = UserID;
+                await sysService.InsertLog(logVM);
             }
             else
             {
@@ -355,15 +359,15 @@ namespace D69soft.Client.Pages.KPI
 
             var str = value ? "Duyệt" : "Hủy duyệt";
 
-            if(type == "SendKPI")
+            if (type == "SendKPI")
             {
                 str = value ? "Gửi duyệt" : "Hủy gửi duyệt";
             }
 
-            if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn "+ str + "?", SweetAlertMessageType.question))
+            if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn " + str + "?", SweetAlertMessageType.question))
             {
 
-                if (type== "SendKPI")
+                if (type == "SendKPI")
                 {
                     rankVM.isSendKPI = value;
                     rankVM.TimeSendKPI = DateTime.Now;

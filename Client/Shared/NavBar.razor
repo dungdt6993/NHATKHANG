@@ -15,7 +15,13 @@
         </li>
 
         <li class="nav-item">
-            <button class="btn btn-outline-secondary text-white nav-link" href="/Auth/Login" @onclick="(() => Logout())" role="button">
+            <a class="nav-link" href="/Log" role="button">
+                <i class="far fa-bell"></i>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <button class="btn btn-outline-secondary text-white nav-link" href="/Auth/Login" @onclick="(() => Logout())">
                 <i class="fas fa-sign-out-alt"></i>
             </button>
         </li>

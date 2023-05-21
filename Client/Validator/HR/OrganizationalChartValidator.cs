@@ -27,7 +27,7 @@ namespace D69soft.Client.Validator.HR
             RuleFor(x => x.DepartmentID).NotEmpty().WithMessage("Không được trống.")
                 .Matches(@"^[a-zA-Z0-9]+$").WithMessage("Không hợp lệ.")
                 .MinimumLength(2).WithMessage("Tối thiểu 2 kí tự.")
-                .Must((x, id) => _organizationalChartService.CheckContainsDepartment(x.DepartmentID).Result).When(x => x.IsTypeUpdate == 0).WithMessage("Đã tồn tại.");
+                .Must((x, id) => _organizationalChartService.CheckContainsDepartmentID(x.DepartmentID).Result).When(x => x.IsTypeUpdate == 0).WithMessage("Đã tồn tại.");
 
             RuleFor(x => x.DepartmentName).NotEmpty().WithMessage("Không được trống.");
             RuleFor(x => x.DepartmentGroupID).NotEmpty().WithMessage("Không được trống.");

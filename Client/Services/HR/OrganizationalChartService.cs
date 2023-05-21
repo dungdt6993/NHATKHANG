@@ -38,7 +38,7 @@ namespace D69soft.Client.Services.HR
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<DepartmentVM>>();
         }
-        public async Task<bool> CheckContainsDepartment(string id)
+        public async Task<bool> CheckContainsDepartmentID(string id)
         {
             return await _httpClient.GetFromJsonAsync<bool>($"api/OrganizationalChart/CheckContainsDepartment/{id}");
         }

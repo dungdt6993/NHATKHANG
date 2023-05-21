@@ -28,18 +28,16 @@
     [Parameter]
     public Exception exception { get; set; }
 
-    ErrorLogVM errorLogVM = new();
+    LogVM logVM = new();
 
     protected override async Task OnInitializedAsync()
     {
         if (exception is not null)
         {
-            errorLogVM.ErrType = exception.GetType().ToString();
-            errorLogVM.ErrMessage = exception.Message;
-            errorLogVM.ErrTime = DateTime.Now;
-            errorLogVM.ErrNote = Directory.GetCurrentDirectory();
-
-            await sysService.ErrorLog(errorLogVM);
+            logVM.LogType = "ERR";
+            logVM.LogName = exception.GetType().ToString();
+            logVM.LogDesc = exception.Message;
+            await sysService.InsertLog(logVM);
         }
     }
 }

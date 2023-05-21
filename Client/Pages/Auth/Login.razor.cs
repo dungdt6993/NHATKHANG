@@ -4,6 +4,7 @@ using D69soft.Client.Services;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.JSInterop;
 
 namespace D69soft.Client.Pages.Auth
@@ -15,7 +16,9 @@ namespace D69soft.Client.Pages.Auth
         [Inject] AuthenticationStateProvider authenticationStateProvider { get; set; }
 
         [Inject] AuthService authService { get; set; }
+        [Inject] SysService sysService { get; set; }
 
+        LogVM logVM = new();
 
         UserVM userVM = new();
 
@@ -37,6 +40,11 @@ namespace D69soft.Client.Pages.Auth
             if (await authService.LoginRequest(userVM) > 0)
             {
                 await ((CustomAuthenticationStateProvider)authenticationStateProvider).UpdateAuthenticationState(userVM.Eserial);
+
+                logVM.LogType = "AUTH";
+                logVM.LogName = "Login";
+                logVM.LogUser = userVM.Eserial;
+                await sysService.InsertLog(logVM);
 
                 await js.InvokeAsync<object>("Cookie_User", "Cookie_UserID", userVM.Eserial, 100);
 

@@ -13,7 +13,6 @@ namespace D69soft.Client.Shared
         [Inject] NavigationManager navigationManager { get; set; }
         [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Inject] SysService sysService { get; set; }
-        [Inject] AuthService authService { get; set; }
 
         bool isLoadingScreen = true;
 

@@ -8,6 +8,7 @@ using D69soft.Shared.Models.ViewModels.POS;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.CRM;
 using D69soft.Client.Helpers;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Client.Pages.POS
 {
@@ -22,12 +23,13 @@ namespace D69soft.Client.Pages.POS
         [Inject] CashierService cashierService { get; set; }
         [Inject] CustomerService customerService { get; set; }
 
-
         bool isLoading;
 
         bool isLoadingScreen = true;
 
         //private HubConnection hubConnection;
+
+        LogVM logVM = new();
 
         //Filter
         FilterPosVM filterPosVM = new();
@@ -68,13 +70,14 @@ namespace D69soft.Client.Pages.POS
 
         protected override async Task OnInitializedAsync()
         {
-            
-
             filterPosVM.UserID = (await authenticationStateTask).User.GetUserId();
 
             if (await sysService.CheckAccessFunc(filterPosVM.UserID, "POS_Cashier"))
             {
-                await sysService.InsertLogUserFunc(filterPosVM.UserID, "POS_Cashier");
+                logVM.LogType = "FUNC";
+                logVM.LogName = "POS_Cashier";
+                logVM.LogUser = filterPosVM.UserID;
+                await sysService.InsertLog(logVM);
             }
             else
             {

@@ -27,6 +27,8 @@ namespace D69soft.Client.Pages.HR
 
         bool isLoadingScreen = true;
 
+        LogVM logVM = new();
+
         FilterHrVM filterHrVM = new();
 
         IEnumerable<PeriodVM> year_filter_list;
@@ -65,7 +67,10 @@ namespace D69soft.Client.Pages.HR
 
             if (await sysService.CheckAccessFunc(UserID, "HR_AgreementText"))
             {
-                await sysService.InsertLogUserFunc(UserID, "HR_AgreementText");
+                logVM.LogType = "FUNC";
+                logVM.LogName = "HR_AgreementText";
+                logVM.LogUser = UserID;
+                await sysService.InsertLog(logVM);
             }
             else
             {

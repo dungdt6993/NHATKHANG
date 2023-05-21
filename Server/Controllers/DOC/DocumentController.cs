@@ -5,6 +5,8 @@ using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.DOC;
 using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Utilities;
+using DevExpress.Web;
 
 namespace D69soft.Server.Controllers.DOC
 {
@@ -13,10 +15,12 @@ namespace D69soft.Server.Controllers.DOC
     public class DocumentController : ControllerBase
     {
         private readonly SqlConnectionConfig _connConfig;
+        private readonly IWebHostEnvironment _env;
 
-        public DocumentController(SqlConnectionConfig connConfig)
+        public DocumentController(SqlConnectionConfig connConfig, IWebHostEnvironment env)
         {
             _connConfig = connConfig;
+            _env = env;
         }
 
         [HttpPost("GetDocTypes")]
@@ -96,6 +100,24 @@ namespace D69soft.Server.Controllers.DOC
         [HttpPost("UpdateDocument")]
         public async Task<ActionResult<bool>> UpdateDocument(DocumentVM _documentVM)
         {
+            if (_documentVM.IsDelFileScan && !String.IsNullOrEmpty(_documentVM.FileScan))
+            {
+                LibraryFunc.DelFileFrom(Path.Combine(_env.ContentRootPath, $"{UrlDirectory.Upload_DOC_Private}{_documentVM.FileScan}"));
+                _documentVM.FileScan = String.Empty;
+            }
+
+            if (_documentVM.FileContent != null)
+            {
+                var filename = $"{LibraryFunc.RemoveWhitespace(_documentVM.DocTypeID + "_" + DateTime.Now.ToString("ddMMyyyy_HHmmss"))}.{_documentVM.FileName}";
+                var path = Path.Combine(_env.ContentRootPath, $"{UrlDirectory.Upload_DOC_Private}{filename}");
+
+                var fs = System.IO.File.Create(path);
+                fs.Write(_documentVM.FileContent, 0, _documentVM.FileContent.Length);
+                fs.Close();
+
+                _documentVM.FileScan = filename;
+            }
+
             var sql = string.Empty;
             if (_documentVM.IsTypeUpdate == 0)
             {

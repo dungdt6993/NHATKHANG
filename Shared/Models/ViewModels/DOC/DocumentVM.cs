@@ -13,7 +13,8 @@ namespace D69soft.Shared.Models.ViewModels.DOC
         public bool IsDelFileScan { get; set; }
 
         public string FileName { get; set; }
-        public string ContentType { get; set; }
+        public byte[] FileContent { get; set; }
+        public string FileType { get; set; }
         //parameter
 
         public int DocID { get; set; }

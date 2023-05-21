@@ -1,0 +1,64 @@
+﻿@page "/Log"
+
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-purple card-outline">
+            <div class="card-body table-responsive p-0" style="height: calc(100vh - 124px);">
+
+                <table class="table table-striped projects">
+                    <thead>
+                        <tr>
+                            <th>
+                                LogType
+                            </th>
+                            <th>
+                                LogName
+                            </th>
+                            <th>
+                                LogDesc
+                            </th>
+                            <th>
+                                LogTime
+                            </th>
+                            <th>
+                                LogUser
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @if (logVMs != null)
+                        {
+                            <Virtualize Items="@logVMs" Context="_logVM" OverscanCount="50">
+
+                                <tr>
+                                    <td>
+                                        @_logVM.LogType
+                                    </td>
+                                    <td>
+                                        @_logVM.LogName
+                                    </td>
+                                    <td>
+                                        @_logVM.LogDesc
+                                    </td>
+                                    <td>
+                                        @_logVM.LogTime
+                                    </td>
+                                    <td>
+                                        @_logVM.LogUser
+                                    </td>
+                                </tr>
+
+                            </Virtualize>
+                        }
+
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+</section>

@@ -46,6 +46,8 @@ namespace D69soft.Client.Pages.HR
         bool disabled_BasicSalary; bool disabled_Benefit4; bool disabled_OtherSalary; bool disabled_Benefit5; bool disabled_Benefit1; bool disabled_Benefit6; bool disabled_Benefit2; bool disabled_Benefit7;
         bool disabled_Benefit3; bool disabled_Benefit8; bool disabled_Reason; bool disabled_ApprovedBy; bool disabled_BeginSalaryDate; bool disabled_SalaryByBank; bool disabled_IsPayBy;
 
+        LogVM logVM = new();
+
         FilterHrVM filterHrVM = new();
         DivisionVM divisionSelected = new();
         IEnumerable<DivisionVM> division_filter_list;
@@ -68,8 +70,6 @@ namespace D69soft.Client.Pages.HR
         IEnumerable<PermissionUserVM> permissionUsers;
         List<ProfileManagamentVM> profileHistorys;
         List<SalaryDefVM> salaryDefs;
-
-        UserSysLogVM userSysLogVM = new();
 
         //KPI
         IEnumerable<ProfileManagamentVM> empls;
@@ -98,16 +98,15 @@ namespace D69soft.Client.Pages.HR
 
             if (await sysService.CheckAccessFunc(UserID, "HR_Profile"))
             {
-                await sysService.InsertLogUserFunc(UserID, "HR_Profile");
+                logVM.LogType = "FUNC";
+                logVM.LogName = "HR_Profile";
+                logVM.LogUser = UserID;
+                await sysService.InsertLog(logVM);
             }
             else
             {
                 navigationManager.NavigateTo("/");
             }
-            userSysLogVM.UserSysLog = UserID;
-            userSysLogVM.UrlFuncLog = "/HR/Profile";
-            userSysLogVM.FuncPermisID = "HR_Profile";
-            userSysLogVM.isShowNotifi = 1;
 
             //Initialize Filter
             filterHrVM.UserID = UserID;

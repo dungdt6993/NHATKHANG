@@ -17,16 +17,15 @@ namespace D69soft.Client.Services
             _httpClient = httpClient;
         }
 
-        //Log Err
-        public async Task ErrorLog(ErrorLogVM _errorLogVM)
+        //Log
+        public async Task InsertLog(LogVM _logVM)
         {
-            await _httpClient.PostAsJsonAsync($"api/Sys/ErrorLog", _errorLogVM);
+            await _httpClient.PostAsJsonAsync($"api/Sys/InsertLog", _logVM);
         }
 
-        //Log
-        public async Task<bool> InsertLogUserFunc(string _UserID, string _FuncID)
+        public async Task<List<LogVM>> GetLog()
         {
-            return await _httpClient.GetFromJsonAsync<bool>($"api/Sys/InsertLogUserFunc/{_UserID}/{_FuncID}");
+            return await _httpClient.GetFromJsonAsync<List<LogVM>>($"api/Sys/GetLog");
         }
 
         public async Task<bool> CheckAccessFunc(string _UserID, string _FuncID)

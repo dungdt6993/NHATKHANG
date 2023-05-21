@@ -9,6 +9,7 @@ using D69soft.Client.Services.FIN;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Client.Helpers;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -27,6 +28,8 @@ namespace D69soft.Client.Pages.FIN
         bool isLoading;
 
         bool isLoadingScreen = true;
+
+        LogVM logVM = new();
 
         //Filter
         FilterFinVM filterFinVM = new();
@@ -68,7 +71,10 @@ namespace D69soft.Client.Pages.FIN
 
             if (await sysService.CheckAccessFunc(UserID, "Stock_Inventory"))
             {
-                await sysService.InsertLogUserFunc(UserID, "Stock_Inventory");
+                logVM.LogType = "FUNC";
+                logVM.LogName = "Stock_Inventory";
+                logVM.LogUser = UserID;
+                await sysService.InsertLog(logVM);
             }
             else
             {

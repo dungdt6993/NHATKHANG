@@ -21,14 +21,14 @@ namespace D69soft.Client.Pages.SYS
 
         bool isLoadingScreen = true;
 
-        UserSysLogVM userSysLogVM = new UserSysLogVM();
+        LogVM logVM = new();
+
+        //Filter
+        FilterHrVM filterHrVM = new();
 
         UserVM userInfo = new UserVM();
 
         IEnumerable<PayslipVM> payslipUsers;
-
-        //Filter
-        FilterHrVM filterHrVM = new();
 
         //Monthly Income
         List<MonthlyIncomeTrnOtherVM> monthlyIncomeTrnOtherVMs;
@@ -37,10 +37,10 @@ namespace D69soft.Client.Pages.SYS
         {
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            userSysLogVM.UserSysLog = UserID;
-            userSysLogVM.UrlFuncLog = "/HR/Profile";
-            userSysLogVM.FuncPermisID = "HR_Profile";
-            userSysLogVM.isShowNotifi = 1;
+            logVM.LogType = "FUNC";
+            logVM.LogName = "PERSONAL";
+            logVM.LogUser = UserID;
+            await sysService.InsertLog(logVM);
 
             userInfo = await sysService.GetInfoUser(UserID);
 

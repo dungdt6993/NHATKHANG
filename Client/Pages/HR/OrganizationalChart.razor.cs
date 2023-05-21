@@ -6,6 +6,7 @@ using D69soft.Client.Services;
 using D69soft.Client.Services.HR;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Client.Helpers;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -23,6 +24,8 @@ namespace D69soft.Client.Pages.HR
         bool isLoading;
 
         bool isLoadingScreen = true;
+
+        LogVM logVM = new();
 
         FilterHrVM filterHrVM = new();
 
@@ -65,7 +68,10 @@ namespace D69soft.Client.Pages.HR
 
             if (await sysService.CheckAccessFunc(UserID, "HR_OrganizationalChart"))
             {
-                await sysService.InsertLogUserFunc(UserID, "HR_OrganizationalChart");
+                logVM.LogType = "FUNC";
+                logVM.LogName = "HR_OrganizationalChart";
+                logVM.LogUser = UserID;
+                await sysService.InsertLog(logVM);
             }
             else
             {

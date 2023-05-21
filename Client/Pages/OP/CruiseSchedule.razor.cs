@@ -8,6 +8,7 @@ using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.OP;
 using D69soft.Client.Helpers;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Client.Pages.OP
 {
@@ -26,6 +27,8 @@ namespace D69soft.Client.Pages.OP
         bool isLoading;
 
         bool isLoadingScreen = true;
+
+        LogVM logVM = new();
 
         //Filter
         FilterHrVM filterHrVM = new();
@@ -59,7 +62,10 @@ namespace D69soft.Client.Pages.OP
 
             if (await sysService.CheckAccessFunc(UserID, "OP_CruiseSchedule"))
             {
-                await sysService.InsertLogUserFunc(UserID, "OP_CruiseSchedule");
+                logVM.LogType = "FUNC";
+                logVM.LogName = "OP_CruiseSchedule";
+                logVM.LogUser = UserID;
+                await sysService.InsertLog(logVM);
             }
             else
             {

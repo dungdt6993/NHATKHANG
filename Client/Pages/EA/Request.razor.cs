@@ -10,6 +10,7 @@ using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.EA;
 using D69soft.Client.Helpers;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Client.Pages.EA
 {
@@ -30,6 +31,8 @@ namespace D69soft.Client.Pages.EA
         bool isLoading;
 
         bool isLoadingScreen = true;
+
+        LogVM logVM = new();
 
         //Filter
         FilterFinVM filterFinVM = new();
@@ -66,7 +69,10 @@ namespace D69soft.Client.Pages.EA
 
             if (await sysService.CheckAccessFunc(UserID, "EA_Request"))
             {
-                await sysService.InsertLogUserFunc(UserID, "EA_Request");
+                logVM.LogType = "FUNC";
+                logVM.LogName = "EA_Request";
+                logVM.LogUser = UserID;
+                await sysService.InsertLog(logVM);
             }
             else
             {

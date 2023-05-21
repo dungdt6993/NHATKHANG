@@ -9,6 +9,7 @@ using D69soft.Client.Services.HR;
 using D69soft.Client.Services.OP;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Client.Helpers;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Client.Pages.OP
 {
@@ -28,6 +29,8 @@ namespace D69soft.Client.Pages.OP
         bool isLoading;
 
         bool isLoadingScreen = true;
+
+        LogVM logVM = new();
 
         //Filter
         FilterHrVM filterHrVM = new();
@@ -65,14 +68,15 @@ namespace D69soft.Client.Pages.OP
         }
 
         protected override async Task OnInitializedAsync()
-        {
-            
-
+        {          
             UserID = (await authenticationStateTask).User.GetUserId();
 
             if (await sysService.CheckAccessFunc(UserID, "OP_EmplTrf"))
             {
-                await sysService.InsertLogUserFunc(UserID, "OP_EmplTrf");
+                logVM.LogType = "FUNC";
+                logVM.LogName = "OP_EmplTrf";
+                logVM.LogUser = UserID;
+                await sysService.InsertLog(logVM);
             }
             else
             {

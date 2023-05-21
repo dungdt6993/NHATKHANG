@@ -8,6 +8,7 @@ using D69soft.Client.Services.POS;
 using D69soft.Shared.Models.ViewModels.POS;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Client.Helpers;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Client.Pages.POS
 {
@@ -25,6 +26,8 @@ namespace D69soft.Client.Pages.POS
         bool isLoading;
 
         bool isLoadingScreen = true;
+
+        LogVM logVM = new();
 
         //Filter
         FilterPosVM filterPosVM = new();
@@ -50,14 +53,15 @@ namespace D69soft.Client.Pages.POS
         }
 
         protected override async Task OnInitializedAsync()
-        {
-            
-
+        {           
             filterPosVM.UserID = (await authenticationStateTask).User.GetUserId();
 
             if (await sysService.CheckAccessFunc(filterPosVM.UserID, "POS_Invoices"))
             {
-                await sysService.InsertLogUserFunc(filterPosVM.UserID, "POS_Invoices");
+                logVM.LogType = "FUNC";
+                logVM.LogName = "POS_Invoices";
+                logVM.LogUser = filterPosVM.UserID;
+                await sysService.InsertLog(logVM);
             }
             else
             {

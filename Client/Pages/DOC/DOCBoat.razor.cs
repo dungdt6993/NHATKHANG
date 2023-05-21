@@ -10,6 +10,7 @@ using D69soft.Client.Helpers;
 using D69soft.Client.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using D69soft.Shared.Utilities;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Client.Pages.DOC
 {
@@ -29,6 +30,8 @@ namespace D69soft.Client.Pages.DOC
 
         bool isLoadingScreen = true;
 
+        LogVM logVM = new();
+
         //Filter
         FilterHrVM filterHrVM = new();
         IEnumerable<DivisionVM> division_filter_list;
@@ -39,6 +42,9 @@ namespace D69soft.Client.Pages.DOC
 
         DocumentVM documentVM = new();
         List<DocumentVM> documentVMs;
+
+        //PermisFunc
+        bool DOC_DOCBoat_Update;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -53,11 +59,14 @@ namespace D69soft.Client.Pages.DOC
 
         protected override async Task OnInitializedAsync()
         {
-            UserID = (await authenticationStateTask).User.GetUserId();
+            filterHrVM.UserID = UserID = (await authenticationStateTask).User.GetUserId();
 
             if (await sysService.CheckAccessFunc(UserID, "DOC_DOCBoat"))
             {
-                await sysService.InsertLogUserFunc(UserID, "DOC_DOCBoat");
+                logVM.LogUser = UserID;
+                logVM.LogType = "FUNC";
+                logVM.LogName = "DOC_DOCBoat";
+                await sysService.InsertLog(logVM);
             }
             else
             {
@@ -65,7 +74,7 @@ namespace D69soft.Client.Pages.DOC
             }
 
             //Initialize Filter
-            filterHrVM.UserID = UserID;
+            DOC_DOCBoat_Update = await sysService.CheckAccessSubFunc(UserID, "DOC_DOCBoat_Update");
 
             filterHrVM.GroupType = "DocBoat";
 
@@ -137,17 +146,19 @@ namespace D69soft.Client.Pages.DOC
         {
             isLoading = true;
 
+            memoryStream = null;
+
             documentVMs = await docService.GetDocs(filterHrVM);
 
             isLoading = false;
         }
 
         //Update Document
-        private async Task InitializeModalUpdate_Document(int _isTypeUpdate, DocumentVM _documentVM)
+        private async Task InitializeModalUpdate_Document(int _IsTypeUpdate, DocumentVM _documentVM)
         {
             isLoading = true;
 
-            if (_isTypeUpdate == 0)
+            if (_IsTypeUpdate == 0)
             {
                 documentVM = new();
 
@@ -156,12 +167,12 @@ namespace D69soft.Client.Pages.DOC
                 documentVM.IsDelFileScan = true;
             }
 
-            if (_isTypeUpdate == 1)
+            if (_IsTypeUpdate == 1)
             {
                 documentVM = _documentVM;
             }
 
-            documentVM.IsTypeUpdate = _isTypeUpdate;
+            documentVM.IsTypeUpdate = _IsTypeUpdate;
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_Document");
 
@@ -192,57 +203,47 @@ namespace D69soft.Client.Pages.DOC
             }
         }
 
-        private async Task UpdateDocument()
+        private async Task UpdateDocument(EditContext _formDocumentVM ,int _IsTypeUpdate)
         {
+            documentVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formDocumentVM.Validate()) return;
+
             isLoading = true;
 
             if (documentVM.IsTypeUpdate != 2)
             {
-                if (documentVM.IsDelFileScan && !String.IsNullOrEmpty(documentVM.FileScan))
-                {
-                    LibraryFunc.DelFileFrom(Path.Combine(Directory.GetCurrentDirectory(), $"{UrlDirectory.Upload_DOC_Private}{documentVM.FileScan}"));
-                    documentVM.FileScan = String.Empty;
-                }
-
-                if (memoryStream != null)
-                {
-                    var filename = LibraryFunc.RemoveWhitespace(documentVM.DocTypeID + "_" + DateTime.Now.ToString("ddMMyyyy_HHmmss"));
-
-                    var path = $"{UrlDirectory.Upload_DOC_Private}{filename}.pdf";
-
-                    File.WriteAllBytes(path, memoryStream.ToArray());
-
-                    documentVM.FileScan = filename + ".pdf";
-                }
-
                 await docService.UpdateDocument(documentVM);
 
+                logVM.LogDesc = "Cập nhật giấy tờ tàu thành công!";
+                await sysService.InsertLog(logVM);
+
+                await GetDocBoatList();
+
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Document");
-                await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+                await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
             }
             else
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
                 {
-                    if (!String.IsNullOrEmpty(documentVM.FileScan))
-                    {
-                        LibraryFunc.DelFileFrom(Path.Combine(Directory.GetCurrentDirectory(), $"{UrlDirectory.Upload_DOC_Private}{documentVM.FileScan}"));
-                    }
+                    documentVM.IsDelFileScan = true;
+
                     await docService.UpdateDocument(documentVM);
 
-                    await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Document");
-                    await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
+                    logVM.LogDesc = "Xoá giấy tờ tàu thành công!";
+                    await sysService.InsertLog(logVM);
 
+                    await GetDocBoatList();
+
+                    await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Document");
+                    await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
                 }
                 else
                 {
                     documentVM.IsTypeUpdate = 1;
                 }
             }
-
-            memoryStream = null;
-
-            await GetDocBoatList();
 
             isLoading = false;
         }
@@ -255,38 +256,41 @@ namespace D69soft.Client.Pages.DOC
         {
             isLoading = true;
 
-            var imageFiles = e.GetMultipleFiles();
+            var Files = e.GetMultipleFiles();
 
-            foreach (var img in imageFiles)
+            foreach (var file in Files)
             {
-                documentVM.ContentType = img.ContentType;
-
-                stream = img.OpenReadStream(maxFileSize);
+                stream = file.OpenReadStream(maxFileSize);
                 memoryStream = new MemoryStream();
                 await stream.CopyToAsync(memoryStream);
-                stream.Close();     
+                stream.Close();
+
+                documentVM.FileName = file.Name;
+                documentVM.FileContent= memoryStream.ToArray();
+                documentVM.FileType = file.ContentType;
+                memoryStream.Close();
             }
 
             isLoading = false;
         }
 
         //Update Doctype
-        private async Task InitializeModalUpdate_DocType(int _isTypeUpdate)
+        private async Task InitializeModalUpdate_DocType(int _IsTypeUpdate)
         {
             isLoading = true;
 
-            if (_isTypeUpdate == 0)
+            if (_IsTypeUpdate == 0)
             {
                 doctypeVM = new();
                 doctypeVM.GroupType = "DocBoat";
             }
 
-            if (_isTypeUpdate == 1)
+            if (_IsTypeUpdate == 1)
             {
                 doctypeVM = doctype_filter_list.First(x => x.DocTypeID == documentVM.DocTypeID);
             }
 
-            doctypeVM.IsTypeUpdate = _isTypeUpdate;
+            doctypeVM.IsTypeUpdate = _IsTypeUpdate;
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_DocType");
 

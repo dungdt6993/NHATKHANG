@@ -24,6 +24,8 @@ namespace D69soft.Client
             //Service
             builder.Services.AddInfrastructure();
 
+
+
             //Auth
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 

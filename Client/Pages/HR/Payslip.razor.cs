@@ -6,6 +6,7 @@ using D69soft.Client.Services.HR;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Client.Helpers;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -25,6 +26,8 @@ namespace D69soft.Client.Pages.HR
         bool isLoading;
 
         bool isLoadingScreen = true;
+
+        LogVM logVM = new();
 
         //Filter
         FilterHrVM filterHrVM = new();
@@ -55,9 +58,12 @@ namespace D69soft.Client.Pages.HR
 
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "HR_DutyRoster"))
+            if (await sysService.CheckAccessFunc(UserID, "HR_Payslip"))
             {
-                await sysService.InsertLogUserFunc(UserID, "HR_DutyRoster");
+                logVM.LogType = "FUNC";
+                logVM.LogName = "HR_Payslip";
+                logVM.LogUser = UserID;
+                await sysService.InsertLog(logVM);
             }
             else
             {

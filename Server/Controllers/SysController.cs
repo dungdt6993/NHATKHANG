@@ -21,35 +21,34 @@ namespace D69soft.Server.Controllers
         }
 
         //Log
-        [HttpGet("InsertLogUserFunc/{_UserID}/{_FuncID}")]
-        public async Task<ActionResult<bool>> InsertLogUserFunc(string _UserID, string _FuncID)
+        [HttpPost("InsertLog")]
+        public async Task<ActionResult<bool>> InsertLog(LogVM _logVM)
         {
-            var sql = "Insert into SYSTEM.UserFuncLog(UserID, FuncID, TimeUserd) values(@UserID, @FuncID,GetDate()) ";
+            var sql = "Insert into SYSTEM.Log (LogType, LogName, LogDesc, LogTime, LogNote, LogUser) ";
+            sql += "Values (@LogType,@LogName,@LogDesc,GETDATE(),@LogNote,@LogUser)";
+
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                await conn.ExecuteAsync(sql, new { UserID = _UserID, FuncID = _FuncID });
+                await conn.ExecuteAsync(sql, _logVM);
             }
             return true;
         }
 
-        //ErrorLog
-        [HttpPost("ErrorLog")]
-        public async Task<ActionResult<bool>> ErrorLog(ErrorLogVM _errorLogVM)
+        [HttpGet("GetLog")]
+        public async Task<ActionResult<List<LogVM>>> GetLog()
         {
-            var sql = "Insert into SYSTEM.ErrorLog (ErrType, ErrMessage, ErrTime, ErrNote) ";
-            sql += "Values (@ErrType,@ErrMessage,@ErrTime,@ErrNote)";
-
+            var sql = "select * from SYSTEM.Log order by LogTime desc ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                await conn.ExecuteAsync(sql, _errorLogVM);
+                var result = await conn.QueryAsync<LogVM>(sql);
+                return result.ToList();
             }
-            return true;
         }
 
         //Info User
@@ -154,7 +153,7 @@ namespace D69soft.Server.Controllers
             }
         }
 
-        [HttpGet("CheckPermisFunc/{_UserID}/{_SubFuncID}")]
+        [HttpGet("CheckAccessSubFunc/{_UserID}/{_SubFuncID}")]
         public async Task<ActionResult<bool>> CheckAccessSubFunc(string _UserID, string _SubFuncID)
         {
             var sql = "SELECT CAST(CASE WHEN EXISTS (select 1 from SYSTEM.PermissionSubFunc where UserID = @UserID and SubFuncID=@SubFuncID) THEN 1 ELSE 0 END as BIT)";

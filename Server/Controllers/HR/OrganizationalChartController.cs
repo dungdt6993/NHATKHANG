@@ -48,7 +48,7 @@ namespace D69soft.Server.Controllers.HR
             }
         }
 
-        [HttpPost("GetDivisionList")]
+        [HttpPost("UpdateDivision")]
         public async Task<ActionResult<int>> UpdateDivision(DivisionVM _divisionVM)
         {
             var sql = "";
@@ -94,7 +94,7 @@ namespace D69soft.Server.Controllers.HR
             }
         }
 
-        [HttpGet("CheckContainsDepartment/{id}")]
+        [HttpGet("CheckContainsDepartmentID/{id}")]
         public async Task<bool> CheckContainsDepartmentID(string id)
         {
             var sql = "SELECT CAST(CASE WHEN EXISTS (SELECT 1 FROM HR.Department where DepartmentID = @DepartmentID) THEN 0 ELSE 1 END as BIT)";

@@ -11,6 +11,7 @@ using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.DOC;
 using D69soft.Client.Helpers;
 using D69soft.Shared.Utilities;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Client.Pages.DOC
 {
@@ -30,6 +31,8 @@ namespace D69soft.Client.Pages.DOC
         bool isLoading;
 
         bool isLoadingScreen = true;
+
+        LogVM logVM = new();
 
         //Filter
         FilterHrVM filterHrVM = new();
@@ -55,13 +58,14 @@ namespace D69soft.Client.Pages.DOC
 
         protected override async Task OnInitializedAsync()
         {
-            
-
-            UserID = (await authenticationStateTask).User.GetUserId();
+            filterHrVM.UserID = UserID = (await authenticationStateTask).User.GetUserId();
 
             if (await sysService.CheckAccessFunc(UserID, "DOC_DOCTender"))
             {
-                await sysService.InsertLogUserFunc(UserID, "DOC_DOCTender");
+                logVM.LogType = "FUNC";
+                logVM.LogName = "DOC_DOCTender";
+                logVM.LogUser = UserID;
+                await sysService.InsertLog(logVM);
             }
             else
             {
@@ -69,8 +73,6 @@ namespace D69soft.Client.Pages.DOC
             }
 
             //Initialize Filter
-            filterHrVM.UserID = UserID;
-
             filterHrVM.GroupType = "DocTender";
 
             division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
@@ -259,16 +261,19 @@ namespace D69soft.Client.Pages.DOC
         {
             isLoading = true;
 
-            var imageFiles = e.GetMultipleFiles();
+            var Files = e.GetMultipleFiles();
 
-            foreach (var img in imageFiles)
+            foreach (var file in Files)
             {
-                documentVM.ContentType = img.ContentType;
-
-                stream = img.OpenReadStream(maxFileSize);
+                stream = file.OpenReadStream(maxFileSize);
                 memoryStream = new MemoryStream();
                 await stream.CopyToAsync(memoryStream);
-                stream.Close();     
+                stream.Close();
+
+                documentVM.FileName = file.Name;
+                documentVM.FileContent = memoryStream.ToArray();
+                documentVM.FileType = file.ContentType;
+                memoryStream.Close();
             }
 
             isLoading = false;

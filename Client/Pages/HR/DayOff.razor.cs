@@ -28,6 +28,8 @@ namespace D69soft.Client.Pages.HR
 
         bool isLoadingScreen = true;
 
+        LogVM logVM = new();
+
         //Filter
         FilterHrVM filterHrVM = new();
         IEnumerable<PeriodVM> year_filter_list;
@@ -65,7 +67,10 @@ namespace D69soft.Client.Pages.HR
 
             if (await sysService.CheckAccessFunc(UserID, "HR_DayOff"))
             {
-                await sysService.InsertLogUserFunc(UserID, "HR_DayOff");
+                logVM.LogType = "FUNC";
+                logVM.LogName = "HR_DayOff";
+                logVM.LogUser = UserID;
+                await sysService.InsertLog(logVM);
             }
             else
             {

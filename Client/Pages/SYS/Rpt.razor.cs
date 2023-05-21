@@ -28,6 +28,8 @@ namespace D69soft.Client.Pages.SYS
 
         bool IsEditRpt = false;
 
+        LogVM logVM = new();
+
         FilterRptVM filterRptVM = new();
         List<SysRptVM> modules = new();
         List<SysRptVM> rptgrps = new();
@@ -53,7 +55,10 @@ namespace D69soft.Client.Pages.SYS
 
             if (await sysService.CheckPermisRpt(UserID))
             {
-                await sysService.InsertLogUserFunc(UserID, "SysRpt");
+                logVM.LogType = "FUNC";
+                logVM.LogName = "RPT";
+                logVM.LogUser = UserID;
+                await sysService.InsertLog(logVM);
             }
             else
             {
