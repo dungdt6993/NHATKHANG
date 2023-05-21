@@ -9,7 +9,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
-            <EditForm Model="@documentVM" OnValidSubmit="@UpdateDocument">
+            <EditForm Model="@documentVM" Context="formDocumentVM">
 
                 <FluentValidationValidator />
 
@@ -95,10 +95,10 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdateDocument(formDocumentVM, documentVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (documentVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => documentVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateDocument(formDocumentVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
 

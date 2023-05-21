@@ -22,7 +22,7 @@ namespace D69soft.Client.Pages.DOC
 
         [Inject] SysService sysService { get; set; }
         [Inject] OrganizationalChartService organizationalChartService { get; set; }
-        [Inject] DocumentService docService { get; set; }
+        [Inject] DocumentService documentService { get; set; }
 
         protected string UserID;
 
@@ -84,7 +84,7 @@ namespace D69soft.Client.Pages.DOC
             filterHrVM.DepartmentID = string.Empty;
             department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
 
-            doctype_filter_list = await docService.GetDocTypes(filterHrVM);
+            doctype_filter_list = await documentService.GetDocTypes(filterHrVM);
 
             isLoadingScreen = false;
         }
@@ -148,7 +148,7 @@ namespace D69soft.Client.Pages.DOC
 
             memoryStream = null;
 
-            documentVMs = await docService.GetDocs(filterHrVM);
+            documentVMs = await documentService.GetDocs(filterHrVM);
 
             isLoading = false;
         }
@@ -213,7 +213,7 @@ namespace D69soft.Client.Pages.DOC
 
             if (documentVM.IsTypeUpdate != 2)
             {
-                await docService.UpdateDocument(documentVM);
+                await documentService.UpdateDocument(documentVM);
 
                 logVM.LogDesc = "Cập nhật giấy tờ tàu thành công!";
                 await sysService.InsertLog(logVM);
@@ -229,7 +229,7 @@ namespace D69soft.Client.Pages.DOC
                 {
                     documentVM.IsDelFileScan = true;
 
-                    await docService.UpdateDocument(documentVM);
+                    await documentService.UpdateDocument(documentVM);
 
                     logVM.LogDesc = "Xoá giấy tờ tàu thành công!";
                     await sysService.InsertLog(logVM);
@@ -302,7 +302,7 @@ namespace D69soft.Client.Pages.DOC
 
             if (doctypeVM.IsTypeUpdate != 2)
             {
-                await docService.UpdateDocType(doctypeVM);
+                await documentService.UpdateDocType(doctypeVM);
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_DocType");
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
@@ -311,12 +311,12 @@ namespace D69soft.Client.Pages.DOC
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
                 {
-                    int affectedRows = await docService.UpdateDocType(doctypeVM);
+                    int affectedRows = await documentService.UpdateDocType(doctypeVM);
 
                     if (affectedRows > 0)
                     {
                         doctypeVM.DocTypeID = 0;
-                        doctype_filter_list = await docService.GetDocTypes(filterHrVM);
+                        doctype_filter_list = await documentService.GetDocTypes(filterHrVM);
 
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_DocType");
                         await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
@@ -333,7 +333,7 @@ namespace D69soft.Client.Pages.DOC
                 }
             }
 
-            doctype_filter_list = await docService.GetDocTypes(filterHrVM);
+            doctype_filter_list = await documentService.GetDocTypes(filterHrVM);
 
             isLoading = false;
         }

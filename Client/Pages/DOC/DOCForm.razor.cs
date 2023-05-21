@@ -10,6 +10,7 @@ using D69soft.Client.Services.HR;
 using D69soft.Client.Services.DOC;
 using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Client.Services.OP;
 
 namespace D69soft.Client.Pages.DOC
 {
@@ -110,6 +111,8 @@ namespace D69soft.Client.Pages.DOC
         {
             isLoading = true;
 
+            memoryStream = null;
+
             documentVMs = search_documentVMs = await documentService.GetDocs(filterHrVM);
 
             filterHrVM.searchValues = String.Empty;
@@ -177,60 +180,47 @@ namespace D69soft.Client.Pages.DOC
             }
         }
 
-        private async Task UpdateDocument()
+        private async Task UpdateDocument(EditContext _formDocumentVM, int _IsTypeUpdate)
         {
+            documentVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formDocumentVM.Validate()) return;
+
             isLoading = true;
 
             if (documentVM.IsTypeUpdate != 2)
             {
-                if (documentVM.IsDelFileScan && !String.IsNullOrEmpty(documentVM.FileScan))
-                {
-                    LibraryFunc.DelFileFrom(Path.Combine(Directory.GetCurrentDirectory(), $"{UrlDirectory.Upload_DOC_Private}{documentVM.FileScan}"));
-                    documentVM.FileScan = String.Empty;
-                }
-
-                if (memoryStream != null)
-                {
-
-                    //var extn = item.customFile.Split('.').Last();
-
-                    var filename = LibraryFunc.RemoveWhitespace(DateTime.Now.ToString("ddMMyyyy_HHmmss") + "_" + LibraryFunc.ConvertToUnSign(documentVM.FileName));
-
-                    var path = $"{UrlDirectory.Upload_DOC_Private}{filename}";
-
-                    File.WriteAllBytes(path, memoryStream.ToArray());
-
-                    documentVM.FileScan = filename;
-                }
-
                 await documentService.UpdateDocument(documentVM);
 
+                logVM.LogDesc = "Cập nhật văn bản, biểu mẫu thành công!";
+                await sysService.InsertLog(logVM);
+
+                await GetDOCFormList();
+
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Document");
-                await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+                await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
             }
             else
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
                 {
-                    if (!String.IsNullOrEmpty(documentVM.FileScan))
-                    {
-                        LibraryFunc.DelFileFrom(Path.Combine(Directory.GetCurrentDirectory(), $"{UrlDirectory.Upload_DOC_Private}{documentVM.FileScan}"));
-                    }
+                    documentVM.IsDelFileScan = true;
+
                     await documentService.UpdateDocument(documentVM);
 
-                    await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Document");
-                    await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
+                    logVM.LogDesc = "Xoá văn bản, biểu mẫu tàu thành công!";
+                    await sysService.InsertLog(logVM);
 
+                    await GetDOCFormList();
+
+                    await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Document");
+                    await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
                 }
                 else
                 {
                     documentVM.IsTypeUpdate = 1;
                 }
             }
-
-            memoryStream = null;
-
-            await GetDOCFormList();
 
             isLoading = false;
         }
