@@ -156,7 +156,7 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
-        [HttpGet("GetItemsList")]
+        [HttpPost("GetItemsList")]
         public async Task<ActionResult<List<ItemsVM>>> GetItemsList(FilterFinVM _filterFinVM)
         {
             var sql = "select * from FIN.Items i ";
@@ -195,7 +195,7 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
-        [HttpGet("GetItemsForQuantitative/{_ICode}")]
+        [HttpGet("GetQuantitativeItems/{_ICode}")]
         public async Task<ActionResult<List<QuantitativeItemsVM>>> GetQuantitativeItems(string _ICode)
         {
             var sql = "select qi.QI_ICode, i.IName as QI_IName, iu.IUnitName as QI_IUnitName, qi.QI_UnitRatio from FIN.QuantitativeItems qi ";

@@ -64,7 +64,7 @@
             </div>
 
             <div class="col-sm-2">
-                @if (sysService.CheckAccessSubFunc(UserID, "EA_Request_Create").Result)
+                @if (EA_Request_Create)
                 {
                     <a href="/EA/Cart" class="btn btn-block btn-success"><i class="fa-solid fa-xl fa-plus"></i> Tạo mới yêu cầu</a>
                 }

@@ -6,8 +6,8 @@ using D69soft.Client.Services;
 using D69soft.Client.Services.HR;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.FIN;
-using D69soft.Client.Helpers;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Client.Extension;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -38,7 +38,7 @@ namespace D69soft.Client.Pages.HR
         IEnumerable<DepartmentVM> department_filter_list;
         IEnumerable<SectionVM> section_filter_list;
         IEnumerable<PositionVM> position_filter_list;
-        IEnumerable<ProfileVM> eserial_filter_list;
+        IEnumerable<EserialVM> eserial_filter_list;
 
         IEnumerable<SalaryTransactionGroupVM> trngrp_filter_list;
         IEnumerable<SalaryTransactionCodeVM> trn_filter_list;
@@ -481,24 +481,24 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        private async Task InitializeModalUpdate_SalTrnCode(int _isTypeUpdate, SalaryTransactionCodeVM _salaryTransactionCodeVM)
+        private async Task InitializeModalUpdate_SalTrnCode(int _IsTypeUpdate, SalaryTransactionCodeVM _salaryTransactionCodeVM)
         {
             isLoading = true;
 
             salaryTransactionCodeVM = new();
             salaryTransactionCodeVMs = await payrollService.GetSalTrnCodeList();
 
-            if (_isTypeUpdate == 0)
+            if (_IsTypeUpdate == 0)
             {
                 salaryTransactionCodeVM.Rate = 1;
             }
 
-            if (_isTypeUpdate == 1)
+            if (_IsTypeUpdate == 1)
             {
                 salaryTransactionCodeVM = _salaryTransactionCodeVM;
             }
 
-            salaryTransactionCodeVM.IsTypeUpdate = _isTypeUpdate;
+            salaryTransactionCodeVM.IsTypeUpdate = _IsTypeUpdate;
 
             isLoading = false;
         }

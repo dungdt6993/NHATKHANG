@@ -75,7 +75,7 @@ namespace D69soft.Server.Controllers.DOC
             }
 
             sql += "and (do.DocTypeID=@DocTypeID or coalesce(@DocTypeID,0)=0) ";
-            sql += "and ((DATEDIFF(d,GETDATE(),ExpDate) - NumExpDate <=0 and NumExpDate <> 0 and @isTypeSearch=1) or (coalesce(FileScan,'') = '' and @isTypeSearch=2) or @isTypeSearch=0) ";
+            sql += "and ((DATEDIFF(d,GETDATE(),ExpDate) - NumExpDate <=0 and NumExpDate <> 0 and @IsTypeSearch=1) or (coalesce(FileScan,'') = '' and @IsTypeSearch=2) or @IsTypeSearch=0) ";
 
             if (_filterHrVM.GroupType == "DocBoat")
             {

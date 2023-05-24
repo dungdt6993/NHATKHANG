@@ -138,7 +138,7 @@
                 <!-- radio -->
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
-                        <input type="radio" id="r1" name="r" value="0" @onchange="onchange_filter_typepayslip" checked="@(filterHrVM.isTypeSearch == 0? true: false)">
+                        <input type="radio" id="r1" name="r" value="0" @onchange="onchange_filter_typepayslip" checked="@(filterHrVM.IsTypeSearch == 0? true: false)">
                         <label for="r1">
                             Tất cả
                         </label>
@@ -147,7 +147,7 @@
                         &nbsp;&nbsp;
                     </label>
                     <div class="icheck-warning d-inline">
-                        <input type="radio" id="r2" name="r" value="1" @onchange="onchange_filter_typepayslip" checked="@(filterHrVM.isTypeSearch == 1? true: false)">
+                        <input type="radio" id="r2" name="r" value="1" @onchange="onchange_filter_typepayslip" checked="@(filterHrVM.IsTypeSearch == 1? true: false)">
                         <label for="r2">
                             Thắc mắc lương
                         </label>
@@ -156,7 +156,7 @@
                         &nbsp;&nbsp;
                     </label>
                     <div class="icheck-danger d-inline">
-                        <input type="radio" id="r3" name="r" value="2" @onchange="onchange_filter_typepayslip" checked="@(filterHrVM.isTypeSearch == 2? true: false)">
+                        <input type="radio" id="r3" name="r" value="2" @onchange="onchange_filter_typepayslip" checked="@(filterHrVM.IsTypeSearch == 2? true: false)">
                         <label for="r3">
                             Chưa giải đáp
                         </label>

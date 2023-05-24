@@ -14,11 +14,11 @@ namespace D69soft.Client.Services.HR
             _httpClient = httpClient;
         }
 
-        public async Task<IEnumerable<ProfileVM>> GetEserialByID(FilterHrVM _filterHrVM, string _UserID)
+        public async Task<IEnumerable<EserialVM>> GetEserialByID(FilterHrVM _filterHrVM, string _UserID)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetEserialByID/{_UserID}", _filterHrVM);
 
-            return await response.Content.ReadFromJsonAsync<IEnumerable<ProfileVM>>();
+            return await response.Content.ReadFromJsonAsync<IEnumerable<EserialVM>>();
         }
 
         public async Task<List<DutyRosterVM>> GetDutyRosterList(FilterHrVM _filterHrVM)
@@ -60,7 +60,7 @@ namespace D69soft.Client.Services.HR
         {
             var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/UpdateShiftWork", _filterHrVM);
 
-            return await response.Content.ReadFromJsonAsync<string>();
+            return await response.Content.ReadAsStringAsync();
         }
 
         //Shift
@@ -87,11 +87,11 @@ namespace D69soft.Client.Services.HR
         }
 
         //Att
-        public async Task<ProfileManagamentVM> GetProfileUser(FilterHrVM _filterHrVM)
+        public async Task<ProfileVM> GetProfileUser(FilterHrVM _filterHrVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetProfileUser", _filterHrVM);
 
-            return await response.Content.ReadFromJsonAsync<ProfileManagamentVM>();
+            return await response.Content.ReadFromJsonAsync<ProfileVM>();
         }
 
         public async Task<IEnumerable<DutyRosterVM>> GetAttendanceRecordList(FilterHrVM _filterHrVM)

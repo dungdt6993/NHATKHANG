@@ -11,7 +11,6 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public string UserID { get; set; }
 
         public int TypeProfile { get; set; }
-        public string selectedEserial { get; set; }
 
         public int Month { get; set; }
         public int Year { get; set; }
@@ -24,7 +23,7 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public bool IsChecked { get; set; }
 
         public string strDataFromExcel { get; set; }
-        public int isTypeSearch { get; set; }
+        public int IsTypeSearch { get; set; }
 
         public string searchValues { get; set; }
         public string searchEmpl { get; set; }

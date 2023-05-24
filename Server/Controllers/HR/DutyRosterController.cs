@@ -19,7 +19,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("GetEserialByID/{_UserID}")]
-        public async Task<ActionResult<IEnumerable<ProfileVM>>> GetEserialByID(FilterHrVM _filterHrVM, string _UserID)
+        public async Task<ActionResult<IEnumerable<EserialVM>>> GetEserialByID(FilterHrVM _filterHrVM, string _UserID)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -35,7 +35,7 @@ namespace D69soft.Server.Controllers.HR
                 parm.Add("@Eserial", _filterHrVM.Eserial);
                 parm.Add("@UserID", _UserID);
 
-                var result = await conn.QueryAsync<ProfileVM>("HR.DutyRoster_viewEserialMain", parm, commandType: CommandType.StoredProcedure);
+                var result = await conn.QueryAsync<EserialVM>("HR.DutyRoster_viewEserialMain", parm, commandType: CommandType.StoredProcedure);
                 return Ok(result);
             }
         }
@@ -262,7 +262,7 @@ namespace D69soft.Server.Controllers.HR
 
         //Att
         [HttpPost("GetProfileUser")]
-        public async Task<ActionResult<ProfileManagamentVM>> GetProfileUser(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<ProfileVM>> GetProfileUser(FilterHrVM _filterHrVM)
         {
             var sql = " select p.Eserial, p.LastName, p.MiddleName, p.FirstName, jh.DivisionID, jh.DepartmentID from HR.JobHistory jh ";
             sql += "join HR.Profile p on p.Eserial = jh.Eserial ";
@@ -273,7 +273,7 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                return await conn.QueryFirstAsync<ProfileManagamentVM>(sql, _filterHrVM);
+                return await conn.QueryFirstAsync<ProfileVM>(sql, _filterHrVM);
             }
         }
 

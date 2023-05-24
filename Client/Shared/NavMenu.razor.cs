@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using D69soft.Client.Helpers;
 using D69soft.Client.Services;
+using D69soft.Client.Extension;
 
 namespace D69soft.Client.Shared
 {
@@ -52,7 +52,7 @@ namespace D69soft.Client.Shared
 
         private void ClickMenuFunc(string _urlFunc)
         {
-            navigationManager.NavigateTo(_urlFunc, true);
+            navigationManager.NavigateTo(_urlFunc, false);
         }
     }
 }

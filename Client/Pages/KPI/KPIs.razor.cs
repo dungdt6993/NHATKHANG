@@ -7,8 +7,8 @@ using D69soft.Client.Services.KPI;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.KPI;
-using D69soft.Client.Helpers;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Client.Extension;
 
 namespace D69soft.Client.Pages.KPI
 {
@@ -37,7 +37,7 @@ namespace D69soft.Client.Pages.KPI
         IEnumerable<DivisionVM> division_filter_list;
         IEnumerable<DepartmentVM> department_filter_list;
         IEnumerable<PositionVM> position_filter_list;
-        IEnumerable<ProfileVM> eserial_filter_list;
+        IEnumerable<EserialVM> eserial_filter_list;
 
         //KPIs
         KPIVM kPIVM = new();

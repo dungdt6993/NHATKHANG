@@ -134,7 +134,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
 
-            <EditForm Model="@doctypeVM" OnValidSubmit="@UpdateDocType">
+            <EditForm Model="@doctypeVM" Context="formDocTypeVM">
 
                 <FluentValidationValidator />
 
@@ -173,10 +173,10 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdateDocType(formDocTypeVM, doctypeVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (doctypeVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => doctypeVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateDocType(formDocTypeVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
 
@@ -233,7 +233,7 @@
                 <!-- radio -->
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
-                        <input type="radio" id="r1" name="r" value="0" @onchange="onchange_filter_type" checked="@(filterHrVM.isTypeSearch == 0? true: false)">
+                        <input type="radio" id="r1" name="r" value="0" @onchange="onchange_filter_type" checked="@(filterHrVM.IsTypeSearch == 0? true: false)">
                         <label for="r1">
                             Tất cả
                         </label>
@@ -242,7 +242,7 @@
                         &nbsp;&nbsp;
                     </label>
                     <div class="icheck-danger d-inline">
-                        <input type="radio" id="r2" name="r" value="1" @onchange="onchange_filter_type" checked="@(filterHrVM.isTypeSearch == 1? true: false)">
+                        <input type="radio" id="r2" name="r" value="1" @onchange="onchange_filter_type" checked="@(filterHrVM.IsTypeSearch == 1? true: false)">
                         <label for="r2">
                             Hết hạn
                         </label>
@@ -251,7 +251,7 @@
                         &nbsp;&nbsp;
                     </label>
                     <div class="icheck-warning d-inline">
-                        <input type="radio" id="r3" name="r" value="2" @onchange="onchange_filter_type" checked="@(filterHrVM.isTypeSearch == 2? true: false)">
+                        <input type="radio" id="r3" name="r" value="2" @onchange="onchange_filter_type" checked="@(filterHrVM.IsTypeSearch == 2? true: false)">
                         <label for="r3">
                             Thiếu file Scan
                         </label>
@@ -274,7 +274,7 @@
         <div class="card card-purple card-outline">
 
             <div class="card-header text-right">
-                @if (sysService.CheckAccessSubFunc(UserID, "DOC_DOCLegal_Update").Result)
+                @if (DOC_DOCLegal_Update)
                 {
                     <button type="button" class="btn btn-success" @onclick="()=>InitializeModalUpdate_Document(0, documentVM)"><i class="fa-solid fa-xl fa-plus"></i> Cật nhật</button>
                 }
@@ -293,7 +293,7 @@
                                 <th class="text-center">Ngày cấp</th>
                                 <th class="text-center">Ngày hết hạn</th>
                                 <th>Ghi chú</th>
-                                @if (sysService.CheckAccessSubFunc(UserID, "DOC_DOCLegal_Update").Result)
+                                @if (DOC_DOCLegal_Update)
                                 {
                                     <th></th>
                                 }
@@ -313,7 +313,7 @@
                                     <td class="text-center">@(_documentVM.DateOfIssue.HasValue ? _documentVM.DateOfIssue.Value.ToString("dd/MM/yyyy") : "")</td>
                                     <td class="text-center">@(_documentVM.ExpDate.HasValue ? _documentVM.ExpDate.Value.ToString("dd/MM/yyyy") : "")</td>
                                     <td>@_documentVM.DocNote</td>
-                                    @if (sysService.CheckAccessSubFunc(UserID, "DOC_DOCLegal_Update").Result)
+                                    @if (DOC_DOCLegal_Update)
                                     {
                                         <td class="text-center">
                                             <button class="btn btn-default btn-xs" data-target="#InitializeModalUpdate_Document" data-toggle="modal" @onclick="(() => InitializeModalUpdate_Document(1, _documentVM))"><i class="fa-solid fa-pen"></i></button>

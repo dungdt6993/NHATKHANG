@@ -5,8 +5,8 @@ using Blazored.TextEditor;
 using D69soft.Client.Services;
 using D69soft.Client.Services.HR;
 using D69soft.Shared.Models.ViewModels.HR;
-using D69soft.Client.Helpers;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Client.Extension;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -36,7 +36,6 @@ namespace D69soft.Client.Pages.HR
         //Department
         DepartmentVM departmentVM = new();
         IEnumerable<DepartmentVM> departmentVMs;
-        //DepartmentGroup
         DepartmentGroupVM departmentGroupVM = new();
         IEnumerable<DepartmentGroupVM> departmentGroupVMs;
 
@@ -47,9 +46,9 @@ namespace D69soft.Client.Pages.HR
         //Position
         PositionVM positionVM = new();
         List<PositionVM> positionVMs;
-        //PositionGroup
         PositionGroupVM positionGroupVM = new();
         IEnumerable<PositionGroupVM> positionGroups;
+
 
         BlazoredTextEditor QuillHtml = new BlazoredTextEditor();
 
@@ -108,11 +107,11 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        private async Task InitializeModalUpdate_Division(int _isTypeUpdate)
+        private async Task InitializeModalUpdate_Division(int _IsTypeUpdate)
         {
             isLoading = true;
 
-            if (_isTypeUpdate == 0)
+            if (_IsTypeUpdate == 0)
             {
                 divisionVM = new();
 
@@ -124,7 +123,7 @@ namespace D69soft.Client.Pages.HR
                 filterHrVM.DivisionID = string.Empty;
             }
 
-            divisionVM.IsTypeUpdate = _isTypeUpdate;
+            divisionVM.IsTypeUpdate = _IsTypeUpdate;
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_Division");
 
@@ -192,11 +191,11 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        private async Task InitializeModalUpdate_Department(int _isTypeUpdate)
+        private async Task InitializeModalUpdate_Department(int _IsTypeUpdate)
         {
             isLoading = true;
 
-            if (_isTypeUpdate == 0)
+            if (_IsTypeUpdate == 0)
             {
                 departmentVM = new();
 
@@ -204,7 +203,7 @@ namespace D69soft.Client.Pages.HR
                 departmentVM.isActive = true;
             }
 
-            departmentVM.IsTypeUpdate = _isTypeUpdate;
+            departmentVM.IsTypeUpdate = _IsTypeUpdate;
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_Department");
 
@@ -261,21 +260,21 @@ namespace D69soft.Client.Pages.HR
         }
 
         //DepartmentGroup
-        private async Task InitializeModalUpdate_DepartmentGroup(int _isTypeUpdate)
+        private async Task InitializeModalUpdate_DepartmentGroup(int _IsTypeUpdate)
         {
             isLoading = true;
 
-            if (_isTypeUpdate == 0)
+            if (_IsTypeUpdate == 0)
             {
                 departmentGroupVM = new();
             }
 
-            if (_isTypeUpdate == 1)
+            if (_IsTypeUpdate == 1)
             {
                 departmentGroupVM = departmentGroupVMs.First(x => x.DepartmentGroupID == departmentVM.DepartmentGroupID);
             }
 
-            departmentGroupVM.IsTypeUpdate = _isTypeUpdate;
+            departmentGroupVM.IsTypeUpdate = _IsTypeUpdate;
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_DepartmentGroup");
 
@@ -340,17 +339,17 @@ namespace D69soft.Client.Pages.HR
 
             isLoading = false;
         }
-        private async Task InitializeModalUpdate_Section(int _isTypeUpdate)
+        private async Task InitializeModalUpdate_Section(int _IsTypeUpdate)
         {
             isLoading = true;
 
-            if (_isTypeUpdate == 0)
+            if (_IsTypeUpdate == 0)
             {
                 sectionVM = new();
                 sectionVM.isActive = true;
             }
 
-            sectionVM.IsTypeUpdate = _isTypeUpdate;
+            sectionVM.IsTypeUpdate = _IsTypeUpdate;
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_Section");
 
@@ -417,18 +416,18 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        private async Task InitializeModalUpdate_Position(int _isTypeUpdate)
+        private async Task InitializeModalUpdate_Position(int _IsTypeUpdate)
         {
             isLoading = true;
 
-            if (_isTypeUpdate == 0)
+            if (_IsTypeUpdate == 0)
             {
                 positionVM = new();
 
                 positionVM.isActive = true;
             }
 
-            if (_isTypeUpdate == 1)
+            if (_IsTypeUpdate == 1)
             {
                 if (!String.IsNullOrEmpty(positionVM.JobDesc))
                 {
@@ -436,7 +435,7 @@ namespace D69soft.Client.Pages.HR
                 }
             }
 
-            positionVM.IsTypeUpdate = _isTypeUpdate;
+            positionVM.IsTypeUpdate = _IsTypeUpdate;
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_Position");
 
@@ -504,21 +503,21 @@ namespace D69soft.Client.Pages.HR
         }
 
         //PositionGroup
-        private async Task InitializeModalUpdate_PositionGroup(int _isTypeUpdate)
+        private async Task InitializeModalUpdate_PositionGroup(int _IsTypeUpdate)
         {
             isLoading = true;
 
-            if (_isTypeUpdate == 0)
+            if (_IsTypeUpdate == 0)
             {
                 positionGroupVM = new();
             }
 
-            if (_isTypeUpdate == 1)
+            if (_IsTypeUpdate == 1)
             {
                 positionGroupVM = positionGroups.First(x => x.PositionGroupID == positionVM.PositionGroupID);
             }
 
-            positionGroupVM.IsTypeUpdate = _isTypeUpdate;
+            positionGroupVM.IsTypeUpdate = _IsTypeUpdate;
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_PositionGroup");
 

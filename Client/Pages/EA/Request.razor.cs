@@ -9,8 +9,8 @@ using D69soft.Client.Services.FIN;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.EA;
-using D69soft.Client.Helpers;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Client.Extension;
 
 namespace D69soft.Client.Pages.EA
 {
@@ -49,6 +49,8 @@ namespace D69soft.Client.Pages.EA
         StockVoucherVM stockVoucherVM = new();
         List<StockVoucherDetailVM> stockVoucherDetailVMs;
 
+        //PermisFunc
+        bool EA_Request_Create;
         bool permisSubFunc_EA_Request_Handover;
 
         bool userRoleAdmin;
@@ -65,13 +67,13 @@ namespace D69soft.Client.Pages.EA
 
         protected override async Task OnInitializedAsync()
         {
-            UserID = (await authenticationStateTask).User.GetUserId();
+            filterFinVM.UserID = filterHrVM.UserID = UserID = (await authenticationStateTask).User.GetUserId();
 
             if (await sysService.CheckAccessFunc(UserID, "EA_Request"))
             {
+                logVM.LogUser = UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "EA_Request";
-                logVM.LogUser = UserID;
                 await sysService.InsertLog(logVM);
             }
             else
@@ -79,7 +81,7 @@ namespace D69soft.Client.Pages.EA
                 navigationManager.NavigateTo("/");
             }
 
-            filterFinVM.UserID = filterHrVM.UserID = UserID;
+            EA_Request_Create = await sysService.CheckAccessSubFunc(UserID, "EA_Request_Create");
 
             division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
             filterFinVM.DivisionID = filterHrVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
@@ -165,7 +167,7 @@ namespace D69soft.Client.Pages.EA
                 str = value ? "Gửi duyệt" : "Hủy gửi duyệt";
             }
 
-            if (type == "SendDirectManager")
+            if (type == "SendApprove")
             {
                 str = value ? "Duyệt" : "Hủy duyệt";
             }
@@ -198,7 +200,7 @@ namespace D69soft.Client.Pages.EA
                     {
                         if (search_requestVMs.Where(x => x.RequestCode == _requestVM.RequestCode && x.QtyApproved > 0).Count() > 0)
                         {
-                            //Tu dong tao phieu xuat chuyen kho noi bo
+                            //Tu dong tao phieu xuat kho
                             stockVoucherVM = new();
                             stockVoucherDetailVMs = new();
 
@@ -226,11 +228,12 @@ namespace D69soft.Client.Pages.EA
                     requestVMs = search_requestVMs = await requestService.GetRequest(filterFinVM);
                 }
 
+                logVM.LogDesc = str + " đơn số " + _requestVM.RequestCode + " thành công!";
+                await sysService.InsertLog(logVM);
+
                 await FilterRequest(filterFinVM.Status);
 
-                ReportName = "CustomNewReport";
-
-                await js.Toast_Alert("" + str + " thành công!", SweetAlertMessageType.success);
+                await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
             }
 
             isLoading = false;
@@ -280,6 +283,8 @@ namespace D69soft.Client.Pages.EA
         protected async Task FilterRequest(String _filterRequest)
         {
             isLoading = true;
+
+            ReportName = "CustomNewReport";
 
             filterFinVM.Status = _filterRequest;
 

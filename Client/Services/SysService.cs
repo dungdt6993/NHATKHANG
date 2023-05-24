@@ -142,7 +142,7 @@ namespace D69soft.Client.Services
         {
             var response = await _httpClient.PostAsJsonAsync($"api/Sys/UpdateRptGrp", _rptGrpVM);
 
-            return await response.Content.ReadFromJsonAsync<string>();
+            return await response.Content.ReadAsStringAsync();
         }
 
         public async Task<bool> DelRptGrp(int _RptGrpID)

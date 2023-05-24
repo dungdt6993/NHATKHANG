@@ -44,11 +44,11 @@ namespace D69soft.Client.Services.KPI
             return await response.Content.ReadFromJsonAsync<IEnumerable<DepartmentVM>>();
         }
 
-        public async Task<IEnumerable<ProfileVM>> GetEserials(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<EserialVM>> GetEserials(FilterHrVM _filterHrVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/KPI/GetEserials", _filterHrVM);
 
-            return await response.Content.ReadFromJsonAsync<IEnumerable<ProfileVM>>();
+            return await response.Content.ReadFromJsonAsync<IEnumerable<EserialVM>>();
         }
 
         //End Filter

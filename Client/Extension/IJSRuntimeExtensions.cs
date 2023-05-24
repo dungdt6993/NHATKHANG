@@ -1,7 +1,6 @@
 ﻿using Microsoft.JSInterop;
-using System.Threading.Tasks;
 
-namespace D69soft.Client.Helpers
+namespace D69soft.Client.Extension
 {
     public static class IJSRuntimeExtensions
     {

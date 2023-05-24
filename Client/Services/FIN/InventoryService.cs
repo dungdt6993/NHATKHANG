@@ -59,7 +59,7 @@ namespace D69soft.Client.Services.FIN
 
         public async Task<List<ItemsVM>> GetItemsList(FilterFinVM _filterFinVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Document/GetItemsList", _filterFinVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Inventory/GetItemsList", _filterFinVM);
 
             return await response.Content.ReadFromJsonAsync<List<ItemsVM>>();
         }
@@ -76,9 +76,9 @@ namespace D69soft.Client.Services.FIN
 
         public async Task<string> UpdateItems(ItemsVM _itemsVM, IEnumerable<QuantitativeItemsVM> _quantitativeItemsVMs)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Document/UpdateItems/{_quantitativeItemsVMs}", _itemsVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Inventory/UpdateItems/{_quantitativeItemsVMs}", _itemsVM);
 
-            return await response.Content.ReadFromJsonAsync<string>();
+            return await response.Content.ReadAsStringAsync();
         }
 
         public async Task<bool> UpdateUrlImg(string _ICode, string _UrlImg)

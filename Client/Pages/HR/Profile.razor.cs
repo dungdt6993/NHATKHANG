@@ -9,8 +9,8 @@ using D69soft.Server.Services.HR;
 using D69soft.Client.Services.HR;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
-using D69soft.Client.Helpers;
 using D69soft.Shared.Utilities;
+using D69soft.Client.Extension;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -26,10 +26,26 @@ namespace D69soft.Client.Pages.HR
         [Inject] OrganizationalChartService organizationalChartService { get; set; }
         [Inject] DutyRosterService dutyRosterService { get; set; }
 
-        protected string UserID;
-
         bool isLoading;
         bool isLoadingScreen = true;
+
+        protected string UserID;
+
+        //PermisFunc
+        bool HR_Profile_EditSal;
+        bool HR_Profile_ChangeSal;
+        bool HR_Profile_ViewSal;
+        bool HR_Profile_User_Permis;
+        bool HR_Profile_User_ResetPass;
+        bool HR_Profile_EmployeeTransaction;
+        bool HR_Profile_UpdateHistory;
+        bool HR_Profile_UpdateContractType;
+        bool HR_Profile_UpdateWorkType;
+        bool HR_Profile_Edit;
+        bool HR_Profile_New;
+        bool HR_Profile_Del;
+        bool HR_Profile_Adjust;
+        bool HR_Profile_Terminate;
 
         bool disabled_btnUpdateProfile = true;
 
@@ -49,30 +65,24 @@ namespace D69soft.Client.Pages.HR
         LogVM logVM = new();
 
         FilterHrVM filterHrVM = new();
-        DivisionVM divisionSelected = new();
         IEnumerable<DivisionVM> division_filter_list;
         IEnumerable<DepartmentVM> department_filter_list;
         IEnumerable<SectionVM> section_filter_list;
         IEnumerable<PositionVM> position_filter_list;
-        IEnumerable<ProfileVM> eserial_filter_list;
+        IEnumerable<EserialVM> eserial_filter_list;
 
-        ProfileManagamentVM profileManagament = new();
-        List<ProfileManagamentVM> profileVMs = new();
+        ProfileVM profileVM = new();
+        List<ProfileVM> profileVMs;
 
-        IEnumerable<DepartmentVM> departments;
-        IEnumerable<SectionVM> sections;
-        IEnumerable<PositionVM> positions;
-        IEnumerable<CountryVM> countrys;
-        IEnumerable<EthnicVM> ethnics;
-        IEnumerable<WorkTypeVM> workTypes;
-        IEnumerable<ShiftVM> shifts;
-        IEnumerable<ContractTypeVM> laborContractTypes;
-        IEnumerable<PermissionUserVM> permissionUsers;
-        List<ProfileManagamentVM> profileHistorys;
-        List<SalaryDefVM> salaryDefs;
+        IEnumerable<CountryVM> countryVMs;
+        IEnumerable<EthnicVM> ethnicVMs;
+        IEnumerable<ShiftVM> shiftVMs;
+        IEnumerable<PermissionUserVM> permissionUserVMs;
+        List<ProfileVM> profileHistorys;
+        List<SalaryDefVM> salaryDefVMs;
 
         //KPI
-        IEnumerable<ProfileManagamentVM> empls;
+        IEnumerable<ProfileVM> empls;
 
         //Báo cáo biến động nhân sự
         DataTable dtEmplChange;
@@ -92,15 +102,13 @@ namespace D69soft.Client.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-
-
-            UserID = (await authenticationStateTask).User.GetUserId();
+            filterHrVM.UserID = UserID = (await authenticationStateTask).User.GetUserId();
 
             if (await sysService.CheckAccessFunc(UserID, "HR_Profile"))
             {
+                logVM.LogUser = UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "HR_Profile";
-                logVM.LogUser = UserID;
                 await sysService.InsertLog(logVM);
             }
             else
@@ -108,9 +116,21 @@ namespace D69soft.Client.Pages.HR
                 navigationManager.NavigateTo("/");
             }
 
-            //Initialize Filter
-            filterHrVM.UserID = UserID;
+            HR_Profile_EditSal = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_EditSal");
+            HR_Profile_ViewSal = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_ViewSal");
+            HR_Profile_User_Permis = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_User_Permis");
+            HR_Profile_User_ResetPass = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_User_ResetPass");
+            HR_Profile_EmployeeTransaction = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_EmployeeTransaction");
+            HR_Profile_UpdateHistory = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_UpdateHistory");
+            HR_Profile_UpdateContractType = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_UpdateContractType");
+            HR_Profile_UpdateWorkType = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_UpdateWorkType");
+            HR_Profile_Edit = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_Edit");
+            HR_Profile_New = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_New");
+            HR_Profile_Del = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_Del");
+            HR_Profile_Adjust = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_Adjust");
+            HR_Profile_Terminate = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_Terminate");
 
+            //Initialize Filter
             division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
             filterHrVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
 
@@ -126,9 +146,9 @@ namespace D69soft.Client.Pages.HR
             filterHrVM.Eserial = string.Empty;
             eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
 
-            //Báo cáo biên động nhân sự
             filterHrVM.Year = DateTime.Now.Year;
-            dtEmplChange = await profileService.GetEmplChangeList(filterHrVM);
+
+            await GetProfileList();
 
             isLoadingScreen = false;
         }
@@ -150,10 +170,7 @@ namespace D69soft.Client.Pages.HR
             filterHrVM.Eserial = string.Empty;
             eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
 
-            filterHrVM.selectedEserial = string.Empty;
-            profileVMs = null;
-
-            dtEmplChange = await profileService.GetEmplChangeList(filterHrVM);
+            await GetProfileList();
 
             isLoading = false;
 
@@ -172,8 +189,7 @@ namespace D69soft.Client.Pages.HR
             filterHrVM.Eserial = string.Empty;
             eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
 
-            filterHrVM.selectedEserial = string.Empty;
-            profileVMs = null;
+            await GetProfileList();
 
             isLoading = false;
 
@@ -189,8 +205,7 @@ namespace D69soft.Client.Pages.HR
             filterHrVM.Eserial = string.Empty;
             eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
 
-            filterHrVM.selectedEserial = string.Empty;
-            profileVMs = null;
+            await GetProfileList();
 
             isLoading = false;
 
@@ -213,8 +228,6 @@ namespace D69soft.Client.Pages.HR
 
                 reload_filter_eserial();
 
-                profileVMs = null;
-
                 isLoading = false;
             }
         }
@@ -228,20 +241,18 @@ namespace D69soft.Client.Pages.HR
             filterHrVM.Eserial = string.Empty;
             eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
 
-            filterHrVM.selectedEserial = string.Empty;
-            profileVMs = null;
+            await GetProfileList();
 
             isLoading = false;
         }
 
-        private void onchange_filter_eserial(string value)
+        private async void onchange_filter_eserial(string value)
         {
             isLoading = true;
 
             filterHrVM.Eserial = value;
 
-            filterHrVM.selectedEserial = string.Empty;
-            profileVMs = null;
+            await GetProfileList();
 
             isLoading = false;
 
@@ -250,62 +261,81 @@ namespace D69soft.Client.Pages.HR
 
         private async void reload_filter_eserial()
         {
-            filterHrVM.selectedEserial = string.Empty;
-
             filterHrVM.Eserial = string.Empty;
             eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
+
+            await GetProfileList();
 
             StateHasChanged();
         }
 
+        //Profile
         protected async Task GetProfileList()
         {
             isLoading = true;
 
-            profileVMs = await profileService.GetProfileList(filterHrVM, UserID);
+            hidden_adjustProfile = "hidden_adjustProfile";
 
-            dtEmplChange = await profileService.GetEmplChangeList(filterHrVM);
+            disable_ckContractExtension = false;
+            disable_ckJob = false;
+            disable_ckSal = false;
 
-            await virtualizeProfileList.RefreshDataAsync();
-            StateHasChanged();
+            disabled_JoinDate = false;
+            disabled_StartContractDate = false;
+            disabled_ContractTypeID = false;
+            disabled_EndContractDate = false;
+            disabled_JobStartDate = false;
+            disabled_BasicSalary = false;
+            disabled_Benefit4 = false;
+            disabled_OtherSalary = false;
+            disabled_Benefit5 = false;
+            disabled_Benefit1 = false;
+            disabled_Benefit6 = false;
+            disabled_Benefit2 = false;
+            disabled_Benefit7 = false;
+            disabled_Benefit3 = false;
+            disabled_Benefit8 = false;
+            disabled_Reason = false;
+            disabled_ApprovedBy = false;
+            disabled_BeginSalaryDate = false;
+            disabled_SalaryByBank = false;
+            disabled_IsPayBy = false;
+
+            profileVM = new();
+
+            profileVMs = await profileService.GetProfileList(filterHrVM);
+
+            //dtEmplChange = await profileService.GetEmplChangeList(filterHrVM);
+
+            //await virtualizeProfileList.RefreshDataAsync();
+            //StateHasChanged();
 
             isLoading = false;
         }
 
-        private Virtualize<ProfileManagamentVM> virtualizeProfileList { get; set; }
+        private Virtualize<ProfileVM> virtualizeProfileList { get; set; }
 
-        private ValueTask<ItemsProviderResult<ProfileManagamentVM>> LoadProfileList(ItemsProviderRequest request)
+        private ValueTask<ItemsProviderResult<ProfileVM>> LoadProfileList(ItemsProviderRequest request)
         {
-            return new(new ItemsProviderResult<ProfileManagamentVM>(
+            return new(new ItemsProviderResult<ProfileVM>(
                 profileVMs.Skip(request.StartIndex).Take(request.Count),
                 profileVMs.Count));
         }
 
-        private void onclick_selectedEserial(ProfileManagamentVM _profileVM)
+        private void onclick_selectedEserial(ProfileVM _profileVM)
         {
-            filterHrVM.selectedEserial = filterHrVM.selectedEserial == _profileVM.Eserial ? String.Empty : _profileVM.Eserial;
-        }
-
-        private void onchange_department(string value)
-        {
-            isLoading = true;
-
-            profileManagament.DepartmentID = value;
-
-            isLoading = false;
-
-            StateHasChanged();
+            profileVM = _profileVM == profileVM ? new() : _profileVM;
         }
 
         public string onchange_Birthday
         {
             get
             {
-                return profileManagament.Birthday.HasValue ? profileManagament.Birthday.Value.ToString("dd/MM/yyyy") : "";
+                return profileVM.Birthday.HasValue ? profileVM.Birthday.Value.ToString("dd/MM/yyyy") : "";
             }
             set
             {
-                profileManagament.Birthday = LibraryFunc.FormatDateDDMMYYYY(value, profileManagament.Birthday);
+                profileVM.Birthday = LibraryFunc.FormatDateDDMMYYYY(value, profileVM.Birthday);
             }
         }
 
@@ -313,11 +343,11 @@ namespace D69soft.Client.Pages.HR
         {
             get
             {
-                return profileManagament.DateOfIssue.HasValue ? profileManagament.DateOfIssue.Value.ToString("dd/MM/yyyy") : "";
+                return profileVM.DateOfIssue.HasValue ? profileVM.DateOfIssue.Value.ToString("dd/MM/yyyy") : "";
             }
             set
             {
-                profileManagament.DateOfIssue = LibraryFunc.FormatDateDDMMYYYY(value, profileManagament.DateOfIssue);
+                profileVM.DateOfIssue = LibraryFunc.FormatDateDDMMYYYY(value, profileVM.DateOfIssue);
             }
         }
 
@@ -325,11 +355,11 @@ namespace D69soft.Client.Pages.HR
         {
             get
             {
-                return profileManagament.VisaExpDate.HasValue ? profileManagament.VisaExpDate.Value.ToString("dd/MM/yyyy") : "";
+                return profileVM.VisaExpDate.HasValue ? profileVM.VisaExpDate.Value.ToString("dd/MM/yyyy") : "";
             }
             set
             {
-                profileManagament.VisaExpDate = LibraryFunc.FormatDateDDMMYYYY(value, profileManagament.VisaExpDate);
+                profileVM.VisaExpDate = LibraryFunc.FormatDateDDMMYYYY(value, profileVM.VisaExpDate);
             }
         }
 
@@ -337,11 +367,11 @@ namespace D69soft.Client.Pages.HR
         {
             get
             {
-                return profileManagament.JoinDate.HasValue ? profileManagament.JoinDate.Value.ToString("dd/MM/yyyy") : "";
+                return profileVM.JoinDate.HasValue ? profileVM.JoinDate.Value.ToString("dd/MM/yyyy") : "";
             }
             set
             {
-                profileManagament.JoinDate = LibraryFunc.FormatDateDDMMYYYY(value, profileManagament.JoinDate);
+                profileVM.JoinDate = LibraryFunc.FormatDateDDMMYYYY(value, profileVM.JoinDate);
             }
         }
 
@@ -349,11 +379,11 @@ namespace D69soft.Client.Pages.HR
         {
             get
             {
-                return profileManagament.StartDayAL.HasValue ? profileManagament.StartDayAL.Value.ToString("dd/MM/yyyy") : "";
+                return profileVM.StartDayAL.HasValue ? profileVM.StartDayAL.Value.ToString("dd/MM/yyyy") : "";
             }
             set
             {
-                profileManagament.StartDayAL = LibraryFunc.FormatDateDDMMYYYY(value, profileManagament.StartDayAL);
+                profileVM.StartDayAL = LibraryFunc.FormatDateDDMMYYYY(value, profileVM.StartDayAL);
             }
         }
 
@@ -361,15 +391,15 @@ namespace D69soft.Client.Pages.HR
         {
             get
             {
-                return profileManagament.StartContractDate.HasValue ? profileManagament.StartContractDate.Value.ToString("dd/MM/yyyy") : "";
+                return profileVM.StartContractDate.HasValue ? profileVM.StartContractDate.Value.ToString("dd/MM/yyyy") : "";
             }
             set
             {
                 isLoading = true;
 
-                profileManagament.StartContractDate = LibraryFunc.FormatDateDDMMYYYY(value, profileManagament.StartContractDate);
+                profileVM.StartContractDate = LibraryFunc.FormatDateDDMMYYYY(value, profileVM.StartContractDate);
 
-                if (profileManagament.StartContractDate == null)
+                if (profileVM.StartContractDate == null)
                 {
                     disabled_ContractTypeID = true;
                     disabled_EndContractDate = true;
@@ -378,29 +408,29 @@ namespace D69soft.Client.Pages.HR
                 {
                     disabled_ContractTypeID = false;
                 }
-                profileManagament.ContractTypeID = string.Empty;
-                profileManagament.EndContractDate = null;
+                profileVM.ContractTypeID = string.Empty;
+                profileVM.EndContractDate = null;
 
                 isLoading = false;
             }
         }
 
-        private async Task onchange_contracttype(string value)
+        private async Task onchange_ContractType(string value)
         {
             isLoading = true;
 
-            profileManagament.ContractTypeID = value;
+            profileVM.ContractTypeID = value;
 
-            int NumMonth = await profileService.GetNumMonthLC(profileManagament.ContractTypeID);
+            int NumMonth = await profileService.GetNumMonthLC(profileVM.ContractTypeID);
             if (NumMonth != 0)
             {
-                profileManagament.EndContractDate = Convert.ToDateTime(profileManagament.StartContractDate).AddMonths(NumMonth).AddDays(-1);
+                profileVM.EndContractDate = Convert.ToDateTime(profileVM.StartContractDate).AddMonths(NumMonth).AddDays(-1);
                 disabled_EndContractDate = true;
             }
             else
             {
                 disabled_EndContractDate = false;
-                profileManagament.EndContractDate = null;
+                profileVM.EndContractDate = null;
             }
 
             isLoading = false;
@@ -411,11 +441,11 @@ namespace D69soft.Client.Pages.HR
         {
             get
             {
-                return profileManagament.EndContractDate.HasValue ? profileManagament.EndContractDate.Value.ToString("dd/MM/yyyy") : "";
+                return profileVM.EndContractDate.HasValue ? profileVM.EndContractDate.Value.ToString("dd/MM/yyyy") : "";
             }
             set
             {
-                profileManagament.EndContractDate = LibraryFunc.FormatDateDDMMYYYY(value, profileManagament.EndContractDate);
+                profileVM.EndContractDate = LibraryFunc.FormatDateDDMMYYYY(value, profileVM.EndContractDate);
             }
         }
 
@@ -423,11 +453,11 @@ namespace D69soft.Client.Pages.HR
         {
             get
             {
-                return profileManagament.JobStartDate.HasValue ? profileManagament.JobStartDate.Value.ToString("dd/MM/yyyy") : "";
+                return profileVM.JobStartDate.HasValue ? profileVM.JobStartDate.Value.ToString("dd/MM/yyyy") : "";
             }
             set
             {
-                profileManagament.JobStartDate = LibraryFunc.FormatDateDDMMYYYY(value, profileManagament.JobStartDate);
+                profileVM.JobStartDate = LibraryFunc.FormatDateDDMMYYYY(value, profileVM.JobStartDate);
             }
         }
 
@@ -435,11 +465,11 @@ namespace D69soft.Client.Pages.HR
         {
             get
             {
-                return profileManagament.TerminateDate.HasValue ? profileManagament.TerminateDate.Value.ToString("dd/MM/yyyy") : "";
+                return profileVM.TerminateDate.HasValue ? profileVM.TerminateDate.Value.ToString("dd/MM/yyyy") : "";
             }
             set
             {
-                profileManagament.TerminateDate = LibraryFunc.FormatDateDDMMYYYY(value, profileManagament.TerminateDate);
+                profileVM.TerminateDate = LibraryFunc.FormatDateDDMMYYYY(value, profileVM.TerminateDate);
             }
         }
 
@@ -447,184 +477,184 @@ namespace D69soft.Client.Pages.HR
         {
             get
             {
-                return profileManagament.BeginSalaryDate.HasValue ? profileManagament.BeginSalaryDate.Value.ToString("dd/MM/yyyy") : "";
+                return profileVM.BeginSalaryDate.HasValue ? profileVM.BeginSalaryDate.Value.ToString("dd/MM/yyyy") : "";
             }
             set
             {
-                profileManagament.BeginSalaryDate = LibraryFunc.FormatDateDDMMYYYY(value, profileManagament.BeginSalaryDate);
+                profileVM.BeginSalaryDate = LibraryFunc.FormatDateDDMMYYYY(value, profileVM.BeginSalaryDate);
             }
         }
 
-        public decimal onchange_basicsalary
+        public decimal onchange_BasicSalary
         {
-            get { return profileManagament.BasicSalary; }
+            get { return profileVM.BasicSalary; }
             set
             {
                 isLoading = true;
 
-                profileManagament.BasicSalary = value;
+                profileVM.BasicSalary = value;
 
-                profileManagament.TotalSalary = profileManagament.BasicSalary + profileManagament.OtherSalary + profileManagament.Benefit1 + profileManagament.Benefit2 + profileManagament.Benefit3 + profileManagament.Benefit4
-                                                + profileManagament.Benefit5 + profileManagament.Benefit6 + profileManagament.Benefit7 + profileManagament.Benefit8;
+                profileVM.TotalSalary = profileVM.BasicSalary + profileVM.OtherSalary + profileVM.Benefit1 + profileVM.Benefit2 + profileVM.Benefit3 + profileVM.Benefit4
+                                                + profileVM.Benefit5 + profileVM.Benefit6 + profileVM.Benefit7 + profileVM.Benefit8;
 
                 isLoading = false;
             }
         }
 
-        public decimal onchange_othersalary
+        public decimal onchange_OtherSalary
         {
-            get { return profileManagament.OtherSalary; }
+            get { return profileVM.OtherSalary; }
             set
             {
                 isLoading = true;
 
-                profileManagament.OtherSalary = value;
+                profileVM.OtherSalary = value;
 
-                profileManagament.TotalSalary = profileManagament.BasicSalary + profileManagament.OtherSalary + profileManagament.Benefit1 + profileManagament.Benefit2 + profileManagament.Benefit3 + profileManagament.Benefit4
-                                                + profileManagament.Benefit5 + profileManagament.Benefit6 + profileManagament.Benefit7 + profileManagament.Benefit8;
+                profileVM.TotalSalary = profileVM.BasicSalary + profileVM.OtherSalary + profileVM.Benefit1 + profileVM.Benefit2 + profileVM.Benefit3 + profileVM.Benefit4
+                                                + profileVM.Benefit5 + profileVM.Benefit6 + profileVM.Benefit7 + profileVM.Benefit8;
 
                 isLoading = false;
             }
         }
 
-        public decimal onchange_benefit1
+        public decimal onchange_Benefit1
         {
-            get { return profileManagament.Benefit1; }
+            get { return profileVM.Benefit1; }
             set
             {
                 isLoading = true;
 
-                profileManagament.Benefit1 = value;
+                profileVM.Benefit1 = value;
 
-                profileManagament.TotalSalary = profileManagament.BasicSalary + profileManagament.OtherSalary + profileManagament.Benefit1 + profileManagament.Benefit2 + profileManagament.Benefit3 + profileManagament.Benefit4
-                                                + profileManagament.Benefit5 + profileManagament.Benefit6 + profileManagament.Benefit7 + profileManagament.Benefit8;
+                profileVM.TotalSalary = profileVM.BasicSalary + profileVM.OtherSalary + profileVM.Benefit1 + profileVM.Benefit2 + profileVM.Benefit3 + profileVM.Benefit4
+                                                + profileVM.Benefit5 + profileVM.Benefit6 + profileVM.Benefit7 + profileVM.Benefit8;
 
                 isLoading = false;
             }
         }
 
-        public decimal onchange_benefit2
+        public decimal onchange_Benefit2
         {
-            get { return profileManagament.Benefit2; }
+            get { return profileVM.Benefit2; }
             set
             {
                 isLoading = true;
 
-                profileManagament.Benefit2 = value;
+                profileVM.Benefit2 = value;
 
-                profileManagament.TotalSalary = profileManagament.BasicSalary + profileManagament.OtherSalary + profileManagament.Benefit1 + profileManagament.Benefit2 + profileManagament.Benefit3 + profileManagament.Benefit4
-                                                + profileManagament.Benefit5 + profileManagament.Benefit6 + profileManagament.Benefit7 + profileManagament.Benefit8;
+                profileVM.TotalSalary = profileVM.BasicSalary + profileVM.OtherSalary + profileVM.Benefit1 + profileVM.Benefit2 + profileVM.Benefit3 + profileVM.Benefit4
+                                                + profileVM.Benefit5 + profileVM.Benefit6 + profileVM.Benefit7 + profileVM.Benefit8;
 
                 isLoading = false;
             }
         }
 
-        public decimal onchange_benefit3
+        public decimal onchange_Benefit3
         {
-            get { return profileManagament.Benefit3; }
+            get { return profileVM.Benefit3; }
             set
             {
                 isLoading = true;
 
-                profileManagament.Benefit3 = value;
+                profileVM.Benefit3 = value;
 
-                profileManagament.TotalSalary = profileManagament.BasicSalary + profileManagament.OtherSalary + profileManagament.Benefit1 + profileManagament.Benefit2 + profileManagament.Benefit3 + profileManagament.Benefit4
-                                                + profileManagament.Benefit5 + profileManagament.Benefit6 + profileManagament.Benefit7 + profileManagament.Benefit8;
+                profileVM.TotalSalary = profileVM.BasicSalary + profileVM.OtherSalary + profileVM.Benefit1 + profileVM.Benefit2 + profileVM.Benefit3 + profileVM.Benefit4
+                                                + profileVM.Benefit5 + profileVM.Benefit6 + profileVM.Benefit7 + profileVM.Benefit8;
 
                 isLoading = false;
             }
         }
 
-        public decimal onchange_benefit4
+        public decimal onchange_Benefit4
         {
-            get { return profileManagament.Benefit4; }
+            get { return profileVM.Benefit4; }
             set
             {
                 isLoading = true;
 
-                profileManagament.Benefit4 = value;
+                profileVM.Benefit4 = value;
 
-                profileManagament.TotalSalary = profileManagament.BasicSalary + profileManagament.OtherSalary + profileManagament.Benefit1 + profileManagament.Benefit2 + profileManagament.Benefit3 + profileManagament.Benefit4
-                                                + profileManagament.Benefit5 + profileManagament.Benefit6 + profileManagament.Benefit7 + profileManagament.Benefit8;
+                profileVM.TotalSalary = profileVM.BasicSalary + profileVM.OtherSalary + profileVM.Benefit1 + profileVM.Benefit2 + profileVM.Benefit3 + profileVM.Benefit4
+                                                + profileVM.Benefit5 + profileVM.Benefit6 + profileVM.Benefit7 + profileVM.Benefit8;
 
                 isLoading = false;
             }
         }
 
-        public decimal onchange_benefit5
+        public decimal onchange_Benefit5
         {
-            get { return profileManagament.Benefit5; }
+            get { return profileVM.Benefit5; }
             set
             {
                 isLoading = true;
 
-                profileManagament.Benefit5 = value;
+                profileVM.Benefit5 = value;
 
-                profileManagament.TotalSalary = profileManagament.BasicSalary + profileManagament.OtherSalary + profileManagament.Benefit1 + profileManagament.Benefit2 + profileManagament.Benefit3 + profileManagament.Benefit4
-                                                + profileManagament.Benefit5 + profileManagament.Benefit6 + profileManagament.Benefit7 + profileManagament.Benefit8;
+                profileVM.TotalSalary = profileVM.BasicSalary + profileVM.OtherSalary + profileVM.Benefit1 + profileVM.Benefit2 + profileVM.Benefit3 + profileVM.Benefit4
+                                                + profileVM.Benefit5 + profileVM.Benefit6 + profileVM.Benefit7 + profileVM.Benefit8;
 
                 isLoading = false;
             }
         }
 
-        public decimal onchange_benefit6
+        public decimal onchange_Benefit6
         {
-            get { return profileManagament.Benefit6; }
+            get { return profileVM.Benefit6; }
             set
             {
                 isLoading = true;
 
-                profileManagament.Benefit6 = value;
+                profileVM.Benefit6 = value;
 
-                profileManagament.TotalSalary = profileManagament.BasicSalary + profileManagament.OtherSalary + profileManagament.Benefit1 + profileManagament.Benefit2 + profileManagament.Benefit3 + profileManagament.Benefit4
-                                                + profileManagament.Benefit5 + profileManagament.Benefit6 + profileManagament.Benefit7 + profileManagament.Benefit8;
+                profileVM.TotalSalary = profileVM.BasicSalary + profileVM.OtherSalary + profileVM.Benefit1 + profileVM.Benefit2 + profileVM.Benefit3 + profileVM.Benefit4
+                                                + profileVM.Benefit5 + profileVM.Benefit6 + profileVM.Benefit7 + profileVM.Benefit8;
 
                 isLoading = false;
             }
         }
 
-        public decimal onchange_benefit7
+        public decimal onchange_Benefit7
         {
-            get { return profileManagament.Benefit7; }
+            get { return profileVM.Benefit7; }
             set
             {
                 isLoading = true;
 
-                profileManagament.Benefit7 = value;
+                profileVM.Benefit7 = value;
 
-                profileManagament.TotalSalary = profileManagament.BasicSalary + profileManagament.OtherSalary + profileManagament.Benefit1 + profileManagament.Benefit2 + profileManagament.Benefit3 + profileManagament.Benefit4
-                                                + profileManagament.Benefit5 + profileManagament.Benefit6 + profileManagament.Benefit7 + profileManagament.Benefit8;
+                profileVM.TotalSalary = profileVM.BasicSalary + profileVM.OtherSalary + profileVM.Benefit1 + profileVM.Benefit2 + profileVM.Benefit3 + profileVM.Benefit4
+                                                + profileVM.Benefit5 + profileVM.Benefit6 + profileVM.Benefit7 + profileVM.Benefit8;
 
                 isLoading = false;
             }
         }
 
-        public decimal onchange_benefit8
+        public decimal onchange_Benefit8
         {
-            get { return profileManagament.Benefit8; }
+            get { return profileVM.Benefit8; }
             set
             {
                 isLoading = true;
 
-                profileManagament.Benefit8 = value;
+                profileVM.Benefit8 = value;
 
-                profileManagament.TotalSalary = profileManagament.BasicSalary + profileManagament.OtherSalary + profileManagament.Benefit1 + profileManagament.Benefit2 + profileManagament.Benefit3 + profileManagament.Benefit4
-                                                + profileManagament.Benefit5 + profileManagament.Benefit6 + profileManagament.Benefit7 + profileManagament.Benefit8;
+                profileVM.TotalSalary = profileVM.BasicSalary + profileVM.OtherSalary + profileVM.Benefit1 + profileVM.Benefit2 + profileVM.Benefit3 + profileVM.Benefit4
+                                                + profileVM.Benefit5 + profileVM.Benefit6 + profileVM.Benefit7 + profileVM.Benefit8;
 
                 isLoading = false;
             }
         }
 
-        private void onchange_salarybybank(ChangeEventArgs args)
+        private void onchange_SalaryByBank(ChangeEventArgs args)
         {
             isLoading = true;
 
-            profileManagament.SalaryByBank = int.Parse(args.Value.ToString());
+            profileVM.SalaryByBank = int.Parse(args.Value.ToString());
 
             isLoading = false;
         }
 
-        private void onchange_ispayby(ChangeEventArgs args)
+        private void onchange_IsPayBy(ChangeEventArgs args)
         {
             isLoading = true;
 
@@ -632,14 +662,14 @@ namespace D69soft.Client.Pages.HR
 
             if (ck == 1)
             {
-                profileManagament.IsPayByMonth = 1;
-                profileManagament.IsPayByDate = 0;
+                profileVM.IsPayByMonth = 1;
+                profileVM.IsPayByDate = 0;
             }
 
             if (ck == 2)
             {
-                profileManagament.IsPayByMonth = 0;
-                profileManagament.IsPayByDate = 1;
+                profileVM.IsPayByMonth = 0;
+                profileVM.IsPayByDate = 1;
             }
 
             isLoading = false;
@@ -649,28 +679,28 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            profileManagament.ckContractExtension = int.Parse(args.Value.ToString());
+            profileVM.ckContractExtension = int.Parse(args.Value.ToString());
 
             disable_ckContractExtension = true;
 
-            if (profileManagament.ckContractExtension == 1)
+            if (profileVM.ckContractExtension == 1)
             {
                 disabled_ContractTypeID = false;
                 disabled_EndContractDate = false;
 
-                profileManagament.StartContractDate = Convert.ToDateTime(profileManagament.EndContractDate).AddDays(1);
+                profileVM.StartContractDate = Convert.ToDateTime(profileVM.EndContractDate).AddDays(1);
 
-                profileManagament.ContractTypeID = string.Empty;
-                profileManagament.EndContractDate = null;
+                profileVM.ContractTypeID = string.Empty;
+                profileVM.EndContractDate = null;
             }
 
-            if (profileManagament.ckContractExtension == 2)
+            if (profileVM.ckContractExtension == 2)
             {
                 disabled_StartContractDate = false;
 
-                profileManagament.StartContractDate = null;
-                profileManagament.ContractTypeID = string.Empty;
-                profileManagament.EndContractDate = null;
+                profileVM.StartContractDate = null;
+                profileVM.ContractTypeID = string.Empty;
+                profileVM.EndContractDate = null;
             }
 
             disabled_btnUpdateProfile = false;
@@ -682,19 +712,19 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            profileManagament.ckJob = int.Parse(args.Value.ToString());
+            profileVM.ckJob = int.Parse(args.Value.ToString());
 
             disable_ckContractExtension = true;
             disable_ckJob = true;
 
-            if (profileManagament.ckContractExtension != 0)
+            if (profileVM.ckContractExtension != 0)
             {
-                profileManagament.JobStartDate = profileManagament.StartContractDate;
+                profileVM.JobStartDate = profileVM.StartContractDate;
                 disabled_JobStartDate = true;
             }
             else
             {
-                profileManagament.JobStartDate = null;
+                profileVM.JobStartDate = null;
                 disabled_JobStartDate = false;
             }
 
@@ -707,7 +737,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            profileManagament.ckSal = int.Parse(args.Value.ToString());
+            profileVM.ckSal = int.Parse(args.Value.ToString());
 
             disable_ckContractExtension = true;
             disable_ckJob = true;
@@ -729,18 +759,18 @@ namespace D69soft.Client.Pages.HR
             disabled_SalaryByBank = false;
             disabled_IsPayBy = false;
 
-            profileManagament.Reason = string.Empty;
-            profileManagament.ApprovedBy = string.Empty;
+            profileVM.Reason = string.Empty;
+            profileVM.ApprovedBy = string.Empty;
 
-            if (profileManagament.ckContractExtension != 0)
+            if (profileVM.ckContractExtension != 0)
             {
-                profileManagament.BeginSalaryDate = profileManagament.StartContractDate;
+                profileVM.BeginSalaryDate = profileVM.StartContractDate;
                 disabled_BeginSalaryDate = true;
             }
 
-            if (profileManagament.ckContractExtension == 0 && profileManagament.ckJob != 0)
+            if (profileVM.ckContractExtension == 0 && profileVM.ckJob != 0)
             {
-                profileManagament.BeginSalaryDate = profileManagament.JobStartDate;
+                profileVM.BeginSalaryDate = profileVM.JobStartDate;
                 disabled_BeginSalaryDate = true;
             }
 
@@ -749,76 +779,72 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        private async Task Initialize_ModalProfile(int typeView)
+        private async Task Initialize_ModalProfile(int _IsTypeUpdate)
         {
             isLoading = true;
+
+            profileVM.IsTypeUpdate = _IsTypeUpdate;
 
             disabled_btnUpdateProfile = false;
 
             disable_Eserial = true;
             placeholder_Eserial = "Mã NV";
 
-            divisionSelected = division_filter_list.First(x => x.DivisionID == filterHrVM.DivisionID);
+            countryVMs = await profileService.GetCountryList();
+            ethnicVMs = await profileService.GetEthnicList();
 
-            countrys = await profileService.GetCountryList();
-            ethnics = await profileService.GetEthnicList();
+            contractTypeVMs = await profileService.GetContractTypeList();
+            workTypeVMs = await profileService.GetWorkTypeList();
+            shiftVMs = (await dutyRosterService.GetShiftList()).Where(x => x.isOFF == 0);
 
-            sections = await organizationalChartService.GetSectionList();
-            departments = await organizationalChartService.GetDepartmentList(filterHrVM);
-            positions = await organizationalChartService.GetPositionList();
+            salaryDefVMs = await profileService.GetSalaryDef();
 
-            laborContractTypes = await profileService.GetContractTypeList();
-            workTypes = await profileService.GetWorkTypeList();
-            shifts = await dutyRosterService.GetShiftList();
-            shifts = shifts.Where(x => x.isOFF == 0);
-
-            salaryDefs = await profileService.GetSalaryDef();
-
-            permissionUsers = await authService.GetPermissionUser(filterHrVM.selectedEserial, UserID);
-
-            if (typeView == 0 || typeView == 4)
+            if (profileVM.IsTypeUpdate == 0 || profileVM.IsTypeUpdate == 4)
             {
                 disabled_ContractTypeID = true;
                 disabled_EndContractDate = true;
 
-                profileManagament = new();
+                if (profileVM.IsTypeUpdate == 0)
+                {
+                    profileVM = new();
+
+                    profileVM.IsTypeUpdate = _IsTypeUpdate;
+                }
 
                 profileHistorys = null;
 
+                profileVM.UrlAvatar = UrlDirectory.Default_Avatar;
 
-                profileManagament.UrlAvatar = UrlDirectory.Default_Avatar;
+                profileVM.CountryCode = "VN";
 
-                profileManagament.CountryCode = "VN";
+                profileVM.EthnicID = 1;
 
-                profileManagament.EthnicID = 1;
+                profileVM.DivisionID = filterHrVM.DivisionID;
 
-                profileManagament.DivisionID = filterHrVM.DivisionID;
+                profileVM.PermisId = 4;
 
-                profileManagament.PermisId = 4;
+                profileVM.IsPayByMonth = 1;
 
-                profileManagament.IsPayByMonth = 1;
-
-                if (typeView == 4)
+                if (profileVM.IsTypeUpdate == 4)
                 {
-                    profileManagament = await profileService.GetProfileByEserial(filterHrVM);
-                    profileManagament.Eserial = null;
-                    profileManagament.JoinDate = null;
-                    profileManagament.StartDayAL = null;
-                    profileManagament.StartContractDate = null;
-                    profileManagament.ContractTypeID = String.Empty;
-                    profileManagament.EndContractDate = null;
-                    profileManagament.JobStartDate = null;
-                    profileManagament.User_isChangePass = 0;
-                    profileManagament.BeginSalaryDate = null;
-                    profileManagament.Reason = String.Empty;
-                    profileManagament.ApprovedBy = String.Empty;
+                    profileVM.Eserial = null;
+                    profileVM.JoinDate = null;
+                    profileVM.StartDayAL = null;
+                    profileVM.StartContractDate = null;
+                    profileVM.ContractTypeID = String.Empty;
+                    profileVM.EndContractDate = null;
+                    profileVM.JobStartDate = null;
+                    profileVM.User_isChangePass = 0;
+                    profileVM.BeginSalaryDate = null;
+                    profileVM.Reason = String.Empty;
+                    profileVM.ApprovedBy = String.Empty;
                 }
 
-                profileManagament.isTypeSave = typeView == 4 ? 0 : 0;
+                profileVM.IsTypeUpdate = profileVM.IsTypeUpdate == 4 ? 0 : 0;
 
-                profileManagament.isAutoEserial = divisionSelected.isAutoEserial;
+                profileVM.isAutoEserial = division_filter_list.Where(x=>x.DivisionID==filterHrVM.DivisionID).Select(x=>x.isAutoEserial).First();
 
-                if (!profileManagament.isAutoEserial)
+                if (!profileVM.isAutoEserial)
                 {
                     disable_Eserial = false;
                 }
@@ -829,15 +855,12 @@ namespace D69soft.Client.Pages.HR
             }
             else
             {
-                profileManagament = await profileService.GetProfileByEserial(filterHrVM);
+                profileVM.IsUpdateUrlAvatar = false;
 
-                profileManagament.IsUpdateUrlAvatar = false;
+                permissionUserVMs = await authService.GetPermissionUser(profileVM.Eserial, UserID);
+                profileHistorys = await profileService.GetProfileHistory(profileVM.Eserial);
 
-                profileHistorys = await profileService.GetProfileHistory(profileManagament.Eserial);
-
-                profileManagament.isTypeSave = typeView;
-
-                if (!await profileService.CkUpdateJobHistory(profileManagament.Eserial))
+                if (!await profileService.CkUpdateJobHistory(profileVM.Eserial))
                 {
                     disabled_StartContractDate = true;
                     disabled_ContractTypeID = true;
@@ -845,7 +868,7 @@ namespace D69soft.Client.Pages.HR
                     disabled_JobStartDate = true;
                 }
 
-                if (!await profileService.CkUpdateSalHistory(profileManagament.Eserial))
+                if (!await profileService.CkUpdateSalHistory(profileVM.Eserial))
                 {
                     disabled_BasicSalary = true;
                     disabled_Benefit4 = true;
@@ -866,7 +889,7 @@ namespace D69soft.Client.Pages.HR
 
                 disabled_JoinDate = true;
 
-                if (typeView == 2)
+                if (profileVM.IsTypeUpdate == 2)
                 {
                     hidden_adjustProfile = string.Empty;
                     disabled_btnUpdateProfile = true;
@@ -897,38 +920,6 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        private void Close_ModalProfile()
-        {
-            hidden_adjustProfile = "hidden_adjustProfile";
-
-            disable_ckContractExtension = false;
-            disable_ckJob = false;
-            disable_ckSal = false;
-
-            disabled_JoinDate = false;
-            disabled_StartContractDate = false;
-            disabled_ContractTypeID = false;
-            disabled_EndContractDate = false;
-            disabled_JobStartDate = false;
-            disabled_BasicSalary = false;
-            disabled_Benefit4 = false;
-            disabled_OtherSalary = false;
-            disabled_Benefit5 = false;
-            disabled_Benefit1 = false;
-            disabled_Benefit6 = false;
-            disabled_Benefit2 = false;
-            disabled_Benefit7 = false;
-            disabled_Benefit3 = false;
-            disabled_Benefit8 = false;
-            disabled_Reason = false;
-            disabled_ApprovedBy = false;
-            disabled_BeginSalaryDate = false;
-            disabled_SalaryByBank = false;
-            disabled_IsPayBy = false;
-
-            disabled_btnUpdateProfile = false;
-        }
-
         MemoryStream memoryStream;
         Stream stream;
         private async Task OnInputFileChange(InputFileChangeEventArgs e)
@@ -944,55 +935,54 @@ namespace D69soft.Client.Pages.HR
             memoryStream = new();
             await stream.CopyToAsync(memoryStream);
 
-            profileManagament.UrlAvatar = $"data:{format};base64,{Convert.ToBase64String(memoryStream.ToArray())}";// convert to a base64 string!!
+            profileVM.UrlAvatar = $"data:{format};base64,{Convert.ToBase64String(memoryStream.ToArray())}";// convert to a base64 string!!
 
-            profileManagament.IsUpdateUrlAvatar = true;
+            profileVM.IsUpdateUrlAvatar = true;
 
             isLoading = false;
         }
 
         private void FileDefault()
         {
-            profileManagament.UrlAvatar = UrlDirectory.Default_Avatar;
+            profileVM.UrlAvatar = UrlDirectory.Default_Avatar;
             memoryStream = null;
-            profileManagament.IsUpdateUrlAvatar = true;
+            profileVM.IsUpdateUrlAvatar = true;
         }
 
-        private async Task SaveProfile()
+        private async Task UpdateProfile()
         {
             isLoading = true;
 
             disabled_btnUpdateProfile = true;
 
-            profileManagament.UserID = UserID;
+            profileVM.UserID = UserID;
 
-            profileManagament.Eserial = await profileService.UpdateProfile(profileManagament);
+            profileVM.Eserial = await profileService.UpdateProfile(profileVM);
 
-            if (profileManagament.IsUpdateUrlAvatar)
+            if (profileVM.IsUpdateUrlAvatar)
             {
-                LibraryFunc.DelFileFrom(Path.Combine(Directory.GetCurrentDirectory(), $"{UrlDirectory.Upload_HR_Images_Profile_Private}{profileManagament.Eserial}.png"));
+                LibraryFunc.DelFileFrom(Path.Combine(Directory.GetCurrentDirectory(), $"{UrlDirectory.Upload_HR_Images_Profile_Private}{profileVM.Eserial}.png"));
 
                 if (memoryStream != null)
                 {
-                    var path = $"{UrlDirectory.Upload_HR_Images_Profile_Private}{profileManagament.Eserial}.png";
+                    var path = $"{UrlDirectory.Upload_HR_Images_Profile_Private}{profileVM.Eserial}.png";
 
                     File.WriteAllBytes(path, memoryStream.ToArray());
 
-                    profileManagament.UrlAvatar = $"{UrlDirectory.Upload_HR_Images_Profile_Public}{profileManagament.Eserial}.png";
+                    profileVM.UrlAvatar = $"{UrlDirectory.Upload_HR_Images_Profile_Public}{profileVM.Eserial}.png";
                 }
 
-                await profileService.UpdateUrlAvatar(profileManagament.Eserial, profileManagament.UrlAvatar);
+                await profileService.UpdateUrlAvatar(profileVM.Eserial, profileVM.UrlAvatar);
             }
 
-            if (profileManagament.isTypeSave == 1)
+            if (profileVM.IsTypeUpdate == 1)
             {
                 await js.Swal_Message("Thông báo!", "Cập nhật dữ liệu thành công.", SweetAlertMessageType.success);
 
                 disabled_btnUpdateProfile = false;
-
            }
 
-            if (profileManagament.isTypeSave == 2)
+            if (profileVM.IsTypeUpdate == 2)
             {
                 await js.Swal_Message("Thông báo!", "Cập nhật dữ liệu thành công.", SweetAlertMessageType.success);
 
@@ -1002,15 +992,15 @@ namespace D69soft.Client.Pages.HR
                 disable_ckSal = true;
             }
 
-            if (profileManagament.isTypeSave == 0)
+            if (profileVM.IsTypeUpdate == 0)
             {
                 await js.Swal_Message("Thông báo!", "Thêm mới dữ liệu thành công.", SweetAlertMessageType.success);
 
-                profileManagament.isTypeSave = 1;
+                profileVM.IsTypeUpdate = 1;
                 disabled_btnUpdateProfile = false;
             }
 
-            profileHistorys = await profileService.GetProfileHistory(profileManagament.Eserial);
+            profileHistorys = await profileService.GetProfileHistory(profileVM.Eserial);
 
             await GetProfileList();
             eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
@@ -1022,12 +1012,12 @@ namespace D69soft.Client.Pages.HR
         {
             if (await js.Swal_Confirm("Xác nhận!", $"Đặt lại mật khẩu đăng nhập hệ thống?", SweetAlertMessageType.question))
             {
-                await profileService.ResetPass(profileManagament);
+                await profileService.ResetPass(profileVM);
                 await js.Swal_Message("Thông báo!", "Đặt lại mật khẩu đăng nhập thành công.", SweetAlertMessageType.success);
             }
         }
 
-        private async Task DelProfileHistory(ProfileManagamentVM profilehistory)
+        private async Task DelProfileHistory(ProfileVM profilehistory)
         {
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
             {
@@ -1035,20 +1025,18 @@ namespace D69soft.Client.Pages.HR
                 {
                     await js.Swal_Message("Thông báo!", "Xóa thành công.", SweetAlertMessageType.success);
 
-                    Close_ModalProfile();
                     await Initialize_ModalProfile(1);
 
                     await GetProfileList();
                 }
-
             }
         }
 
         private async Task DelProfile()
         {
-            if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa nhân viên mã " + filterHrVM.selectedEserial + "?", SweetAlertMessageType.question))
+            if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa nhân viên mã " + profileVM.Eserial + "?", SweetAlertMessageType.question))
             {
-                if (await profileService.DelProfile(filterHrVM.selectedEserial))
+                if (await profileService.DelProfile(profileVM.Eserial))
                 {
                     await js.Swal_Message("Thông báo!", "Xóa thành công.", SweetAlertMessageType.success);
 
@@ -1057,7 +1045,6 @@ namespace D69soft.Client.Pages.HR
                     reload_filter_eserial();
                 }
             }
-
         }
 
         private async Task InitializeModal_TerminateProfile()
@@ -1066,20 +1053,16 @@ namespace D69soft.Client.Pages.HR
 
             disabled_btnUpdateProfile = false;
 
-            profileManagament = new ProfileManagamentVM();
+            profileVM.IsTypeUpdate = 4;
 
-            profileManagament = await profileService.GetProfileByEserial(filterHrVM);
-
-            profileManagament.isTypeSave = 4;
-
-            profileManagament.UserID = UserID;
+            profileVM.UserID = UserID;
 
             isLoading = false;
         }
 
         private async Task TerminateProfile()
         {
-            if (await profileService.TerminateProfile(profileManagament))
+            if (await profileService.TerminateProfile(profileVM))
             {
                 await js.Swal_Message("Thông báo!", "Chấm dứt hợp đồng thành công.", SweetAlertMessageType.success);
 
@@ -1096,7 +1079,7 @@ namespace D69soft.Client.Pages.HR
         {
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắc chắn hủy chấm dứt hợp đồng?", SweetAlertMessageType.question))
             {
-                if (await profileService.RestoreTerminateProfile(filterHrVM.selectedEserial, UserID))
+                if (await profileService.RestoreTerminateProfile(profileVM.Eserial, UserID))
                 {
                     await js.Swal_Message("Thông báo!", "Hủy chấm dứt hợp đồng thành công.", SweetAlertMessageType.success);
                     await js.InvokeAsync<object>("CloseModal", "#InitializeModal_TerminateProfile");
@@ -1105,9 +1088,7 @@ namespace D69soft.Client.Pages.HR
 
                     reload_filter_eserial();
                 }
-
             }
-
         }
 
         //Permis
@@ -1125,15 +1106,15 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            permis_funcGroups = await profileService.GetFuncGroupPermis(profileManagament.Eserial);
-            permis_funcs = await profileService.GetFuncPermis(profileManagament.Eserial);
-            permis_subFuncs = await profileService.GetSubFuncPermis(profileManagament.Eserial);
+            permis_funcGroups = await profileService.GetFuncGroupPermis(profileVM.Eserial);
+            permis_funcs = await profileService.GetFuncPermis(profileVM.Eserial);
+            permis_subFuncs = await profileService.GetSubFuncPermis(profileVM.Eserial);
 
-            permis_divs = await profileService.GetDivisionPermis(profileManagament.Eserial);
-            permis_depts = await profileService.GetDepartmentPermis(profileManagament.Eserial);
+            permis_divs = await profileService.GetDivisionPermis(profileVM.Eserial);
+            permis_depts = await profileService.GetDepartmentPermis(profileVM.Eserial);
 
-            permis_rptgrps = await profileService.GetSysReportGroupPermis(profileManagament.Eserial);
-            permis_rpts = await profileService.GetSysReportPermis(profileManagament.Eserial);
+            permis_rptgrps = await profileService.GetSysReportGroupPermis(profileVM.Eserial);
+            permis_rpts = await profileService.GetSysReportPermis(profileVM.Eserial);
 
             isLoading = false;
         }
@@ -1204,7 +1185,7 @@ namespace D69soft.Client.Pages.HR
 
         private async Task UpdatePermis()
         {
-            await profileService.UpdatePermis(permis_funcs.Where(x => x.IsChecked), permis_subFuncs.Where(x => x.IsChecked), permis_depts.Where(x => x.IsChecked), permis_rpts.Where(x => x.IsChecked), filterHrVM.selectedEserial);
+            await profileService.UpdatePermis(permis_funcs.Where(x => x.IsChecked), permis_subFuncs.Where(x => x.IsChecked), permis_depts.Where(x => x.IsChecked), permis_rpts.Where(x => x.IsChecked), profileVM.Eserial);
 
             await js.Swal_Message("Thông báo!", "Cập nhật phân quyền thành công.", SweetAlertMessageType.success);
         }
@@ -1216,8 +1197,8 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            salTrnGrps = await profileService.GetSalTrnGrp(profileManagament.Eserial);
-            salTrnCodes = await profileService.GetSalTrnCode(profileManagament.Eserial);
+            salTrnGrps = await profileService.GetSalTrnGrp(profileVM.Eserial);
+            salTrnCodes = await profileService.GetSalTrnCode(profileVM.Eserial);
 
             isLoading = false;
         }
@@ -1241,7 +1222,7 @@ namespace D69soft.Client.Pages.HR
 
         private async Task UpdateEmplTrn()
         {
-            await profileService.UpdateEmplTrn(salTrnCodes.Where(x => x.IsChecked), filterHrVM.selectedEserial);
+            await profileService.UpdateEmplTrn(salTrnCodes.Where(x => x.IsChecked), profileVM.Eserial);
 
             await js.Swal_Message("Thông báo!", "Cập nhật thiết lập giao dịch lương thành công.", SweetAlertMessageType.success);
         }
@@ -1259,7 +1240,7 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        private async Task InitializeModalUpdate_ContractType(int _isTypeUpdate, ContractTypeVM _contractTypeVM)
+        private async Task InitializeModalUpdate_ContractType(int _IsTypeUpdate, ContractTypeVM _contractTypeVM)
         {
             isLoading = true;
 
@@ -1267,12 +1248,12 @@ namespace D69soft.Client.Pages.HR
 
             contractTypeGroupVMs = await profileService.GetContractTypeGroupList();
 
-            if (_isTypeUpdate == 1)
+            if (_IsTypeUpdate == 1)
             {
                 contractTypeVM = _contractTypeVM;
             }
 
-            contractTypeVM.IsTypeUpdate = _isTypeUpdate;
+            contractTypeVM.IsTypeUpdate = _IsTypeUpdate;
 
             isLoading = false;
         }
@@ -1336,18 +1317,18 @@ namespace D69soft.Client.Pages.HR
 
             isLoading = false;
         }
-        private void InitializeModalUpdate_WorkType(int _isTypeUpdate, WorkTypeVM _workTypeVM)
+        private void InitializeModalUpdate_WorkType(int _IsTypeUpdate, WorkTypeVM _workTypeVM)
         {
             isLoading = true;
 
             workTypeVM = new();
 
-            if (_isTypeUpdate == 1)
+            if (_IsTypeUpdate == 1)
             {
                 workTypeVM = _workTypeVM;
             }
 
-            workTypeVM.IsTypeUpdate = _isTypeUpdate;
+            workTypeVM.IsTypeUpdate = _IsTypeUpdate;
 
             isLoading = false;
         }
@@ -1426,14 +1407,14 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            profileRelationshipVMs = await profileService.GetProfileRelationshipList(filterHrVM.selectedEserial);
+            profileRelationshipVMs = await profileService.GetProfileRelationshipList(profileVM.Eserial);
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModal_ProfileRelationship");
 
             isLoading = false;
         }
 
-        private async Task InitializeModalUpdate_ProfileRelationship(int _isTypeUpdate, ProfileRelationshipVM _profileRelationshipVM)
+        private async Task InitializeModalUpdate_ProfileRelationship(int _IsTypeUpdate, ProfileRelationshipVM _profileRelationshipVM)
         {
             isLoading = true;
 
@@ -1442,16 +1423,16 @@ namespace D69soft.Client.Pages.HR
             relationshipVMs = await profileService.GetRelationshipList();
             profileRelationshipVM.RelationshipID = relationshipVMs.ElementAt(0).RelationshipID;
 
-            profileRelationshipVM.Eserial = filterHrVM.selectedEserial;
+            profileRelationshipVM.Eserial = profileVM.Eserial;
 
             profileRelationshipVM.isActive = true;
 
-            if (_isTypeUpdate == 1)
+            if (_IsTypeUpdate == 1)
             {
                 profileRelationshipVM = _profileRelationshipVM;
             }
 
-            profileRelationshipVM.IsTypeUpdate = _isTypeUpdate;
+            profileRelationshipVM.IsTypeUpdate = _IsTypeUpdate;
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_ProfileRelationship");
 
@@ -1519,7 +1500,7 @@ namespace D69soft.Client.Pages.HR
                 }
             }
 
-            profileRelationshipVMs = await profileService.GetProfileRelationshipList(filterHrVM.selectedEserial);
+            profileRelationshipVMs = await profileService.GetProfileRelationshipList(profileVM.Eserial);
 
             isLoading = false;
         }
@@ -1528,7 +1509,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            profileRelationshipVMs = await profileService.GetProfileRelationshipList(filterHrVM.selectedEserial);
+            profileRelationshipVMs = await profileService.GetProfileRelationshipList(profileVM.Eserial);
 
             isLoading = false;
         }

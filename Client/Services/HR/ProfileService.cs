@@ -16,45 +16,38 @@ namespace D69soft.Server.Services.HR
         }
 
         //Contact
-        public async Task<List<ProfileManagamentVM>> GetContacts(string _UserID)
+        public async Task<List<ProfileVM>> GetContacts(string _UserID)
         {
-            return await _httpClient.GetFromJsonAsync<List<ProfileManagamentVM>>($"api/Profile/GetContacts/{_UserID}");
+            return await _httpClient.GetFromJsonAsync<List<ProfileVM>>($"api/Profile/GetContacts/{_UserID}");
         }
 
         //Profile
-        public async Task<IEnumerable<ProfileVM>> GetEserialListByID(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<EserialVM>> GetEserialListByID(FilterHrVM _filterHrVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/Profile/GetEserialListByID", _filterHrVM);
+
+            return await response.Content.ReadFromJsonAsync<IEnumerable<EserialVM>>();
+        }
+
+        public async Task<List<ProfileVM>> GetProfileList(FilterHrVM _filterHrVM)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/Profile/GetProfileList", _filterHrVM);
+
+            return await response.Content.ReadFromJsonAsync<List<ProfileVM>>();
+        }
+
+        public async Task<IEnumerable<ProfileVM>> GetSearchEmpl(FilterHrVM _filterHrVM)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/Profile/GetSearchEmpl", _filterHrVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<ProfileVM>>();
         }
 
-        public async Task<List<ProfileManagamentVM>> GetProfileList(FilterHrVM _filterHrVM, string _UserID)
+        public async Task<string> UpdateProfile(ProfileVM _profileVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Profile/GetProfileList/{_UserID}", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Profile/UpdateProfile", _profileVM);
 
-            return await response.Content.ReadFromJsonAsync<List<ProfileManagamentVM>>();
-        }
-
-        public async Task<ProfileManagamentVM> GetProfileByEserial(FilterHrVM _filterHrVM)
-        {
-            var response = await _httpClient.PostAsJsonAsync($"api/Profile/GetProfileByEserial", _filterHrVM);
-
-            return await response.Content.ReadFromJsonAsync<ProfileManagamentVM>();
-        }
-
-        public async Task<IEnumerable<ProfileManagamentVM>> GetSearchEmpl(FilterHrVM _filterHrVM)
-        {
-            var response = await _httpClient.PostAsJsonAsync($"api/Profile/GetSearchEmpl", _filterHrVM);
-
-            return await response.Content.ReadFromJsonAsync<IEnumerable<ProfileManagamentVM>>();
-        }
-
-        public async Task<string> UpdateProfile(ProfileManagamentVM _profileManagamentVM)
-        {
-            var response = await _httpClient.PostAsJsonAsync($"api/Profile/UpdateProfile", _profileManagamentVM);
-
-            return await response.Content.ReadFromJsonAsync<string>();
+            return await response.Content.ReadAsStringAsync();
         }
 
         public async Task<bool> UpdateUrlAvatar(string _Eserial, string _UrlAvatar)
@@ -62,9 +55,9 @@ namespace D69soft.Server.Services.HR
             return await _httpClient.GetFromJsonAsync<bool>($"api/Profile/UpdateUrlAvatar/{_Eserial}/{_UrlAvatar}");
         }
 
-        public async Task<List<ProfileManagamentVM>> GetProfileHistory(string _Eserial)
+        public async Task<List<ProfileVM>> GetProfileHistory(string _Eserial)
         {
-            return await _httpClient.GetFromJsonAsync<List<ProfileManagamentVM>>($"api/Profile/GetProfileHistory/{_Eserial}");
+            return await _httpClient.GetFromJsonAsync<List<ProfileVM>>($"api/Profile/GetProfileHistory/{_Eserial}");
         }
 
         public async Task<List<SalaryDefVM>> GetSalaryDef()
@@ -97,16 +90,16 @@ namespace D69soft.Server.Services.HR
             return await _httpClient.GetFromJsonAsync<bool>($"api/Profile/CkUpdateSalHistory/{_Eserial}");
         }
 
-        public async Task<bool> ResetPass(ProfileManagamentVM _profileManagamentVM)
+        public async Task<bool> ResetPass(ProfileVM _profileVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Profile/ResetPass", _profileManagamentVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Profile/ResetPass", _profileVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<bool> DelProfileHistory(ProfileManagamentVM _profileManagamentVM)
+        public async Task<bool> DelProfileHistory(ProfileVM _profileVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Profile/DelProfileHistory", _profileManagamentVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Profile/DelProfileHistory", _profileVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
@@ -116,9 +109,9 @@ namespace D69soft.Server.Services.HR
             return await _httpClient.GetFromJsonAsync<bool>($"api/Profile/DelProfile/{_Eserial}");
         }
 
-        public async Task<bool> TerminateProfile(ProfileManagamentVM _profileManagamentVM)
+        public async Task<bool> TerminateProfile(ProfileVM _profileVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Profile/TerminateProfile", _profileManagamentVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Profile/TerminateProfile", _profileVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }

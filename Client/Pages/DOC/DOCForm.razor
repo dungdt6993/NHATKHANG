@@ -114,7 +114,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
 
-            <EditForm Model="@doctypeVM" OnValidSubmit="@UpdateDocType">
+            <EditForm Model="@doctypeVM" Context="formDocTypeVM">
 
                 <FluentValidationValidator />
 
@@ -141,10 +141,10 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdateDocType(formDocTypeVM, doctypeVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (doctypeVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => doctypeVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateDocType(formDocTypeVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
 
@@ -217,7 +217,7 @@
         <div class="card card-purple card-outline">
 
             <div class="card-header text-right">
-                @if (sysService.CheckAccessSubFunc(UserID, "DOC_DOCForm_Update").Result)
+                @if (DOC_DOCForm_Update)
                 {
                     <button type="button" class="btn btn-success" @onclick="()=>InitializeModalUpdate_Document(0, documentVM)"><i class="fa-solid fa-xl fa-plus"></i> Cật nhật</button>
                 }
@@ -233,7 +233,7 @@
                                 <th>Tên tài liệu</th>
                                 <th class="text-center">File</th>
                                 <th>Ghi chú</th>
-                                @if (sysService.CheckAccessSubFunc(UserID, "DOC_DOCForm_Update").Result)
+                                @if (DOC_DOCForm_Update)
                                 {
                                     <th></th>
                                 }
@@ -282,7 +282,7 @@
                                         }
                                     </td>
                                     <td>@_documentVM.DocNote</td>
-                                    @if (sysService.CheckAccessSubFunc(UserID, "DOC_DOCForm_Update").Result)
+                                    @if (DOC_DOCForm_Update)
                                     {
                                         <td class="text-center">
                                             <button class="btn btn-default btn-xs" @onclick="(() => InitializeModalUpdate_Document(1, _documentVM))"><i class="fa-solid fa-pen"></i></button>

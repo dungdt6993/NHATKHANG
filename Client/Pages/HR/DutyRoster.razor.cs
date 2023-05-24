@@ -5,9 +5,9 @@ using D69soft.Client.Services;
 using D69soft.Client.Services.HR;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.FIN;
-using D69soft.Client.Helpers;
 using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Client.Extension;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -39,7 +39,7 @@ namespace D69soft.Client.Pages.HR
         IEnumerable<DepartmentVM> department_filter_list;
         IEnumerable<SectionVM> section_filter_list;
         IEnumerable<PositionVM> position_filter_list;
-        IEnumerable<ProfileVM> eserial_filter_list;
+        IEnumerable<EserialVM> eserial_filter_list;
 
         //DutyRoster
         DutyRosterVM dutyRosterVM = new();
@@ -510,25 +510,25 @@ namespace D69soft.Client.Pages.HR
 
             isLoading = false;
         }
-        private async Task InitializeModalUpdate_Shift(int _isTypeUpdate, ShiftVM _shiftVM)
+        private async Task InitializeModalUpdate_Shift(int _IsTypeUpdate, ShiftVM _shiftVM)
         {
             isLoading = true;
 
             shiftVM = new();
             shiftTypeVMs = await dutyRosterService.GetShiftTypeList();
 
-            if (_isTypeUpdate == 0)
+            if (_IsTypeUpdate == 0)
             {
                 shiftVM.ColorHEX = "#ffffff";
                 shiftVM.isActive = true;
             }
 
-            if (_isTypeUpdate == 1)
+            if (_IsTypeUpdate == 1)
             {
                 shiftVM = _shiftVM;
             }
 
-            shiftVM.IsTypeUpdate = _isTypeUpdate;
+            shiftVM.IsTypeUpdate = _IsTypeUpdate;
 
             isLoading = false;
         }

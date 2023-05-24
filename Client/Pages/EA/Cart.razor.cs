@@ -7,8 +7,8 @@ using D69soft.Client.Services.HR;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.EA;
-using D69soft.Client.Helpers;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Client.Extension;
 
 namespace D69soft.Client.Pages.EA
 {
@@ -19,10 +19,9 @@ namespace D69soft.Client.Pages.EA
         [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
         [Inject] SysService sysService { get; set; }
-
+        [Inject] OrganizationalChartService organizationalChartService { get; set; }
         [Inject] InventoryService inventoryService { get; set; }
         [Inject] RequestService requestService { get; set; }
-        [Inject] OrganizationalChartService organizationalChartService { get; set; }
 
         protected string UserID;
 
@@ -61,15 +60,13 @@ namespace D69soft.Client.Pages.EA
 
         protected override async Task OnInitializedAsync()
         {
-            
-
             UserID = (await authenticationStateTask).User.GetUserId();
 
             if (await sysService.CheckAccessFunc(UserID, "EA_Request"))
             {
-                logVM.LogType = "FUNC";
-                logVM.LogName = "EA_Request";
                 logVM.LogUser = UserID;
+                logVM.LogType = "FUNC";
+                logVM.LogName = "EA_Cart";
                 await sysService.InsertLog(logVM);
             }
             else
@@ -171,9 +168,12 @@ namespace D69soft.Client.Pages.EA
 
             await requestService.SendRequest(requestVM, UserID);
 
-            await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Request");
+            logVM.LogName = "EA_Cart";
+            logVM.LogDesc = "Gửi yêu cầu cấp hàng thành công!";
+            await sysService.InsertLog(logVM);
 
-            await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+            await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Request");
+            await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
 
             navigationManager.NavigateTo("/EA/Request", true);
 

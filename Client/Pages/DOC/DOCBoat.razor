@@ -154,7 +154,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
 
-            <EditForm Model="@doctypeVM" OnValidSubmit="@UpdateDocType">
+            <EditForm Model="@doctypeVM" Context="formDocTypeVM">
 
                 <FluentValidationValidator />
 
@@ -193,10 +193,10 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdateDocType(formDocTypeVM, doctypeVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (doctypeVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => doctypeVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateDocType(formDocTypeVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
 
@@ -270,7 +270,7 @@
                 <!-- radio -->
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
-                        <input type="radio" id="r1" name="r" value="0" @onchange="onchange_filter_type" checked="@(filterHrVM.isTypeSearch == 0? true: false)">
+                        <input type="radio" id="r1" name="r" value="0" @onchange="onchange_filter_type" checked="@(filterHrVM.IsTypeSearch == 0? true: false)">
                         <label for="r1">
                             Tất cả
                         </label>
@@ -279,7 +279,7 @@
                         &nbsp;&nbsp;
                     </label>
                     <div class="icheck-danger d-inline">
-                        <input type="radio" id="r2" name="r" value="1" @onchange="onchange_filter_type" checked="@(filterHrVM.isTypeSearch == 1? true: false)">
+                        <input type="radio" id="r2" name="r" value="1" @onchange="onchange_filter_type" checked="@(filterHrVM.IsTypeSearch == 1? true: false)">
                         <label for="r2">
                             Hết hạn
                         </label>
@@ -288,7 +288,7 @@
                         &nbsp;&nbsp;
                     </label>
                     <div class="icheck-warning d-inline">
-                        <input type="radio" id="r3" name="r" value="2" @onchange="onchange_filter_type" checked="@(filterHrVM.isTypeSearch == 2? true: false)">
+                        <input type="radio" id="r3" name="r" value="2" @onchange="onchange_filter_type" checked="@(filterHrVM.IsTypeSearch == 2? true: false)">
                         <label for="r3">
                             Thiếu file Scan
                         </label>

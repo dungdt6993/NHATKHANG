@@ -24,7 +24,7 @@ namespace D69soft.Server.Controllers.HR
 
         //Contact
         [HttpGet("GetContacts/{_UserID}")]
-        public async Task<ActionResult<List<ProfileManagamentVM>>> GetContacts(string _UserID)
+        public async Task<ActionResult<List<ProfileVM>>> GetContacts(string _UserID)
         {
             var sql = "select p.UrlAvatar, p.Eserial, p.LastName, p.MiddleName, p.FirstName, p.LastName + ' ' + p.MiddleName + ' ' + p.FirstName as FullName, p.Birthday, p.Mobile, s.EmailCompany, de.DepartmentName, po.PositionName from HR.Profile p ";
             sql += "join (select * from HR.Staff where coalesce(Terminated,0) = 0) s on s.Eserial = p.Eserial ";
@@ -37,14 +37,14 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<ProfileManagamentVM>(sql, new { UserID = _UserID });
+                var result = await conn.QueryAsync<ProfileVM>(sql, new { UserID = _UserID });
                 return result.ToList();
             }
         }
 
         //Profile
         [HttpPost("GetEserialListByID")]
-        public async Task<IEnumerable<ProfileVM>> GetEserialListByID(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<EserialVM>>> GetEserialListByID(FilterHrVM _filterHrVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -59,13 +59,13 @@ namespace D69soft.Server.Controllers.HR
                 parm.Add("@isSearch", _filterHrVM.TypeProfile);
                 parm.Add("@UserID", _filterHrVM.UserID);
 
-                var result = await conn.QueryAsync<ProfileVM>("HR.Profile_viewEserialMain", parm, commandType: CommandType.StoredProcedure);
-                return result;
+                var result = await conn.QueryAsync<EserialVM>("HR.Profile_viewEserialMain", parm, commandType: CommandType.StoredProcedure);
+                return Ok(result);
             }
         }
 
-        [HttpPost("GetProfileList/{_UserID}")]
-        public async Task<List<ProfileManagamentVM>> GetProfileList(FilterHrVM _filterHrVM, string _UserID)
+        [HttpPost("GetProfileList")]
+        public async Task<ActionResult<List<ProfileVM>>> GetProfileList(FilterHrVM _filterHrVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -79,37 +79,15 @@ namespace D69soft.Server.Controllers.HR
                 parm.Add("@arrPos", _filterHrVM.PositionGroupID);
                 parm.Add("@Eserial", _filterHrVM.Eserial);
                 parm.Add("@isSearch", _filterHrVM.TypeProfile);
-                parm.Add("@UserID", _UserID);
+                parm.Add("@UserID", _filterHrVM.UserID);
 
-                var result = await conn.QueryAsync<ProfileManagamentVM>("HR.Profile_viewListProfile", parm, commandType: CommandType.StoredProcedure);
+                var result = await conn.QueryAsync<ProfileVM>("HR.Profile_viewListProfile", parm, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }
 
-        [HttpPost("GetProfileByEserial")]
-        public async Task<ProfileManagamentVM> GetProfileByEserial(FilterHrVM _filterHrVM)
-        {
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                DynamicParameters parm = new DynamicParameters();
-                parm.Add("@DivsID", _filterHrVM.DivisionID);
-                parm.Add("@SectionID", _filterHrVM.SectionID);
-                parm.Add("@DeptID", _filterHrVM.DepartmentID);
-                parm.Add("@arrPos", _filterHrVM.PositionGroupID);
-                parm.Add("@Eserial", _filterHrVM.selectedEserial);
-                parm.Add("@isSearch", _filterHrVM.TypeProfile);
-                parm.Add("@UserID", _filterHrVM.UserID);
-
-                var result = await conn.QueryFirstAsync<ProfileManagamentVM>("HR.Profile_viewListProfile", parm, commandType: CommandType.StoredProcedure);
-                return result;
-            }
-        }
-
         [HttpPost("GetSearchEmpl")]
-        public async Task<IEnumerable<ProfileManagamentVM>> GetSearchEmpl(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<ProfileVM>>> GetSearchEmpl(FilterHrVM _filterHrVM)
         {
             var sql = "select * from HR.Profile p ";
             sql += "join (select * from HR.Staff where coalesce(Terminated,0)=0) s on s.Eserial = p.Eserial ";
@@ -122,15 +100,15 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<ProfileManagamentVM>(sql, _filterHrVM);
-                return result;
+                var result = await conn.QueryAsync<ProfileVM>(sql, _filterHrVM);
+                return Ok(result);
             }
         }
 
         [HttpPost("UpdateProfile")]
-        public async Task<string> UpdateProfile(ProfileManagamentVM _profileManagamentVM)
+        public async Task<ActionResult<string>> UpdateProfile(ProfileVM _profileManagamentVM)
         {
-            if (_profileManagamentVM.isTypeSave == 0)
+            if (_profileManagamentVM.IsTypeUpdate == 0)
             {
                 _profileManagamentVM.User_PassReset = LibraryFunc.RandomNumber(100000, 999999).ToString();
 
@@ -143,7 +121,7 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@typeView", _profileManagamentVM.isTypeSave);
+                parm.Add("@typeView", _profileManagamentVM.IsTypeUpdate);
 
                 parm.Add("@ckcontractextension", _profileManagamentVM.ckContractExtension);
                 parm.Add("@ckjob", _profileManagamentVM.ckJob);
@@ -228,8 +206,8 @@ namespace D69soft.Server.Controllers.HR
             }
         }
 
-        [HttpGet("UpdateUrlAvatar")]
-        public async Task<bool> UpdateUrlAvatar(string _Eserial, string _UrlAvatar)
+        [HttpGet("UpdateUrlAvatar/{_Eserial}/{_UrlAvatar}")]
+        public async Task<ActionResult<bool>> UpdateUrlAvatar(string _Eserial, string _UrlAvatar)
         {
             var sql = "Update HR.Profile set UrlAvatar=@UrlAvatar where Eserial=@Eserial";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -242,8 +220,8 @@ namespace D69soft.Server.Controllers.HR
             }
         }
 
-        [HttpGet("GetProfileHistory")]
-        public async Task<List<ProfileManagamentVM>> GetProfileHistory(string _Eserial)
+        [HttpGet("GetProfileHistory/{_Eserial}")]
+        public async Task<ActionResult<List<ProfileVM>>> GetProfileHistory(string _Eserial)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -254,14 +232,14 @@ namespace D69soft.Server.Controllers.HR
 
                 parm.Add("@Eserial", _Eserial);
 
-                var result = await conn.QueryAsync<ProfileManagamentVM>("HR.Profile_viewProfileHistory", parm, commandType: CommandType.StoredProcedure);
+                var result = await conn.QueryAsync<ProfileVM>("HR.Profile_viewProfileHistory", parm, commandType: CommandType.StoredProcedure);
 
-                return result.AsList();
+                return result.ToList();
             }
         }
 
-        [HttpPost("GetSalaryDef")]
-        public async Task<List<SalaryDefVM>> GetSalaryDef()
+        [HttpGet("GetSalaryDef")]
+        public async Task<ActionResult<List<SalaryDefVM>>> GetSalaryDef()
         {
             var sql = "select * from HR.SalaryDef";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -270,12 +248,12 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<SalaryDefVM>(sql);
-                return result.AsList();
+                return result.ToList();
             }
         }
 
         [HttpGet("CheckContainsEserial/{_Eserial}")]
-        public async Task<bool> CheckContainsEserial(string _Eserial)
+        public async Task<ActionResult<bool>> CheckContainsEserial(string _Eserial)
         {
             var sql = "SELECT CAST(CASE WHEN EXISTS (SELECT 1 FROM HR.Profile where Eserial = @Eserial) THEN 0 ELSE 1 END as BIT)";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -288,7 +266,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpGet("GetCountryList")]
-        public async Task<IEnumerable<CountryVM>> GetCountryList()
+        public async Task<ActionResult<IEnumerable<CountryVM>>> GetCountryList()
         {
             var sql = "select CountryCode, CountryName from HR.Country";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -297,12 +275,12 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<CountryVM>(sql);
-                return result;
+                return Ok(result);
             }
         }
 
         [HttpGet("GetEthnicList")]
-        public async Task<IEnumerable<EthnicVM>> GetEthnicList()
+        public async Task<ActionResult<IEnumerable<EthnicVM>>> GetEthnicList()
         {
             var sql = "select EthnicID, EthnicName from HR.Ethnic";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -311,12 +289,12 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<EthnicVM>(sql);
-                return result;
+                return Ok(result);
             }
         }
 
         [HttpGet("CkUpdateJobHistory/{_Eserial}")]
-        public async Task<bool> CkUpdateJobHistory(string _Eserial)
+        public async Task<ActionResult<bool>> CkUpdateJobHistory(string _Eserial)
         {
             var sql = "SELECT CAST(CASE WHEN EXISTS (select 1 from HR.JobHistory where Eserial=@Eserial group by Eserial having count(Eserial)>1) THEN 0 ELSE 1 END as BIT)";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -329,7 +307,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpGet("CkUpdateSalHistory/{_Eserial}")]
-        public async Task<bool> CkUpdateSalHistory(string _Eserial)
+        public async Task<ActionResult<bool>> CkUpdateSalHistory(string _Eserial)
         {
             var sql = "SELECT CAST(CASE WHEN EXISTS (select 1 from HR.SalaryHistory where Eserial=@Eserial group by Eserial having count(Eserial)>1) THEN 0 ELSE 1 END as BIT)";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -342,7 +320,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("ResetPass")]
-        public async Task<bool> ResetPass(ProfileManagamentVM _profileManagamentVM)
+        public async Task<ActionResult<bool>> ResetPass(ProfileVM _profileManagamentVM)
         {
             _profileManagamentVM.User_PassReset = LibraryFunc.RandomNumber(100000, 999999).ToString();
 
@@ -362,7 +340,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("DelProfileHistory")]
-        public async Task<bool> DelProfileHistory(ProfileManagamentVM _profileManagamentVM)
+        public async Task<ActionResult<bool>> DelProfileHistory(ProfileVM _profileManagamentVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -404,7 +382,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpGet("DelProfile")]
-        public async Task<bool> DelProfile(string _Eserial)
+        public async Task<ActionResult<bool>> DelProfile(string _Eserial)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -421,7 +399,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("TerminateProfile")]
-        public async Task<bool> TerminateProfile(ProfileManagamentVM _profileManagamentVM)
+        public async Task<ActionResult<bool>> TerminateProfile(ProfileVM _profileManagamentVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -441,7 +419,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpGet("RestoreTerminateProfile/{_Eserial}/{_UserID}")]
-        public async Task<bool> RestoreTerminateProfile(string _Eserial, string _UserID)
+        public async Task<ActionResult<bool>> RestoreTerminateProfile(string _Eserial, string _UserID)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -460,7 +438,7 @@ namespace D69soft.Server.Controllers.HR
 
         //Permis
         [HttpGet("GetFuncGroupPermis/{_Eserial}")]
-        public async Task<IEnumerable<FuncVM>> GetFuncGroupPermis(string _Eserial)
+        public async Task<ActionResult<IEnumerable<FuncVM>>> GetFuncGroupPermis(string _Eserial)
         {
             var sql = "select distinct fg.ModuleID, fg.FGNo, fg.FuncGrpID, fg.FuncGrpName, case when sum(case when coalesce(pf.FuncID,'') != '' then 1 else 0 end) > 0 then 1 else 0 end as IsChecked from SYSTEM.FuncGrp fg ";
             sql += "join (select * from SYSTEM.Func where isActive = 1) f on fg.FuncGrpID = f.FuncGrpID ";
@@ -472,12 +450,12 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<FuncVM>(sql, new { Eserial = _Eserial });
-                return result;
+                return Ok(result);
             }
         }
 
         [HttpGet("GetFuncPermis/{_Eserial}")]
-        public async Task<IEnumerable<FuncVM>> GetFuncPermis(string _Eserial)
+        public async Task<ActionResult<IEnumerable<FuncVM>>> GetFuncPermis(string _Eserial)
         {
             var sql = "select f.FuncGrpID, f.FuncID, FuncName, case when coalesce(pf.FuncID,'') != '' then 1 else 0 end as IsChecked from SYSTEM.Func f ";
             sql += "left join (select * from SYSTEM.PermissionFunc where UserID=@Eserial) pf on pf.FuncID = f.FuncID ";
@@ -488,12 +466,12 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<FuncVM>(sql, new { Eserial = _Eserial });
-                return result;
+                return Ok(result);
             }
         }
 
         [HttpGet("GetSubFuncPermis/{_Eserial}")]
-        public async Task<IEnumerable<FuncVM>> GetSubFuncPermis(string _Eserial)
+        public async Task<ActionResult<IEnumerable<FuncVM>>> GetSubFuncPermis(string _Eserial)
         {
             var sql = "select f.FuncGrpID, sf.FuncID, sf.SubFuncID, SubFuncName, case when coalesce(pfs.SubFuncID,'') != '' then 1 else 0 end as IsChecked from SYSTEM.SubFunc sf ";
             sql += "join (select * from SYSTEM.Func where isActive = 1) f on f.FuncID = sf.FuncID ";
@@ -504,12 +482,12 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<FuncVM>(sql, new { Eserial = _Eserial });
-                return result;
+                return Ok(result);
             }
         }
 
         [HttpGet("GetDivisionPermis/{_Eserial}")]
-        public async Task<IEnumerable<DepartmentVM>> GetDivisionPermis(string _Eserial)
+        public async Task<ActionResult<IEnumerable<DepartmentVM>>> GetDivisionPermis(string _Eserial)
         {
             var sql = "select di.DivisionID, di.DivisionName, case when sum(case when coalesce(pd.DepartmentID,'') != '' then 1 else 0 end) > 0 then 1 else 0 end as IsChecked  from HR.Division di ";
             sql += "left join (select * from SYSTEM.PermissionDepartment where UserID=@Eserial) pd on pd.DivisionID = di.DivisionID group by di.DivisionID, di.DivisionName ";
@@ -520,12 +498,12 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<DepartmentVM>(sql, new { Eserial = _Eserial });
-                return result;
+                return Ok(result);
             }
         }
 
         [HttpGet("GetDepartmentPermis/{_Eserial}")]
-        public async Task<IEnumerable<DepartmentVM>> GetDepartmentPermis(string _Eserial)
+        public async Task<ActionResult<IEnumerable<DepartmentVM>>> GetDepartmentPermis(string _Eserial)
         {
             var sql = "select di.DivisionID, de.DepartmentID, de.DepartmentName, case when coalesce(pd.DepartmentID,'') != '' then 1 else 0 end as IsChecked  from HR.Department de ";
             sql += "join HR.Division di on di.DivisionID = de.DivisionID ";
@@ -537,12 +515,12 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<DepartmentVM>(sql, new { Eserial = _Eserial });
-                return result;
+                return Ok(result);
             }
         }
 
-        [HttpGet("GetRptGrpPermis/{_Eserial}")]
-        public async Task<IEnumerable<SysRptVM>> GetSysReportGroupPermis(string _Eserial)
+        [HttpGet("GetSysReportGroupPermis/{_Eserial}")]
+        public async Task<ActionResult<IEnumerable<SysRptVM>>> GetSysReportGroupPermis(string _Eserial)
         {
             var sql = "select rg.RptGrpID, rg.RptGrpName, case when sum(case when coalesce(pr.RptID,'') != '' then 1 else 0 end) > 0 then 1 else 0 end as IsChecked from SYSTEM.RptGrp rg ";
             sql += "join (select * from SYSTEM.Rpt) r on rg.RptGrpID = r.RptGrpID ";
@@ -554,12 +532,12 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<SysRptVM>(sql, new { Eserial = _Eserial });
-                return result;
+                return Ok(result);
             }
         }
 
-        [HttpGet("GetRptPermis/{_Eserial}")]
-        public async Task<IEnumerable<SysRptVM>> GetSysReportPermis(string _Eserial)
+        [HttpGet("GetSysReportPermis/{_Eserial}")]
+        public async Task<ActionResult<IEnumerable<SysRptVM>>> GetSysReportPermis(string _Eserial)
         {
             var sql = "select r.RptGrpID, r.RptID, r.RptName, case when coalesce(pr.RptID,'') != '' then 1 else 0 end as IsChecked from SYSTEM.Rpt r ";
             sql += "left join (select * from SYSTEM.PermissionRpt where UserID=@Eserial) pr on pr.RptID = r.RptID  ";
@@ -570,12 +548,12 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<SysRptVM>(sql, new { Eserial = _Eserial });
-                return result;
+                return Ok(result);
             }
         }
 
         [HttpGet("UpdatePermis/{_funcVMs}/{_subFuncVMs}/{_departmentVMs}/{_sysRptVMs}/{_Eserial}")]
-        public async Task<bool> UpdatePermis(IEnumerable<FuncVM> _funcVMs, [FromRouteAttribute] IEnumerable<FuncVM> _subFuncVMs, [FromRouteAttribute] IEnumerable<DepartmentVM> _departmentVMs, [FromRouteAttribute] IEnumerable<SysRptVM> _sysRptVMs, string _Eserial)
+        public async Task<ActionResult<bool>> UpdatePermis(IEnumerable<FuncVM> _funcVMs, [FromRouteAttribute] IEnumerable<FuncVM> _subFuncVMs, [FromRouteAttribute] IEnumerable<DepartmentVM> _departmentVMs, [FromRouteAttribute] IEnumerable<SysRptVM> _sysRptVMs, string _Eserial)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -617,7 +595,7 @@ namespace D69soft.Server.Controllers.HR
 
         //EmplTrn
         [HttpGet("GetSalTrnGrp/{_Eserial}")]
-        public async Task<IEnumerable<EmployeeTransactionVM>> GetSalTrnGrp(string _Eserial)
+        public async Task<ActionResult<IEnumerable<EmployeeTransactionVM>>> GetSalTrnGrp(string _Eserial)
         {
             var sql = "select stg.TrnGroupCode, stg.TrnGroupName, case when sum(coalesce(et.TrnCode,0)) > 0 then 1 else 0 end as IsChecked from HR.SalaryTransactionGroup stg ";
             sql += "join HR.SalaryTransactionCode st  on st.TrnGroupCode = stg.TrnGroupCode ";
@@ -629,12 +607,12 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<EmployeeTransactionVM>(sql, new { Eserial = _Eserial });
-                return result;
+                return Ok(result);
             }
         }
 
         [HttpGet("GetSalTrnCode/{_Eserial}")]
-        public async Task<IEnumerable<EmployeeTransactionVM>> GetSalTrnCode(string _Eserial)
+        public async Task<ActionResult<IEnumerable<EmployeeTransactionVM>>> GetSalTrnCode(string _Eserial)
         {
             var sql = "select st.SalTrnID, stg.TrnGroupCode, stg.TrnGroupName, st.TrnCode, st.TrnSubCode, st.TrnName, case when coalesce(et.SalTrnID,0) != 0 then 1 else 0 end as IsChecked from HR.SalaryTransactionCode st ";
             sql += "join HR.SalaryTransactionGroup stg  on stg.TrnGroupCode = st.TrnGroupCode ";
@@ -645,12 +623,12 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<EmployeeTransactionVM>(sql, new { Eserial = _Eserial });
-                return result;
+                return Ok(result);
             }
         }
 
         [HttpGet("UpdateEmplTrn/{_salTrnCodes}/{_Eserial}")]
-        public async Task<bool> UpdateEmplTrn(IEnumerable<EmployeeTransactionVM> _salTrnCodes, string _Eserial)
+        public async Task<ActionResult<bool>> UpdateEmplTrn(IEnumerable<EmployeeTransactionVM> _salTrnCodes, string _Eserial)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -671,7 +649,7 @@ namespace D69soft.Server.Controllers.HR
 
         //ContractType
         [HttpGet("GetContractTypeGroupList")]
-        public async Task<IEnumerable<ContractTypeVM>> GetContractTypeGroupList()
+        public async Task<ActionResult<IEnumerable<ContractTypeVM>>> GetContractTypeGroupList()
         {
             var sql = "select * from HR.ContractTypeGroup ";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -680,12 +658,12 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<ContractTypeVM>(sql);
-                return result;
+                return Ok(result);
             }
         }
 
         [HttpGet("GetContractTypeList")]
-        public async Task<IEnumerable<ContractTypeVM>> GetContractTypeList()
+        public async Task<ActionResult<IEnumerable<ContractTypeVM>>> GetContractTypeList()
         {
             var sql = "select * from HR.ContractType ct join HR.ContractTypeGroup ctg on ctg.ContractTypeGroupID = ct.ContractTypeGroupID ";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -694,12 +672,12 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<ContractTypeVM>(sql);
-                return result;
+                return Ok(result);
             }
         }
 
         [HttpGet("GetNumMonthLC/{_ContractTypeID}")]
-        public async Task<int> GetNumMonthLC(string _ContractTypeID)
+        public async Task<ActionResult<int>> GetNumMonthLC(string _ContractTypeID)
         {
             var sql = "select NumMonth from HR.ContractType where ContractTypeID=@ContractTypeID";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -712,7 +690,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpGet("ContainsContractTypeID/{id}")]
-        public async Task<bool> ContainsContractTypeID(string id)
+        public async Task<ActionResult<bool>> ContainsContractTypeID(string id)
         {
             var sql = "SELECT CAST(CASE WHEN EXISTS (SELECT 1 FROM HR.ContractType where ContractTypeID = @ContractTypeID) THEN 0 ELSE 1 END as BIT)";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -725,7 +703,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("UpdateContractType")]
-        public async Task<int> UpdateContractType(ContractTypeVM _contractTypeVM)
+        public async Task<ActionResult<int>> UpdateContractType(ContractTypeVM _contractTypeVM)
         {
             var sql = "";
             if (_contractTypeVM.IsTypeUpdate == 0)
@@ -754,7 +732,7 @@ namespace D69soft.Server.Controllers.HR
 
         //WorkType
         [HttpGet("GetWorkTypeList")]
-        public async Task<IEnumerable<WorkTypeVM>> GetWorkTypeList()
+        public async Task<ActionResult<IEnumerable<WorkTypeVM>>> GetWorkTypeList()
         {
             var sql = "select * from HR.WorkType";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -763,12 +741,12 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<WorkTypeVM>(sql);
-                return result;
+                return Ok(result);
             }
         }
 
         [HttpGet("ContainsWorkTypeID/{id}")]
-        public async Task<bool> ContainsWorkTypeID(string id)
+        public async Task<ActionResult<bool>> ContainsWorkTypeID(string id)
         {
             var sql = "SELECT CAST(CASE WHEN EXISTS (SELECT 1 FROM HR.WorkType where WorkTypeID = @WorkTypeID) THEN 0 ELSE 1 END as BIT)";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -781,7 +759,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("UpdateWorkType")]
-        public async Task<int> UpdateWorkType(WorkTypeVM _workTypeVM)
+        public async Task<ActionResult<int>> UpdateWorkType(WorkTypeVM _workTypeVM)
         {
             var sql = "";
             if (_workTypeVM.IsTypeUpdate == 0)
@@ -810,7 +788,7 @@ namespace D69soft.Server.Controllers.HR
 
         //ProfileRelationship
         [HttpGet("GetRelationshipList")]
-        public async Task<IEnumerable<ProfileRelationshipVM>> GetRelationshipList()
+        public async Task<ActionResult<IEnumerable<ProfileRelationshipVM>>> GetRelationshipList()
         {
             var sql = "select * from HR.Relationship ";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -819,12 +797,12 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<ProfileRelationshipVM>(sql);
-                return result;
+                return Ok(result);
             }
         }
 
         [HttpGet("GetProfileRelationshipList/{_Eserial}")]
-        public async Task<IEnumerable<ProfileRelationshipVM>> GetProfileRelationshipList(string _Eserial)
+        public async Task<ActionResult<IEnumerable<ProfileRelationshipVM>>> GetProfileRelationshipList(string _Eserial)
         {
             var sql = "select * from HR.ProfileRelationship pr join HR.Relationship r on r.RelationshipID = pr.RelationshipID where Eserial=@Eserial ";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -833,12 +811,12 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var result = await conn.QueryAsync<ProfileRelationshipVM>(sql, new { Eserial = _Eserial });
-                return result;
+                return Ok(result);
             }
         }
 
         [HttpPost("UpdateProfileRelationship")]
-        public async Task<bool> UpdateProfileRelationship(ProfileRelationshipVM _profileRelationshipVM)
+        public async Task<ActionResult<bool>> UpdateProfileRelationship(ProfileRelationshipVM _profileRelationshipVM)
         {
             var sql = "";
             if (_profileRelationshipVM.IsTypeUpdate == 0)
@@ -867,7 +845,7 @@ namespace D69soft.Server.Controllers.HR
 
         //Báo cáo biến động nhân sự
         [HttpPost("GetEmplChangeList")]
-        public async Task<DataTable> GetEmplChangeList(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<DataTable>> GetEmplChangeList(FilterHrVM _filterHrVM)
         {
             return ExecuteStoredProcPrmsToDataTable("RPT.HR_Bao_cao_bien_dong_nhan_su",
                 "@Y", _filterHrVM.Year,

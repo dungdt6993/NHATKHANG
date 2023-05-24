@@ -5,9 +5,9 @@ using Microsoft.JSInterop;
 using D69soft.Client.Services;
 using D69soft.Client.Services.FIN;
 using D69soft.Shared.Models.ViewModels.FIN;
-using D69soft.Client.Helpers;
 using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Client.Extension;
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -79,15 +79,13 @@ namespace D69soft.Client.Pages.FIN
 
         protected override async Task OnInitializedAsync()
         {
-            
-
             UserID = (await authenticationStateTask).User.GetUserId();
 
             if (await sysService.CheckAccessFunc(UserID, "STOCK_Items"))
             {
+                logVM.LogUser = UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "STOCK_Items";
-                logVM.LogUser = UserID;
                 await sysService.InsertLog(logVM);
             }
             else
@@ -227,18 +225,18 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
-        private async Task InitializeModalUpdate_ItemsGroup(int _isTypeUpdate)
+        private async Task InitializeModalUpdate_ItemsGroup(int _IsTypeUpdate)
         {
             isLoading = true;
 
-            if (_isTypeUpdate == 0)
+            if (_IsTypeUpdate == 0)
             {
                 itemsGroupVM = new();
 
                 itemsGroupVM.IClsCode = filterFinVM.IClsCode;
             }
 
-            itemsGroupVM.IsTypeUpdate = _isTypeUpdate;
+            itemsGroupVM.IsTypeUpdate = _IsTypeUpdate;
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_ItemsGroup");
 
@@ -287,7 +285,7 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
-        private async Task InitializeModalUpdate_Items(int _isTypeUpdate, ItemsVM _itemsVM)
+        private async Task InitializeModalUpdate_Items(int _IsTypeUpdate, ItemsVM _itemsVM)
         {
             isLoading = true;
 
@@ -297,7 +295,7 @@ namespace D69soft.Client.Pages.FIN
 
             vendorVMs = await purchasingService.GetVendorList();
 
-            if (_isTypeUpdate == 0)
+            if (_IsTypeUpdate == 0)
             {
                 itemsVM = new();
 
@@ -307,13 +305,13 @@ namespace D69soft.Client.Pages.FIN
                 itemsVM.IActive = true;
             }
 
-            if (_isTypeUpdate == 1)
+            if (_IsTypeUpdate == 1)
             {
                 itemsVM = _itemsVM;
                 quantitativeItemsVMs = await inventoryService.GetQuantitativeItems(itemsVM.ICode);
             }
 
-            itemsVM.IsTypeUpdate = _isTypeUpdate;
+            itemsVM.IsTypeUpdate = _IsTypeUpdate;
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_Items");
 
@@ -463,23 +461,23 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
-        private async Task InitializeModalUpdate_ItemsUnit(int _isTypeUpdate)
+        private async Task InitializeModalUpdate_ItemsUnit(int _IsTypeUpdate)
         {
             isLoading = true;
 
             itemsUnitVMs = await inventoryService.GetItemsUnitList();
 
-            if (_isTypeUpdate == 0)
+            if (_IsTypeUpdate == 0)
             {
                 itemsUnitVM = new();
             }
 
-            if (_isTypeUpdate == 1)
+            if (_IsTypeUpdate == 1)
             {
                 itemsUnitVM = itemsUnitVMs.First(x => x.IUnitCode == itemsVM.IUnitCode);
             }
 
-            itemsUnitVM.IsTypeUpdate = _isTypeUpdate;
+            itemsUnitVM.IsTypeUpdate = _IsTypeUpdate;
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_ItemsUnit");
 

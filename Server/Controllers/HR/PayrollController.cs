@@ -39,7 +39,7 @@ namespace D69soft.Server.Controllers.HR
                 parm.Add("@Eserial", _filterHrVM.Eserial);
                 parm.Add("@TrnCode", _filterHrVM.TrnCode);
                 parm.Add("@TrnSubCode", _filterHrVM.TrnSubCode);
-                parm.Add("@isTypeSearch", _filterHrVM.isTypeSearch);
+                parm.Add("@IsTypeSearch", _filterHrVM.IsTypeSearch);
 
                 var result = await conn.QueryAsync<MonthlyIncomeTrnOtherVM>("HR.MonthlyIncome_viewMain", parm, commandType: CommandType.StoredProcedure);
                 return result.ToList();
@@ -664,7 +664,7 @@ namespace D69soft.Server.Controllers.HR
                 parm.Add("@DeptID", _filterHrVM.DepartmentID);
                 parm.Add("@arrPos", _filterHrVM.PositionGroupID);
                 parm.Add("@Eserial", _filterHrVM.Eserial);
-                parm.Add("@isSearch", _filterHrVM.isTypeSearch);
+                parm.Add("@isSearch", _filterHrVM.IsTypeSearch);
 
                 var result = await conn.QueryAsync<PayslipVM>("HR.Payslip_viewMain", parm, commandType: CommandType.StoredProcedure);
                 return result.ToList();

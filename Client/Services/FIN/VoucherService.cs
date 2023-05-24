@@ -1,7 +1,4 @@
-﻿using D69soft.Shared.Models.ViewModels.DOC;
-using D69soft.Shared.Models.ViewModels.FIN;
-using D69soft.Shared.Models.ViewModels.HR;
-using D69soft.Shared.Models.ViewModels.SYSTEM;
+﻿using D69soft.Shared.Models.ViewModels.FIN;
 using System.Net.Http.Json;
 
 namespace D69soft.Client.Services.FIN
@@ -48,7 +45,7 @@ namespace D69soft.Client.Services.FIN
         {
             var response = await _httpClient.PostAsJsonAsync($"api/Voucher/UpdateVoucher/{_stockVoucherDetailVMs}", _stockVoucherVM);
 
-            return await response.Content.ReadFromJsonAsync<string>();
+            return await response.Content.ReadAsStringAsync();
         }
 
     }

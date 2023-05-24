@@ -6,11 +6,11 @@ using D69soft.Client.Services.HR;
 using D69soft.Client.Services.DOC;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.DOC;
-using D69soft.Client.Helpers;
 using D69soft.Client.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Client.Extension;
 
 namespace D69soft.Client.Pages.DOC
 {
@@ -73,9 +73,9 @@ namespace D69soft.Client.Pages.DOC
                 navigationManager.NavigateTo("/");
             }
 
-            //Initialize Filter
             DOC_DOCBoat_Update = await sysService.CheckAccessSubFunc(UserID, "DOC_DOCBoat_Update");
 
+            //Initialize Filter
             filterHrVM.GroupType = "DocBoat";
 
             division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
@@ -135,7 +135,7 @@ namespace D69soft.Client.Pages.DOC
         {
             isLoading = true;
 
-            filterHrVM.isTypeSearch = int.Parse(args.Value.ToString());
+            filterHrVM.IsTypeSearch = int.Parse(args.Value.ToString());
 
             documentVMs = null;
 
@@ -296,16 +296,25 @@ namespace D69soft.Client.Pages.DOC
 
             isLoading = false;
         }
-        private async Task UpdateDocType()
+        private async Task UpdateDocType(EditContext _formDocTypeVM, int _IsTypeUpdate)
         {
+            doctypeVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formDocTypeVM.Validate()) return;
+
             isLoading = true;
 
             if (doctypeVM.IsTypeUpdate != 2)
             {
                 await documentService.UpdateDocType(doctypeVM);
 
+                logVM.LogDesc = "Cập nhật loại tài liệu thành công!";
+                await sysService.InsertLog(logVM);
+
+                doctype_filter_list = await documentService.GetDocTypes(filterHrVM);
+
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_DocType");
-                await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+                await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
             }
             else
             {
@@ -315,11 +324,14 @@ namespace D69soft.Client.Pages.DOC
 
                     if (affectedRows > 0)
                     {
-                        doctypeVM.DocTypeID = 0;
+                        logVM.LogDesc = "Xóa loại tài liệu thành công!";
+                        await sysService.InsertLog(logVM);
+
+                        documentVM.DocTypeID = 0;
                         doctype_filter_list = await documentService.GetDocTypes(filterHrVM);
 
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_DocType");
-                        await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
+                        await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
                     }
                     else
                     {
@@ -332,8 +344,6 @@ namespace D69soft.Client.Pages.DOC
                     doctypeVM.IsTypeUpdate = 1;
                 }
             }
-
-            doctype_filter_list = await documentService.GetDocTypes(filterHrVM);
 
             isLoading = false;
         }

@@ -6,9 +6,9 @@ using Microsoft.JSInterop;
 using D69soft.Client.Services;
 using D69soft.Client.Services.HR;
 using D69soft.Shared.Models.ViewModels.HR;
-using D69soft.Client.Helpers;
 using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Client.Extension;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -143,11 +143,11 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        private async Task InitializeModalUpdate_WorkPlan(int _isTypeUpdate, string _PositionGroupID, DutyRosterVM _workPlanVM)
+        private async Task InitializeModalUpdate_WorkPlan(int _IsTypeUpdate, string _PositionGroupID, DutyRosterVM _workPlanVM)
         {
             isLoading = true;
 
-            if (_isTypeUpdate == 0)
+            if (_IsTypeUpdate == 0)
             {
                 workPlanVM = new();
 
@@ -157,12 +157,12 @@ namespace D69soft.Client.Pages.HR
                 workPlanVM.UserCreated = UserID;
             }
 
-            if (_isTypeUpdate == 1)
+            if (_IsTypeUpdate == 1)
             {
                 workPlanVM = _workPlanVM;
             }
 
-            workPlanVM.IsTypeUpdate = _isTypeUpdate;
+            workPlanVM.IsTypeUpdate = _IsTypeUpdate;
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_WorkPlan");
 

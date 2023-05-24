@@ -310,7 +310,7 @@
 
                     @if (stockVoucherVM.VActive)
                     {
-                        @if (sysService.CheckAccessSubFunc(UserID, "STOCK_InOut_CancelActive").Result)
+                        @if (STOCK_InventoryCheck_CancelActive)
                         {
                             <button type="button" class="btn btn-danger" @onclick="(() => ActiveVoucher(4,false))"><i class="fa-solid fa-file-circle-xmark"></i> Bỏ ghi sổ</button>
                         }
@@ -319,7 +319,7 @@
                     {
                         @if (stockVoucherVM.IsTypeUpdate == 3)
                         {
-                            @if (sysService.CheckAccessSubFunc(UserID, "STOCK_InOut_Update").Result)
+                            @if (STOCK_InventoryCheck_Update)
                             {
                                 <button type="button" class="btn btn-secondary" @onclick="(() => stockVoucherVM.IsTypeUpdate=1)"><i class="fa-solid fa-pencil"></i> Sửa</button>
                                 @if (!String.IsNullOrEmpty(stockVoucherVM.VNumber))

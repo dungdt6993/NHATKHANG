@@ -5,8 +5,8 @@ using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Client.Services;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Client.Services.HR;
-using D69soft.Client.Helpers;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Client.Extension;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -39,13 +39,13 @@ namespace D69soft.Client.Pages.HR
         IEnumerable<DepartmentVM> department_filter_list;
         IEnumerable<SectionVM> section_filter_list;
         IEnumerable<PositionVM> position_filter_list;
-        IEnumerable<ProfileVM> eserial_filter_list;
+        IEnumerable<EserialVM> eserial_filter_list;
 
         //AttendanceRecord
         DutyRosterVM arVM = new();
         IEnumerable<DutyRosterVM> arVMs;
 
-        ProfileManagamentVM profileUserVM;
+        ProfileVM profileUserVM;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {

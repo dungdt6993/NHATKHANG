@@ -5,8 +5,8 @@ using D69soft.Client.Services;
 using D69soft.Client.Services.HR;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.FIN;
-using D69soft.Client.Helpers;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Client.Extension;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -38,7 +38,7 @@ namespace D69soft.Client.Pages.HR
         IEnumerable<DepartmentVM> department_filter_list;
         IEnumerable<SectionVM> section_filter_list;
         IEnumerable<PositionVM> position_filter_list;
-        IEnumerable<ProfileVM> eserial_filter_list;
+        IEnumerable<EserialVM> eserial_filter_list;
 
         IEnumerable<ShiftVM> dayofftype_filter_list;
 
@@ -394,18 +394,18 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        private void InitializeModalUpdate_PublicHoliday(int _isTypeUpdate, PublicHolidayDefVM _publicHolidayDefVM)
+        private void InitializeModalUpdate_PublicHoliday(int _IsTypeUpdate, PublicHolidayDefVM _publicHolidayDefVM)
         {
             isLoading = true;
 
             publicHolidayDefVM = new();
 
-            if (_isTypeUpdate == 1)
+            if (_IsTypeUpdate == 1)
             {
                 publicHolidayDefVM = _publicHolidayDefVM;
             }
 
-            publicHolidayDefVM.IsTypeUpdate = _isTypeUpdate;
+            publicHolidayDefVM.IsTypeUpdate = _IsTypeUpdate;
 
             isLoading = false;
         }
@@ -462,18 +462,18 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        private void InitializeModalUpdate_GlobalParameter(int _isTypeUpdate, GlobalParameterVM _globalParameterVM)
+        private void InitializeModalUpdate_GlobalParameter(int _IsTypeUpdate, GlobalParameterVM _globalParameterVM)
         {
             isLoading = true;
 
             globalParameterVM = new();
 
-            if (_isTypeUpdate == 1)
+            if (_IsTypeUpdate == 1)
             {
                 globalParameterVM = _globalParameterVM;
             }
 
-            globalParameterVM.IsTypeUpdate = _isTypeUpdate;
+            globalParameterVM.IsTypeUpdate = _IsTypeUpdate;
 
             isLoading = false;
         }

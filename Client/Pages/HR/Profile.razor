@@ -8,9 +8,9 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
 
-            <EditForm Model="@profileManagament" OnValidSubmit="@SaveProfile">
+            <EditForm Model="@profileVM" OnValidSubmit="@UpdateProfile">
 
-                @if (profileManagament.isTypeSave != 3)
+                @if (profileVM.IsTypeUpdate != 3)
                 {
                     <FluentValidationValidator />
                 }
@@ -18,24 +18,24 @@
                 <div class="modal-header" style="border-bottom:none;">
                     @{
                         string str = string.Empty;
-                        str = (profileManagament.Eserial ?? string.Empty) != string.Empty ? "-" : string.Empty;
+                        str = (profileVM.Eserial ?? string.Empty) != string.Empty ? "-" : string.Empty;
                     }
-                    <h5 class="modal-title">Hồ sơ nhân viên <strong style="color:#6f42c1">@profileManagament.Eserial @str @profileManagament.LastName @profileManagament.MiddleName @profileManagament.FirstName</strong></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="()=> Close_ModalProfile()">
+                    <h5 class="modal-title">Hồ sơ nhân viên <strong style="color:#6f42c1">@profileVM.Eserial @str @profileVM.LastName @profileVM.MiddleName @profileVM.FirstName</strong></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="()=> GetProfileList()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
 
                 <div class="card-body p-0" style="overflow: auto;">
 
-                    @if (profileManagament.isTypeSave != 3)
+                    @if (profileVM.IsTypeUpdate != 3)
                     {
                         <ValidationSummary />
                     }
 
                     <div class="card-header p-0 pt-1 border-bottom-0">
                         <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
-                            @if (profileManagament.isTypeSave != 2)
+                            @if (profileVM.IsTypeUpdate != 2)
                             {
                                 <li class="nav-item">
                                     <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill" href="#custom-tabs-three-profile" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="true">Tiểu sử</a>
@@ -43,7 +43,7 @@
                             }
 
                             <li class="nav-item">
-                                @if (profileManagament.isTypeSave == 2)
+                                @if (profileVM.IsTypeUpdate == 2)
                                 {
                                     <a class="nav-link active" id="custom-tabs-three-job-tab" data-toggle="pill" href="#custom-tabs-three-job" role="tab" aria-controls="custom-tabs-three-job" aria-selected="false">Công việc</a>
                                 }
@@ -53,7 +53,7 @@
                                 }
                             </li>
 
-                            @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_EditSal").Result && profileManagament.isTypeSave == 1 || sysService.CheckAccessSubFunc(UserID, "HR_Profile_ChangeSal").Result && profileManagament.isTypeSave == 2 || sysService.CheckAccessSubFunc(UserID, "HR_Profile_ViewSal").Result && profileManagament.isTypeSave == 3 || profileManagament.isTypeSave == 0)
+                            @if (HR_Profile_EditSal && profileVM.IsTypeUpdate == 1 || HR_Profile_ChangeSal && profileVM.IsTypeUpdate == 2 || HR_Profile_ViewSal && profileVM.IsTypeUpdate == 3 || profileVM.IsTypeUpdate == 0)
                             {
                                 <li class="nav-item">
                                     <a class="nav-link" id="custom-tabs-three-salary-tab" data-toggle="pill" href="#custom-tabs-three-salary" role="tab" aria-controls="custom-tabs-three-salary" aria-selected="false">Lương</a>
@@ -69,7 +69,7 @@
                         <div class="tab-content" id="custom-tabs-three-tabContent">
                             @{
                                 string active_tabProfile;
-                                active_tabProfile = @profileManagament.isTypeSave != 2 ? "show active" : "";
+                                active_tabProfile = @profileVM.IsTypeUpdate != 2 ? "show active" : "";
                             }
                             <div class="tab-pane fade @active_tabProfile" id="custom-tabs-three-profile" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
 
@@ -78,13 +78,13 @@
                                         <div class="img-avatar-profile">
                                             <label>
                                                 <InputFile OnChange="OnInputFileChange" style="display:none;" accept="image/*" />
-                                                <img class="imgUser" src="@profileManagament.UrlAvatar">
+                                                <img class="imgUser" src="@profileVM.UrlAvatar">
                                             </label>
                                         </div>
 
-                                        @if (profileManagament.isTypeSave == 1 || profileManagament.UrlAvatar != UrlDirectory.Default_Avatar)
+                                        @if (profileVM.IsTypeUpdate == 1 || profileVM.UrlAvatar != UrlDirectory.Default_Avatar)
                                         {
-                                            <a href="@profileManagament.UrlAvatar" download><i class="fa-solid fa-download"></i></a>
+                                            <a href="@profileVM.UrlAvatar" download><i class="fa-solid fa-download"></i></a>
                                             <span>&nbsp;</span>
                                             <a href="javascript:void(0)" @onclick="(() => FileDefault())"><i class="fa-solid fa-trash-can"></i></a>
                                         }
@@ -95,13 +95,13 @@
                                             <tbody>
                                                 <tr>
                                                     <th class="text-danger">Mã NV:</th>
-                                                    <td style="width:20%"><InputText class="form-control" placeholder="@placeholder_Eserial" @bind-Value:get="profileManagament.Eserial" @bind-Value:set="(value) => {profileManagament.Eserial = value.ToUpper();}" disabled="@disable_Eserial" /></td>
+                                                    <td style="width:20%"><InputText class="form-control" placeholder="@placeholder_Eserial" @bind-Value:get="profileVM.Eserial" @bind-Value:set="(value) => {profileVM.Eserial = value.ToUpper();}" disabled="@disable_Eserial" /></td>
                                                     <th class="text-danger">Họ:</th>
-                                                    <td style="width:20%"><InputText class="form-control" placeholder="Họ" @bind-Value="profileManagament.LastName" /></td>
+                                                    <td style="width:20%"><InputText class="form-control" placeholder="Họ" @bind-Value="profileVM.LastName" /></td>
                                                     <th>Đệm:</th>
-                                                    <td style="width:30%"><InputText class="form-control" placeholder="Đệm" @bind-Value="profileManagament.MiddleName" /></td>
+                                                    <td style="width:30%"><InputText class="form-control" placeholder="Đệm" @bind-Value="profileVM.MiddleName" /></td>
                                                     <th class="text-danger">Tên:</th>
-                                                    <td style="width:30%"><InputText class="form-control" placeholder="Tên" @bind-Value="profileManagament.FirstName" /></td>
+                                                    <td style="width:30%"><InputText class="form-control" placeholder="Tên" @bind-Value="profileVM.FirstName" /></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -119,10 +119,10 @@
                                                         </div>
                                                     </td>
                                                     <th>Nơi sinh:</th>
-                                                    <td style="width:55%"><InputText class="form-control" placeholder="Nơi sinh" @bind-Value="profileManagament.PlaceOfBirth" /></td>
+                                                    <td style="width:55%"><InputText class="form-control" placeholder="Nơi sinh" @bind-Value="profileVM.PlaceOfBirth" /></td>
                                                     <th>Giới tính:</th>
                                                     <td style="width:15%">
-                                                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" @bind-Value="profileManagament.Gender">
+                                                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" @bind-Value="profileVM.Gender">
                                                             <option value="0">Nam</option>
                                                             <option value="1">Nữ</option>
                                                         </InputSelectNumber>
@@ -135,7 +135,7 @@
                                             <tbody>
                                                 <tr>
                                                     <th class="text-danger">Căn cước:</th>
-                                                    <td style="width:35%"><InputText class="form-control" placeholder="Căn cước công dân/ Hộ chiếu" @bind-Value="profileManagament.IDCard" /></td>
+                                                    <td style="width:35%"><InputText class="form-control" placeholder="Căn cước công dân/ Hộ chiếu" @bind-Value="profileVM.IDCard" /></td>
                                                     <th>Ngày cấp:</th>
                                                     <td style="width:30%">
                                                         <div class="input-group date">
@@ -146,7 +146,7 @@
                                                         </div>
                                                     </td>
                                                     <th>Nơi cấp:</th>
-                                                    <td style="width:35%"><InputText class="form-control" placeholder="Nơi cấp" @bind-Value="profileManagament.PlaceOfIssue" /></td>
+                                                    <td style="width:35%"><InputText class="form-control" placeholder="Nơi cấp" @bind-Value="profileVM.PlaceOfIssue" /></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -161,10 +161,10 @@
                                                 <th>Quốc tịch:</th>
                                                 <td style="width:20%">
 
-                                                    <InputSelect class="selectpicker form-control" data-container="body" data-style="btn-selectpicker" data-live-search="true" @bind-Value="profileManagament.CountryCode">
-                                                        @if (countrys != null)
+                                                    <InputSelect class="selectpicker form-control" data-container="body" data-style="btn-selectpicker" data-live-search="true" @bind-Value="profileVM.CountryCode">
+                                                        @if (countryVMs != null)
                                                         {
-                                                            @foreach (var country in countrys)
+                                                            @foreach (var country in countryVMs)
                                                             {
                                                                 <option value="@country.CountryCode">@country.CountryName</option>
                                                             }
@@ -174,10 +174,10 @@
                                                 <th>Dân tộc:</th>
                                                 <td style="width:20%">
 
-                                                    <InputSelectNumber class="selectpicker form-control" data-container="body" data-style="btn-selectpicker" data-live-search="true" @bind-Value="profileManagament.EthnicID">
-                                                        @if (ethnics != null)
+                                                    <InputSelectNumber class="selectpicker form-control" data-container="body" data-style="btn-selectpicker" data-live-search="true" @bind-Value="profileVM.EthnicID">
+                                                        @if (ethnicVMs != null)
                                                         {
-                                                            @foreach (var ethnic in ethnics)
+                                                            @foreach (var ethnic in ethnicVMs)
                                                             {
                                                                 <option value="@ethnic.EthnicID">@ethnic.EthnicName</option>
                                                             }
@@ -185,7 +185,7 @@
                                                     </InputSelectNumber>
                                                 </td>
                                                 <th>Nguyên quán:</th>
-                                                <td style="width:60%"><InputText class="form-control" placeholder="Nguyên quán" @bind-Value="profileManagament.Hometown" /></td>
+                                                <td style="width:60%"><InputText class="form-control" placeholder="Nguyên quán" @bind-Value="profileVM.Hometown" /></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -194,11 +194,11 @@
                                         <tbody>
                                             <tr>
                                                 <th>Trình độ:</th>
-                                                <td style="width:35%"><InputText class="form-control" placeholder="Trình độ học vấn" @bind-Value="profileManagament.Qualification" /></td>
+                                                <td style="width:35%"><InputText class="form-control" placeholder="Trình độ học vấn" @bind-Value="profileVM.Qualification" /></td>
                                                 <th>Điện thoại:</th>
-                                                <td style="width:30%"><InputText class="form-control" placeholder="Điện thoại" @bind-Value="profileManagament.Mobile" /></td>
+                                                <td style="width:30%"><InputText class="form-control" placeholder="Điện thoại" @bind-Value="profileVM.Mobile" /></td>
                                                 <th>Email:</th>
-                                                <td style="width:35%"><InputText class="form-control" placeholder="Email cá nhân" @bind-Value="profileManagament.Email" /></td>
+                                                <td style="width:35%"><InputText class="form-control" placeholder="Email cá nhân" @bind-Value="profileVM.Email" /></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -207,21 +207,9 @@
                                         <tbody>
                                             <tr>
                                                 <th>Thường trú:</th>
-                                                <td style="width:50%"><InputText class="form-control" placeholder="Địa chỉ thường trú" @bind-Value="profileManagament.Resident" /></td>
+                                                <td style="width:50%"><InputText class="form-control" placeholder="Địa chỉ thường trú" @bind-Value="profileVM.Resident" /></td>
                                                 <th>Tạm trú:</th>
-                                                <td style="width:50%"><InputText class="form-control" placeholder="Địa chỉ tạm trú" @bind-Value="profileManagament.Temporarity" /></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="table no-border mb-0">
-                                        <tbody>
-                                            <tr>
-                                                <th style="width:6%">Liên hệ:</th>
-                                                <td style="width:20%"><InputText class="form-control" placeholder="Tên người liên hệ" @bind-Value="profileManagament.Contact_Name" /></td>
-                                                <td style="width:10%"><InputText class="form-control" placeholder="Quan hệ" @bind-Value="profileManagament.Contact_Rela" /></td>
-                                                <td style="width:20%"><InputText class="form-control" placeholder="Số điện thoại" @bind-Value="profileManagament.Contact_Tel" /></td>
-                                                <td style="width:44%"><InputText class="form-control" placeholder="Địa chỉ" @bind-Value="profileManagament.Contact_Address" /></td>
+                                                <td style="width:50%"><InputText class="form-control" placeholder="Địa chỉ tạm trú" @bind-Value="profileVM.Temporarity" /></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -230,9 +218,9 @@
                                         <tbody>
                                             <tr>
                                                 <th style="width:5%">MST:</th>
-                                                <td style="width:30%"><InputText class="form-control" placeholder="Mã số thuế" @bind-Value="profileManagament.PITTaxCode" /></td>
+                                                <td style="width:30%"><InputText class="form-control" placeholder="Mã số thuế" @bind-Value="profileVM.PITTaxCode" /></td>
                                                 <th style="width:10%">Cơ quan thuế:</th>
-                                                <td style="width:55%"><InputText class="form-control" placeholder="Cơ quan thuế" @bind-Value="profileManagament.TaxDept" /></td>
+                                                <td style="width:55%"><InputText class="form-control" placeholder="Cơ quan thuế" @bind-Value="profileVM.TaxDept" /></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -241,7 +229,7 @@
                                         <tbody>
                                             <tr>
                                                 <th style="width:5%">Số Visa:</th>
-                                                <td style="width:20%"><InputText class="form-control" placeholder="Số Visa" @bind-Value="profileManagament.VisaNumber" /></td>
+                                                <td style="width:20%"><InputText class="form-control" placeholder="Số Visa" @bind-Value="profileVM.VisaNumber" /></td>
                                                 <th style="width:10%">Ngày hết hạn visa:</th>
                                                 <td style="width:20%">
                                                     <div class="input-group date">
@@ -263,7 +251,7 @@
 
                             @{
                                 string active_tabJob;
-                                active_tabJob = @profileManagament.isTypeSave == 2 ? "show active" : "";
+                                active_tabJob = @profileVM.IsTypeUpdate == 2 ? "show active" : "";
                             }
                             <div class="tab-pane fade @active_tabJob" id="custom-tabs-three-job" role="tabpanel" aria-labelledby="custom-tabs-three-job-tab">
 
@@ -271,7 +259,7 @@
 
                                     <div class="form-group clearfix">
                                         <div class="icheck-purple d-inline">
-                                            <input type="radio" id="ckContractExtension1" name="ckContractExtension" value="1" @onchange="onchange_ckContractExtension" checked="@(profileManagament.ckContractExtension == 1? true: false)" disabled="@disable_ckContractExtension">
+                                            <input type="radio" id="ckContractExtension1" name="ckContractExtension" value="1" @onchange="onchange_ckContractExtension" checked="@(profileVM.ckContractExtension == 1? true: false)" disabled="@disable_ckContractExtension">
                                             <label for="ckContractExtension1">
                                                 Gia hạn hợp đồng
                                             </label>
@@ -280,7 +268,7 @@
                                             &nbsp;&nbsp;
                                         </label>
                                         <div class="icheck-purple d-inline">
-                                            <input type="radio" id="ckContractExtension2" name="ckContractExtension" value="2" @onchange="onchange_ckContractExtension" checked="@(profileManagament.ckContractExtension == 2? true: false)" disabled="@disable_ckContractExtension">
+                                            <input type="radio" id="ckContractExtension2" name="ckContractExtension" value="2" @onchange="onchange_ckContractExtension" checked="@(profileVM.ckContractExtension == 2? true: false)" disabled="@disable_ckContractExtension">
                                             <label for="ckContractExtension2">
                                                 Gia hạn hợp đồng trước thời hạn
                                             </label>
@@ -289,7 +277,7 @@
 
                                     <div class="form-group clearfix">
                                         @*                                        <div class="icheck-purple d-inline">
-                                        <input type="radio" id="ckJob1" name="ckJob" value="1" @onchange="onchange_ckJob" checked="@(profileManagament.ckJob == 1? true: false)" disabled="@disable_ckJob">
+                                        <input type="radio" id="ckJob1" name="ckJob" value="1" @onchange="onchange_ckJob" checked="@(profileVM.ckJob == 1? true: false)" disabled="@disable_ckJob">
                                         <label for="ckJob1">
                                         Thay đổi công việc
                                         </label>
@@ -298,7 +286,7 @@
                                         &nbsp;&nbsp;
                                         </label>*@
                                         <div class="icheck-purple d-inline">
-                                            <input type="radio" id="ckJob2" name="ckJob" value="2" @onchange="onchange_ckJob" checked="@(profileManagament.ckJob == 2? true: false)" disabled="@disable_ckJob">
+                                            <input type="radio" id="ckJob2" name="ckJob" value="2" @onchange="onchange_ckJob" checked="@(profileVM.ckJob == 2? true: false)" disabled="@disable_ckJob">
                                             <label for="ckJob2">
                                                 Điều chuyển công việc
                                             </label>
@@ -307,7 +295,7 @@
                                             &nbsp;&nbsp;
                                         </label>
                                         <div class="icheck-purple d-inline">
-                                            <input type="radio" id="ckJob3" name="ckJob" value="3" @onchange="onchange_ckJob" checked="@(profileManagament.ckJob == 3? true: false)" disabled="@disable_ckJob">
+                                            <input type="radio" id="ckJob3" name="ckJob" value="3" @onchange="onchange_ckJob" checked="@(profileVM.ckJob == 3? true: false)" disabled="@disable_ckJob">
                                             <label for="ckJob3">
                                                 Bổ nhiệm
                                             </label>
@@ -332,7 +320,7 @@
                                                 <th style="width:7%" class="text-danger">Công ty:</th>
                                                 <td style="width:33%">
                                                     <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true">
-                                                        <option data-subtext="@divisionSelected.DivisionID" showSubtext="true">@divisionSelected.DivisionName</option>
+                                                        <option data-subtext="@filterHrVM.DivisionID" showSubtext="true">@(division_filter_list != null? @division_filter_list.Where(x=>x.DivisionID==filterHrVM.DivisionID).Select(x=>x.DivisionName).First(): String.Empty)</option>
                                                     </select>
                                                 </td>
                                                 <th style="width:10%" class="text-danger">Ngày ký HĐ:</th>
@@ -364,13 +352,11 @@
                                                 <td style="width:33%">
 
                                                     <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                                                 ValueExpression="@(()=>profileManagament.DepartmentID)"
-                                                                 Value="@profileManagament.DepartmentID"
-                                                                 ValueChanged="@((string value) => onchange_department(value))">
+                                                                 @bind-Value="profileVM.DepartmentID">
                                                         <option value=@string.Empty>-----Chọn-----</option>
-                                                        @if (departments != null)
+                                                        @if (department_filter_list != null)
                                                         {
-                                                            @foreach (var department in departments)
+                                                            @foreach (var department in department_filter_list)
                                                             {
                                                                 <option data-subtext="@department.DepartmentID" value="@department.DepartmentID">@department.DepartmentName</option>
                                                             }
@@ -382,15 +368,15 @@
                                                 <td style="width:20%">
 
                                                     <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                                                 ValueExpression="@(()=>profileManagament.ContractTypeID)"
-                                                                 Value="@profileManagament.ContractTypeID"
-                                                                 ValueChanged="@((string value) => onchange_contracttype(value))" disabled="@disabled_ContractTypeID">
+                                                                 ValueExpression="@(()=>profileVM.ContractTypeID)"
+                                                                 Value="@profileVM.ContractTypeID"
+                                                                 ValueChanged="@((string value) => onchange_ContractType(value))" disabled="@disabled_ContractTypeID">
                                                         <option value=@string.Empty>-----Chọn-----</option>
-                                                        @if (laborContractTypes != null)
+                                                        @if (contractTypeVMs != null)
                                                         {
-                                                            @foreach (var laborContractType in laborContractTypes)
+                                                            @foreach (var contractTypeVM in contractTypeVMs)
                                                             {
-                                                                <option data-subtext="@laborContractType.ContractTypeID" value="@laborContractType.ContractTypeID">@laborContractType.ContractTypeName</option>
+                                                                <option data-subtext="@contractTypeVM.ContractTypeID" value="@contractTypeVM.ContractTypeID">@contractTypeVM.ContractTypeName</option>
                                                             }
                                                         }
                                                     </InputSelect>
@@ -405,11 +391,11 @@
                                                 <th style="width:10%;" class="text-danger">Loại công việc:</th>
                                                 <td style="width:20%">
 
-                                                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind-Value="profileManagament.WorkTypeID">
+                                                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind-Value="profileVM.WorkTypeID">
                                                         <option value=@string.Empty>-----Chọn-----</option>
-                                                        @if (workTypes != null)
+                                                        @if (workTypeVMs != null)
                                                         {
-                                                            @foreach (var workType in workTypes)
+                                                            @foreach (var workType in workTypeVMs)
                                                             {
                                                                 <option data-subtext="@workType.WorkTypeID" value="@workType.WorkTypeID">@workType.WorkTypeName</option>
                                                             }
@@ -419,13 +405,13 @@
                                                 <th style="width:7%" class="text-danger">Khu vực:</th>
                                                 <td style="width:33%">
 
-                                                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind-Value="profileManagament.SectionID">
+                                                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind-Value="profileVM.SectionID">
                                                         <option value=@string.Empty>-----Chọn-----</option>
-                                                        @if (sections != null)
+                                                        @if (section_filter_list != null)
                                                         {
-                                                            @foreach (var sec in sections)
+                                                            @foreach (var _section in section_filter_list)
                                                             {
-                                                                <option data-subtext="@sec.SectionID" value="@sec.SectionID">@sec.SectionName</option>
+                                                                <option data-subtext="@_section.SectionID" value="@_section.SectionID">@_section.SectionName</option>
                                                             }
                                                         }
                                                     </InputSelect>
@@ -448,15 +434,15 @@
                                         <tbody>
                                             <tr>
                                                 <th style="width:10%;">Mã chấm công:</th>
-                                                <td style="width:20%"><InputNumber type="text" class="form-control" placeholder="Mã chấm công" @bind-Value="profileManagament.TimeAttCode" /></td>
+                                                <td style="width:20%"><InputNumber type="text" class="form-control" placeholder="Mã chấm công" @bind-Value="profileVM.TimeAttCode" /></td>
                                                 <th style="width:7%;" class="text-danger">Vị trí:</th>
                                                 <td style="width:33%">
 
-                                                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind-Value="profileManagament.PositionID">
+                                                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind-Value="profileVM.PositionID">
                                                         <option value=@string.Empty>-----Chọn-----</option>
-                                                        @if (positions != null)
+                                                        @if (position_filter_list != null)
                                                         {
-                                                            @foreach (var position in positions)
+                                                            @foreach (var position in position_filter_list)
                                                             {
                                                                 <option data-subtext="@position.PositionID" value="@position.PositionID">@position.PositionName</option>
                                                             }
@@ -481,11 +467,11 @@
                                         <tbody>
                                             <tr>
                                                 <th style="width:10%;">Email:</th>
-                                                <td style="width:30%"><InputText class="form-control" placeholder="Email công ty" @bind-Value="profileManagament.EmailCompany" /></td>
+                                                <td style="width:30%"><InputText class="form-control" placeholder="Email công ty" @bind-Value="profileVM.EmailCompany" /></td>
                                                 <th style="width:10%;">Số BHXH:</th>
-                                                <td style="width:20%"><InputText class="form-control" placeholder="Số sổ BHXH" @bind-Value="profileManagament.SocialInsNumber" /></td>
+                                                <td style="width:20%"><InputText class="form-control" placeholder="Số sổ BHXH" @bind-Value="profileVM.SocialInsNumber" /></td>
                                                 <th style="width:10%;">Thẻ BHYT:</th>
-                                                <td style="width:20%"><InputText class="form-control" placeholder="Thẻ BHYT" @bind-Value="profileManagament.HealthInsNumber" /></td>
+                                                <td style="width:20%"><InputText class="form-control" placeholder="Thẻ BHYT" @bind-Value="profileVM.HealthInsNumber" /></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -494,10 +480,10 @@
                                         <tbody>
                                             <tr>
                                                 <th style="width:10%">Ngân hàng:</th>
-                                                <td style="width:20%"><InputText class="form-control" placeholder="Số tài khoản" @bind-Value="profileManagament.BankAccount" /></td>
-                                                <td style="width:12%"><InputText class="form-control" placeholder="Mã" @bind-Value="profileManagament.BankCode" /></td>
-                                                <td style="width:33%"><InputText class="form-control" placeholder="Tên" @bind-Value="profileManagament.BankName" /></td>
-                                                <td style="width:25%"><InputText class="form-control" placeholder="Chi nhánh" @bind-Value="profileManagament.BankBranch" /></td>
+                                                <td style="width:20%"><InputText class="form-control" placeholder="Số tài khoản" @bind-Value="profileVM.BankAccount" /></td>
+                                                <td style="width:12%"><InputText class="form-control" placeholder="Mã" @bind-Value="profileVM.BankCode" /></td>
+                                                <td style="width:33%"><InputText class="form-control" placeholder="Tên" @bind-Value="profileVM.BankName" /></td>
+                                                <td style="width:25%"><InputText class="form-control" placeholder="Chi nhánh" @bind-Value="profileVM.BankBranch" /></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -508,31 +494,32 @@
                                                 <th style="width:10%">Quyền:</th>
                                                 <td style="width:30%">
 
-                                                    <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" @bind-Value="profileManagament.PermisId">
-                                                        @if (permissionUsers != null)
+                                                    <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" @bind-Value="profileVM.PermisId">
+                                                        @if (permissionUserVMs != null)
                                                         {
-                                                            @foreach (var permissionUser in permissionUsers)
+                                                            @foreach (var permissionUser in permissionUserVMs)
                                                             {
                                                                 <option value="@permissionUser.PermisId">@permissionUser.Description</option>
-                                                            }                   }
+                                                            }
+                                                        }
                                                     </InputSelectNumber>
                                                 </td>
                                                 <td style="width:20%">
-                                                    @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_User_Permis").Result && profileManagament.isTypeSave == 1)
+                                                    @if (HR_Profile_User_Permis && profileVM.IsTypeUpdate == 1)
                                                     {
                                                         <button type="button" class="btn btn-block btn btn-secondary" data-target="#InitializeModal_Permis" data-toggle="modal" @onclick="()=>InitializeModal_Permis()"><i class="fas fa-wrench"></i> Phân quyền</button>
                                                     }
                                                 </td>
                                                 <td style="width:20%">
-                                                    @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_User_ResetPass").Result && profileManagament.isTypeSave == 1)
+                                                    @if (HR_Profile_User_ResetPass && profileVM.IsTypeUpdate == 1)
                                                     {
-                                                        if (profileManagament.User_isChangePass == 1)
+                                                        if (profileVM.User_isChangePass == 1)
                                                         {
                                                             <button type="button" class="btn btn-block btn-danger" @onclick="(() => ResetPass())"><i class="fa fa-key"></i> Đặt lại mật khẩu</button>
                                                         }
                                                         else
                                                         {
-                                                            <button type="button" class="btn btn-block btn-danger"><i class="fa fa-key"></i> Mật khẩu: <strong>@profileManagament.User_PassReset</strong></button>
+                                                            <button type="button" class="btn btn-block btn-danger"><i class="fa fa-key"></i> Mật khẩu: <strong>@profileVM.User_PassReset</strong></button>
                                                         }
                                                     }
                                                 </td>
@@ -551,14 +538,14 @@
                                                 <label>Người đánh giá:</label>
 
                                                 <div class="dropdown dropup">
-                                                    <input class="form-control" placeholder="Tìm kiếm" @oninput="@((ChangeEventArgs e) => onchange_SearchEmpl(e))" value="@profileManagament.Appraiser_Eserial" data-toggle="dropdown" />
+                                                    <input class="form-control" placeholder="Tìm kiếm" @oninput="@((ChangeEventArgs e) => onchange_SearchEmpl(e))" value="@profileVM.Appraiser_Eserial" data-toggle="dropdown" />
 
                                                     <div class="dropdown-menu">
                                                         @if (empls != null)
                                                         {
                                                             @foreach (var _empl in empls)
                                                             {
-                                                                <a class="dropdown-item" @onclick=@(() => profileManagament.Appraiser_Eserial = _empl.Eserial)>@_empl.Eserial - @_empl.LastName @_empl.MiddleName @_empl.FirstName - @_empl.PositionName</a>
+                                                                <a class="dropdown-item" @onclick=@(() => profileVM.Appraiser_Eserial = _empl.Eserial)>@_empl.Eserial - @_empl.LastName @_empl.MiddleName @_empl.FirstName - @_empl.PositionName</a>
                                                             }
                                                         }
                                                         else
@@ -573,14 +560,14 @@
                                                 <label>Quản lý trực tiếp:</label>
 
                                                 <div class="dropdown dropup">
-                                                    <input class="form-control" placeholder="Tìm kiếm" @oninput="@((ChangeEventArgs e) => onchange_SearchEmpl(e))" value="@profileManagament.DirectManager_Eserial" data-toggle="dropdown" />
+                                                    <input class="form-control" placeholder="Tìm kiếm" @oninput="@((ChangeEventArgs e) => onchange_SearchEmpl(e))" value="@profileVM.DirectManager_Eserial" data-toggle="dropdown" />
 
                                                     <div class="dropdown-menu">
                                                         @if (empls != null)
                                                         {
                                                             @foreach (var _empl in empls)
                                                             {
-                                                                <a class="dropdown-item" @onclick=@(() => profileManagament.DirectManager_Eserial = _empl.Eserial)>@_empl.Eserial - @_empl.LastName @_empl.MiddleName @_empl.FirstName - @_empl.PositionName</a>
+                                                                <a class="dropdown-item" @onclick=@(() => profileVM.DirectManager_Eserial = _empl.Eserial)>@_empl.Eserial - @_empl.LastName @_empl.MiddleName @_empl.FirstName - @_empl.PositionName</a>
                                                             }
                                                         }
                                                         else
@@ -594,14 +581,14 @@
                                                 <label>Phụ trách bộ phận:</label>
 
                                                 <div class="dropdown dropup">
-                                                    <input class="form-control" placeholder="Tìm kiếm" @oninput="@((ChangeEventArgs e) => onchange_SearchEmpl(e))" value="@profileManagament.ControlDept_Eserial" data-toggle="dropdown" />
+                                                    <input class="form-control" placeholder="Tìm kiếm" @oninput="@((ChangeEventArgs e) => onchange_SearchEmpl(e))" value="@profileVM.ControlDept_Eserial" data-toggle="dropdown" />
 
                                                     <div class="dropdown-menu">
                                                         @if (empls != null)
                                                         {
                                                             @foreach (var _empl in empls)
                                                             {
-                                                                <a class="dropdown-item" @onclick=@(() => profileManagament.ControlDept_Eserial = _empl.Eserial)>@_empl.Eserial - @_empl.LastName @_empl.MiddleName @_empl.FirstName - @_empl.PositionName</a>
+                                                                <a class="dropdown-item" @onclick=@(() => profileVM.ControlDept_Eserial = _empl.Eserial)>@_empl.Eserial - @_empl.LastName @_empl.MiddleName @_empl.FirstName - @_empl.PositionName</a>
                                                             }
                                                         }
                                                         else
@@ -616,14 +603,14 @@
                                                 <label>Phê duyệt:</label>
 
                                                 <div class="dropdown dropup">
-                                                    <input class="form-control" placeholder="Tìm kiếm" @oninput="@((ChangeEventArgs e) => onchange_SearchEmpl(e))" value="@profileManagament.Approve_Eserial" data-toggle="dropdown" />
+                                                    <input class="form-control" placeholder="Tìm kiếm" @oninput="@((ChangeEventArgs e) => onchange_SearchEmpl(e))" value="@profileVM.Approve_Eserial" data-toggle="dropdown" />
 
                                                     <div class="dropdown-menu">
                                                         @if (empls != null)
                                                         {
                                                             @foreach (var _empl in empls)
                                                             {
-                                                                <a class="dropdown-item" @onclick=@(() => profileManagament.Approve_Eserial = _empl.Eserial)>@_empl.Eserial - @_empl.LastName @_empl.MiddleName @_empl.FirstName - @_empl.PositionName</a>
+                                                                <a class="dropdown-item" @onclick=@(() => profileVM.Approve_Eserial = _empl.Eserial)>@_empl.Eserial - @_empl.LastName @_empl.MiddleName @_empl.FirstName - @_empl.PositionName</a>
                                                             }
                                                         }
                                                         else
@@ -644,7 +631,7 @@
                                 <div class="@hidden_adjustProfile">
                                     <div class="form-group clearfix">
                                         <div class="icheck-purple d-inline">
-                                            <input type="radio" id="ckSal" name="ckSal" value="1" @onchange="onchange_ckSal" checked="@(profileManagament.ckSal == 1? true: false)" disabled="@disable_ckSal">
+                                            <input type="radio" id="ckSal" name="ckSal" value="1" @onchange="onchange_ckSal" checked="@(profileVM.ckSal == 1? true: false)" disabled="@disable_ckSal">
                                             <label for="ckSal">
                                                 Điều chỉnh lương
                                             </label>
@@ -656,16 +643,16 @@
 
                                     <div class="col-sm-8 col-md-8">
 
-                                        @if (salaryDefs != null)
+                                        @if (salaryDefVMs != null)
                                         {
                                             <table class="table no-border mb-0">
                                                 <tbody>
                                                     <tr>
-                                                        <th style="width:20%">@salaryDefs[0].SalaryTypeName:</th>
-                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_basicsalary" disabled="@disabled_BasicSalary" onClick="this.select();" /></td>
+                                                        <th style="width:20%">@salaryDefVMs[0].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_BasicSalary" disabled="@disabled_BasicSalary" onClick="this.select();" /></td>
 
-                                                        <th style="width:20%">@salaryDefs[5].SalaryTypeName:</th>
-                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_benefit5" disabled="@disabled_Benefit5" onClick="this.select();" /></td>
+                                                        <th style="width:20%">@salaryDefVMs[5].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_Benefit5" disabled="@disabled_Benefit5" onClick="this.select();" /></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -673,10 +660,10 @@
                                             <table class="table no-border mb-0">
                                                 <tbody>
                                                     <tr>
-                                                        <th style="width:20%">@salaryDefs[1].SalaryTypeName:</th>
-                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_benefit1" disabled="@disabled_Benefit1" onClick="this.select();" /></td>
-                                                        <th style="width:20%">@salaryDefs[6].SalaryTypeName:</th>
-                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_benefit6" disabled="@disabled_Benefit6" onClick="this.select();" /></td>
+                                                        <th style="width:20%">@salaryDefVMs[1].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_Benefit1" disabled="@disabled_Benefit1" onClick="this.select();" /></td>
+                                                        <th style="width:20%">@salaryDefVMs[6].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_Benefit6" disabled="@disabled_Benefit6" onClick="this.select();" /></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -684,10 +671,10 @@
                                             <table class="table no-border mb-0">
                                                 <tbody>
                                                     <tr>
-                                                        <th style="width:20%">@salaryDefs[2].SalaryTypeName:</th>
-                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_benefit2" disabled="@disabled_Benefit2" onClick="this.select();" /></td>
-                                                        <th style="width:20%">@salaryDefs[7].SalaryTypeName:</th>
-                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_benefit7" disabled="@disabled_Benefit7" onClick="this.select();" /></td>
+                                                        <th style="width:20%">@salaryDefVMs[2].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_Benefit2" disabled="@disabled_Benefit2" onClick="this.select();" /></td>
+                                                        <th style="width:20%">@salaryDefVMs[7].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_Benefit7" disabled="@disabled_Benefit7" onClick="this.select();" /></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -695,10 +682,10 @@
                                             <table class="table no-border mb-0">
                                                 <tbody>
                                                     <tr>
-                                                        <th style="width:20%">@salaryDefs[3].SalaryTypeName:</th>
-                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_benefit3" disabled="@disabled_Benefit3" onClick="this.select();" /></td>
-                                                        <th style="width:20%">@salaryDefs[8].SalaryTypeName:</th>
-                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_benefit8" disabled="@disabled_Benefit8" onClick="this.select();" /></td>
+                                                        <th style="width:20%">@salaryDefVMs[3].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_Benefit3" disabled="@disabled_Benefit3" onClick="this.select();" /></td>
+                                                        <th style="width:20%">@salaryDefVMs[8].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_Benefit8" disabled="@disabled_Benefit8" onClick="this.select();" /></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -706,10 +693,10 @@
                                             <table class="table no-border mb-0">
                                                 <tbody>
                                                     <tr>
-                                                        <th style="width:20%">@salaryDefs[4].SalaryTypeName:</th>
-                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_benefit4" disabled="@disabled_Benefit4" onClick="this.select();" /></td>
-                                                        <th style="width:20%">@salaryDefs[9].SalaryTypeName:</th>
-                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_othersalary" disabled="@disabled_OtherSalary" onClick="this.select();" /></td>
+                                                        <th style="width:20%">@salaryDefVMs[4].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_Benefit4" disabled="@disabled_Benefit4" onClick="this.select();" /></td>
+                                                        <th style="width:20%">@salaryDefVMs[9].SalaryTypeName:</th>
+                                                        <td style="width:30%"><input type="text" name="currency-mask" class="form-control" @bind="onchange_OtherSalary" disabled="@disabled_OtherSalary" onClick="this.select();" /></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -720,14 +707,14 @@
                                                 <div class="form-group row">
                                                     <label class="col-sm-2 col-form-label">Ghi chú:</label>
                                                     <div class="col-sm-10">
-                                                        <InputText class="form-control" placeholder="Ghi chú" @bind-Value="profileManagament.Reason" disabled="@disabled_Reason" />
+                                                        <InputText class="form-control" placeholder="Ghi chú" @bind-Value="profileVM.Reason" disabled="@disabled_Reason" />
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group row">
                                                     <label class="col-sm-2 col-form-label">Người duyệt:</label>
                                                     <div class="col-sm-10">
-                                                        <InputText class="form-control" placeholder="Người duyệt" @bind-Value="profileManagament.ApprovedBy" disabled="@disabled_ApprovedBy" />
+                                                        <InputText class="form-control" placeholder="Người duyệt" @bind-Value="profileVM.ApprovedBy" disabled="@disabled_ApprovedBy" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -739,7 +726,7 @@
                                             <div class="card-header">
 
                                                 <div class="row">
-                                                    <div class="col-sm-9 col-md-9"><h5><strong>Tổng: @string.Format("{0:#,##0.##}", profileManagament.TotalSalary) </strong></h5></div>
+                                                    <div class="col-sm-9 col-md-9"><h5><strong>Tổng: @string.Format("{0:#,##0.##}", profileVM.TotalSalary) </strong></h5></div>
                                                     <div class="col-sm-3 col-md-3">
                                                         <select class="selectpicker form-control" data-style="btn-selectpicker">
                                                             <option value="VND">VND</option>
@@ -766,14 +753,14 @@
                                                     <div class="col-sm-7 col-md-7">
                                                         <div class="form-group row">
                                                             <div class="custom-control custom-radio">
-                                                                <input class="custom-control-input custom-control-input-success" type="radio" id="rBank" name="rSalaryBy" value="0" @onchange="onchange_salarybybank" checked="@(profileManagament.SalaryByBank == 0? true: false)" disabled="@disabled_SalaryByBank">
+                                                                <input class="custom-control-input custom-control-input-success" type="radio" id="rBank" name="rSalaryBy" value="0" @onchange="onchange_SalaryByBank" checked="@(profileVM.SalaryByBank == 0? true: false)" disabled="@disabled_SalaryByBank">
                                                                 <label for="rBank" class="custom-control-label">Chuyển khoản</label>
                                                             </div>
 
                                                             <label>&nbsp;&nbsp;</label>
 
                                                             <div class="custom-control custom-radio">
-                                                                <input class="custom-control-input custom-control-input-success" type="radio" id="rCash" name="rSalaryBy" value="0" @onchange="onchange_salarybybank" checked="@(profileManagament.SalaryByBank == 1? true: false)" disabled="@disabled_SalaryByBank">
+                                                                <input class="custom-control-input custom-control-input-success" type="radio" id="rCash" name="rSalaryBy" value="0" @onchange="onchange_SalaryByBank" checked="@(profileVM.SalaryByBank == 1? true: false)" disabled="@disabled_SalaryByBank">
                                                                 <label for="rCash" class="custom-control-label">Tiền mặt</label>
                                                             </div>
                                                         </div>
@@ -786,20 +773,20 @@
 
                                                         <div class="form-group row">
                                                             <div class="custom-control custom-radio">
-                                                                <input class="custom-control-input custom-control-input-success" type="radio" id="rMonth" name="rIsPayBy" value="1" @onchange="onchange_ispayby" checked="@(profileManagament.IsPayByMonth == 1? true: false)" disabled="@disabled_IsPayBy">
+                                                                <input class="custom-control-input custom-control-input-success" type="radio" id="rMonth" name="rIsPayBy" value="1" @onchange="onchange_IsPayBy" checked="@(profileVM.IsPayByMonth == 1? true: false)" disabled="@disabled_IsPayBy">
                                                                 <label for="rMonth" class="custom-control-label">Tháng</label>
                                                             </div>
 
                                                             <label>&nbsp;&nbsp;</label>
 
                                                             <div class="custom-control custom-radio">
-                                                                <input class="custom-control-input custom-control-input-success" type="radio" id="rDay" name="rIsPayBy" value="2" @onchange="onchange_ispayby" checked="@(profileManagament.IsPayByDate == 1? true: false)" disabled="@disabled_IsPayBy">
+                                                                <input class="custom-control-input custom-control-input-success" type="radio" id="rDay" name="rIsPayBy" value="2" @onchange="onchange_IsPayBy" checked="@(profileVM.IsPayByDate == 1? true: false)" disabled="@disabled_IsPayBy">
                                                                 <label for="rDay" class="custom-control-label">Ngày</label>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_EmployeeTransaction").Result && (profileManagament.isTypeSave == 1 || profileManagament.isTypeSave == 2))
+                                                @if (HR_Profile_EmployeeTransaction && (profileVM.IsTypeUpdate == 1 || profileVM.IsTypeUpdate == 2))
                                                 {
                                                     <button type="button" class="btn btn-secondary" data-target="#InitializeModal_EmployeeTransaction" data-toggle="modal" @onclick="()=>InitializeModal_EmployeeTransaction()"><i class="fas fa-wrench"></i> Thiết lập tài khoản giao dịch</button>
                                                 }
@@ -830,7 +817,7 @@
                                                 <th style="min-width:100px;">Hợp đồng</th>
                                                 <th class="text-center">Ngày bắt đầu HĐ</th>
                                                 <th class="text-center">Ngày kết thúc HĐ</th>
-                                                @foreach (var salarydef in salaryDefs)
+                                                @foreach (var salarydef in salaryDefVMs)
                                                 {
                                                     <th class="text-center">@salarydef.SalaryTypeName</th>
                                                 }
@@ -839,14 +826,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @{
-                                                var color_profilehistory = string.Empty;
-                                            }
                                             @foreach (var ph in profileHistorys)
                                             {
-                                                color_profilehistory = profileHistorys.IndexOf(ph) == 0 ? "green" : "";
-
-                                                <tr style="color: @color_profilehistory">
+                                                <tr class="color: @(profileHistorys.IndexOf(ph) == 0 ? "text-success" : "")">
                                                     <td class="text-center">@ph.DateJSH.ToString("dd/MM/yyyy")</td>
                                                     <td>@ph.AdjustProfileName</td>
                                                     <td>@ph.Eserial</td>
@@ -870,7 +852,7 @@
                                                     <td class="text-right">@string.Format("{0:#,#.}", ph.TotalSalary)</td>
                                                     <td class="text-center">@(ph.BeginSalaryDate.HasValue ? ph.BeginSalaryDate.Value.ToString("dd/MM/yyyy") : "")</td>
                                                     <td>
-                                                        @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_UpdateHistory").Result && profileManagament.isTypeSave == 1 && filterHrVM.TypeProfile == 0)
+                                                        @if (HR_Profile_UpdateHistory && profileVM.IsTypeUpdate == 1 && filterHrVM.TypeProfile == 0)
                                                         {
                                                             if (profileHistorys.Count > 1 && profileHistorys.IndexOf(ph) == 0)
                                                             {
@@ -891,9 +873,9 @@
 
                 </div>
                 <div class="modal-footer justify-content-center">
-                    @if (profileManagament.isTypeSave != 3)
+                    @if (profileVM.IsTypeUpdate != 3)
                     {
-                        <button type="button" class="btn btn-default" data-dismiss="modal" @onclick="(() => Close_ModalProfile())"><i class="fas fa-times"></i> Thoát</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" @onclick="(() => GetProfileList())"><i class="fas fa-times"></i> Thoát</button>
                         <button type="submit" class="btn btn-success" disabled="@disabled_btnUpdateProfile">
                             <i class="fas fa-save"></i>
                             Lưu
@@ -909,12 +891,12 @@
     <div class="modal-dialog">
         <div class="modal-content">
 
-            <EditForm Model="@profileManagament" OnValidSubmit="@TerminateProfile">
+            <EditForm Model="@profileVM" OnValidSubmit="@TerminateProfile">
 
                 <FluentValidationValidator />
 
                 <div class="modal-header">
-                    <h5 class="modal-title">Chấm dứt hợp đồng <strong style="color:#6f42c1">@profileManagament.Eserial</strong></h5>
+                    <h5 class="modal-title">Chấm dứt hợp đồng <strong style="color:#6f42c1">@profileVM.Eserial</strong></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -930,15 +912,15 @@
                                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                 </div>
                             </div>
-                            <ValidationMessage For="@(() => profileManagament.TerminateDate)" />
+                            <ValidationMessage For="@(() => profileVM.TerminateDate)" />
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Lý do:</label>
                         <div class="col-sm-9">
-                            <InputTextArea class="form-control" @bind-Value="profileManagament.ReasonTerminate" />
-                            <ValidationMessage For="@(() => profileManagament.ReasonTerminate)" />
+                            <InputTextArea class="form-control" @bind-Value="profileVM.ReasonTerminate" />
+                            <ValidationMessage For="@(() => profileVM.ReasonTerminate)" />
                         </div>
                     </div>
 
@@ -1175,7 +1157,7 @@
                 </h5>
 
                 <div class="ml-auto">
-                    @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_UpdateContractType").Result)
+                    @if (HR_Profile_UpdateContractType)
                     {
                         <button type="button" class="btn btn-sm btn-success" data-target="#InitializeModalUpdate_ContractType" data-toggle="modal" @onclick="(() => InitializeModalUpdate_ContractType(0, contractTypeVM))"><i class="fas fa-plus-circle"></i> Thêm mới</button>
                     }
@@ -1224,7 +1206,7 @@
     </div>
 </div>
 
-@if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_UpdateContractType").Result)
+@if (HR_Profile_UpdateContractType)
 {
     <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_ContractType">
         <div class="modal-dialog">
@@ -1327,7 +1309,7 @@
                 </h5>
 
                 <div class="ml-auto">
-                    @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_UpdateWorkType").Result)
+                    @if (HR_Profile_UpdateWorkType)
                     {
                         <button type="button" class="btn btn-sm btn-success" data-target="#InitializeModalUpdate_WorkType" data-toggle="modal" @onclick="(() => InitializeModalUpdate_WorkType(0, workTypeVM))"><i class="fas fa-plus-circle"></i> Thêm mới</button>
                     }
@@ -1410,7 +1392,7 @@
     </div>
 </div>
 
-@if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_UpdateWorkType").Result)
+@if (HR_Profile_UpdateWorkType)
 {
     <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_WorkType">
         <div class="modal-dialog">
@@ -1563,7 +1545,7 @@
                 </h5>
 
                 <div class="ml-auto">
-                    @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_Edit").Result)
+                    @if (HR_Profile_Edit)
                     {
                         <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_ProfileRelationship(0, profileRelationshipVM))"><i class="fas fa-plus-circle"></i> Thêm mới</button>
                     }
@@ -1635,7 +1617,7 @@
     </div>
 </div>
 
-@if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_Edit").Result)
+@if (HR_Profile_Edit)
 {
     <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_ProfileRelationship">
         <div class="modal-dialog">
@@ -1961,11 +1943,11 @@
 
                 <button type="button" class="btn btn-secondary" data-target="#InitializeModalList_WorkType" data-toggle="modal" @onclick="()=>InitializeModalList_WorkType()"><i class="fa-solid fa-person-digging"></i> Loại công việc</button>
                 <button type="button" class="btn btn-secondary" data-target="#InitializeModalList_ContractType" data-toggle="modal" @onclick="()=>InitializeModal_ContractType()"><i class="fa-solid fa-file-contract"></i> Loại hợp đồng</button>
-                @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_New").Result)
+                @if (HR_Profile_New)
                 {
                     <button type="button" class="btn btn-success" data-target="#InitializeModal_Profile" data-toggle="modal" @onclick="()=>Initialize_ModalProfile(0)"><i class="fa-solid fa-user-plus"></i> Thêm mới</button>
                 }
-                @if ((filterHrVM.selectedEserial ?? string.Empty) != string.Empty)
+                @if (!String.IsNullOrEmpty(profileVM.Eserial))
                 {
                     <div class="btn-group">
                         <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -1977,7 +1959,7 @@
                         </div>
                     </div>
 
-                    @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_Edit").Result)
+                    @if (HR_Profile_Edit)
                     {
                         <button type="button" class="btn btn-secondary" data-target="#InitializeModal_Profile" data-toggle="modal" @onclick="()=>Initialize_ModalProfile(1)"><i class="fa-solid fa-user-pen"></i> Sửa</button>
                         <button type="button" class="btn btn-secondary" data-target="#InitializeModal_Profile" data-toggle="modal" @onclick="()=>Initialize_ModalProfile(4)"><i class="fa-solid fa-copy"></i> Sao chép</button>
@@ -1985,18 +1967,18 @@
 
                     if (filterHrVM.TypeProfile != 1)
                     {
-                        @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_Del").Result)
+                        @if (HR_Profile_Del)
                         {
                             <button type="button" class="btn btn-danger" @onclick="()=>DelProfile()"><i class="fa-solid fa-user-xmark"></i> Xóa</button>
                         }
 
-                        @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_Adjust").Result)
+                        @if (HR_Profile_Adjust)
                         {
                             <button type="button" class="btn btn-secondary" data-target="#InitializeModal_Profile" data-toggle="modal" @onclick="() => Initialize_ModalProfile(2)"><i class="fas fa-exchange-alt"></i> Điều chỉnh</button>
                         }
                     }
 
-                    @if (sysService.CheckAccessSubFunc(UserID, "HR_Profile_Terminate").Result)
+                    @if (HR_Profile_Terminate)
                     {
                         if (filterHrVM.TypeProfile != 1)
                         {
@@ -2067,7 +2049,7 @@
                                             _departmentID = _profileVM.DepartmentID;
                                         }
 
-                                        <tr class="@(filterHrVM.selectedEserial == _profileVM.Eserial? "selected":"")" @onclick="() => onclick_selectedEserial(_profileVM)">
+                                        <tr class="@(profileVM.Eserial == _profileVM.Eserial? "selected":"")" @onclick="() => onclick_selectedEserial(_profileVM)">
                                             <td class="text-center">
                                                 <img alt="Avatar" class="table-profile-avatar" src="@_profileVM.UrlAvatar">
                                             </td>
@@ -2160,12 +2142,12 @@
                                             <td>
                                                 @foreach (var _empl in profileVMs.Where(x => x.PositionGroupID == _positionGrp.PositionGroupID && x.DepartmentID == _dept.DepartmentID))
                                                 {
-                                                    @if (filterHrVM.selectedEserial == _empl.Eserial)
+                                                    @if (profileVM.Eserial == _empl.Eserial)
                                                     {
                                                         <i class="fa-solid fa-square-check text-success">&nbsp;</i>
                                                     }
 
-                                                    <a class="@(filterHrVM.selectedEserial == _empl.Eserial? "text-success":"")" @onclick="() => onclick_selectedEserial(_empl)"><span>@_empl.Eserial</span> <span>-</span> <span>@_empl.LastName @_empl.MiddleName @_empl.FirstName</span></a>
+                                                    <a class="@(profileVM.Eserial == _empl.Eserial? "text-success":"")" @onclick="() => onclick_selectedEserial(_empl)"><span>@_empl.Eserial</span> <span>-</span> <span>@_empl.LastName @_empl.MiddleName @_empl.FirstName</span></a>
 
                                                     <br />
                                                 }

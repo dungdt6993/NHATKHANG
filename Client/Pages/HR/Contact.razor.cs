@@ -1,4 +1,4 @@
-﻿using D69soft.Client.Helpers;
+﻿using D69soft.Client.Extension;
 using D69soft.Server.Services.HR;
 using D69soft.Shared.Models.ViewModels.HR;
 using Microsoft.AspNetCore.Components;
@@ -7,7 +7,7 @@ using System.Net.Http.Json;
 
 namespace D69soft.Client.Pages.HR
 {
-	partial class Contact
+    partial class Contact
 	{
 		[CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
@@ -17,9 +17,9 @@ namespace D69soft.Client.Pages.HR
 
         protected string UserID;
 
-        List<ProfileManagamentVM> contacts;
+        List<ProfileVM> contacts;
 
-        List<ProfileManagamentVM> search_contacts;
+        List<ProfileVM> search_contacts;
 
         FilterHrVM filterHrVM = new();
 

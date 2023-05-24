@@ -5,8 +5,8 @@ using D69soft.Client.Services;
 using D69soft.Client.Services.HR;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.FIN;
-using D69soft.Client.Helpers;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Client.Extension;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -37,7 +37,7 @@ namespace D69soft.Client.Pages.HR
         IEnumerable<DepartmentVM> department_filter_list;
         IEnumerable<SectionVM> section_filter_list;
         IEnumerable<PositionVM> position_filter_list;
-        IEnumerable<ProfileVM> eserial_filter_list;
+        IEnumerable<EserialVM> eserial_filter_list;
 
         IEnumerable<SalaryTransactionGroupVM> trngrp_filter_list;
         IEnumerable<SalaryTransactionCodeVM> trn_filter_list;
@@ -287,13 +287,13 @@ namespace D69soft.Client.Pages.HR
             StateHasChanged();
         }
 
-        private async Task GetMonthlyIncomeTrnOtherList(int _isTypeSearch)
+        private async Task GetMonthlyIncomeTrnOtherList(int _IsTypeSearch)
         {
             isLoading = true;
 
-            filterHrVM.isTypeSearch = _isTypeSearch;
+            filterHrVM.IsTypeSearch = _IsTypeSearch;
 
-            if(_isTypeSearch == 1)
+            if(_IsTypeSearch == 1)
             {
                 filterHrVM.DepartmentID = string.Empty;
                 filterHrVM.PositionGroupID = string.Empty;
@@ -318,13 +318,13 @@ namespace D69soft.Client.Pages.HR
             monthlyIncomeTrnOtherVMs.ToList().ForEach(e => e.IsChecked = isChecked);
         }
 
-        private async Task InitializeModalUpdate_MonthlyIncomeTrnOther(int _isTypeUpdate, MonthlyIncomeTrnOtherVM _monthlyIncomeTrnOtherVM)
+        private async Task InitializeModalUpdate_MonthlyIncomeTrnOther(int _IsTypeUpdate, MonthlyIncomeTrnOtherVM _monthlyIncomeTrnOtherVM)
         {
             isLoading = true;
 
             monthlyIncomeTrnOtherVM = new();
 
-            if (_isTypeUpdate == 0)
+            if (_IsTypeUpdate == 0)
             {
                 if (filterHrVM.Eserial == string.Empty)
                 {
@@ -349,7 +349,7 @@ namespace D69soft.Client.Pages.HR
                 }
             }
 
-            if (_isTypeUpdate == 1)
+            if (_IsTypeUpdate == 1)
             {
                 monthlyIncomeTrnOtherVM = _monthlyIncomeTrnOtherVM;
 
@@ -357,7 +357,7 @@ namespace D69soft.Client.Pages.HR
             }
 
             monthlyIncomeTrnOtherVM.UserID = UserID;
-            monthlyIncomeTrnOtherVM.IsTypeUpdate = _isTypeUpdate;
+            monthlyIncomeTrnOtherVM.IsTypeUpdate = _IsTypeUpdate;
 
             isLoading = false;
         }
@@ -371,24 +371,24 @@ namespace D69soft.Client.Pages.HR
             await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_MonthlyIncomeTrnOther");
 
             filterHrVM.IsChecked = false;
-            filterHrVM.isTypeSearch = 0;
+            filterHrVM.IsTypeSearch = 0;
             monthlyIncomeTrnOtherVMs = await payrollService.GetMonthlyIncomeTrnOtherList(filterHrVM);
 
             isLoading = false;
         }
 
-        private async Task UpdateMITrnOtherByIsCheck(int _isTypeUpdate)
+        private async Task UpdateMITrnOtherByIsCheck(int _IsTypeUpdate)
         {
             isLoading = true;
 
             monthlyIncomeTrnOtherVM = new();
 
             monthlyIncomeTrnOtherVM.UserID = UserID;
-            monthlyIncomeTrnOtherVM.IsTypeUpdate = _isTypeUpdate;
+            monthlyIncomeTrnOtherVM.IsTypeUpdate = _IsTypeUpdate;
 
             monthlyIncomeTrnOtherVM.strSeqMITrnOther = string.Join(",",monthlyIncomeTrnOtherVMs.Select(x=> new { x.SeqMITrnOther, x.IsChecked }).Where(x => x.IsChecked).Select(x=>x.SeqMITrnOther));
 
-            if (_isTypeUpdate == 2)
+            if (_IsTypeUpdate == 2)
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa dữ liệu đã chọn?", SweetAlertMessageType.question))
                 {
@@ -402,7 +402,7 @@ namespace D69soft.Client.Pages.HR
                 }
             }
 
-            if (_isTypeUpdate == 3)
+            if (_IsTypeUpdate == 3)
             {
                 if (filterHrVM.TrnCode == 0 || filterHrVM.TrnSubCode == 0)
                 {

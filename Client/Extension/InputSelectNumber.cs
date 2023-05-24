@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Components.Forms;
 
-namespace D69soft.Client.Helpers
+namespace D69soft.Client.Extension
 {
     public class InputSelectNumber<TValue> : InputSelect<TValue>
     {

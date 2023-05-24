@@ -8,8 +8,8 @@ using D69soft.Client.Services.HR;
 using D69soft.Client.Services.FIN;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.HR;
-using D69soft.Client.Helpers;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Client.Extension;
 
 namespace D69soft.Client.Pages.FIN
 {

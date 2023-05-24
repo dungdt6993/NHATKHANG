@@ -9,9 +9,9 @@ using D69soft.Client.Services.HR;
 using D69soft.Client.Services;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.HR;
-using D69soft.Client.Helpers;
 using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Client.Extension;
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -27,11 +27,16 @@ namespace D69soft.Client.Pages.FIN
         [Inject] PurchasingService purchasingService { get; set; }
         [Inject] InventoryService inventoryService { get; set; }
 
-        protected string UserID;
+
 
         bool isLoading;
-
         bool isLoadingScreen = true;
+
+        protected string UserID;
+
+        //PermisFunc
+        bool STOCK_InOut_Update;
+        bool STOCK_InOut_CancelActive;
 
         LogVM logVM = new();
 
@@ -82,15 +87,13 @@ namespace D69soft.Client.Pages.FIN
 
         protected override async Task OnInitializedAsync()
         {
-            
-
-            UserID = (await authenticationStateTask).User.GetUserId();
+            filterHrVM.UserID = UserID = (await authenticationStateTask).User.GetUserId();
 
             if (await sysService.CheckAccessFunc(UserID, "STOCK_InOut"))
             {
+                logVM.LogUser = UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "STOCK_InOut";
-                logVM.LogUser = UserID;
                 await sysService.InsertLog(logVM);
             }
             else
@@ -98,7 +101,8 @@ namespace D69soft.Client.Pages.FIN
                 navigationManager.NavigateTo("/");
             }
 
-            filterHrVM.UserID = UserID;
+            STOCK_InOut_Update = await sysService.CheckAccessSubFunc(UserID, "STOCK_InOut_Update");
+            STOCK_InOut_CancelActive = await sysService.CheckAccessSubFunc(UserID, "STOCK_InOut_CancelActive");
 
             filter_divisionVMs = await organizationalChartService.GetDivisionList(filterHrVM);
             filterFinVM.DivisionID = filter_divisionVMs.Count() > 0 ? filter_divisionVMs.ElementAt(0).DivisionID : string.Empty;
@@ -128,9 +132,9 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            stockVoucherVMs = await voucherService.GetStockVouchers(filterFinVM);
-
             ReportName = "CustomNewReport";
+
+            stockVoucherVMs = await voucherService.GetStockVouchers(filterFinVM);
 
             isLoading = false;
         }
@@ -149,7 +153,7 @@ namespace D69soft.Client.Pages.FIN
             return "selected";
         }
 
-        private async Task InitializeModalUpdate_Voucher(string _vTypeID, int _isTypeUpdate)
+        private async Task InitializeModalUpdate_Voucher(string _vTypeID, int _IsTypeUpdate)
         {
             isLoading = true;
 
@@ -157,24 +161,24 @@ namespace D69soft.Client.Pages.FIN
 
             stockVMs = await inventoryService.GetStockList();
 
-            if (_isTypeUpdate == 0)
+            if (_IsTypeUpdate == 0)
             {
                 stockVoucherVM = new();
                 stockVoucherDetailVMs = new();
             }
 
-            if (_isTypeUpdate != 0)
+            if (_IsTypeUpdate != 0)
             {
                 stockVoucherDetailVMs = await voucherService.GetStockVoucherDetails(stockVoucherVM.VNumber);
             }
 
-            if (_isTypeUpdate == 0 || _isTypeUpdate == 5)
+            if (_IsTypeUpdate == 0 || _IsTypeUpdate == 5)
             {
                 stockVoucherVM.VDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
                 stockVoucherVM.VActive = false;
             }
 
-            if (_isTypeUpdate == 5)
+            if (_IsTypeUpdate == 5)
             {
                 foreach (var _stockVoucherDetailVM in stockVoucherDetailVMs)
                 {
@@ -195,13 +199,13 @@ namespace D69soft.Client.Pages.FIN
             stockVoucherVM.VTypeID = _vTypeID;
             vSubTypeVMs = filter_vSubTypeVMs.Where(x => x.VTypeID == _vTypeID);
 
-            if (_isTypeUpdate == 0)
+            if (_IsTypeUpdate == 0)
             {
                 stockVoucherVM.VSubTypeID = vSubTypeVMs.ElementAt(0).VSubTypeID;
             }
 
             stockVoucherVM.DivisionID = filterFinVM.DivisionID;
-            stockVoucherVM.IsTypeUpdate = _isTypeUpdate;
+            stockVoucherVM.IsTypeUpdate = _IsTypeUpdate;
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_Voucher");
 
@@ -493,7 +497,7 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
-        private async Task ActiveVoucher(int _isTypeUpdate, bool _VActive)
+        private async Task ActiveVoucher(int _IsTypeUpdate, bool _VActive)
         {
             isLoading = true;
 
@@ -519,7 +523,7 @@ namespace D69soft.Client.Pages.FIN
                     }
                 }
 
-                stockVoucherVM.IsTypeUpdate = _isTypeUpdate;
+                stockVoucherVM.IsTypeUpdate = _IsTypeUpdate;
                 stockVoucherVM.VActive = _VActive;
 
                 await voucherService.UpdateVoucher(stockVoucherVM, stockVoucherDetailVMs);

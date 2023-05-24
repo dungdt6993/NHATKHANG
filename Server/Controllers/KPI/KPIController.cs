@@ -91,7 +91,7 @@ namespace D69soft.Server.Controllers.KPI
         }
 
         [HttpPost("GetEserials")]
-        public async Task<ActionResult<IEnumerable<ProfileVM>>> GetEserials(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<EserialVM>>> GetEserials(FilterHrVM _filterHrVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -105,7 +105,7 @@ namespace D69soft.Server.Controllers.KPI
                 parm.Add("@arrPos", _filterHrVM.PositionGroupID);
                 parm.Add("@UserID", _filterHrVM.UserID);
 
-                var result = await conn.QueryAsync<ProfileVM>("KPI.KPIs_viewEserial", parm, commandType: CommandType.StoredProcedure);
+                var result = await conn.QueryAsync<EserialVM>("KPI.KPIs_viewEserial", parm, commandType: CommandType.StoredProcedure);
                 return Ok(result);
             }
         }
@@ -327,7 +327,7 @@ namespace D69soft.Server.Controllers.KPI
                 parm.Add("@Eserial", _Eserial);
                 parm.Add("@UserID", _filterHrVM.UserID);
 
-                await conn.QueryAsync<ProfileVM>("KPI.KPIs_open", parm, commandType: CommandType.StoredProcedure);
+                await conn.QueryAsync<EserialVM>("KPI.KPIs_open", parm, commandType: CommandType.StoredProcedure);
             }
 
             return true;

@@ -64,7 +64,7 @@ namespace D69soft.Client.Services.FIN
 
         public async Task<bool> SendApprove(RequestVM _requestVM, string _type)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Request/SendApprove{_type}", _requestVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Request/SendApprove/{_type}", _requestVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
