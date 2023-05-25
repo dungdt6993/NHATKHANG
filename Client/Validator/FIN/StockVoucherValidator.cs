@@ -1,4 +1,5 @@
 ﻿using D69soft.Client.Services.FIN;
+using D69soft.Server.Services.HR;
 using D69soft.Shared.Models.ViewModels.FIN;
 using FluentValidation;
 
@@ -13,7 +14,16 @@ namespace D69soft.Client.Validator.HR
                 RuleFor(x => x.ICode)
                 .Matches(@"^[a-zA-Z0-9]+$").WithMessage("Không hợp lệ.")
                 .MinimumLength(2).WithMessage("Tối thiểu 2 kí tự.")
-                .Must((x, id) => _inventoryService.ContainsICode(x.ICode).Result).When(x => x.IsTypeUpdate == 0).WithMessage("Đã tồn tại.");
+                                  .MustAsync(async (id, cancellation) =>
+                                  {
+                                      bool result = true;
+                                      if (!String.IsNullOrEmpty(id))
+                                      if (!String.IsNullOrEmpty(id))
+                                      {
+                                          result = await _inventoryService.ContainsICode(id);
+                                      }
+                                      return result;
+                                  }).When(x => x.IsTypeUpdate == 0).WithMessage("Đã tồn tại.");
 
                 RuleFor(x => x.IName).NotEmpty().WithMessage("Không được trống.");
                 RuleFor(x => x.ITypeCode).NotEmpty().WithMessage("Không được trống.");
@@ -34,7 +44,15 @@ namespace D69soft.Client.Validator.HR
                 RuleFor(x => x.IGrpCode).NotEmpty().WithMessage("Không được trống.")
                 .Matches(@"^[a-zA-Z0-9]+$").WithMessage("Không hợp lệ.")
                 .MinimumLength(2).WithMessage("Tối thiểu 2 kí tự.")
-                .Must((x, id) => _inventoryService.ContainsIGrpCode(x.IGrpCode).Result).When(x => x.IsTypeUpdate == 0).WithMessage("Đã tồn tại.");
+                .MustAsync(async (id, cancellation) =>
+                {
+                    bool result = true;
+                    if (!String.IsNullOrEmpty(id))
+                    {
+                        result = await _inventoryService.ContainsIGrpCode(id);
+                    }
+                    return result;
+                }).When(x => x.IsTypeUpdate == 0).WithMessage("Đã tồn tại.");
 
                 RuleFor(x => x.IGrpName).NotEmpty().WithMessage("Không được trống.");
                 RuleFor(x => x.IClsCode).NotEmpty().WithMessage("Không được trống.");

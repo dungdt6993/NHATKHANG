@@ -1,4 +1,5 @@
-﻿using D69soft.Client.Services.HR;
+﻿using D69soft.Client.Services.FIN;
+using D69soft.Client.Services.HR;
 using D69soft.Shared.Models.ViewModels.HR;
 using FluentValidation;
 
@@ -21,7 +22,15 @@ namespace D69soft.Client.Validator.HR
                 RuleFor(x => x.ShiftID).NotEmpty().WithMessage("Mã ca không được trống.")
                 .Matches(@"^[a-zA-Z0-9]+$").WithMessage("Mã ca không hợp lệ.")
                 .MinimumLength(2).WithMessage("Tối thiểu 2 kí tự.")
-                .Must((x, id) => _dutyRosterService.ContainsShiftID(x.ShiftID).Result).When(x => x.IsTypeUpdate == 0).WithMessage("Mã ca đã tồn tại.");
+                .MustAsync(async (id, cancellation) =>
+                {
+                    bool result = true;
+                    if (!String.IsNullOrEmpty(id))
+                    {
+                        result = await _dutyRosterService.ContainsShiftID(id);
+                    }
+                    return result;
+                }).When(x => x.IsTypeUpdate == 0).WithMessage("Mã ca đã tồn tại.");
 
                 RuleFor(x => x.ShiftName).NotEmpty().WithMessage("Tên ca không được trống.");
                 RuleFor(x => x.ShiftTypeID).NotEmpty().WithMessage("Loại ca không được trống.");

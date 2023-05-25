@@ -1002,7 +1002,6 @@ namespace D69soft.Client.Pages.HR
 
             profileHistorys = await profileService.GetProfileHistory(profileVM.Eserial);
 
-            await GetProfileList();
             eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
 
             isLoading = false;

@@ -1,4 +1,5 @@
 ﻿using D69soft.Client.Services.CRM;
+using D69soft.Client.Services.HR;
 using D69soft.Shared.Models.ViewModels.CRM;
 using FluentValidation;
 
@@ -9,7 +10,15 @@ namespace D69soft.Client.Validator.POS
         public CustomerValidator(CustomerService _customerService)
         {
             RuleFor(x => x.CustomerID).Matches(@"^[a-zA-Z0-9]+$").WithMessage("Mã khách hàng không hợp lệ.")
-            .Must((x, id) => _customerService.CheckContains_Customer(x.CustomerID).Result).When(x => x.IsTypeUpdate == 0).WithMessage("Mã khách hàng đã tồn tại.");
+            .MustAsync(async (id, cancellation) =>
+            {
+                bool result = true;
+                if (!String.IsNullOrEmpty(id))
+                {
+                    result = await _customerService.CheckContains_Customer(id);
+                }
+                return result;
+            }).When(x => x.IsTypeUpdate == 0).WithMessage("Mã khách hàng đã tồn tại.");
 
             RuleFor(x => x.CustomerName).NotEmpty().WithMessage("Tên khách hàng không được trống.");
 

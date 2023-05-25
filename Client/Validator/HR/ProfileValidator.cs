@@ -18,7 +18,11 @@ namespace D69soft.Client.Validator.HR
 
             .MustAsync(async (eserial, cancellation) =>
             {
-                bool result = await _profileService.CheckContainsEserial(eserial);
+                bool result = true;
+                if (!String.IsNullOrEmpty(eserial))
+                {
+                    result = await _profileService.CheckContainsEserial(eserial);
+                }
                 return result;
             }).When(x => x.IsTypeUpdate == 0).WithMessage("Mã nhân viên đã tồn tại.");
 
@@ -85,62 +89,78 @@ namespace D69soft.Client.Validator.HR
         }
     }
 
-    //public class EditEserialValidator : AbstractValidator<EditEserialVM>
-    //{
-    //    public EditEserialValidator(ProfileService _profileService)
-    //    {
-    //        RuleFor(x => x.NewEserial).NotEmpty().WithMessage("Mã nhân viên mới không được trống.")
-    //        .Matches(@"^[A-Za-z0-9_.]+$").WithMessage("Mã nhân viên không hợp lệ.")
-    //        .MaximumLength(20).WithMessage("Mã nhân viên tối đa 20 ký tự.")
-    //        .Must((x, eserial) => _profileService.CheckContainsEserial(x.Eserial).Result).WithMessage("Mã nhân viên đã tồn tại.");
+    public class EditEserialValidator : AbstractValidator<EditEserialVM>
+    {
+        public EditEserialValidator(ProfileService _profileService)
+        {
+            RuleFor(x => x.NewEserial).NotEmpty().WithMessage("Mã nhân viên mới không được trống.")
+            .Matches(@"^[A-Za-z0-9_.]+$").WithMessage("Mã nhân viên không hợp lệ.")
+            .MaximumLength(20).WithMessage("Mã nhân viên tối đa 20 ký tự.")
+            .Must((x, eserial) => _profileService.CheckContainsEserial(x.Eserial).Result).WithMessage("Mã nhân viên đã tồn tại.");
 
-    //    }
-    //}
+        }
+    }
 
-    //public class ContractTypeValidator : AbstractValidator<ContractTypeVM>
-    //{
-    //    public ContractTypeValidator(ProfileService _profileService)
-    //    {
-    //        When(x => x.IsTypeUpdate != 2, () =>
-    //          {
-    //              RuleFor(x => x.ContractTypeID).NotEmpty().WithMessage("Mã loại hợp đồng không được trống.")
-    //              .Matches(@"^[a-zA-Z0-9]+$").WithMessage("Mã loại hợp đồng không hợp lệ.")
-    //              .MinimumLength(2).WithMessage("Tối thiểu 2 kí tự.")
-    //              .Must((x, id) => _profileService.ContainsContractTypeID(x.ContractTypeGroupID).Result).When(x => x.IsTypeUpdate == 0).WithMessage("Mã loại hợp đồng đã tồn tại.");
+    public class ContractTypeValidator : AbstractValidator<ContractTypeVM>
+    {
+        public ContractTypeValidator(ProfileService _profileService)
+        {
+            When(x => x.IsTypeUpdate != 2, () =>
+              {
+                  RuleFor(x => x.ContractTypeID).NotEmpty().WithMessage("Mã loại hợp đồng không được trống.")
+                  .Matches(@"^[a-zA-Z0-9]+$").WithMessage("Mã loại hợp đồng không hợp lệ.")
+                  .MinimumLength(2).WithMessage("Tối thiểu 2 kí tự.")
+                  .MustAsync(async (id, cancellation) =>
+                  {
+                      bool result = true;
+                      if (!String.IsNullOrEmpty(id))
+                      {
+                          result = await _profileService.ContainsContractTypeID(id);
+                      }
+                      return result;
+                  }).When(x => x.IsTypeUpdate == 0).WithMessage("Mã loại hợp đồng đã tồn tại.");
 
-    //              RuleFor(x => x.ContractTypeName).NotEmpty().WithMessage("Tên loại hợp đồng không được trống.");
-    //              RuleFor(x => x.ContractTypeGroupID).NotEmpty().WithMessage("Nhóm hợp đồng không được trống.");
-    //          });
-    //    }
-    //}
+                  RuleFor(x => x.ContractTypeName).NotEmpty().WithMessage("Tên loại hợp đồng không được trống.");
+                  RuleFor(x => x.ContractTypeGroupID).NotEmpty().WithMessage("Nhóm hợp đồng không được trống.");
+              });
+        }
+    }
 
-    //public class WorkTypeValidator : AbstractValidator<WorkTypeVM>
-    //{
-    //    public WorkTypeValidator(ProfileService _profileService)
-    //    {
-    //        When(x => x.IsTypeUpdate != 2, () =>
-    //        {
-    //            RuleFor(x => x.WorkTypeID).NotEmpty().WithMessage("Mã loại công việc không được trống.")
-    //            .Matches(@"^[a-zA-Z0-9]+$").WithMessage("Mã loại công việc không hợp lệ.")
-    //            .MinimumLength(2).WithMessage("Tối thiểu 2 kí tự.")
-    //            .Must((x, id) => _profileService.ContainsWorkTypeID(x.WorkTypeID).Result).When(x => x.IsTypeUpdate == 0).WithMessage("Mã loại công việc đã tồn tại.");
+    public class WorkTypeValidator : AbstractValidator<WorkTypeVM>
+    {
+        public WorkTypeValidator(ProfileService _profileService)
+        {
+            When(x => x.IsTypeUpdate != 2, () =>
+            {
+                RuleFor(x => x.WorkTypeID).NotEmpty().WithMessage("Mã loại công việc không được trống.")
+                .Matches(@"^[a-zA-Z0-9]+$").WithMessage("Mã loại công việc không hợp lệ.")
+                .MinimumLength(2).WithMessage("Tối thiểu 2 kí tự.")
+                .MustAsync(async (id, cancellation) =>
+                {
+                    bool result = true;
+                    if (!String.IsNullOrEmpty(id))
+                    {
+                        result = await _profileService.ContainsWorkTypeID(id);
+                    }
+                    return result;
+                }).When(x => x.IsTypeUpdate == 0).WithMessage("Mã loại công việc đã tồn tại.");
 
-    //            RuleFor(x => x.WorkTypeName).NotEmpty().WithMessage("Tên loại công việc không được trống.");
-    //        });
-    //    }
-    //}
+                RuleFor(x => x.WorkTypeName).NotEmpty().WithMessage("Tên loại công việc không được trống.");
+            });
+        }
+    }
 
-    //public class ProfileRelationshipValidator : AbstractValidator<ProfileRelationshipVM>
-    //{
-    //    public ProfileRelationshipValidator()
-    //    {
-    //        When(x => x.IsTypeUpdate != 2, () =>
-    //        {
-    //            RuleFor(x => x.Rela_FullName).NotEmpty().WithMessage("Họ tên không được trống.");
-    //            RuleFor(x => x.Rela_Birthday).NotEmpty().WithMessage("Ngày sinh không được trống.");
-    //            RuleFor(x => x.Rela_ValidTo).NotEmpty().When(x=>x.isEmployeeTax).WithMessage("Hiệu lực không được trống.");
-    //        });
-    //    }
-    //}
+    public class ProfileRelationshipValidator : AbstractValidator<ProfileRelationshipVM>
+    {
+        public ProfileRelationshipValidator()
+        {
+            When(x => x.IsTypeUpdate != 2, () =>
+            {
+                RuleFor(x => x.Rela_FullName).NotEmpty().WithMessage("Họ tên không được trống.");
+                RuleFor(x => x.Rela_Birthday).NotEmpty().WithMessage("Ngày sinh không được trống.");
+                RuleFor(x => x.Rela_ValidTo).NotEmpty().When(x => x.isEmployeeTax).WithMessage("Hiệu lực không được trống.");
+            });
+        }
+    }
 
 }
