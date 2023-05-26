@@ -6,6 +6,7 @@ using Data.Infrastructure;
 using Dapper;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Shared.Utilities;
+using D69soft.Shared.Models.ViewModels.DOC;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,10 +17,12 @@ namespace D69soft.Server.Controllers.HR
     public class ProfileController : ControllerBase
     {
         private readonly SqlConnectionConfig _connConfig;
+        private readonly IWebHostEnvironment _env;
 
-        public ProfileController(SqlConnectionConfig connConfig)
+        public ProfileController(SqlConnectionConfig connConfig, IWebHostEnvironment env)
         {
             _connConfig = connConfig;
+            _env = env;
         }
 
         //Contact
@@ -106,13 +109,13 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("UpdateProfile")]
-        public async Task<ActionResult<string>> UpdateProfile(ProfileVM _profileManagamentVM)
+        public async Task<ActionResult<string>> UpdateProfile(ProfileVM _profileVM)
         {
-            if (_profileManagamentVM.IsTypeUpdate == 0)
+            if (_profileVM.IsTypeUpdate == 0)
             {
-                _profileManagamentVM.User_PassReset = LibraryFunc.RandomNumber(100000, 999999).ToString();
+                _profileVM.User_PassReset = LibraryFunc.RandomNumber(100000, 999999).ToString();
 
-                _profileManagamentVM.User_Password = LibraryFunc.GennerateToMD5(_profileManagamentVM.User_PassReset);
+                _profileVM.User_Password = LibraryFunc.GennerateToMD5(_profileVM.User_PassReset);
             }
 
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -121,102 +124,109 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@typeView", _profileManagamentVM.IsTypeUpdate);
+                parm.Add("@typeView", _profileVM.IsTypeUpdate);
 
-                parm.Add("@ckcontractextension", _profileManagamentVM.ckContractExtension);
-                parm.Add("@ckjob", _profileManagamentVM.ckJob);
-                parm.Add("@cksal", _profileManagamentVM.ckSal);
-                parm.Add("@eserial", _profileManagamentVM.Eserial);
-                parm.Add("@lastname", _profileManagamentVM.LastName);
-                parm.Add("@middlename", _profileManagamentVM.MiddleName);
-                parm.Add("@firstname ", _profileManagamentVM.FirstName);
-                parm.Add("@birthday ", _profileManagamentVM.Birthday);
-                parm.Add("@placeofbirthday", _profileManagamentVM.PlaceOfBirth);
-                parm.Add("@gender", _profileManagamentVM.Gender);
-                parm.Add("@idcard", _profileManagamentVM.IDCard);
-                parm.Add("@dateofissue", _profileManagamentVM.DateOfIssue);
-                parm.Add("@placeofissue", _profileManagamentVM.PlaceOfIssue);
-                parm.Add("@nationality", _profileManagamentVM.CountryCode);
-                parm.Add("@ethnic", _profileManagamentVM.EthnicID);
-                parm.Add("@hometown", _profileManagamentVM.Hometown);
-                parm.Add("@qualification", _profileManagamentVM.Qualification);
-                parm.Add("@tel", _profileManagamentVM.Mobile);
-                parm.Add("@email", _profileManagamentVM.Email);
-                parm.Add("@resident", _profileManagamentVM.Resident);
-                parm.Add("@temporarity", _profileManagamentVM.Temporarity);
-                parm.Add("@pittaxcode", _profileManagamentVM.PITTaxCode);
-                parm.Add("@taxdept", _profileManagamentVM.TaxDept);
-                parm.Add("@visanum", _profileManagamentVM.VisaNumber);
-                parm.Add("@visaexp", _profileManagamentVM.VisaExpDate);
-                parm.Add("@contact_name", _profileManagamentVM.Contact_Name);
-                parm.Add("@contact_rela", _profileManagamentVM.Contact_Rela);
-                parm.Add("@contact_tel", _profileManagamentVM.Contact_Tel);
-                parm.Add("@contact_address", _profileManagamentVM.Contact_Address);
-                parm.Add("@joindate", _profileManagamentVM.JoinDate);
-                parm.Add("@startdayal", _profileManagamentVM.StartDayAL);
-                parm.Add("@worktype ", _profileManagamentVM.WorkTypeID);
-                parm.Add("@division", _profileManagamentVM.DivisionID);
-                parm.Add("@department", _profileManagamentVM.DepartmentID);
-                parm.Add("@section", _profileManagamentVM.SectionID);
-                parm.Add("@position", _profileManagamentVM.PositionID);
-                parm.Add("@startcontractdate", _profileManagamentVM.StartContractDate);
-                parm.Add("@contracttype", _profileManagamentVM.ContractTypeID);
-                parm.Add("@endcontractdate", _profileManagamentVM.EndContractDate);
-                parm.Add("@shift", _profileManagamentVM.ShiftID);
-                parm.Add("@jobstartdate", _profileManagamentVM.JobStartDate);
-                parm.Add("@bankaccount", _profileManagamentVM.BankAccount);
-                parm.Add("@bankcode", _profileManagamentVM.BankCode);
-                parm.Add("@bankname", _profileManagamentVM.BankName);
-                parm.Add("@bankbranch", _profileManagamentVM.BankBranch);
-                parm.Add("@timeattcode", _profileManagamentVM.TimeAttCode);
-                parm.Add("@socialins", _profileManagamentVM.SocialInsNumber);
-                parm.Add("@healthins", _profileManagamentVM.HealthInsNumber);
-                parm.Add("@emailcompany", _profileManagamentVM.EmailCompany);
-                parm.Add("@basicsalary", _profileManagamentVM.BasicSalary);
-                parm.Add("@othersalary", _profileManagamentVM.OtherSalary);
-                parm.Add("@benefit1", _profileManagamentVM.Benefit1);
-                parm.Add("@benefit2", _profileManagamentVM.Benefit2);
-                parm.Add("@benefit3", _profileManagamentVM.Benefit3);
-                parm.Add("@benefit4", _profileManagamentVM.Benefit4);
-                parm.Add("@benefit5", _profileManagamentVM.Benefit5);
-                parm.Add("@benefit6", _profileManagamentVM.Benefit6);
-                parm.Add("@benefit7", _profileManagamentVM.Benefit7);
-                parm.Add("@benefit8", _profileManagamentVM.Benefit8);
-                parm.Add("@beginsalary", _profileManagamentVM.BeginSalaryDate);
-                parm.Add("@ispaybank", _profileManagamentVM.SalaryByBank);
-                parm.Add("@ispaybymonth", _profileManagamentVM.IsPayByMonth);
-                parm.Add("@ispaybydate", _profileManagamentVM.IsPayByDate);
-                parm.Add("@reason", _profileManagamentVM.Reason);
-                parm.Add("@approvedby", _profileManagamentVM.ApprovedBy);
-                parm.Add("@imageurl", _profileManagamentVM.UrlAvatar == null ? UrlDirectory.Default_Avatar : _profileManagamentVM.UrlAvatar);
-                parm.Add("@role", _profileManagamentVM.PermisId);
-                parm.Add("@pass", _profileManagamentVM.User_Password);
-                parm.Add("@passreset", _profileManagamentVM.User_PassReset);
+                parm.Add("@ckcontractextension", _profileVM.ckContractExtension);
+                parm.Add("@ckjob", _profileVM.ckJob);
+                parm.Add("@cksal", _profileVM.ckSal);
+                parm.Add("@eserial", _profileVM.Eserial);
+                parm.Add("@lastname", _profileVM.LastName);
+                parm.Add("@middlename", _profileVM.MiddleName);
+                parm.Add("@firstname ", _profileVM.FirstName);
+                parm.Add("@birthday ", _profileVM.Birthday);
+                parm.Add("@placeofbirthday", _profileVM.PlaceOfBirth);
+                parm.Add("@gender", _profileVM.Gender);
+                parm.Add("@idcard", _profileVM.IDCard);
+                parm.Add("@dateofissue", _profileVM.DateOfIssue);
+                parm.Add("@placeofissue", _profileVM.PlaceOfIssue);
+                parm.Add("@nationality", _profileVM.CountryCode);
+                parm.Add("@ethnic", _profileVM.EthnicID);
+                parm.Add("@hometown", _profileVM.Hometown);
+                parm.Add("@qualification", _profileVM.Qualification);
+                parm.Add("@tel", _profileVM.Mobile);
+                parm.Add("@email", _profileVM.Email);
+                parm.Add("@resident", _profileVM.Resident);
+                parm.Add("@temporarity", _profileVM.Temporarity);
+                parm.Add("@pittaxcode", _profileVM.PITTaxCode);
+                parm.Add("@taxdept", _profileVM.TaxDept);
+                parm.Add("@visanum", _profileVM.VisaNumber);
+                parm.Add("@visaexp", _profileVM.VisaExpDate);
+                parm.Add("@contact_name", _profileVM.Contact_Name);
+                parm.Add("@contact_rela", _profileVM.Contact_Rela);
+                parm.Add("@contact_tel", _profileVM.Contact_Tel);
+                parm.Add("@contact_address", _profileVM.Contact_Address);
+                parm.Add("@joindate", _profileVM.JoinDate);
+                parm.Add("@startdayal", _profileVM.StartDayAL);
+                parm.Add("@worktype ", _profileVM.WorkTypeID);
+                parm.Add("@division", _profileVM.DivisionID);
+                parm.Add("@department", _profileVM.DepartmentID);
+                parm.Add("@section", _profileVM.SectionID);
+                parm.Add("@position", _profileVM.PositionID);
+                parm.Add("@startcontractdate", _profileVM.StartContractDate);
+                parm.Add("@contracttype", _profileVM.ContractTypeID);
+                parm.Add("@endcontractdate", _profileVM.EndContractDate);
+                parm.Add("@shift", _profileVM.ShiftID);
+                parm.Add("@jobstartdate", _profileVM.JobStartDate);
+                parm.Add("@bankaccount", _profileVM.BankAccount);
+                parm.Add("@bankcode", _profileVM.BankCode);
+                parm.Add("@bankname", _profileVM.BankName);
+                parm.Add("@bankbranch", _profileVM.BankBranch);
+                parm.Add("@timeattcode", _profileVM.TimeAttCode);
+                parm.Add("@socialins", _profileVM.SocialInsNumber);
+                parm.Add("@healthins", _profileVM.HealthInsNumber);
+                parm.Add("@emailcompany", _profileVM.EmailCompany);
+                parm.Add("@basicsalary", _profileVM.BasicSalary);
+                parm.Add("@othersalary", _profileVM.OtherSalary);
+                parm.Add("@benefit1", _profileVM.Benefit1);
+                parm.Add("@benefit2", _profileVM.Benefit2);
+                parm.Add("@benefit3", _profileVM.Benefit3);
+                parm.Add("@benefit4", _profileVM.Benefit4);
+                parm.Add("@benefit5", _profileVM.Benefit5);
+                parm.Add("@benefit6", _profileVM.Benefit6);
+                parm.Add("@benefit7", _profileVM.Benefit7);
+                parm.Add("@benefit8", _profileVM.Benefit8);
+                parm.Add("@beginsalary", _profileVM.BeginSalaryDate);
+                parm.Add("@ispaybank", _profileVM.SalaryByBank);
+                parm.Add("@ispaybymonth", _profileVM.IsPayByMonth);
+                parm.Add("@ispaybydate", _profileVM.IsPayByDate);
+                parm.Add("@reason", _profileVM.Reason);
+                parm.Add("@approvedby", _profileVM.ApprovedBy);
+                parm.Add("@imageurl", _profileVM.UrlAvatar == null ? UrlDirectory.Default_Avatar : _profileVM.UrlAvatar);
+                parm.Add("@role", _profileVM.PermisId);
+                parm.Add("@pass", _profileVM.User_Password);
+                parm.Add("@passreset", _profileVM.User_PassReset);
 
-                parm.Add("@Appraiser_Eserial", _profileManagamentVM.Appraiser_Eserial);
-                parm.Add("@DirectManager_Eserial", _profileManagamentVM.DirectManager_Eserial);
-                parm.Add("@ControlDept_Eserial", _profileManagamentVM.ControlDept_Eserial);
-                parm.Add("@Approve_Eserial", _profileManagamentVM.Approve_Eserial);
+                parm.Add("@Appraiser_Eserial", _profileVM.Appraiser_Eserial);
+                parm.Add("@DirectManager_Eserial", _profileVM.DirectManager_Eserial);
+                parm.Add("@ControlDept_Eserial", _profileVM.ControlDept_Eserial);
+                parm.Add("@Approve_Eserial", _profileVM.Approve_Eserial);
 
-                parm.Add("@UserID", _profileManagamentVM.UserID);
+                parm.Add("@UserID", _profileVM.UserID);
 
-                var eserial = await conn.ExecuteScalarAsync<string>("HR.Profile_update", parm, commandType: CommandType.StoredProcedure);
+                _profileVM.Eserial = await conn.ExecuteScalarAsync<string>("HR.Profile_update", parm, commandType: CommandType.StoredProcedure);
 
-                return eserial;
-            }
-        }
+                //Update UrlAvarta
+                if (_profileVM.IsDelFileUpload)
+                {
+                    LibraryFunc.DelFileFrom(Path.Combine(_env.ContentRootPath, $"{UrlDirectory.Upload_HR_Images_Profile_Private}{_profileVM.Eserial}.png"));
+                    _profileVM.UrlAvatar = UrlDirectory.Default_Avatar;
+                }
 
-        [HttpGet("UpdateUrlAvatar/{_Eserial}/{_UrlAvatar}")]
-        public async Task<ActionResult<bool>> UpdateUrlAvatar(string _Eserial, string _UrlAvatar)
-        {
-            var sql = "Update HR.Profile set UrlAvatar=@UrlAvatar where Eserial=@Eserial";
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
+                if (_profileVM.FileContent != null)
+                {
+                    var filename = $"{_profileVM.Eserial}.png";
+                    var path = Path.Combine(_env.ContentRootPath, $"{UrlDirectory.Upload_HR_Images_Profile_Private}{filename}");
+                    var fs = System.IO.File.Create(path);
+                    fs.Write(_profileVM.FileContent, 0, _profileVM.FileContent.Length);
+                    fs.Close();
 
-                await conn.ExecuteAsync(sql, new { Eserial = _Eserial, UrlAvatar = _UrlAvatar });
-                return true;
+                    _profileVM.UrlAvatar = $"{UrlDirectory.Upload_HR_Images_Profile_Public}{filename}";
+                }
+
+                var sql = "Update HR.Profile set UrlAvatar=@UrlAvatar where Eserial=@Eserial";
+                await conn.ExecuteAsync(sql, _profileVM);
+
+                return _profileVM.Eserial;
             }
         }
 
@@ -320,13 +330,13 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("ResetPass")]
-        public async Task<ActionResult<bool>> ResetPass(ProfileVM _profileManagamentVM)
+        public async Task<ActionResult<bool>> ResetPass(ProfileVM _profileVM)
         {
-            _profileManagamentVM.User_PassReset = LibraryFunc.RandomNumber(100000, 999999).ToString();
+            _profileVM.User_PassReset = LibraryFunc.RandomNumber(100000, 999999).ToString();
 
-            _profileManagamentVM.User_Password = LibraryFunc.GennerateToMD5(_profileManagamentVM.User_PassReset);
+            _profileVM.User_Password = LibraryFunc.GennerateToMD5(_profileVM.User_PassReset);
 
-            _profileManagamentVM.User_isChangePass = 0;
+            _profileVM.User_isChangePass = 0;
 
             var sql = "Update HR.Profile set User_Password = @User_Password, User_PassReset = @User_PassReset, User_isChangePass = @User_isChangePass where Eserial = @Eserial";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -334,13 +344,13 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                await conn.ExecuteAsync(sql, _profileManagamentVM);
+                await conn.ExecuteAsync(sql, _profileVM);
                 return true;
             }
         }
 
         [HttpPost("DelProfileHistory")]
-        public async Task<ActionResult<bool>> DelProfileHistory(ProfileVM _profileManagamentVM)
+        public async Task<ActionResult<bool>> DelProfileHistory(ProfileVM _profileVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -349,33 +359,33 @@ namespace D69soft.Server.Controllers.HR
 
                 //Check del JOB
                 var sqlCheckDelJob = "select 1 from HR.JobSalHistory where Eserial=@Eserial and JobID=@JobID and SalID=@SalaryID and (SUBSTRING(RIGHT(AdjustProfileID,5),3,1) > 0 or SUBSTRING(RIGHT(AdjustProfileID,5),1,1) > 0) ";
-                if (await conn.ExecuteScalarAsync<int>(sqlCheckDelJob, _profileManagamentVM) == 1)
+                if (await conn.ExecuteScalarAsync<int>(sqlCheckDelJob, _profileVM) == 1)
                 {
                     var sqlDelJob = "Delete from HR.JobHistory where Eserial=@Eserial and JobID=@JobID ";
-                    await conn.ExecuteAsync(sqlDelJob, _profileManagamentVM);
+                    await conn.ExecuteAsync(sqlDelJob, _profileVM);
 
                     var sqlUpdateJobActive = "Update HR.JobHistory set CurrentJobID = 1 where Eserial = @Eserial and JobID in (select MAX(JobID) from HR.JobHistory where Eserial = @Eserial)";
-                    await conn.ExecuteAsync(sqlUpdateJobActive, _profileManagamentVM);
+                    await conn.ExecuteAsync(sqlUpdateJobActive, _profileVM);
                 }
 
                 //Check del SAL
                 var sqlCheckDelSal = "select 1 from HR.JobSalHistory where Eserial=@Eserial and SalID=@SalaryID and JobID=@JobID and SUBSTRING(RIGHT(AdjustProfileID,5),5,1) > 0 ";
-                if (await conn.ExecuteScalarAsync<int>(sqlCheckDelSal, _profileManagamentVM) == 1)
+                if (await conn.ExecuteScalarAsync<int>(sqlCheckDelSal, _profileVM) == 1)
                 {
                     var sqlDelSal = "Delete from HR.SalaryHistory where Eserial=@Eserial and SalaryID=@SalaryID";
-                    await conn.ExecuteAsync(sqlDelSal, _profileManagamentVM);
+                    await conn.ExecuteAsync(sqlDelSal, _profileVM);
 
                     var sqlUpdateSalActive = "Update HR.SalaryHistory set isActive = 1 where Eserial = @Eserial and SalaryID in (select MAX(SalaryID) from HR.SalaryHistory where Eserial = @Eserial)";
-                    await conn.ExecuteAsync(sqlUpdateSalActive, _profileManagamentVM);
+                    await conn.ExecuteAsync(sqlUpdateSalActive, _profileVM);
                 }
 
                 //Del JobSalHistory
                 var sqlDelJobSalHistory = "Delete from HR.JobSalHistory where Eserial=@Eserial and JobID=@JobID and SalID=@SalaryID ";
-                await conn.ExecuteAsync(sqlDelJobSalHistory, _profileManagamentVM);
+                await conn.ExecuteAsync(sqlDelJobSalHistory, _profileVM);
 
                 //Del LogPrintAgreementText
                 var sqlDelLogPrintAgreementText = "Delete from HR.LogPrintAgreementText where Eserial=@Eserial and JobID=@JobID and SalID=@SalaryID ";
-                await conn.ExecuteAsync(sqlDelLogPrintAgreementText, _profileManagamentVM);
+                await conn.ExecuteAsync(sqlDelLogPrintAgreementText, _profileVM);
 
                 return true;
             }
@@ -399,7 +409,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("TerminateProfile")]
-        public async Task<ActionResult<bool>> TerminateProfile(ProfileVM _profileManagamentVM)
+        public async Task<ActionResult<bool>> TerminateProfile(ProfileVM _profileVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -407,10 +417,10 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@eserial", _profileManagamentVM.Eserial);
-                parm.Add("@terminatedate", _profileManagamentVM.TerminateDate);
-                parm.Add("@reasonterminate", _profileManagamentVM.ReasonTerminate);
-                parm.Add("@UserID", _profileManagamentVM.UserID);
+                parm.Add("@eserial", _profileVM.Eserial);
+                parm.Add("@terminatedate", _profileVM.TerminateDate);
+                parm.Add("@reasonterminate", _profileVM.ReasonTerminate);
+                parm.Add("@UserID", _profileVM.UserID);
 
                 await conn.ExecuteAsync("HR.Profile_terminate", parm, commandType: CommandType.StoredProcedure);
 

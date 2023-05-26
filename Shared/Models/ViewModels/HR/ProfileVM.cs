@@ -18,10 +18,15 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public decimal TotalSalary { get; set; }
         public int IsTypeUpdate { get; set; }
         public DateTime DateJSH { get; set; }
-        public bool IsUpdateUrlAvatar { get; set; }
-        public bool IsUpdateAppraider { get; set; }
 
         public string FullName { get; set; }
+
+        //Upload file scan
+        public bool IsDelFileUpload { get; set; }
+
+        public string FileName { get; set; }
+        public byte[] FileContent { get; set; }
+        public string FileType { get; set; }
 
         //Appraiser
         public string Appraiser_FullName { get; set; }

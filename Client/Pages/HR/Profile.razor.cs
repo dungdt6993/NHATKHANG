@@ -808,22 +808,22 @@ namespace D69soft.Client.Pages.HR
                 {
                     profileVM = new();
 
+                    profileVM.CountryCode = "VN";
+
+                    profileVM.EthnicID = 1;
+
+                    profileVM.DivisionID = filterHrVM.DivisionID;
+
+                    profileVM.PermisId = 4;
+
+                    profileVM.IsPayByMonth = 1;
+
                     profileVM.IsTypeUpdate = _IsTypeUpdate;
                 }
 
-                profileHistorys = null;
-
                 profileVM.UrlAvatar = UrlDirectory.Default_Avatar;
 
-                profileVM.CountryCode = "VN";
-
-                profileVM.EthnicID = 1;
-
-                profileVM.DivisionID = filterHrVM.DivisionID;
-
-                profileVM.PermisId = 4;
-
-                profileVM.IsPayByMonth = 1;
+                profileHistorys = null;
 
                 if (profileVM.IsTypeUpdate == 4)
                 {
@@ -855,8 +855,6 @@ namespace D69soft.Client.Pages.HR
             }
             else
             {
-                profileVM.IsUpdateUrlAvatar = false;
-
                 permissionUserVMs = await authService.GetPermissionUser(profileVM.Eserial, UserID);
                 profileHistorys = await profileService.GetProfileHistory(profileVM.Eserial);
 
@@ -930,23 +928,27 @@ namespace D69soft.Client.Pages.HR
             long maxFileSize = 1024 * 1024 * 15;
 
             var resizedFile = await e.File.RequestImageFileAsync(format, 640, 480); // resize the image file
-            stream = resizedFile.OpenReadStream(maxFileSize);
 
+            stream = resizedFile.OpenReadStream(maxFileSize);
             memoryStream = new();
             await stream.CopyToAsync(memoryStream);
+            stream.Close();
 
             profileVM.UrlAvatar = $"data:{format};base64,{Convert.ToBase64String(memoryStream.ToArray())}";// convert to a base64 string!!
 
-            profileVM.IsUpdateUrlAvatar = true;
+            profileVM.FileContent = memoryStream.ToArray();
+
+            memoryStream.Close();
 
             isLoading = false;
         }
 
         private void FileDefault()
         {
-            profileVM.UrlAvatar = UrlDirectory.Default_Avatar;
             memoryStream = null;
-            profileVM.IsUpdateUrlAvatar = true;
+            profileVM.IsDelFileUpload = true;
+            profileVM.UrlAvatar = UrlDirectory.Default_Avatar;
+            profileVM.FileContent = null;
         }
 
         private async Task UpdateProfile()
@@ -959,28 +961,12 @@ namespace D69soft.Client.Pages.HR
 
             profileVM.Eserial = await profileService.UpdateProfile(profileVM);
 
-            if (profileVM.IsUpdateUrlAvatar)
-            {
-                LibraryFunc.DelFileFrom(Path.Combine(Directory.GetCurrentDirectory(), $"{UrlDirectory.Upload_HR_Images_Profile_Private}{profileVM.Eserial}.png"));
-
-                if (memoryStream != null)
-                {
-                    var path = $"{UrlDirectory.Upload_HR_Images_Profile_Private}{profileVM.Eserial}.png";
-
-                    File.WriteAllBytes(path, memoryStream.ToArray());
-
-                    profileVM.UrlAvatar = $"{UrlDirectory.Upload_HR_Images_Profile_Public}{profileVM.Eserial}.png";
-                }
-
-                await profileService.UpdateUrlAvatar(profileVM.Eserial, profileVM.UrlAvatar);
-            }
-
             if (profileVM.IsTypeUpdate == 1)
             {
                 await js.Swal_Message("Thông báo!", "Cập nhật dữ liệu thành công.", SweetAlertMessageType.success);
 
                 disabled_btnUpdateProfile = false;
-           }
+            }
 
             if (profileVM.IsTypeUpdate == 2)
             {

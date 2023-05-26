@@ -50,11 +50,6 @@ namespace D69soft.Server.Services.HR
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<bool> UpdateUrlAvatar(string _Eserial, string _UrlAvatar)
-        {
-            return await _httpClient.GetFromJsonAsync<bool>($"api/Profile/UpdateUrlAvatar/{_Eserial}/{_UrlAvatar}");
-        }
-
         public async Task<List<ProfileVM>> GetProfileHistory(string _Eserial)
         {
             return await _httpClient.GetFromJsonAsync<List<ProfileVM>>($"api/Profile/GetProfileHistory/{_Eserial}");
