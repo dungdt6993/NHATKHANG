@@ -11,6 +11,9 @@ using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Shared.Utilities;
 using D69soft.Client.Extension;
+using D69soft.Shared.Models.ViewModels.DOC;
+using D69soft.Shared.Models.Entities.HR;
+using System.Reflection.Metadata;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -72,7 +75,9 @@ namespace D69soft.Client.Pages.HR
         IEnumerable<EserialVM> eserial_filter_list;
 
         ProfileVM profileVM = new();
-        List<ProfileVM> profileVMs;
+        private List<ProfileVM> profileVMs { get; set; } =new();
+
+        private Virtualize<ProfileVM> virtualizeProfileList { get; set; }
 
         IEnumerable<CountryVM> countryVMs;
         IEnumerable<EthnicVM> ethnicVMs;
@@ -117,6 +122,7 @@ namespace D69soft.Client.Pages.HR
             }
 
             HR_Profile_EditSal = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_EditSal");
+            HR_Profile_ChangeSal = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_ChangeSal");
             HR_Profile_ViewSal = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_ViewSal");
             HR_Profile_User_Permis = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_User_Permis");
             HR_Profile_User_ResetPass = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_User_ResetPass");
@@ -226,7 +232,7 @@ namespace D69soft.Client.Pages.HR
 
                 filterHrVM.PositionGroupID = string.Join(",", (string[])value);
 
-                reload_filter_eserial();
+                //await GetProfileList();
 
                 isLoading = false;
             }
@@ -246,27 +252,10 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        private async void onchange_filter_eserial(string value)
+        private async Task SearchProfile(string value)
         {
-            isLoading = true;
-
-            filterHrVM.Eserial = value;
-
-            await GetProfileList();
-
-            isLoading = false;
-
-            StateHasChanged();
-        }
-
-        private async void reload_filter_eserial()
-        {
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
-
-            await GetProfileList();
-
-            StateHasChanged();
+            filterHrVM.searchValues = value;
+            //return profileVMs.Where(x => x.Eserial.ToUpper().Contains(filterHrVM.searchValues.ToUpper()));
         }
 
         //Profile
@@ -307,13 +296,11 @@ namespace D69soft.Client.Pages.HR
 
             //dtEmplChange = await profileService.GetEmplChangeList(filterHrVM);
 
-            //await virtualizeProfileList.RefreshDataAsync();
-            //StateHasChanged();
+            await virtualizeProfileList.RefreshDataAsync();
+            StateHasChanged();
 
             isLoading = false;
         }
-
-        private Virtualize<ProfileVM> virtualizeProfileList { get; set; }
 
         private ValueTask<ItemsProviderResult<ProfileVM>> LoadProfileList(ItemsProviderRequest request)
         {
@@ -1004,32 +991,44 @@ namespace D69soft.Client.Pages.HR
 
         private async Task DelProfileHistory(ProfileVM profilehistory)
         {
+            isLoading = true;
+
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
             {
                 if (await profileService.DelProfileHistory(profilehistory))
                 {
+                    filterHrVM.Eserial = profileVM.Eserial;
+
+                    profileVM = (await profileService.GetProfileList(filterHrVM)).First();
+
+                    profileHistorys = await profileService.GetProfileHistory(profileVM.Eserial);
+
+                    profileVM.IsTypeUpdate = 1;
+
+                    filterHrVM.Eserial = String.Empty;
+
                     await js.Swal_Message("Thông báo!", "Xóa thành công.", SweetAlertMessageType.success);
-
-                    await Initialize_ModalProfile(1);
-
-                    await GetProfileList();
                 }
             }
+
+            isLoading= false;
         }
 
         private async Task DelProfile()
         {
+            isLoading = true;
+
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa nhân viên mã " + profileVM.Eserial + "?", SweetAlertMessageType.question))
             {
                 if (await profileService.DelProfile(profileVM.Eserial))
                 {
-                    await js.Swal_Message("Thông báo!", "Xóa thành công.", SweetAlertMessageType.success);
-
                     await GetProfileList();
 
-                    reload_filter_eserial();
+                    await js.Swal_Message("Thông báo!", "Xóa thành công.", SweetAlertMessageType.success);
                 }
             }
+
+            isLoading = false;
         }
 
         private async Task InitializeModal_TerminateProfile()
@@ -1047,33 +1046,36 @@ namespace D69soft.Client.Pages.HR
 
         private async Task TerminateProfile()
         {
+            isLoading = true;
+
             if (await profileService.TerminateProfile(profileVM))
             {
+                await GetProfileList();
+
                 await js.Swal_Message("Thông báo!", "Chấm dứt hợp đồng thành công.", SweetAlertMessageType.success);
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModal_TerminateProfile");
-
-                await GetProfileList();
-
-                reload_filter_eserial();
             }
             disabled_btnUpdateProfile = true;
+
+            isLoading = false;
         }
 
         private async Task RestoreTerminateProfile()
         {
+            isLoading = true;
+
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắc chắn hủy chấm dứt hợp đồng?", SweetAlertMessageType.question))
             {
                 if (await profileService.RestoreTerminateProfile(profileVM.Eserial, UserID))
                 {
-                    await js.Swal_Message("Thông báo!", "Hủy chấm dứt hợp đồng thành công.", SweetAlertMessageType.success);
-                    await js.InvokeAsync<object>("CloseModal", "#InitializeModal_TerminateProfile");
-
                     await GetProfileList();
 
-                    reload_filter_eserial();
+                    await js.Swal_Message("Thông báo!", "Hủy chấm dứt hợp đồng thành công.", SweetAlertMessageType.success);
                 }
             }
+
+            isLoading = false;
         }
 
         //Permis
@@ -1216,7 +1218,7 @@ namespace D69soft.Client.Pages.HR
         IEnumerable<ContractTypeVM> contractTypeGroupVMs;
         IEnumerable<ContractTypeVM> contractTypeVMs;
         ContractTypeVM contractTypeVM = new();
-        private async Task InitializeModal_ContractType()
+        private async Task InitializeModalList_ContractType()
         {
             isLoading = true;
 
@@ -1243,13 +1245,19 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        private async Task UpdateContractType()
+        private async Task UpdateContractType(EditContext _formContractTypeVM, int _IsTypeUpdate)
         {
+            contractTypeVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formContractTypeVM.Validate()) return;
+
             isLoading = true;
 
             if (contractTypeVM.IsTypeUpdate != 2)
             {
                 await profileService.UpdateContractType(contractTypeVM);
+
+                await InitializeModalList_ContractType();
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ContractType");
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
@@ -1262,6 +1270,8 @@ namespace D69soft.Client.Pages.HR
 
                     if (affectedRows > 0)
                     {
+                        await InitializeModalList_ContractType();
+
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ContractType");
                         await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
                     }
@@ -1276,17 +1286,6 @@ namespace D69soft.Client.Pages.HR
                     contractTypeVM.IsTypeUpdate = 1;
                 }
             }
-
-            contractTypeVMs = await profileService.GetContractTypeList();
-
-            isLoading = false;
-        }
-
-        private async Task CloseModalUpdate_ContractType()
-        {
-            isLoading = true;
-
-            contractTypeVMs = await profileService.GetContractTypeList();
 
             isLoading = false;
         }
@@ -1336,13 +1335,19 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        private async Task UpdateWorkType()
+        private async Task UpdateWorkType(EditContext _formWorkTypeVM, int _IsTypeUpdate)
         {
+            workTypeVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formWorkTypeVM.Validate()) return;
+
             isLoading = true;
 
             if (workTypeVM.IsTypeUpdate != 2)
             {
                 await profileService.UpdateWorkType(workTypeVM);
+
+                await InitializeModalList_WorkType();
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_WorkType");
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
@@ -1355,6 +1360,8 @@ namespace D69soft.Client.Pages.HR
 
                     if (affectedRows > 0)
                     {
+                        await InitializeModalList_WorkType();
+
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_WorkType");
                         await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
                     }
@@ -1370,17 +1377,6 @@ namespace D69soft.Client.Pages.HR
                 }
             }
 
-            workTypeVMs = await profileService.GetWorkTypeList();
-
-            isLoading = false;
-        }
-
-        private async Task CloseModalUpdate_WorkType()
-        {
-            isLoading = true;
-
-            workTypeVMs = await profileService.GetWorkTypeList();
-
             isLoading = false;
         }
 
@@ -1388,7 +1384,7 @@ namespace D69soft.Client.Pages.HR
         IEnumerable<ProfileRelationshipVM> profileRelationshipVMs;
         IEnumerable<ProfileRelationshipVM> relationshipVMs;
         ProfileRelationshipVM profileRelationshipVM = new();
-        private async Task InitializeModal_ProfileRelationship()
+        private async Task InitializeModalList_ProfileRelationship()
         {
             isLoading = true;
 
@@ -1453,8 +1449,12 @@ namespace D69soft.Client.Pages.HR
             }
         }
 
-        private async Task UpdateProfileRelationship()
+        private async Task UpdateProfileRelationship(EditContext _formProfileRelationshipVM, int _IsTypeUpdate)
         {
+            profileRelationshipVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formProfileRelationshipVM.Validate()) return;
+
             isLoading = true;
 
             if (profileRelationshipVM.IsTypeUpdate != 2)
@@ -1467,6 +1467,8 @@ namespace D69soft.Client.Pages.HR
 
                 await profileService.UpdateProfileRelationship(profileRelationshipVM);
 
+                await InitializeModalList_ProfileRelationship();
+
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ProfileRelationship");
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
             }
@@ -1476,6 +1478,8 @@ namespace D69soft.Client.Pages.HR
                 {
                     await profileService.UpdateProfileRelationship(profileRelationshipVM);
 
+                    await InitializeModalList_ProfileRelationship();
+
                     await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ProfileRelationship");
                     await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
                 }
@@ -1484,17 +1488,6 @@ namespace D69soft.Client.Pages.HR
                     profileRelationshipVM.IsTypeUpdate = 1;
                 }
             }
-
-            profileRelationshipVMs = await profileService.GetProfileRelationshipList(profileVM.Eserial);
-
-            isLoading = false;
-        }
-
-        private async Task CloseModalUpdate_ProfileRelationship()
-        {
-            isLoading = true;
-
-            profileRelationshipVMs = await profileService.GetProfileRelationshipList(profileVM.Eserial);
 
             isLoading = false;
         }

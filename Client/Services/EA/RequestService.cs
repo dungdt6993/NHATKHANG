@@ -55,9 +55,9 @@ namespace D69soft.Client.Services.FIN
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<List<RequestVM>> GetRequest(FilterFinVM _filterFinVM)
+        public async Task<List<RequestVM>> GetRequests(FilterFinVM _filterFinVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Request/GetRequest", _filterFinVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Request/GetRequests", _filterFinVM);
 
             return await response.Content.ReadFromJsonAsync<List<RequestVM>>();
         }

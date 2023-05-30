@@ -66,7 +66,7 @@ namespace D69soft.Client.Pages.EA
             {
                 logVM.LogUser = UserID;
                 logVM.LogType = "FUNC";
-                logVM.LogName = "EA_Cart";
+                logVM.LogName = "EA_Request";
                 await sysService.InsertLog(logVM);
             }
             else
@@ -105,7 +105,7 @@ namespace D69soft.Client.Pages.EA
 
             cartVMs = await requestService.GetCarts(UserID);
 
-            await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+            await js.Toast_Alert("Thêm giỏ hàng thành công!", SweetAlertMessageType.success);
 
             isLoading = false;
         }
@@ -120,7 +120,7 @@ namespace D69soft.Client.Pages.EA
 
                 cartVMs = await requestService.GetCarts(UserID);
 
-                await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+                await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
 
                 isLoading = false;
             }
@@ -168,7 +168,6 @@ namespace D69soft.Client.Pages.EA
 
             await requestService.SendRequest(requestVM, UserID);
 
-            logVM.LogName = "EA_Cart";
             logVM.LogDesc = "Gửi yêu cầu cấp hàng thành công!";
             await sysService.InsertLog(logVM);
 

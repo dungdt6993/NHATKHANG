@@ -6,7 +6,8 @@ using Data.Infrastructure;
 using Dapper;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Shared.Utilities;
-using D69soft.Shared.Models.ViewModels.DOC;
+using System.Collections;
+using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -391,7 +392,7 @@ namespace D69soft.Server.Controllers.HR
             }
         }
 
-        [HttpGet("DelProfile")]
+        [HttpGet("DelProfile/{_Eserial}")]
         public async Task<ActionResult<bool>> DelProfile(string _Eserial)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -562,9 +563,14 @@ namespace D69soft.Server.Controllers.HR
             }
         }
 
-        [HttpGet("UpdatePermis/{_funcVMs}/{_subFuncVMs}/{_departmentVMs}/{_sysRptVMs}/{_Eserial}")]
-        public async Task<ActionResult<bool>> UpdatePermis(IEnumerable<FuncVM> _funcVMs, [FromRouteAttribute] IEnumerable<FuncVM> _subFuncVMs, [FromRouteAttribute] IEnumerable<DepartmentVM> _departmentVMs, [FromRouteAttribute] IEnumerable<SysRptVM> _sysRptVMs, string _Eserial)
+        [HttpPost("UpdatePermis/{_Eserial}")]
+        public async Task<ActionResult<bool>> UpdatePermis(ArrayList _arrayList, string _Eserial)
         {
+            IEnumerable<FuncVM> _funcVMs = JsonConvert.DeserializeObject<IEnumerable<FuncVM>>(_arrayList[0].ToString());
+            IEnumerable<FuncVM> _subFuncVMs = JsonConvert.DeserializeObject<IEnumerable<FuncVM>>(_arrayList[1].ToString());
+            IEnumerable<DepartmentVM> _departmentVMs = JsonConvert.DeserializeObject<IEnumerable<DepartmentVM>>(_arrayList[2].ToString());
+            IEnumerable<SysRptVM> _sysRptVMs = JsonConvert.DeserializeObject<IEnumerable<SysRptVM>>(_arrayList[3].ToString());
+
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)
@@ -597,9 +603,7 @@ namespace D69soft.Server.Controllers.HR
                     sqlRpt += "Insert into SYSTEM.PermissionRpt(UserID, RptID) Values(@Eserial,'" + _sysRptVM.RptID + "') ";
                 }
                 await conn.ExecuteAsync(sqlRpt, new { Eserial = _Eserial });
-
             }
-
             return true;
         }
 
@@ -637,8 +641,8 @@ namespace D69soft.Server.Controllers.HR
             }
         }
 
-        [HttpGet("UpdateEmplTrn/{_salTrnCodes}/{_Eserial}")]
-        public async Task<ActionResult<bool>> UpdateEmplTrn(IEnumerable<EmployeeTransactionVM> _salTrnCodes, string _Eserial)
+        [HttpPost("UpdateEmplTrn/{_Eserial}")]
+        public async Task<ActionResult<bool>> UpdateEmplTrn([FromBody] IEnumerable<EmployeeTransactionVM> _salTrnCodes, string _Eserial)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {

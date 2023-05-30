@@ -1,4 +1,5 @@
 ﻿using D69soft.Shared.Models.ViewModels.FIN;
+using System.Collections;
 using System.Net.Http.Json;
 
 namespace D69soft.Client.Services.FIN
@@ -43,7 +44,11 @@ namespace D69soft.Client.Services.FIN
 
         public async Task<string> UpdateVoucher(StockVoucherVM _stockVoucherVM, IEnumerable<StockVoucherDetailVM> _stockVoucherDetailVMs)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/UpdateVoucher/{_stockVoucherDetailVMs}", _stockVoucherVM);
+            ArrayList arrayList = new ArrayList();
+            arrayList.Add(_stockVoucherVM);
+            arrayList.Add(_stockVoucherDetailVMs);
+
+            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/UpdateVoucher", arrayList);
 
             return await response.Content.ReadAsStringAsync();
         }

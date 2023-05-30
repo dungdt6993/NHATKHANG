@@ -3,6 +3,9 @@ using Dapper;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
+using Newtonsoft.Json;
+using System.Collections;
 
 namespace D69soft.Server.Controllers.FIN
 {
@@ -124,9 +127,13 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
-        [HttpPost("UpdateVoucher/{_stockVoucherDetailVMs}")]
-        public async Task<ActionResult<string>> UpdateVoucher(StockVoucherVM _stockVoucherVM, [FromRouteAttribute] IEnumerable<StockVoucherDetailVM> _stockVoucherDetailVMs)
+        [HttpPost("UpdateVoucher")]
+        public async Task<ActionResult<string>> UpdateVoucher(ArrayList _arrayList)
         {
+            StockVoucherVM _stockVoucherVM = JsonConvert.DeserializeObject<StockVoucherVM>(_arrayList[0].ToString());
+
+            IEnumerable<StockVoucherDetailVM> _stockVoucherDetailVMs = JsonConvert.DeserializeObject<IEnumerable<StockVoucherDetailVM>>(_arrayList[1].ToString());
+
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)

@@ -320,7 +320,7 @@
                                                 <th style="width:7%" class="text-danger">Công ty:</th>
                                                 <td style="width:33%">
                                                     <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true">
-                                                        <option data-subtext="@filterHrVM.DivisionID" showSubtext="true">@(division_filter_list != null? @division_filter_list.Where(x=>x.DivisionID==filterHrVM.DivisionID).Select(x=>x.DivisionName).First(): String.Empty)</option>
+                                                        <option data-subtext="@filterHrVM.DivisionID" showSubtext="true">@(division_filter_list != null ? @division_filter_list.Where(x => x.DivisionID == filterHrVM.DivisionID).Select(x => x.DivisionName).First() : String.Empty)</option>
                                                     </select>
                                                 </td>
                                                 <th style="width:10%" class="text-danger">Ngày ký HĐ:</th>
@@ -1211,7 +1211,7 @@
     <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_ContractType">
         <div class="modal-dialog">
             <div class="modal-content">
-                <EditForm Model="@contractTypeVM" OnValidSubmit="@UpdateContractType">
+                <EditForm Model="@contractTypeVM" Context="formContractTypeVM">
 
                     <FluentValidationValidator />
 
@@ -1220,7 +1220,7 @@
                             <span>CẬP NHẬT LOẠI HỢP ĐỒNG</span>
                         </h5>
 
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => CloseModalUpdate_ContractType())">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => InitializeModalList_ContractType())">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -1285,10 +1285,10 @@
 
                     </div>
                     <div class="modal-footer justify-content-center">
-                        <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                        <button type="submit" class="btn btn-success" @onclick=@(() => UpdateContractType(formContractTypeVM, contractTypeVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                         @if (contractTypeVM.IsTypeUpdate == 1)
                         {
-                            <button type="submit" class="btn btn-danger" @onclick=@(() => contractTypeVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                            <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateContractType(formContractTypeVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                         }
                     </div>
                 </EditForm>
@@ -1397,7 +1397,7 @@
     <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_WorkType">
         <div class="modal-dialog">
             <div class="modal-content">
-                <EditForm Model="@workTypeVM" OnValidSubmit="@UpdateWorkType">
+                <EditForm Model="@workTypeVM" Context="formWorkTypeVM">
 
                     <FluentValidationValidator />
 
@@ -1406,7 +1406,7 @@
                             <span>CẬP NHẬT LOẠI CÔNG VIỆC</span>
                         </h5>
 
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => CloseModalUpdate_WorkType())">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => InitializeModalList_WorkType())">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -1521,10 +1521,10 @@
 
                     </div>
                     <div class="modal-footer justify-content-center">
-                        <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                        <button type="submit" class="btn btn-success" @onclick=@(() => UpdateWorkType(formWorkTypeVM, workTypeVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                         @if (workTypeVM.IsTypeUpdate == 1)
                         {
-                            <button type="submit" class="btn btn-danger" @onclick=@(() => workTypeVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                            <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateWorkType(formWorkTypeVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                         }
                     </div>
                 </EditForm>
@@ -1622,7 +1622,7 @@
     <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_ProfileRelationship">
         <div class="modal-dialog">
             <div class="modal-content">
-                <EditForm Model="@profileRelationshipVM" OnValidSubmit="@UpdateProfileRelationship">
+                <EditForm Model="@profileRelationshipVM" Context="formProfileRelationshipVM">
 
                     <FluentValidationValidator />
 
@@ -1631,7 +1631,7 @@
                             <span>CẬP NHẬT THÔNG TIN GIA ĐÌNH</span>
                         </h5>
 
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => CloseModalUpdate_ProfileRelationship())">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => InitializeModalList_ProfileRelationship())">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -1732,10 +1732,10 @@
 
                     </div>
                     <div class="modal-footer justify-content-center">
-                        <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                        <button type="submit" class="btn btn-success" @onclick=@(() => UpdateProfileRelationship(formProfileRelationshipVM, profileRelationshipVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                         @if (profileRelationshipVM.IsTypeUpdate == 1)
                         {
-                            <button type="submit" class="btn btn-danger" @onclick=@(() => profileRelationshipVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                            <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateProfileRelationship(formProfileRelationshipVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                         }
                     </div>
                 </EditForm>
@@ -1875,23 +1875,11 @@
 
             <div class="col-sm-7 col-md-7">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
-                                 ValueExpression="@(()=>filterHrVM.Eserial)"
-                                 Value="@filterHrVM.Eserial"
-                                 ValueChanged="@((string value) => onchange_filter_eserial(value))">
-                        <option value=@string.Empty>-----Nhân viên-----</option>
-                        @if (eserial_filter_list != null)
-                        {
-                            @foreach (var eserial_filter in eserial_filter_list)
-                            {
-                                <option data-subtext="@eserial_filter.Eserial" value="@eserial_filter.Eserial">@eserial_filter.LastName @eserial_filter.MiddleName @eserial_filter.FirstName</option>
-                            }
-                        }
-                    </InputSelect>
+                    <InputText type="search" class="form-control form-control-border border-width-2" placeholder="Tìm kiếm nhân viên..." @bind-Value:get="filterHrVM.searchValues" @bind-Value:set="SearchProfile" />
                 </div>
             </div>
 
-            <div class="col-sm-3 col-md-3">
+            <div class="col-sm-4 col-md-4">
                 <!-- radio -->
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
@@ -1926,11 +1914,6 @@
                 <button class="btn btn-outline-dark btn-sm @(filterHrVM.typeView==2?"active":"")" @onclick=@(() => filterHrVM.typeView = 2)><i class="fa-solid fa-grip"></i></button>
             </div>
 
-            <div class="col-sm-1 col-md-1">
-                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetProfileList())">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
         </div>
     </EditForm>
 </section>
@@ -1942,7 +1925,7 @@
             <div class="card-header text-right">
 
                 <button type="button" class="btn btn-secondary" data-target="#InitializeModalList_WorkType" data-toggle="modal" @onclick="()=>InitializeModalList_WorkType()"><i class="fa-solid fa-person-digging"></i> Loại công việc</button>
-                <button type="button" class="btn btn-secondary" data-target="#InitializeModalList_ContractType" data-toggle="modal" @onclick="()=>InitializeModal_ContractType()"><i class="fa-solid fa-file-contract"></i> Loại hợp đồng</button>
+                <button type="button" class="btn btn-secondary" data-target="#InitializeModalList_ContractType" data-toggle="modal" @onclick="()=>InitializeModalList_ContractType()"><i class="fa-solid fa-file-contract"></i> Loại hợp đồng</button>
                 @if (HR_Profile_New)
                 {
                     <button type="button" class="btn btn-success" data-target="#InitializeModal_Profile" data-toggle="modal" @onclick="()=>Initialize_ModalProfile(0)"><i class="fa-solid fa-user-plus"></i> Thêm mới</button>
@@ -1955,7 +1938,7 @@
                         </button>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" data-target="#InitializeModal_Profile" data-toggle="modal" @onclick="() => Initialize_ModalProfile(3)">Hồ sơ nhân viên</a>
-                            <a class="dropdown-item" @onclick="()=>InitializeModal_ProfileRelationship()">Thông tin gia đình</a>
+                            <a class="dropdown-item" @onclick="()=>InitializeModalList_ProfileRelationship()">Thông tin gia đình</a>
                         </div>
                     </div>
 
@@ -2105,9 +2088,12 @@
                                         </tr>
                                     </ItemContent>
                                     <Placeholder>
-                                        <p>
-                                            Loading&hellip;
-                                        </p>
+                                        <div class="d-flex justify-content-center">
+                                            <div class="spinner-border" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                            <span>Loading...</span>
+                                        </div>
                                     </Placeholder>
                                 </Virtualize>
                             </tbody>

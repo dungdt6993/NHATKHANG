@@ -11,6 +11,7 @@ using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.EA;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extension;
+using D69soft.Server.Services.HR;
 
 namespace D69soft.Client.Pages.EA
 {
@@ -42,8 +43,8 @@ namespace D69soft.Client.Pages.EA
         IEnumerable<DepartmentVM> department_filter_list;
 
         //Request
-        List<RequestVM> requestVMs;
-        List<RequestVM> search_requestVMs;
+        List<RequestVM> requestVMs = new();
+        private Virtualize<RequestVM> virtualizeRequests { get; set; }
 
         //Voucher
         StockVoucherVM stockVoucherVM = new();
@@ -103,10 +104,10 @@ namespace D69soft.Client.Pages.EA
                 filterFinVM.isHandover = true;
             }
 
-            filterFinVM.ShowEntity = 100;
-            filterFinVM.Status = "all";
+            filterFinVM.ShowEntity = 50;
+            filterFinVM.RequestStatus = "all";
 
-            requestVMs = search_requestVMs = await requestService.GetRequest(filterFinVM);
+            await GetRequests();
 
             isLoadingScreen = false;
         }
@@ -131,9 +132,7 @@ namespace D69soft.Client.Pages.EA
 
             filterFinVM.DepartmentID = filterHrVM.DepartmentID = value;
 
-            requestVMs = search_requestVMs = await requestService.GetRequest(filterFinVM);
-
-            await FilterRequest(filterFinVM.Status);
+            await GetRequests();
 
             isLoading = false;
 
@@ -147,13 +146,54 @@ namespace D69soft.Client.Pages.EA
             filterFinVM.StartDate = _range.Start;
             filterFinVM.EndDate = _range.End;
 
-            requestVMs = search_requestVMs = await requestService.GetRequest(filterFinVM);
-
-            await FilterRequest(filterFinVM.Status);
+            await GetRequests();
 
             isLoading = false;
 
             StateHasChanged();
+        }
+
+        //Profile
+        protected async Task GetRequests()
+        {
+            isLoading = true;
+
+            ReportName = "CustomNewReport";
+
+            requestVMs = await requestService.GetRequests(filterFinVM);
+
+            await virtualizeRequests.RefreshDataAsync();
+            StateHasChanged();
+
+            isLoading = false;
+        }
+
+        //Load Request
+        protected async Task FilterRequest(String _filterRequest)
+        {
+            isLoading = true;
+
+            filterFinVM.RequestStatus = _filterRequest;
+
+            await GetRequests();
+
+            isLoading = false;
+        }
+
+        private async ValueTask<ItemsProviderResult<RequestVM>> LoadRequestVMs(ItemsProviderRequest request)
+        {
+            return new ItemsProviderResult<RequestVM>(requestVMs.DistinctBy(x => new { x.RequestCode }).Skip(request.StartIndex).Take(request.Count), requestVMs.DistinctBy(x => new { x.RequestCode }).Count());
+        }
+
+        private async Task ShowEntity(ChangeEventArgs e)
+        {
+            isLoading = true;
+
+            filterFinVM.ShowEntity = int.Parse(e.Value.ToString());
+
+            await GetRequests();
+
+            isLoading = false;
         }
 
         private async Task SendApprove(bool value, string type, RequestVM _requestVM)
@@ -198,7 +238,7 @@ namespace D69soft.Client.Pages.EA
 
                     if (_requestVM.isSendApprove)
                     {
-                        if (search_requestVMs.Where(x => x.RequestCode == _requestVM.RequestCode && x.QtyApproved > 0).Count() > 0)
+                        if (requestVMs.Where(x => x.RequestCode == _requestVM.RequestCode && x.QtyApproved > 0).Count() > 0)
                         {
                             //Tu dong tao phieu xuat kho
                             stockVoucherVM = new();
@@ -223,15 +263,10 @@ namespace D69soft.Client.Pages.EA
 
                 await requestService.SendApprove(_requestVM, type);
 
-                if (type == "SendDelRequest")
-                {
-                    requestVMs = search_requestVMs = await requestService.GetRequest(filterFinVM);
-                }
-
                 logVM.LogDesc = str + " đơn số " + _requestVM.RequestCode + " thành công!";
                 await sysService.InsertLog(logVM);
 
-                await FilterRequest(filterFinVM.Status);
+                await GetRequests();
 
                 await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
             }
@@ -276,68 +311,6 @@ namespace D69soft.Client.Pages.EA
         {
             ReportName = "EA_Request_PrintHandover?RequestCode=" + _requestCode + "";
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalView_Rpt");
-        }
-
-        //Load Request
-        private Virtualize<RequestVM> RequestContainer { get; set; }
-        protected async Task FilterRequest(String _filterRequest)
-        {
-            isLoading = true;
-
-            ReportName = "CustomNewReport";
-
-            filterFinVM.Status = _filterRequest;
-
-            if (filterFinVM.Status == "all")
-            {
-                search_requestVMs = requestVMs;
-
-                await RequestContainer.RefreshDataAsync();
-                StateHasChanged();
-            }
-
-            if (filterFinVM.Status == "pending")
-            {
-                search_requestVMs = requestVMs.Where(x => !x.isSendApprove).ToList();
-
-                await RequestContainer.RefreshDataAsync();
-                StateHasChanged();
-            }
-
-            if (filterFinVM.Status == "approved")
-            {
-                search_requestVMs = requestVMs.Where(x => x.isSendApprove).ToList();
-
-                await RequestContainer.RefreshDataAsync();
-                StateHasChanged();
-            }
-
-            if (filterFinVM.Status == "nothandover")
-            {
-                search_requestVMs = requestVMs.Where(x => x.isSendApprove && !x.VActive).ToList();
-
-                await RequestContainer.RefreshDataAsync();
-                StateHasChanged();
-            }
-
-            isLoading = false;
-        }
-
-        private async ValueTask<ItemsProviderResult<RequestVM>> LoadRequestVMs(ItemsProviderRequest request)
-        {
-            return new ItemsProviderResult<RequestVM>(search_requestVMs.DistinctBy(x => new { x.RequestCode }).Skip(request.StartIndex).Take(request.Count), search_requestVMs.DistinctBy(x => new { x.RequestCode }).Count());
-        }
-
-        private async Task ShowEntity(ChangeEventArgs e)
-        {
-            isLoading = true;
-
-            filterFinVM.ShowEntity = int.Parse(e.Value.ToString());
-            requestVMs = search_requestVMs = await requestService.GetRequest(filterFinVM);
-
-            await FilterRequest(filterFinVM.Status);
-
-            isLoading = false;
         }
 
     }

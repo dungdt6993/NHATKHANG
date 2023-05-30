@@ -1,6 +1,7 @@
 ﻿using D69soft.Shared.Models.ViewModels.DOC;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using System.Collections;
 using System.Data;
 using System.Net.Http.Json;
 
@@ -154,7 +155,20 @@ namespace D69soft.Server.Services.HR
 
         public async Task<bool> UpdatePermis(IEnumerable<FuncVM> _funcVMs, IEnumerable<FuncVM> _subFuncVMs, IEnumerable<DepartmentVM> _departmentVMs, IEnumerable<SysRptVM> _sysRptVMs, string _Eserial)
         {
-            return await _httpClient.GetFromJsonAsync<bool>($"api/Profile/UpdatePermis/{_funcVMs}/{_subFuncVMs}/{_departmentVMs}/{_sysRptVMs}/{_Eserial}");
+            //return await _httpClient.GetFromJsonAsync<bool>($"api/Profile/UpdatePermis/{_funcVMs}/{_subFuncVMs}/{_departmentVMs}/{_sysRptVMs}/{_Eserial}");
+
+            //var response = await _httpClient.PostAsJsonAsync($"api/Profile/UpdatePermis/{_subFuncVMs}/{_departmentVMs}/{_sysRptVMs}/{_Eserial}", _funcVMs);
+
+            ArrayList arrayList = new ArrayList();
+
+            arrayList.Add(_funcVMs);
+            arrayList.Add(_subFuncVMs);
+            arrayList.Add(_departmentVMs);
+            arrayList.Add(_sysRptVMs);
+
+            var response = await _httpClient.PostAsJsonAsync($"api/Profile/UpdatePermis/{_Eserial}", arrayList);
+
+            return await response.Content.ReadFromJsonAsync<bool>();
         }
 
         //EmplTrn
@@ -170,7 +184,9 @@ namespace D69soft.Server.Services.HR
 
         public async Task<bool> UpdateEmplTrn(IEnumerable<EmployeeTransactionVM> _salTrnCodes, string _Eserial)
         {
-            return await _httpClient.GetFromJsonAsync<bool>($"api/Profile/UpdateEmplTrn/{_salTrnCodes}/{_Eserial}");
+            var response = await _httpClient.PostAsJsonAsync($"api/Profile/UpdateEmplTrn/{_Eserial}", _salTrnCodes);
+
+            return await response.Content.ReadFromJsonAsync<bool>();
         }
 
         //ContractType

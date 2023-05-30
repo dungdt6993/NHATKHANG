@@ -118,8 +118,8 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
-        [HttpPost("GetRequest")]
-        public async Task<ActionResult<List<RequestVM>>> GetRequest(FilterFinVM _filterFinVM)
+        [HttpPost("GetRequests")]
+        public async Task<ActionResult<List<RequestVM>>> GetRequests(FilterFinVM _filterFinVM)
         {
             var sql = "select * from EA.RequestDetail rdtl ";
 
@@ -129,6 +129,18 @@ namespace D69soft.Server.Controllers.FIN
                 sql += "top "+ _filterFinVM.ShowEntity + " ";
             }
             sql += "* from EA.Request where (DeptRequest=@DepartmentID or coalesce(@DepartmentID,'') = '') and format(DateOfRequest,'MM/dd/yyyy')>=format(@StartDate,'MM/dd/yyyy') and format(DateOfRequest,'MM/dd/yyyy')<=format(@EndDate,'MM/dd/yyyy') ";
+            if(_filterFinVM.RequestStatus == "pending")
+            {
+                sql += "and coalesce(isSendApprove,0) = 0 ";
+            }
+            if (_filterFinVM.RequestStatus == "approved")
+            {
+                sql += "and coalesce(isSendApprove,0) = 1 ";
+            }
+            if (_filterFinVM.RequestStatus == "nothandover")
+            {
+                sql += "and coalesce(isSendApprove,0) = 1 ";
+            }
             if (!_filterFinVM.isHandover)
             {
                 sql += "and (EserialRequest = @UserID or DirectManager_Eserial = @UserID or ControlDept_Eserial = @UserID or Approve_Eserial = @UserID) ";
@@ -152,6 +164,11 @@ namespace D69soft.Server.Controllers.FIN
             sql += "left join (select Eserial, LastName + ' ' + MiddleName + ' ' + FirstName as DirectManager_FullName from HR.Profile) pDirectManager on pDirectManager.Eserial = r.DirectManager_Eserial ";
             sql += "left join (select Eserial, LastName + ' ' + MiddleName + ' ' + FirstName as ControlDept_FullName from HR.Profile) pControlDept on pControlDept.Eserial = r.ControlDept_Eserial ";
             sql += "left join (select Eserial, LastName + ' ' + MiddleName + ' ' + FirstName as Approve_FullName from HR.Profile) pApprove on pApprove.Eserial = r.Approve_Eserial ";
+
+            if (_filterFinVM.RequestStatus == "nothandover")
+            {
+                sql += "where sv.VActive = 0 ";
+            }
 
             sql += "order by r.DateOfRequest desc ";
             using (var conn = new SqlConnection(_connConfig.Value))

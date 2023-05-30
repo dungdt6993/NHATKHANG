@@ -20,7 +20,7 @@ namespace D69soft.Shared.Models.ViewModels.FIN
 
         //Request
         public bool isHandover { get; set; }
-        public string Status { get; set; }
+        public string RequestStatus { get; set; }
         public int ShowEntity { get; set; }
 
         public DateTimeOffset StartDate { get; set; }

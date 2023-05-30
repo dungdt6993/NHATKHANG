@@ -91,7 +91,7 @@
 
                         @if (requestVMs != null)
                         {
-                            <Virtualize @ref="RequestContainer" ItemsProvider="@LoadRequestVMs" Context="_requestVM" ItemSize="5" OverscanCount="5">
+                            <Virtualize @ref="virtualizeRequests" ItemsProvider="@LoadRequestVMs" Context="_requestVM" ItemSize="5" OverscanCount="5">
                                 <ItemContent>
 
                                     <div class="callout callout-@(_requestVM.isSendApprove?"success":"danger") p-1">
@@ -164,7 +164,7 @@
                                             </thead>
                                             <tbody>
 
-                                                @foreach (var _requestVM_detail in search_requestVMs.Where(x => x.RequestCode == _requestVM.RequestCode))
+                                                @foreach (var _requestVM_detail in requestVMs.Where(x => x.RequestCode == _requestVM.RequestCode))
                                                 {
                                                     <tr>
                                                         <td style="min-width: 130px;">
@@ -410,11 +410,11 @@
                 <div class="card-footer text-muted">
                     Hiển thị:
                     <select class="form-select form-select-sm" style="width: 100px;" @onchange="ShowEntity">
-                        <option value="100" selected>100</option>
+                        <option value="@filterFinVM.ShowEntity" selected>@filterFinVM.ShowEntity</option>
                         <option value="0">Tất cả</option>
                     </select>
 
-                        <b>@search_requestVMs.DistinctBy(x => new {x.RequestCode}).Count()</b>
+                    <b>@requestVMs.DistinctBy(x => new {x.RequestCode}).Count()</b>
 
                     bản ghi
                 </div>

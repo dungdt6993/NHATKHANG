@@ -52,7 +52,7 @@ namespace D69soft.Client.Shared
 
         private void ClickMenuFunc(string _urlFunc)
         {
-            navigationManager.NavigateTo(_urlFunc, false);
+            navigationManager.NavigateTo(_urlFunc, true);
         }
     }
 }
