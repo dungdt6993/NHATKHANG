@@ -9,7 +9,7 @@
     <div class="modal-dialog modal-xxl">
         <div class="modal-content">
 
-            <EditForm Model="stockVoucherVM" OnValidSubmit="@UpdateVoucher">
+            <EditForm Model="stockVoucherVM" Context="formStockVoucherVM">
 
                 <FluentValidationValidator />
 
@@ -52,7 +52,7 @@
                         <label>&nbsp;</label>
                     }
 
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="()=> InitializeModalClose_Voucher()">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="()=> GetVouchers()">
                         <span aria-hidden="true">&times;</span>
                     </button>
 
@@ -465,13 +465,13 @@
                         }
                         else
                         {
-                            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                            <button type="submit" class="btn btn-success" @onclick=@(() => UpdateVoucher(formStockVoucherVM, stockVoucherVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
 
                             @if (String.IsNullOrEmpty(stockVoucherVM.Reference_VNumber))
                             {
                                 @if (stockVoucherVM.IsTypeUpdate == 1)
                                 {
-                                    <button type="submit" class="btn btn-danger" @onclick=@(() => stockVoucherVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                                    <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateVoucher(formStockVoucherVM, 2))><i class="fas fa-trash-alt"></i> Xóa</button>
                                 }
                             }
                         }

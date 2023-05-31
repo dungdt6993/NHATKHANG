@@ -367,11 +367,10 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
-        [HttpGet("GetInventoryCheck_Qty/{_VDate}/{_StockCode}/{_ICode}")]
-        public async Task<ActionResult<float>> GetInventoryCheck_Qty(DateTimeOffset _VDate, string _StockCode, string _ICode)
+        [HttpPost("GetInventoryCheck_Qty/{_VDate}")]
+        public async Task<ActionResult<float>> GetInventoryCheck_Qty(DateTimeOffset _VDate, StockVoucherDetailVM _stockVoucherDetailVM)
         {
             var sql = String.Empty;
-
             sql += "select sum(case when coalesce(ToStockCode,'') <> '' then Qty else 0 end) - sum(case when coalesce(FromStockCode,'') <> '' then Qty else 0 end) as Qty ";
             sql += "from FIN.StockVoucherDetail svd ";
             sql += "join (select * from FIN.StockVoucher where VActive=1) sv on sv.VNumber = svd.VNumber ";
@@ -382,7 +381,7 @@ namespace D69soft.Server.Controllers.FIN
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.ExecuteScalarAsync<float>(sql, new { VDate = _VDate, StockCode = _StockCode, ICode = _ICode });
+                var result = await conn.ExecuteScalarAsync<float>(sql, new { VDate = _VDate, _stockVoucherDetailVM });
                 return result;
             }
         }

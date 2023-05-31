@@ -3,7 +3,6 @@ using Dapper;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.FIN;
-using D69soft.Shared.Models.ViewModels.SYSTEM;
 using Newtonsoft.Json;
 using System.Collections;
 

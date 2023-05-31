@@ -12,6 +12,8 @@ using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extension;
+using Microsoft.AspNetCore.Components.Forms;
+using D69soft.Shared.Models.Entities.HR;
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -134,6 +136,9 @@ namespace D69soft.Client.Pages.FIN
 
             ReportName = "CustomNewReport";
 
+            stockVoucherVM = new();
+            stockVoucherDetailVMs = new();
+
             stockVoucherVMs = await voucherService.GetStockVouchers(filterFinVM);
 
             isLoading = false;
@@ -182,7 +187,7 @@ namespace D69soft.Client.Pages.FIN
             {
                 foreach (var _stockVoucherDetailVM in stockVoucherDetailVMs)
                 {
-                    _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM.FromStockCode, _stockVoucherDetailVM.ICode);
+                    _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM);
                 }
 
                 stockVoucherDetailVMs.ForEach(e => e.Price = e.IPrice);
@@ -306,7 +311,7 @@ namespace D69soft.Client.Pages.FIN
 
             foreach (var _stockVoucherDetailVM_0 in stockVoucherDetailVMs.Where(x => x.SeqVD > _stockVoucherDetailVM.SeqVD))
             {
-                _stockVoucherDetailVM_0.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM_0.FromStockCode, _stockVoucherDetailVM_0.ICode);
+                _stockVoucherDetailVM_0.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM_0);
             }
 
             isLoading = false;
@@ -379,8 +384,12 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
-        private async Task UpdateVoucher()
+        private async Task UpdateVoucher(EditContext formStockVoucherVM, int _IsTypeUpdate)
         {
+            stockVoucherVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!formStockVoucherVM.Validate()) return;
+
             isLoading = true;
 
             stockVoucherVM.IsTypeUpdate = stockVoucherVM.IsTypeUpdate == 5 ? 0 : stockVoucherVM.IsTypeUpdate;
@@ -473,8 +482,6 @@ namespace D69soft.Client.Pages.FIN
                 stockVoucherVM.IsTypeUpdate = 3;
 
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
-
-                await GetVouchers();
             }
             else
             {
@@ -511,7 +518,7 @@ namespace D69soft.Client.Pages.FIN
                     {
                         foreach (var _stockVoucherDetailVM in stockVoucherDetailVMs)
                         {
-                            _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM.FromStockCode, _stockVoucherDetailVM.ICode);
+                            _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM);
                         }
 
                         //if (stockVoucherDetailVMs.GroupBy(x => new { x.ICode, x.FromStockCode, x.InventoryCheck_Qty }).Select(x => new { InventoryCheck_Qty = x.Max(x => x.InventoryCheck_Qty), sumQty = x.Sum(x => x.Qty) }).Where(x => x.sumQty > x.InventoryCheck_Qty).Count() > 0)
@@ -531,8 +538,6 @@ namespace D69soft.Client.Pages.FIN
                 stockVoucherVM.IsTypeUpdate = 3;
 
                 await js.Toast_Alert("" + question + " thành công!", SweetAlertMessageType.success);
-
-                await GetVouchers();
             }
 
             isLoading = false;
@@ -552,7 +557,7 @@ namespace D69soft.Client.Pages.FIN
 
             foreach (var _stockVoucherDetailVM in stockVoucherDetailVMs)
             {
-                _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM.FromStockCode, _stockVoucherDetailVM.ICode);
+                _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM);
             }
 
             isLoading = false;
@@ -560,19 +565,7 @@ namespace D69soft.Client.Pages.FIN
 
         private async Task UpdateInventoryCheck_Qty(StockVoucherDetailVM _stockVoucherDetailVM)
         {
-            _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM.FromStockCode, _stockVoucherDetailVM.ICode);
-        }
-
-        private async Task InitializeModalClose_Voucher()
-        {
-            isLoading = true;
-
-            stockVoucherVM = new();
-            stockVoucherDetailVMs = new();
-
-            stockVoucherVMs = await voucherService.GetStockVouchers(filterFinVM);
-
-            isLoading = false;
+            _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM);
         }
 
     }

@@ -181,7 +181,7 @@ namespace D69soft.Client.Pages.FIN
             {
                 foreach (var _stockVoucherDetailVM in stockVoucherDetailVMs)
                 {
-                    _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM.InventoryCheck_StockCode, _stockVoucherDetailVM.ICode);
+                    _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM);
                 }
             }
 
@@ -208,7 +208,7 @@ namespace D69soft.Client.Pages.FIN
             {
                 foreach (var _stockVoucherDetailVM in stockVoucherDetailVMs)
                 {
-                    _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM.InventoryCheck_StockCode, _stockVoucherDetailVM.ICode);
+                    _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM);
                 }
             }
         }
@@ -306,7 +306,7 @@ namespace D69soft.Client.Pages.FIN
 
             foreach (var _stockVoucherDetailVM_0 in stockVoucherDetailVMs.Where(x => x.SeqVD > _stockVoucherDetailVM.SeqVD))
             {
-                _stockVoucherDetailVM_0.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM_0.InventoryCheck_StockCode, _stockVoucherDetailVM_0.ICode);
+                _stockVoucherDetailVM_0.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM_0);
             }
 
             isLoading = false;
@@ -471,7 +471,7 @@ namespace D69soft.Client.Pages.FIN
 
             foreach (var _stockVoucherDetailVM in stockVoucherDetailVMs)
             {
-                _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM.InventoryCheck_StockCode, _stockVoucherDetailVM.ICode);
+                _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM);
             }
 
             isLoading = false;
@@ -479,7 +479,7 @@ namespace D69soft.Client.Pages.FIN
 
         private async Task UpdateInventoryCheck_Qty(StockVoucherDetailVM _stockVoucherDetailVM)
         {
-            _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM.InventoryCheck_StockCode, _stockVoucherDetailVM.ICode);
+            _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM);
         }
 
         private async Task InitializeModalClose_Voucher()
