@@ -28,7 +28,9 @@ namespace D69soft.Client.Services.HR
 
         public async Task<IEnumerable<SysRptVM>> PrintAgreementText(IEnumerable<AgreementTextVM> _agreementTexts, string _UserID)
         {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<SysRptVM>>($"api/AgreementText/PrintAgreementText/{_agreementTexts}/{_UserID}");
+            var response = await _httpClient.PostAsJsonAsync($"api/AgreementText/PrintAgreementText/{_UserID}", _agreementTexts);
+
+            return await response.Content.ReadFromJsonAsync<IEnumerable<SysRptVM>>();
         }
 
         public async Task<IEnumerable<AdjustProfileVM>> GetAdjustProfileList()

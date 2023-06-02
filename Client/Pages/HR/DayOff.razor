@@ -3,7 +3,7 @@
 <Loading isLoading="@isLoading"></Loading>
 <LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 
-@if (sysService.CheckAccessSubFunc(UserID, "HR_DayOff_Adjust").Result)
+@if (HR_DayOff_Adjust)
 {
 	<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_AddBalance">
 		<div class="modal-dialog">
@@ -81,7 +81,7 @@
 						}
 
 					</div>
-				@if (payrollService.IsOpenFunc(filterHrVM).Result)
+				@if (IsOpenFunc)
 				{
 					<div class="modal-footer justify-content-center">
 						<button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
@@ -105,7 +105,7 @@
 				</h5>
 
 				<div class="ml-auto">
-					@if (sysService.CheckAccessSubFunc(UserID, "HR_DayOff_Config").Result)
+					@if (HR_DayOff_Config)
 					{
 						<button type="button" class="btn btn-sm btn-success" data-target="#InitializeModalUpdate_PublicHoliday" data-toggle="modal" @onclick="(() => InitializeModalUpdate_PublicHoliday(0, publicHolidayDefVM))"><i class="fas fa-plus-circle"></i> Thêm mới</button>
 					}
@@ -161,7 +161,7 @@
 	</div>
 </div>
 
-@if (sysService.CheckAccessSubFunc(UserID, "HR_DayOff_Config").Result)
+@if (HR_DayOff_Config)
 {
 	<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_PublicHoliday">
 		<div class="modal-dialog">
@@ -533,7 +533,7 @@
 		<div class="card card-purple card-outline">
 
 			<div class="card-header text-right">
-				@if (sysService.CheckAccessSubFunc(UserID, "HR_DayOff_Config").Result)
+				@if (HR_DayOff_Config)
 				{
 					<button type="button" class="btn btn-secondary" data-target="#InitializeModalList_GlobalParameter" data-toggle="modal" @onclick="()=>InitializeModalList_GlobalParameter()"><i class="fa-solid fa-calendar"></i> Cấu hình ngày nghỉ</button>
 					if (filterHrVM.ShiftID == "PH")
@@ -542,9 +542,9 @@
 					}
 				}
 
-				@if (payrollService.IsOpenFunc(filterHrVM).Result)
+				@if (IsOpenFunc)
 				{
-					@if (sysService.CheckAccessSubFunc(UserID, "HR_DayOff_Calc").Result)
+					@if (HR_DayOff_Calc)
 					{
 						if (filterHrVM.ShiftID == "AL" || filterHrVM.ShiftID == "DO" || filterHrVM.ShiftID == "PH")
 						{

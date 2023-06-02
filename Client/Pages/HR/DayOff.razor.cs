@@ -25,8 +25,14 @@ namespace D69soft.Client.Pages.HR
         protected string UserID;
 
         bool isLoading;
-
         bool isLoadingScreen = true;
+
+        //PermisFunc
+        bool IsOpenFunc;
+
+        bool HR_DayOff_Config;
+        bool HR_DayOff_Calc;
+        bool HR_DayOff_Adjust;
 
         LogVM logVM = new();
 
@@ -61,21 +67,25 @@ namespace D69soft.Client.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            
-
             UserID = (await authenticationStateTask).User.GetUserId();
 
             if (await sysService.CheckAccessFunc(UserID, "HR_DayOff"))
             {
+                logVM.LogUser = UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "HR_DayOff";
-                logVM.LogUser = UserID;
                 await sysService.InsertLog(logVM);
             }
             else
             {
                 navigationManager.NavigateTo("/");
             }
+
+            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
+
+			HR_DayOff_Config = await sysService.CheckAccessSubFunc(UserID, "HR_DayOff_Config");
+			HR_DayOff_Calc = await sysService.CheckAccessSubFunc(UserID, "HR_DayOff_Calc");
+			HR_DayOff_Adjust = await sysService.CheckAccessSubFunc(UserID, "HR_DayOff_Adjust");
 
             //Initialize Filter
             filterHrVM.UserID = dayOffVM.UserID = UserID;

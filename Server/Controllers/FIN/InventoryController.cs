@@ -374,14 +374,14 @@ namespace D69soft.Server.Controllers.FIN
             sql += "select sum(case when coalesce(ToStockCode,'') <> '' then Qty else 0 end) - sum(case when coalesce(FromStockCode,'') <> '' then Qty else 0 end) as Qty ";
             sql += "from FIN.StockVoucherDetail svd ";
             sql += "join (select * from FIN.StockVoucher where VActive=1) sv on sv.VNumber = svd.VNumber ";
-            sql += "where sv.VDate <= CAST(@VDate as datetime) and (ToStockCode = @StockCode or FromStockCode = @StockCode) and ICode=@ICode ";
+            sql += "where sv.VDate <= CAST('"+_VDate.ToString("MM/dd/yyyy")+ "' as datetime) and (ToStockCode = @FromStockCode or FromStockCode = @FromStockCode) and ICode=@ICode ";
             sql += "group by ICode ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.ExecuteScalarAsync<float>(sql, new { VDate = _VDate, _stockVoucherDetailVM });
+                var result = await conn.ExecuteScalarAsync<float>(sql, _stockVoucherDetailVM);
                 return result;
             }
         }

@@ -116,7 +116,7 @@ namespace D69soft.Client.Services.FIN
 
         public async Task<float> GetInventoryCheck_Qty(DateTimeOffset _VDate, StockVoucherDetailVM _stockVoucherDetailVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Inventory/GetInventoryCheck_Qty/{_VDate}", _stockVoucherDetailVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Inventory/GetInventoryCheck_Qty/{_VDate.ToString("yyyy-MM-dd")}", _stockVoucherDetailVM);
 
             return await response.Content.ReadFromJsonAsync<float>();
         }

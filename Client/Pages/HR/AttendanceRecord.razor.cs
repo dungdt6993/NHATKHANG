@@ -29,6 +29,13 @@ namespace D69soft.Client.Pages.HR
 
         bool isLoadingScreen = true;
 
+        //PermisFunc
+        bool IsOpenFunc;
+        int Role;
+
+        bool HR_AttendanceRecord_CalcFingerData;
+        bool HR_DutyRoster_Update;
+
         LogVM logVM = new();
 
         //Filter
@@ -63,15 +70,21 @@ namespace D69soft.Client.Pages.HR
 
             if (await sysService.CheckAccessFunc(UserID, "HR_AttendanceRecord"))
             {
+                logVM.LogUser = UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "HR_AttendanceRecord";
-                logVM.LogUser = UserID;
                 await sysService.InsertLog(logVM);
             }
             else
             {
                 navigationManager.NavigateTo("/");
             }
+
+            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
+            Role = await authService.GetRole(UserID);
+
+            HR_AttendanceRecord_CalcFingerData = await sysService.CheckAccessSubFunc(UserID, "HR_AttendanceRecord_CalcFingerData");
+            HR_DutyRoster_Update = await sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_Update");
 
             //Initialize Filter
             filterHrVM.UserID = arVM.UserID = UserID;

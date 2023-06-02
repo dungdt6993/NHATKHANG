@@ -237,11 +237,14 @@ namespace D69soft.Client.Pages.OP
 
                     filterHrVM.Year = int.Parse(filterHrVM.dDate.Value.ToString("yyyy"));
                     filterHrVM.Month = int.Parse(filterHrVM.dDate.Value.ToString("MM"));
+					filterHrVM.Day = _dutyRosterVM.dDate.Day;
 
-                    filterHrVM.SectionID = String.Empty;
+					filterHrVM.SectionID = String.Empty;
                     filterHrVM.DepartmentID = String.Empty;
+                    filterHrVM.PositionGroupID = String.Empty;
+                    filterHrVM.Eserial = _dutyRosterVM.Eserial;
 
-                    DutyRosterVM tmpDutyRosterVM = await dutyRosterService.GetDutyRosterByEserial(filterHrVM, _dutyRosterVM);
+                    DutyRosterVM tmpDutyRosterVM = (await dutyRosterService.GetDutyRosterList(filterHrVM)).First();
 
                     _dutyRosterVM.WorkShift = tmpDutyRosterVM.WorkShift;
                     _dutyRosterVM.ColorHEX = tmpDutyRosterVM.ColorHEX;

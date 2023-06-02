@@ -1,5 +1,5 @@
 /*!
-* sweetalert2 v11.7.0
+* sweetalert2 v11.7.10
 * Released under the MIT License.
 */
 (function (global, factory) {
@@ -7,6 +7,41 @@
   typeof define === 'function' && define.amd ? define(factory) :
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Sweetalert2 = factory());
 })(this, (function () { 'use strict';
+
+  const RESTORE_FOCUS_TIMEOUT = 100;
+
+  /** @type {GlobalState} */
+  const globalState = {};
+  const focusPreviousActiveElement = () => {
+    if (globalState.previousActiveElement instanceof HTMLElement) {
+      globalState.previousActiveElement.focus();
+      globalState.previousActiveElement = null;
+    } else if (document.body) {
+      document.body.focus();
+    }
+  };
+
+  /**
+   * Restore previous active (focused) element
+   *
+   * @param {boolean} returnFocus
+   * @returns {Promise<void>}
+   */
+  const restoreActiveElement = returnFocus => {
+    return new Promise(resolve => {
+      if (!returnFocus) {
+        return resolve();
+      }
+      const x = window.scrollX;
+      const y = window.scrollY;
+      globalState.restoreFocusTimeout = setTimeout(() => {
+        focusPreviousActiveElement();
+        resolve();
+      }, RESTORE_FOCUS_TIMEOUT); // issues/900
+
+      window.scrollTo(x, y);
+    });
+  };
 
   /**
    * This module contains `WeakMap`s for each effectively-"private  property" that a `Swal` has.
@@ -19,7 +54,6 @@
    */
 
   var privateProps = {
-    awaitingPromise: new WeakMap(),
     promise: new WeakMap(),
     innerParams: new WeakMap(),
     domCache: new WeakMap()
@@ -28,36 +62,100 @@
   const swalPrefix = 'swal2-';
 
   /**
-   * @param {string[]} items
-   * @returns {object}
+   * @typedef
+   * { | 'container'
+   *   | 'shown'
+   *   | 'height-auto'
+   *   | 'iosfix'
+   *   | 'popup'
+   *   | 'modal'
+   *   | 'no-backdrop'
+   *   | 'no-transition'
+   *   | 'toast'
+   *   | 'toast-shown'
+   *   | 'show'
+   *   | 'hide'
+   *   | 'close'
+   *   | 'title'
+   *   | 'html-container'
+   *   | 'actions'
+   *   | 'confirm'
+   *   | 'deny'
+   *   | 'cancel'
+   *   | 'default-outline'
+   *   | 'footer'
+   *   | 'icon'
+   *   | 'icon-content'
+   *   | 'image'
+   *   | 'input'
+   *   | 'file'
+   *   | 'range'
+   *   | 'select'
+   *   | 'radio'
+   *   | 'checkbox'
+   *   | 'label'
+   *   | 'textarea'
+   *   | 'inputerror'
+   *   | 'input-label'
+   *   | 'validation-message'
+   *   | 'progress-steps'
+   *   | 'active-progress-step'
+   *   | 'progress-step'
+   *   | 'progress-step-line'
+   *   | 'loader'
+   *   | 'loading'
+   *   | 'styled'
+   *   | 'top'
+   *   | 'top-start'
+   *   | 'top-end'
+   *   | 'top-left'
+   *   | 'top-right'
+   *   | 'center'
+   *   | 'center-start'
+   *   | 'center-end'
+   *   | 'center-left'
+   *   | 'center-right'
+   *   | 'bottom'
+   *   | 'bottom-start'
+   *   | 'bottom-end'
+   *   | 'bottom-left'
+   *   | 'bottom-right'
+   *   | 'grow-row'
+   *   | 'grow-column'
+   *   | 'grow-fullscreen'
+   *   | 'rtl'
+   *   | 'timer-progress-bar'
+   *   | 'timer-progress-bar-container'
+   *   | 'scrollbar-measure'
+   *   | 'icon-success'
+   *   | 'icon-warning'
+   *   | 'icon-info'
+   *   | 'icon-question'
+   *   | 'icon-error'
+   * } SwalClass
+   * @typedef {Record<SwalClass, string>} SwalClasses
    */
-  const prefix = items => {
-    const result = {};
-    for (const i in items) {
-      result[items[i]] = swalPrefix + items[i];
-    }
-    return result;
-  };
-  const swalClasses = prefix(['container', 'shown', 'height-auto', 'iosfix', 'popup', 'modal', 'no-backdrop', 'no-transition', 'toast', 'toast-shown', 'show', 'hide', 'close', 'title', 'html-container', 'actions', 'confirm', 'deny', 'cancel', 'default-outline', 'footer', 'icon', 'icon-content', 'image', 'input', 'file', 'range', 'select', 'radio', 'checkbox', 'label', 'textarea', 'inputerror', 'input-label', 'validation-message', 'progress-steps', 'active-progress-step', 'progress-step', 'progress-step-line', 'loader', 'loading', 'styled', 'top', 'top-start', 'top-end', 'top-left', 'top-right', 'center', 'center-start', 'center-end', 'center-left', 'center-right', 'bottom', 'bottom-start', 'bottom-end', 'bottom-left', 'bottom-right', 'grow-row', 'grow-column', 'grow-fullscreen', 'rtl', 'timer-progress-bar', 'timer-progress-bar-container', 'scrollbar-measure', 'icon-success', 'icon-warning', 'icon-info', 'icon-question', 'icon-error']);
-  const iconTypes = prefix(['success', 'warning', 'info', 'question', 'error']);
-
-  const consolePrefix = 'SweetAlert2:';
 
   /**
-   * Filter the unique values into a new array
-   *
-   * @param {Array} arr
-   * @returns {Array}
+   * @typedef {'success' | 'warning' | 'info' | 'question' | 'error'} SwalIcon
+   * @typedef {Record<SwalIcon, string>} SwalIcons
    */
-  const uniqueArray = arr => {
-    const result = [];
-    for (let i = 0; i < arr.length; i++) {
-      if (result.indexOf(arr[i]) === -1) {
-        result.push(arr[i]);
-      }
-    }
-    return result;
-  };
+
+  /** @type {SwalClass[]} */
+  const classNames = ['container', 'shown', 'height-auto', 'iosfix', 'popup', 'modal', 'no-backdrop', 'no-transition', 'toast', 'toast-shown', 'show', 'hide', 'close', 'title', 'html-container', 'actions', 'confirm', 'deny', 'cancel', 'default-outline', 'footer', 'icon', 'icon-content', 'image', 'input', 'file', 'range', 'select', 'radio', 'checkbox', 'label', 'textarea', 'inputerror', 'input-label', 'validation-message', 'progress-steps', 'active-progress-step', 'progress-step', 'progress-step-line', 'loader', 'loading', 'styled', 'top', 'top-start', 'top-end', 'top-left', 'top-right', 'center', 'center-start', 'center-end', 'center-left', 'center-right', 'bottom', 'bottom-start', 'bottom-end', 'bottom-left', 'bottom-right', 'grow-row', 'grow-column', 'grow-fullscreen', 'rtl', 'timer-progress-bar', 'timer-progress-bar-container', 'scrollbar-measure', 'icon-success', 'icon-warning', 'icon-info', 'icon-question', 'icon-error'];
+  const swalClasses = classNames.reduce((acc, className) => {
+    acc[className] = swalPrefix + className;
+    return acc;
+  }, /** @type {SwalClasses} */{});
+
+  /** @type {SwalIcon[]} */
+  const icons = ['success', 'warning', 'info', 'question', 'error'];
+  const iconTypes = icons.reduce((acc, icon) => {
+    acc[icon] = swalPrefix + icon;
+    return acc;
+  }, /** @type {SwalIcons} */{});
+
+  const consolePrefix = 'SweetAlert2:';
 
   /**
    * Capitalize the first letter of a string
@@ -70,7 +168,7 @@
   /**
    * Standardize console warnings
    *
-   * @param {string | Array} message
+   * @param {string | string[]} message
    */
   const warn = message => {
     console.warn(`${consolePrefix} ${typeof message === 'object' ? message.join(' ') : message}`);
@@ -88,7 +186,7 @@
   /**
    * Private global state for `warnOnce`
    *
-   * @type {Array}
+   * @type {string[]}
    * @private
    */
   const previousWarnOnceMessages = [];
@@ -132,7 +230,7 @@
 
   /**
    * @param {any} arg
-   * @returns {Promise}
+   * @returns {Promise<any>}
    */
   const asPromise = arg => hasToPromiseFn(arg) ? arg.toPromise() : Promise.resolve(arg);
 
@@ -207,14 +305,19 @@
   const getValidationMessage = () => elementByClass(swalClasses['validation-message']);
 
   /**
-   * @returns {HTMLElement | null}
+   * @returns {HTMLButtonElement | null}
    */
-  const getConfirmButton = () => elementBySelector(`.${swalClasses.actions} .${swalClasses.confirm}`);
+  const getConfirmButton = () => /** @type {HTMLButtonElement} */elementBySelector(`.${swalClasses.actions} .${swalClasses.confirm}`);
 
   /**
-   * @returns {HTMLElement | null}
+   * @returns {HTMLButtonElement | null}
    */
-  const getDenyButton = () => elementBySelector(`.${swalClasses.actions} .${swalClasses.deny}`);
+  const getCancelButton = () => /** @type {HTMLButtonElement} */elementBySelector(`.${swalClasses.actions} .${swalClasses.cancel}`);
+
+  /**
+   * @returns {HTMLButtonElement | null}
+   */
+  const getDenyButton = () => /** @type {HTMLButtonElement} */elementBySelector(`.${swalClasses.actions} .${swalClasses.deny}`);
 
   /**
    * @returns {HTMLElement | null}
@@ -225,11 +328,6 @@
    * @returns {HTMLElement | null}
    */
   const getLoader = () => elementBySelector(`.${swalClasses.loader}`);
-
-  /**
-   * @returns {HTMLElement | null}
-   */
-  const getCancelButton = () => elementBySelector(`.${swalClasses.actions} .${swalClasses.cancel}`);
 
   /**
    * @returns {HTMLElement | null}
@@ -272,7 +370,9 @@
    * @returns {HTMLElement[]}
    */
   const getFocusableElements = () => {
-    const focusableElementsWithTabindex = Array.from(getPopup().querySelectorAll('[tabindex]:not([tabindex="-1"]):not([tabindex="0"])'))
+    /** @type {NodeListOf<HTMLElement>} */
+    const focusableElementsWithTabindex = getPopup().querySelectorAll('[tabindex]:not([tabindex="-1"]):not([tabindex="0"])');
+    const focusableElementsWithTabindexSorted = Array.from(focusableElementsWithTabindex)
     // sort according to tabindex
     .sort((a, b) => {
       const tabindexA = parseInt(a.getAttribute('tabindex'));
@@ -284,8 +384,11 @@
       }
       return 0;
     });
-    const otherFocusableElements = Array.from(getPopup().querySelectorAll(focusable)).filter(el => el.getAttribute('tabindex') !== '-1');
-    return uniqueArray(focusableElementsWithTabindex.concat(otherFocusableElements)).filter(el => isVisible$1(el));
+
+    /** @type {NodeListOf<HTMLElement>} */
+    const otherFocusableElements = getPopup().querySelectorAll(focusable);
+    const otherFocusableElementsFiltered = Array.from(otherFocusableElements).filter(el => el.getAttribute('tabindex') !== '-1');
+    return [...new Set(focusableElementsWithTabindexSorted.concat(otherFocusableElementsFiltered))].filter(el => isVisible$1(el));
   };
 
   /**
@@ -307,11 +410,6 @@
    */
   const isLoading = () => {
     return getPopup().hasAttribute('data-loading');
-  };
-
-  // Remember state in cases where opening and handling a modal will fiddle with it.
-  const states = {
-    previousBodyPadding: null
   };
 
   /**
@@ -498,19 +596,19 @@
   };
 
   /**
-   * @param {HTMLElement} elem
+   * @param {HTMLElement | null} elem
    * @param {string} display
    */
   const show = function (elem) {
     let display = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'flex';
-    elem.style.display = display;
+    elem && (elem.style.display = display);
   };
 
   /**
-   * @param {HTMLElement} elem
+   * @param {HTMLElement | null} elem
    */
   const hide = elem => {
-    elem.style.display = 'none';
+    elem && (elem.style.display = 'none');
   };
 
   /**
@@ -595,41 +693,6 @@
     const timerProgressBarFullWidth = parseInt(window.getComputedStyle(timerProgressBar).width);
     const timerProgressBarPercent = timerProgressBarWidth / timerProgressBarFullWidth * 100;
     timerProgressBar.style.width = `${timerProgressBarPercent}%`;
-  };
-
-  const RESTORE_FOCUS_TIMEOUT = 100;
-
-  /** @type {GlobalState} */
-  const globalState = {};
-  const focusPreviousActiveElement = () => {
-    if (globalState.previousActiveElement instanceof HTMLElement) {
-      globalState.previousActiveElement.focus();
-      globalState.previousActiveElement = null;
-    } else if (document.body) {
-      document.body.focus();
-    }
-  };
-
-  /**
-   * Restore previous active (focused) element
-   *
-   * @param {boolean} returnFocus
-   * @returns {Promise}
-   */
-  const restoreActiveElement = returnFocus => {
-    return new Promise(resolve => {
-      if (!returnFocus) {
-        return resolve();
-      }
-      const x = window.scrollX;
-      const y = window.scrollY;
-      globalState.restoreFocusTimeout = setTimeout(() => {
-        focusPreviousActiveElement();
-        resolve();
-      }, RESTORE_FOCUS_TIMEOUT); // issues/900
-
-      window.scrollTo(x, y);
-    });
   };
 
   /**
@@ -847,22 +910,7 @@
   })();
 
   /**
-   * Measure scrollbar width for padding body during modal show/hide
-   * https://github.com/twbs/bootstrap/blob/master/js/src/modal.js
-   *
-   * @returns {number}
-   */
-  const measureScrollbar = () => {
-    const scrollDiv = document.createElement('div');
-    scrollDiv.className = swalClasses['scrollbar-measure'];
-    document.body.appendChild(scrollDiv);
-    const scrollbarWidth = scrollDiv.getBoundingClientRect().width - scrollDiv.clientWidth;
-    document.body.removeChild(scrollDiv);
-    return scrollbarWidth;
-  };
-
-  /**
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    * @param {SweetAlertOptions} params
    */
   const renderActions = (instance, params) => {
@@ -959,7 +1007,7 @@
   }
 
   /**
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    * @param {SweetAlertOptions} params
    */
   const renderCloseButton = (instance, params) => {
@@ -973,7 +1021,7 @@
   };
 
   /**
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    * @param {SweetAlertOptions} params
    */
   const renderContainer = (instance, params) => {
@@ -1029,11 +1077,12 @@
 
   /// <reference path="../../../../sweetalert2.d.ts"/>
 
+
   /** @type {InputClass[]} */
   const inputClasses = ['input', 'file', 'range', 'select', 'radio', 'checkbox', 'textarea'];
 
   /**
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    * @param {SweetAlertOptions} params
    */
   const renderInput = (instance, params) => {
@@ -1292,7 +1341,7 @@
   };
 
   /**
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    * @param {SweetAlertOptions} params
    */
   const renderContent = (instance, params) => {
@@ -1319,11 +1368,14 @@
   };
 
   /**
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    * @param {SweetAlertOptions} params
    */
   const renderFooter = (instance, params) => {
     const footer = getFooter();
+    if (!footer) {
+      return;
+    }
     toggle(footer, params.footer);
     if (params.footer) {
       parseHtmlToContainer(params.footer, footer);
@@ -1334,7 +1386,7 @@
   };
 
   /**
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    * @param {SweetAlertOptions} params
    */
   const renderIcon = (instance, params) => {
@@ -1462,11 +1514,14 @@
   const iconContent = content => `<div class="${swalClasses['icon-content']}">${content}</div>`;
 
   /**
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    * @param {SweetAlertOptions} params
    */
   const renderImage = (instance, params) => {
     const image = getImage();
+    if (!image) {
+      return;
+    }
     if (!params.imageUrl) {
       hide(image);
       return;
@@ -1475,7 +1530,7 @@
 
     // Src, alt
     image.setAttribute('src', params.imageUrl);
-    image.setAttribute('alt', params.imageAlt);
+    image.setAttribute('alt', params.imageAlt || '');
 
     // Width, height
     applyNumericalStyle(image, 'width', params.imageWidth);
@@ -1487,19 +1542,23 @@
   };
 
   /**
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    * @param {SweetAlertOptions} params
    */
   const renderPopup = (instance, params) => {
     const container = getContainer();
     const popup = getPopup();
+    if (!container || !popup) {
+      return;
+    }
 
     // Width
     // https://github.com/sweetalert2/sweetalert2/issues/2170
     if (params.toast) {
       applyNumericalStyle(container, 'width', params.width);
       popup.style.width = '100%';
-      popup.insertBefore(getLoader(), getIcon());
+      const loader = getLoader();
+      loader && popup.insertBefore(loader, getIcon());
     } else {
       applyNumericalStyle(popup, 'width', params.width);
     }
@@ -1527,8 +1586,9 @@
    * @param {SweetAlertOptions} params
    */
   const addClasses$1 = (popup, params) => {
+    const showClass = params.showClass || {};
     // Default Class + showClass when updating Swal.update({})
-    popup.className = `${swalClasses.popup} ${isVisible$1(popup) ? params.showClass.popup : ''}`;
+    popup.className = `${swalClasses.popup} ${isVisible$1(popup) ? showClass.popup : ''}`;
     if (params.toast) {
       addClass([document.documentElement, document.body], swalClasses['toast-shown']);
       addClass(popup, swalClasses.toast);
@@ -1549,27 +1609,34 @@
   };
 
   /**
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    * @param {SweetAlertOptions} params
    */
   const renderProgressSteps = (instance, params) => {
     const progressStepsContainer = getProgressSteps();
-    if (!params.progressSteps || params.progressSteps.length === 0) {
+    if (!progressStepsContainer) {
+      return;
+    }
+    const {
+      progressSteps,
+      currentProgressStep
+    } = params;
+    if (!progressSteps || progressSteps.length === 0 || currentProgressStep === undefined) {
       hide(progressStepsContainer);
       return;
     }
     show(progressStepsContainer);
     progressStepsContainer.textContent = '';
-    if (params.currentProgressStep >= params.progressSteps.length) {
+    if (currentProgressStep >= progressSteps.length) {
       warn('Invalid currentProgressStep parameter, it should be less than progressSteps.length ' + '(currentProgressStep like JS arrays starts from 0)');
     }
-    params.progressSteps.forEach((step, index) => {
+    progressSteps.forEach((step, index) => {
       const stepEl = createStepElement(step);
       progressStepsContainer.appendChild(stepEl);
-      if (index === params.currentProgressStep) {
+      if (index === currentProgressStep) {
         addClass(stepEl, swalClasses['active-progress-step']);
       }
-      if (index !== params.progressSteps.length - 1) {
+      if (index !== progressSteps.length - 1) {
         const lineEl = createLineElement(params);
         progressStepsContainer.appendChild(lineEl);
       }
@@ -1601,11 +1668,14 @@
   };
 
   /**
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    * @param {SweetAlertOptions} params
    */
   const renderTitle = (instance, params) => {
     const title = getTitle();
+    if (!title) {
+      return;
+    }
     toggle(title, params.title || params.titleText, 'block');
     if (params.title) {
       parseHtmlToContainer(params.title, title);
@@ -1619,7 +1689,7 @@
   };
 
   /**
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    * @param {SweetAlertOptions} params
    */
   const render = (instance, params) => {
@@ -1637,55 +1707,6 @@
       params.didRender(getPopup());
     }
   };
-
-  /**
-   * Hides loader and shows back the button which was hidden by .showLoading()
-   */
-  function hideLoading() {
-    // do nothing if popup is closed
-    const innerParams = privateProps.innerParams.get(this);
-    if (!innerParams) {
-      return;
-    }
-    const domCache = privateProps.domCache.get(this);
-    hide(domCache.loader);
-    if (isToast()) {
-      if (innerParams.icon) {
-        show(getIcon());
-      }
-    } else {
-      showRelatedButton(domCache);
-    }
-    removeClass([domCache.popup, domCache.actions], swalClasses.loading);
-    domCache.popup.removeAttribute('aria-busy');
-    domCache.popup.removeAttribute('data-loading');
-    domCache.confirmButton.disabled = false;
-    domCache.denyButton.disabled = false;
-    domCache.cancelButton.disabled = false;
-  }
-  const showRelatedButton = domCache => {
-    const buttonToReplace = domCache.popup.getElementsByClassName(domCache.loader.getAttribute('data-button-to-replace'));
-    if (buttonToReplace.length) {
-      show(buttonToReplace[0], 'inline-block');
-    } else if (allButtonsAreHidden()) {
-      hide(domCache.actions);
-    }
-  };
-
-  /**
-   * Gets the input DOM node, this method works with input parameter.
-   *
-   * @param {SweetAlert2} instance
-   * @returns {HTMLElement | null}
-   */
-  function getInput(instance) {
-    const innerParams = privateProps.innerParams.get(instance || this);
-    const domCache = privateProps.domCache.get(instance || this);
-    if (!domCache) {
-      return null;
-    }
-    return getInput$1(domCache.popup, innerParams.input);
-  }
 
   /*
    * Global function to determine if SweetAlert2 popup is shown
@@ -1709,6 +1730,9 @@
    */
   const clickCancel = () => getCancelButton() && getCancelButton().click();
 
+  /** @typedef {'cancel' | 'backdrop' | 'close' | 'esc' | 'timer'} DismissReason */
+
+  /** @type {Record<DismissReason, DismissReason>} */
   const DismissReason = Object.freeze({
     cancel: 'cancel',
     backdrop: 'backdrop',
@@ -1730,7 +1754,7 @@
   };
 
   /**
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    * @param {GlobalState} globalState
    * @param {SweetAlertOptions} innerParams
    * @param {*} dismissWith
@@ -1776,7 +1800,7 @@
   const arrowKeysPreviousButton = ['ArrowLeft', 'ArrowUp'];
 
   /**
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    * @param {KeyboardEvent} event
    * @param {Function} dismissWith
    */
@@ -1819,7 +1843,7 @@
   };
 
   /**
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    * @param {KeyboardEvent} event
    * @param {SweetAlertOptions} innerParams
    */
@@ -1872,7 +1896,9 @@
     const confirmButton = getConfirmButton();
     const denyButton = getDenyButton();
     const cancelButton = getCancelButton();
-    if (document.activeElement instanceof HTMLElement && ![confirmButton, denyButton, cancelButton].includes(document.activeElement)) {
+    /** @type HTMLElement[] */
+    const buttons = [confirmButton, denyButton, cancelButton];
+    if (document.activeElement instanceof HTMLElement && !buttons.includes(document.activeElement)) {
       return;
     }
     const sibling = arrowKeysNextButton.includes(key) ? 'nextElementSibling' : 'previousElementSibling';
@@ -2056,29 +2082,51 @@
     }
   };
 
+  /**
+   * Measure scrollbar width for padding body during modal show/hide
+   * https://github.com/twbs/bootstrap/blob/master/js/src/modal.js
+   *
+   * @returns {number}
+   */
+  const measureScrollbar = () => {
+    const scrollDiv = document.createElement('div');
+    scrollDiv.className = swalClasses['scrollbar-measure'];
+    document.body.appendChild(scrollDiv);
+    const scrollbarWidth = scrollDiv.getBoundingClientRect().width - scrollDiv.clientWidth;
+    document.body.removeChild(scrollDiv);
+    return scrollbarWidth;
+  };
+
+  /**
+   * Remember state in cases where opening and handling a modal will fiddle with it.
+   * @type {number | null}
+   */
+  let previousBodyPadding = null;
   const fixScrollbar = () => {
     // for queues, do not do this more than once
-    if (states.previousBodyPadding !== null) {
+    if (previousBodyPadding !== null) {
       return;
     }
     // if the body has overflow
     if (document.body.scrollHeight > window.innerHeight) {
       // add padding so the content doesn't shift after removal of scrollbar
-      states.previousBodyPadding = parseInt(window.getComputedStyle(document.body).getPropertyValue('padding-right'));
-      document.body.style.paddingRight = `${states.previousBodyPadding + measureScrollbar()}px`;
+      previousBodyPadding = parseInt(window.getComputedStyle(document.body).getPropertyValue('padding-right'));
+      document.body.style.paddingRight = `${previousBodyPadding + measureScrollbar()}px`;
     }
   };
   const undoScrollbar = () => {
-    if (states.previousBodyPadding !== null) {
-      document.body.style.paddingRight = `${states.previousBodyPadding}px`;
-      states.previousBodyPadding = null;
+    if (previousBodyPadding !== null) {
+      document.body.style.paddingRight = `${previousBodyPadding}px`;
+      previousBodyPadding = null;
     }
   };
 
-  /*
-   * Instance method to close sweetAlert
+  /**
+   * @param {SweetAlert} instance
+   * @param {HTMLElement} container
+   * @param {boolean} returnFocus
+   * @param {Function} didClose
    */
-
   function removePopupAndResetState(instance, container, returnFocus, didClose) {
     if (isToast()) {
       triggerDidCloseAndDispose(instance, didClose);
@@ -2103,14 +2151,24 @@
     }
     removeBodyClasses();
   }
+
+  /**
+   * Remove SweetAlert2 classes from body
+   */
   function removeBodyClasses() {
     removeClass([document.documentElement, document.body], [swalClasses.shown, swalClasses['height-auto'], swalClasses['no-backdrop'], swalClasses['toast-shown']]);
   }
+
+  /**
+   * Instance method to close sweetAlert
+   *
+   * @param {any} resolveValue
+   */
   function close(resolveValue) {
     resolveValue = prepareResolveValue(resolveValue);
     const swalPromiseResolve = privateMethods.swalPromiseResolve.get(this);
     const didClose = triggerClosePopup(this);
-    if (this.isAwaitingPromise()) {
+    if (this.isAwaitingPromise) {
       // A swal awaiting for a promise (after a click on Confirm or Deny) cannot be dismissed anymore #2335
       if (!resolveValue.isDismissed) {
         handleAwaitingPromise(this);
@@ -2120,9 +2178,6 @@
       // Resolve Swal promise
       swalPromiseResolve(resolveValue);
     }
-  }
-  function isAwaitingPromise() {
-    return !!privateProps.awaitingPromise.get(this);
   }
   const triggerClosePopup = instance => {
     const popup = getPopup();
@@ -2141,6 +2196,10 @@
     handlePopupAnimation(instance, popup, innerParams);
     return true;
   };
+
+  /**
+   * @param {any} error
+   */
   function rejectPromise(error) {
     const rejectPromise = privateMethods.swalPromiseReject.get(this);
     handleAwaitingPromise(this);
@@ -2149,15 +2208,24 @@
       rejectPromise(error);
     }
   }
+
+  /**
+   * @param {SweetAlert} instance
+   */
   const handleAwaitingPromise = instance => {
-    if (instance.isAwaitingPromise()) {
-      privateProps.awaitingPromise.delete(instance);
+    if (instance.isAwaitingPromise) {
+      delete instance.isAwaitingPromise;
       // The instance might have been previously partly destroyed, we must resume the destroy process in this case #2335
       if (!privateProps.innerParams.get(instance)) {
         instance._destroy();
       }
     }
   };
+
+  /**
+   * @param {any} resolveValue
+   * @returns {SweetAlertResult}
+   */
   const prepareResolveValue = resolveValue => {
     // When user calls Swal.close()
     if (typeof resolveValue === 'undefined') {
@@ -2173,6 +2241,12 @@
       isDismissed: false
     }, resolveValue);
   };
+
+  /**
+   * @param {SweetAlert} instance
+   * @param {HTMLElement} popup
+   * @param {SweetAlertOptions} innerParams
+   */
   const handlePopupAnimation = (instance, popup, innerParams) => {
     const container = getContainer();
     // If animation is supported, animate
@@ -2187,6 +2261,14 @@
       removePopupAndResetState(instance, container, innerParams.returnFocus, innerParams.didClose);
     }
   };
+
+  /**
+   * @param {SweetAlert} instance
+   * @param {HTMLElement} popup
+   * @param {HTMLElement} container
+   * @param {boolean} returnFocus
+   * @param {Function} didClose
+   */
   const animatePopup = (instance, popup, container, returnFocus, didClose) => {
     globalState.swalCloseEventFinishedCallback = removePopupAndResetState.bind(null, instance, container, returnFocus, didClose);
     popup.addEventListener(animationEndEvent, function (e) {
@@ -2196,17 +2278,489 @@
       }
     });
   };
+
+  /**
+   * @param {SweetAlert} instance
+   * @param {Function} didClose
+   */
   const triggerDidCloseAndDispose = (instance, didClose) => {
     setTimeout(() => {
       if (typeof didClose === 'function') {
         didClose.bind(instance.params)();
       }
-      instance._destroy();
+      // instance might have been destroyed already
+      if (instance._destroy) {
+        instance._destroy();
+      }
     });
   };
 
   /**
-   * @param {SweetAlert2} instance
+   * Shows loader (spinner), this is useful with AJAX requests.
+   * By default the loader be shown instead of the "Confirm" button.
+   *
+   * @param {HTMLButtonElement} [buttonToReplace]
+   */
+  const showLoading = buttonToReplace => {
+    let popup = getPopup();
+    if (!popup) {
+      new Swal(); // eslint-disable-line no-new
+    }
+
+    popup = getPopup();
+    const loader = getLoader();
+    if (isToast()) {
+      hide(getIcon());
+    } else {
+      replaceButton(popup, buttonToReplace);
+    }
+    show(loader);
+    popup.setAttribute('data-loading', 'true');
+    popup.setAttribute('aria-busy', 'true');
+    popup.focus();
+  };
+
+  /**
+   * @param {HTMLElement} popup
+   * @param {HTMLButtonElement} [buttonToReplace]
+   */
+  const replaceButton = (popup, buttonToReplace) => {
+    const actions = getActions();
+    const loader = getLoader();
+    if (!buttonToReplace && isVisible$1(getConfirmButton())) {
+      buttonToReplace = getConfirmButton();
+    }
+    show(actions);
+    if (buttonToReplace) {
+      hide(buttonToReplace);
+      loader.setAttribute('data-button-to-replace', buttonToReplace.className);
+    }
+    loader.parentNode.insertBefore(loader, buttonToReplace);
+    addClass([popup, actions], swalClasses.loading);
+  };
+
+  /**
+   * @typedef { string | number | boolean } InputValue
+   */
+
+  /**
+   * @param {SweetAlert} instance
+   * @param {SweetAlertOptions} params
+   */
+  const handleInputOptionsAndValue = (instance, params) => {
+    if (params.input === 'select' || params.input === 'radio') {
+      handleInputOptions(instance, params);
+    } else if (['text', 'email', 'number', 'tel', 'textarea'].includes(params.input) && (hasToPromiseFn(params.inputValue) || isPromise(params.inputValue))) {
+      showLoading(getConfirmButton());
+      handleInputValue(instance, params);
+    }
+  };
+
+  /**
+   * @param {SweetAlert} instance
+   * @param {SweetAlertOptions} innerParams
+   * @returns {string | number | File | FileList | null}
+   */
+  const getInputValue = (instance, innerParams) => {
+    const input = instance.getInput();
+    if (!input) {
+      return null;
+    }
+    switch (innerParams.input) {
+      case 'checkbox':
+        return getCheckboxValue(input);
+      case 'radio':
+        return getRadioValue(input);
+      case 'file':
+        return getFileValue(input);
+      default:
+        return innerParams.inputAutoTrim ? input.value.trim() : input.value;
+    }
+  };
+
+  /**
+   * @param {HTMLInputElement} input
+   * @returns {number}
+   */
+  const getCheckboxValue = input => input.checked ? 1 : 0;
+
+  /**
+   * @param {HTMLInputElement} input
+   * @returns {string | null}
+   */
+  const getRadioValue = input => input.checked ? input.value : null;
+
+  /**
+   * @param {HTMLInputElement} input
+   * @returns {FileList | File | null}
+   */
+  const getFileValue = input => input.files.length ? input.getAttribute('multiple') !== null ? input.files : input.files[0] : null;
+
+  /**
+   * @param {SweetAlert} instance
+   * @param {SweetAlertOptions} params
+   */
+  const handleInputOptions = (instance, params) => {
+    const popup = getPopup();
+    /**
+     * @param {Record<string, any>} inputOptions
+     */
+    const processInputOptions = inputOptions => {
+      populateInputOptions[params.input](popup, formatInputOptions(inputOptions), params);
+    };
+    if (hasToPromiseFn(params.inputOptions) || isPromise(params.inputOptions)) {
+      showLoading(getConfirmButton());
+      asPromise(params.inputOptions).then(inputOptions => {
+        instance.hideLoading();
+        processInputOptions(inputOptions);
+      });
+    } else if (typeof params.inputOptions === 'object') {
+      processInputOptions(params.inputOptions);
+    } else {
+      error(`Unexpected type of inputOptions! Expected object, Map or Promise, got ${typeof params.inputOptions}`);
+    }
+  };
+
+  /**
+   * @param {SweetAlert} instance
+   * @param {SweetAlertOptions} params
+   */
+  const handleInputValue = (instance, params) => {
+    const input = instance.getInput();
+    hide(input);
+    asPromise(params.inputValue).then(inputValue => {
+      input.value = params.input === 'number' ? `${parseFloat(inputValue) || 0}` : `${inputValue}`;
+      show(input);
+      input.focus();
+      instance.hideLoading();
+    }).catch(err => {
+      error(`Error in inputValue promise: ${err}`);
+      input.value = '';
+      show(input);
+      input.focus();
+      instance.hideLoading();
+    });
+  };
+  const populateInputOptions = {
+    /**
+     * @param {HTMLElement} popup
+     * @param {Record<string, any>} inputOptions
+     * @param {SweetAlertOptions} params
+     */
+    select: (popup, inputOptions, params) => {
+      const select = getDirectChildByClass(popup, swalClasses.select);
+      /**
+       * @param {HTMLElement} parent
+       * @param {string} optionLabel
+       * @param {string} optionValue
+       */
+      const renderOption = (parent, optionLabel, optionValue) => {
+        const option = document.createElement('option');
+        option.value = optionValue;
+        setInnerHtml(option, optionLabel);
+        option.selected = isSelected(optionValue, params.inputValue);
+        parent.appendChild(option);
+      };
+      inputOptions.forEach(inputOption => {
+        const optionValue = inputOption[0];
+        const optionLabel = inputOption[1];
+        // <optgroup> spec:
+        // https://www.w3.org/TR/html401/interact/forms.html#h-17.6
+        // "...all OPTGROUP elements must be specified directly within a SELECT element (i.e., groups may not be nested)..."
+        // check whether this is a <optgroup>
+        if (Array.isArray(optionLabel)) {
+          // if it is an array, then it is an <optgroup>
+          const optgroup = document.createElement('optgroup');
+          optgroup.label = optionValue;
+          optgroup.disabled = false; // not configurable for now
+          select.appendChild(optgroup);
+          optionLabel.forEach(o => renderOption(optgroup, o[1], o[0]));
+        } else {
+          // case of <option>
+          renderOption(select, optionLabel, optionValue);
+        }
+      });
+      select.focus();
+    },
+    /**
+     * @param {HTMLElement} popup
+     * @param {Record<string, any>} inputOptions
+     * @param {SweetAlertOptions} params
+     */
+    radio: (popup, inputOptions, params) => {
+      const radio = getDirectChildByClass(popup, swalClasses.radio);
+      inputOptions.forEach(inputOption => {
+        const radioValue = inputOption[0];
+        const radioLabel = inputOption[1];
+        const radioInput = document.createElement('input');
+        const radioLabelElement = document.createElement('label');
+        radioInput.type = 'radio';
+        radioInput.name = swalClasses.radio;
+        radioInput.value = radioValue;
+        if (isSelected(radioValue, params.inputValue)) {
+          radioInput.checked = true;
+        }
+        const label = document.createElement('span');
+        setInnerHtml(label, radioLabel);
+        label.className = swalClasses.label;
+        radioLabelElement.appendChild(radioInput);
+        radioLabelElement.appendChild(label);
+        radio.appendChild(radioLabelElement);
+      });
+      const radios = radio.querySelectorAll('input');
+      if (radios.length) {
+        radios[0].focus();
+      }
+    }
+  };
+
+  /**
+   * Converts `inputOptions` into an array of `[value, label]`s
+   *
+   * @param {Record<string, any>} inputOptions
+   * @returns {Array<Array<string>>}
+   */
+  const formatInputOptions = inputOptions => {
+    const result = [];
+    if (typeof Map !== 'undefined' && inputOptions instanceof Map) {
+      inputOptions.forEach((value, key) => {
+        let valueFormatted = value;
+        if (typeof valueFormatted === 'object') {
+          // case of <optgroup>
+          valueFormatted = formatInputOptions(valueFormatted);
+        }
+        result.push([key, valueFormatted]);
+      });
+    } else {
+      Object.keys(inputOptions).forEach(key => {
+        let valueFormatted = inputOptions[key];
+        if (typeof valueFormatted === 'object') {
+          // case of <optgroup>
+          valueFormatted = formatInputOptions(valueFormatted);
+        }
+        result.push([key, valueFormatted]);
+      });
+    }
+    return result;
+  };
+
+  /**
+   * @param {string} optionValue
+   * @param {InputValue | Promise<InputValue> | { toPromise: () => InputValue }} inputValue
+   * @returns {boolean}
+   */
+  const isSelected = (optionValue, inputValue) => {
+    return inputValue && inputValue.toString() === optionValue.toString();
+  };
+
+  /**
+   * @param {SweetAlert} instance
+   */
+  const handleConfirmButtonClick = instance => {
+    const innerParams = privateProps.innerParams.get(instance);
+    instance.disableButtons();
+    if (innerParams.input) {
+      handleConfirmOrDenyWithInput(instance, 'confirm');
+    } else {
+      confirm(instance, true);
+    }
+  };
+
+  /**
+   * @param {SweetAlert} instance
+   */
+  const handleDenyButtonClick = instance => {
+    const innerParams = privateProps.innerParams.get(instance);
+    instance.disableButtons();
+    if (innerParams.returnInputValueOnDeny) {
+      handleConfirmOrDenyWithInput(instance, 'deny');
+    } else {
+      deny(instance, false);
+    }
+  };
+
+  /**
+   * @param {SweetAlert} instance
+   * @param {Function} dismissWith
+   */
+  const handleCancelButtonClick = (instance, dismissWith) => {
+    instance.disableButtons();
+    dismissWith(DismissReason.cancel);
+  };
+
+  /**
+   * @param {SweetAlert} instance
+   * @param {'confirm' | 'deny'} type
+   */
+  const handleConfirmOrDenyWithInput = (instance, type) => {
+    const innerParams = privateProps.innerParams.get(instance);
+    if (!innerParams.input) {
+      error(`The "input" parameter is needed to be set when using returnInputValueOn${capitalizeFirstLetter(type)}`);
+      return;
+    }
+    const inputValue = getInputValue(instance, innerParams);
+    if (innerParams.inputValidator) {
+      handleInputValidator(instance, inputValue, type);
+    } else if (!instance.getInput().checkValidity()) {
+      instance.enableButtons();
+      instance.showValidationMessage(innerParams.validationMessage);
+    } else if (type === 'deny') {
+      deny(instance, inputValue);
+    } else {
+      confirm(instance, inputValue);
+    }
+  };
+
+  /**
+   * @param {SweetAlert} instance
+   * @param {string | number | File | FileList | null} inputValue
+   * @param {'confirm' | 'deny'} type
+   */
+  const handleInputValidator = (instance, inputValue, type) => {
+    const innerParams = privateProps.innerParams.get(instance);
+    instance.disableInput();
+    const validationPromise = Promise.resolve().then(() => asPromise(innerParams.inputValidator(inputValue, innerParams.validationMessage)));
+    validationPromise.then(validationMessage => {
+      instance.enableButtons();
+      instance.enableInput();
+      if (validationMessage) {
+        instance.showValidationMessage(validationMessage);
+      } else if (type === 'deny') {
+        deny(instance, inputValue);
+      } else {
+        confirm(instance, inputValue);
+      }
+    });
+  };
+
+  /**
+   * @param {SweetAlert} instance
+   * @param {any} value
+   */
+  const deny = (instance, value) => {
+    const innerParams = privateProps.innerParams.get(instance || undefined);
+    if (innerParams.showLoaderOnDeny) {
+      showLoading(getDenyButton());
+    }
+    if (innerParams.preDeny) {
+      instance.isAwaitingPromise = true; // Flagging the instance as awaiting a promise so it's own promise's reject/resolve methods doesn't get destroyed until the result from this preDeny's promise is received
+      const preDenyPromise = Promise.resolve().then(() => asPromise(innerParams.preDeny(value, innerParams.validationMessage)));
+      preDenyPromise.then(preDenyValue => {
+        if (preDenyValue === false) {
+          instance.hideLoading();
+          handleAwaitingPromise(instance);
+        } else {
+          instance.close({
+            isDenied: true,
+            value: typeof preDenyValue === 'undefined' ? value : preDenyValue
+          });
+        }
+      }).catch(error => rejectWith(instance || undefined, error));
+    } else {
+      instance.close({
+        isDenied: true,
+        value
+      });
+    }
+  };
+
+  /**
+   * @param {SweetAlert} instance
+   * @param {any} value
+   */
+  const succeedWith = (instance, value) => {
+    instance.close({
+      isConfirmed: true,
+      value
+    });
+  };
+
+  /**
+   *
+   * @param {SweetAlert} instance
+   * @param {string} error
+   */
+  const rejectWith = (instance, error) => {
+    instance.rejectPromise(error);
+  };
+
+  /**
+   *
+   * @param {SweetAlert} instance
+   * @param {any} value
+   */
+  const confirm = (instance, value) => {
+    const innerParams = privateProps.innerParams.get(instance || undefined);
+    if (innerParams.showLoaderOnConfirm) {
+      showLoading();
+    }
+    if (innerParams.preConfirm) {
+      instance.resetValidationMessage();
+      instance.isAwaitingPromise = true; // Flagging the instance as awaiting a promise so it's own promise's reject/resolve methods doesn't get destroyed until the result from this preConfirm's promise is received
+      const preConfirmPromise = Promise.resolve().then(() => asPromise(innerParams.preConfirm(value, innerParams.validationMessage)));
+      preConfirmPromise.then(preConfirmValue => {
+        if (isVisible$1(getValidationMessage()) || preConfirmValue === false) {
+          instance.hideLoading();
+          handleAwaitingPromise(instance);
+        } else {
+          succeedWith(instance, typeof preConfirmValue === 'undefined' ? value : preConfirmValue);
+        }
+      }).catch(error => rejectWith(instance || undefined, error));
+    } else {
+      succeedWith(instance, value);
+    }
+  };
+
+  /**
+   * Hides loader and shows back the button which was hidden by .showLoading()
+   */
+  function hideLoading() {
+    // do nothing if popup is closed
+    const innerParams = privateProps.innerParams.get(this);
+    if (!innerParams) {
+      return;
+    }
+    const domCache = privateProps.domCache.get(this);
+    hide(domCache.loader);
+    if (isToast()) {
+      if (innerParams.icon) {
+        show(getIcon());
+      }
+    } else {
+      showRelatedButton(domCache);
+    }
+    removeClass([domCache.popup, domCache.actions], swalClasses.loading);
+    domCache.popup.removeAttribute('aria-busy');
+    domCache.popup.removeAttribute('data-loading');
+    domCache.confirmButton.disabled = false;
+    domCache.denyButton.disabled = false;
+    domCache.cancelButton.disabled = false;
+  }
+  const showRelatedButton = domCache => {
+    const buttonToReplace = domCache.popup.getElementsByClassName(domCache.loader.getAttribute('data-button-to-replace'));
+    if (buttonToReplace.length) {
+      show(buttonToReplace[0], 'inline-block');
+    } else if (allButtonsAreHidden()) {
+      hide(domCache.actions);
+    }
+  };
+
+  /**
+   * Gets the input DOM node, this method works with input parameter.
+   *
+   * @returns {HTMLInputElement | null}
+   */
+  function getInput() {
+    const innerParams = privateProps.innerParams.get(this);
+    const domCache = privateProps.domCache.get(this);
+    if (!domCache) {
+      return null;
+    }
+    return getInput$1(domCache.popup, innerParams.input);
+  }
+
+  /**
+   * @param {SweetAlert} instance
    * @param {string[]} buttons
    * @param {boolean} disabled
    */
@@ -2235,15 +2789,31 @@
       input.disabled = disabled;
     }
   }
+
+  /**
+   * Enable all the buttons
+   */
   function enableButtons() {
     setButtonsDisabled(this, ['confirmButton', 'denyButton', 'cancelButton'], false);
   }
+
+  /**
+   * Disable all the buttons
+   */
   function disableButtons() {
     setButtonsDisabled(this, ['confirmButton', 'denyButton', 'cancelButton'], true);
   }
+
+  /**
+   * Enable the input field
+   */
   function enableInput() {
     setInputDisabled(this.getInput(), false);
   }
+
+  /**
+   * Disable the input field
+   */
   function disableInput() {
     setInputDisabled(this.getInput(), true);
   }
@@ -2378,6 +2948,8 @@
     scrollbarPadding: true
   };
   const updatableParams = ['allowEscapeKey', 'allowOutsideClick', 'background', 'buttonsStyling', 'cancelButtonAriaLabel', 'cancelButtonColor', 'cancelButtonText', 'closeButtonAriaLabel', 'closeButtonHtml', 'color', 'confirmButtonAriaLabel', 'confirmButtonColor', 'confirmButtonText', 'currentProgressStep', 'customClass', 'denyButtonAriaLabel', 'denyButtonColor', 'denyButtonText', 'didClose', 'didDestroy', 'footer', 'hideClass', 'html', 'icon', 'iconColor', 'iconHtml', 'imageAlt', 'imageHeight', 'imageUrl', 'imageWidth', 'preConfirm', 'preDeny', 'progressSteps', 'returnFocus', 'reverseButtons', 'showCancelButton', 'showCloseButton', 'showConfirmButton', 'showDenyButton', 'text', 'title', 'titleText', 'willClose'];
+
+  /** @type {Record<string, string>} */
   const deprecatedParams = {};
   const toastIncompatibleParams = ['allowOutsideClick', 'allowEnterKey', 'backdrop', 'focusConfirm', 'focusDeny', 'focusCancel', 'returnFocus', 'heightAuto', 'keydownListenerCapture'];
 
@@ -2433,8 +3005,9 @@
    * @param {string} param
    */
   const checkIfParamIsDeprecated = param => {
-    if (isDeprecatedParameter(param)) {
-      warnAboutDeprecation(param, isDeprecatedParameter(param));
+    const isDeprecated = isDeprecatedParameter(param);
+    if (isDeprecated) {
+      warnAboutDeprecation(param, isDeprecated);
     }
   };
 
@@ -2520,12 +3093,11 @@
   }
 
   /**
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    */
   const disposeSwal = instance => {
     disposeWeakMaps(instance);
     // Unset this.params so GC will dispose it (#1569)
-    // @ts-ignore
     delete instance.params;
     // Unset globalState props so GC will dispose globalState (#1569)
     delete globalState.keydownHandler;
@@ -2535,23 +3107,40 @@
   };
 
   /**
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    */
   const disposeWeakMaps = instance => {
     // If the current instance is awaiting a promise result, we keep the privateMethods to call them once the promise result is retrieved #2335
-    // @ts-ignore
-    if (instance.isAwaitingPromise()) {
+    if (instance.isAwaitingPromise) {
       unsetWeakMaps(privateProps, instance);
-      privateProps.awaitingPromise.set(instance, true);
+      instance.isAwaitingPromise = true;
     } else {
       unsetWeakMaps(privateMethods, instance);
       unsetWeakMaps(privateProps, instance);
+      delete instance.isAwaitingPromise;
+      // Unset instance methods
+      delete instance.disableButtons;
+      delete instance.enableButtons;
+      delete instance.getInput;
+      delete instance.disableInput;
+      delete instance.enableInput;
+      delete instance.hideLoading;
+      delete instance.disableLoading;
+      delete instance.showValidationMessage;
+      delete instance.resetValidationMessage;
+      delete instance.close;
+      delete instance.closePopup;
+      delete instance.closeModal;
+      delete instance.closeToast;
+      delete instance.rejectPromise;
+      delete instance.update;
+      delete instance._destroy;
     }
   };
 
   /**
    * @param {object} obj
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    */
   const unsetWeakMaps = (obj, instance) => {
     for (const i in obj) {
@@ -2561,435 +3150,24 @@
 
   var instanceMethods = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    hideLoading: hideLoading,
-    disableLoading: hideLoading,
-    getInput: getInput,
+    _destroy: _destroy,
     close: close,
-    isAwaitingPromise: isAwaitingPromise,
-    rejectPromise: rejectPromise,
-    handleAwaitingPromise: handleAwaitingPromise,
-    closePopup: close,
     closeModal: close,
+    closePopup: close,
     closeToast: close,
-    enableButtons: enableButtons,
     disableButtons: disableButtons,
-    enableInput: enableInput,
     disableInput: disableInput,
-    showValidationMessage: showValidationMessage,
+    disableLoading: hideLoading,
+    enableButtons: enableButtons,
+    enableInput: enableInput,
+    getInput: getInput,
+    handleAwaitingPromise: handleAwaitingPromise,
+    hideLoading: hideLoading,
+    rejectPromise: rejectPromise,
     resetValidationMessage: resetValidationMessage,
-    update: update,
-    _destroy: _destroy
+    showValidationMessage: showValidationMessage,
+    update: update
   });
-
-  /**
-   * Shows loader (spinner), this is useful with AJAX requests.
-   * By default the loader be shown instead of the "Confirm" button.
-   */
-  const showLoading = buttonToReplace => {
-    let popup = getPopup();
-    if (!popup) {
-      new Swal(); // eslint-disable-line no-new
-    }
-
-    popup = getPopup();
-    const loader = getLoader();
-    if (isToast()) {
-      hide(getIcon());
-    } else {
-      replaceButton(popup, buttonToReplace);
-    }
-    show(loader);
-    popup.setAttribute('data-loading', 'true');
-    popup.setAttribute('aria-busy', 'true');
-    popup.focus();
-  };
-  const replaceButton = (popup, buttonToReplace) => {
-    const actions = getActions();
-    const loader = getLoader();
-    if (!buttonToReplace && isVisible$1(getConfirmButton())) {
-      buttonToReplace = getConfirmButton();
-    }
-    show(actions);
-    if (buttonToReplace) {
-      hide(buttonToReplace);
-      loader.setAttribute('data-button-to-replace', buttonToReplace.className);
-    }
-    loader.parentNode.insertBefore(loader, buttonToReplace);
-    addClass([popup, actions], swalClasses.loading);
-  };
-
-  /**
-   * @typedef { string | number | boolean } InputValue
-   */
-
-  /**
-   * @param {SweetAlert2} instance
-   * @param {SweetAlertOptions} params
-   */
-  const handleInputOptionsAndValue = (instance, params) => {
-    if (params.input === 'select' || params.input === 'radio') {
-      handleInputOptions(instance, params);
-    } else if (['text', 'email', 'number', 'tel', 'textarea'].includes(params.input) && (hasToPromiseFn(params.inputValue) || isPromise(params.inputValue))) {
-      showLoading(getConfirmButton());
-      handleInputValue(instance, params);
-    }
-  };
-
-  /**
-   * @param {SweetAlert2} instance
-   * @param {SweetAlertOptions} innerParams
-   * @returns {string | number | File | FileList | null}
-   */
-  const getInputValue = (instance, innerParams) => {
-    const input = instance.getInput();
-    if (!input) {
-      return null;
-    }
-    switch (innerParams.input) {
-      case 'checkbox':
-        return getCheckboxValue(input);
-      case 'radio':
-        return getRadioValue(input);
-      case 'file':
-        return getFileValue(input);
-      default:
-        return innerParams.inputAutoTrim ? input.value.trim() : input.value;
-    }
-  };
-
-  /**
-   * @param {HTMLInputElement} input
-   * @returns {number}
-   */
-  const getCheckboxValue = input => input.checked ? 1 : 0;
-
-  /**
-   * @param {HTMLInputElement} input
-   * @returns {string | null}
-   */
-  const getRadioValue = input => input.checked ? input.value : null;
-
-  /**
-   * @param {HTMLInputElement} input
-   * @returns {FileList | File | null}
-   */
-  const getFileValue = input => input.files.length ? input.getAttribute('multiple') !== null ? input.files : input.files[0] : null;
-
-  /**
-   * @param {SweetAlert2} instance
-   * @param {SweetAlertOptions} params
-   */
-  const handleInputOptions = (instance, params) => {
-    const popup = getPopup();
-    /**
-     * @param {Record<string, any>} inputOptions
-     */
-    const processInputOptions = inputOptions => {
-      populateInputOptions[params.input](popup, formatInputOptions(inputOptions), params);
-    };
-    if (hasToPromiseFn(params.inputOptions) || isPromise(params.inputOptions)) {
-      showLoading(getConfirmButton());
-      asPromise(params.inputOptions).then(inputOptions => {
-        instance.hideLoading();
-        processInputOptions(inputOptions);
-      });
-    } else if (typeof params.inputOptions === 'object') {
-      processInputOptions(params.inputOptions);
-    } else {
-      error(`Unexpected type of inputOptions! Expected object, Map or Promise, got ${typeof params.inputOptions}`);
-    }
-  };
-
-  /**
-   * @param {SweetAlert2} instance
-   * @param {SweetAlertOptions} params
-   */
-  const handleInputValue = (instance, params) => {
-    const input = instance.getInput();
-    hide(input);
-    asPromise(params.inputValue).then(inputValue => {
-      input.value = params.input === 'number' ? `${parseFloat(inputValue) || 0}` : `${inputValue}`;
-      show(input);
-      input.focus();
-      instance.hideLoading();
-    }).catch(err => {
-      error(`Error in inputValue promise: ${err}`);
-      input.value = '';
-      show(input);
-      input.focus();
-      instance.hideLoading();
-    });
-  };
-  const populateInputOptions = {
-    /**
-     * @param {HTMLElement} popup
-     * @param {Record<string, any>} inputOptions
-     * @param {SweetAlertOptions} params
-     */
-    select: (popup, inputOptions, params) => {
-      const select = getDirectChildByClass(popup, swalClasses.select);
-      /**
-       * @param {HTMLElement} parent
-       * @param {string} optionLabel
-       * @param {string} optionValue
-       */
-      const renderOption = (parent, optionLabel, optionValue) => {
-        const option = document.createElement('option');
-        option.value = optionValue;
-        setInnerHtml(option, optionLabel);
-        option.selected = isSelected(optionValue, params.inputValue);
-        parent.appendChild(option);
-      };
-      inputOptions.forEach(inputOption => {
-        const optionValue = inputOption[0];
-        const optionLabel = inputOption[1];
-        // <optgroup> spec:
-        // https://www.w3.org/TR/html401/interact/forms.html#h-17.6
-        // "...all OPTGROUP elements must be specified directly within a SELECT element (i.e., groups may not be nested)..."
-        // check whether this is a <optgroup>
-        if (Array.isArray(optionLabel)) {
-          // if it is an array, then it is an <optgroup>
-          const optgroup = document.createElement('optgroup');
-          optgroup.label = optionValue;
-          optgroup.disabled = false; // not configurable for now
-          select.appendChild(optgroup);
-          optionLabel.forEach(o => renderOption(optgroup, o[1], o[0]));
-        } else {
-          // case of <option>
-          renderOption(select, optionLabel, optionValue);
-        }
-      });
-      select.focus();
-    },
-    /**
-     * @param {HTMLElement} popup
-     * @param {Record<string, any>} inputOptions
-     * @param {SweetAlertOptions} params
-     */
-    radio: (popup, inputOptions, params) => {
-      const radio = getDirectChildByClass(popup, swalClasses.radio);
-      inputOptions.forEach(inputOption => {
-        const radioValue = inputOption[0];
-        const radioLabel = inputOption[1];
-        const radioInput = document.createElement('input');
-        const radioLabelElement = document.createElement('label');
-        radioInput.type = 'radio';
-        radioInput.name = swalClasses.radio;
-        radioInput.value = radioValue;
-        if (isSelected(radioValue, params.inputValue)) {
-          radioInput.checked = true;
-        }
-        const label = document.createElement('span');
-        setInnerHtml(label, radioLabel);
-        label.className = swalClasses.label;
-        radioLabelElement.appendChild(radioInput);
-        radioLabelElement.appendChild(label);
-        radio.appendChild(radioLabelElement);
-      });
-      const radios = radio.querySelectorAll('input');
-      if (radios.length) {
-        radios[0].focus();
-      }
-    }
-  };
-
-  /**
-   * Converts `inputOptions` into an array of `[value, label]`s
-   *
-   * @param {Record<string, any>} inputOptions
-   * @returns {Array<Array<string>>}
-   */
-  const formatInputOptions = inputOptions => {
-    const result = [];
-    if (typeof Map !== 'undefined' && inputOptions instanceof Map) {
-      inputOptions.forEach((value, key) => {
-        let valueFormatted = value;
-        if (typeof valueFormatted === 'object') {
-          // case of <optgroup>
-          valueFormatted = formatInputOptions(valueFormatted);
-        }
-        result.push([key, valueFormatted]);
-      });
-    } else {
-      Object.keys(inputOptions).forEach(key => {
-        let valueFormatted = inputOptions[key];
-        if (typeof valueFormatted === 'object') {
-          // case of <optgroup>
-          valueFormatted = formatInputOptions(valueFormatted);
-        }
-        result.push([key, valueFormatted]);
-      });
-    }
-    return result;
-  };
-
-  /**
-   * @param {string} optionValue
-   * @param {InputValue | Promise<InputValue> | { toPromise: () => InputValue }} inputValue
-   * @returns {boolean}
-   */
-  const isSelected = (optionValue, inputValue) => {
-    return inputValue && inputValue.toString() === optionValue.toString();
-  };
-
-  /**
-   * @param {SweetAlert2} instance
-   */
-  const handleConfirmButtonClick = instance => {
-    const innerParams = privateProps.innerParams.get(instance);
-    instance.disableButtons();
-    if (innerParams.input) {
-      handleConfirmOrDenyWithInput(instance, 'confirm');
-    } else {
-      confirm(instance, true);
-    }
-  };
-
-  /**
-   * @param {SweetAlert2} instance
-   */
-  const handleDenyButtonClick = instance => {
-    const innerParams = privateProps.innerParams.get(instance);
-    instance.disableButtons();
-    if (innerParams.returnInputValueOnDeny) {
-      handleConfirmOrDenyWithInput(instance, 'deny');
-    } else {
-      deny(instance, false);
-    }
-  };
-
-  /**
-   * @param {SweetAlert2} instance
-   * @param {Function} dismissWith
-   */
-  const handleCancelButtonClick = (instance, dismissWith) => {
-    instance.disableButtons();
-    dismissWith(DismissReason.cancel);
-  };
-
-  /**
-   * @param {SweetAlert2} instance
-   * @param {'confirm' | 'deny'} type
-   */
-  const handleConfirmOrDenyWithInput = (instance, type) => {
-    const innerParams = privateProps.innerParams.get(instance);
-    if (!innerParams.input) {
-      error(`The "input" parameter is needed to be set when using returnInputValueOn${capitalizeFirstLetter(type)}`);
-      return;
-    }
-    const inputValue = getInputValue(instance, innerParams);
-    if (innerParams.inputValidator) {
-      handleInputValidator(instance, inputValue, type);
-    } else if (!instance.getInput().checkValidity()) {
-      instance.enableButtons();
-      instance.showValidationMessage(innerParams.validationMessage);
-    } else if (type === 'deny') {
-      deny(instance, inputValue);
-    } else {
-      confirm(instance, inputValue);
-    }
-  };
-
-  /**
-   * @param {SweetAlert2} instance
-   * @param {string | number | File | FileList | null} inputValue
-   * @param {'confirm' | 'deny'} type
-   */
-  const handleInputValidator = (instance, inputValue, type) => {
-    const innerParams = privateProps.innerParams.get(instance);
-    instance.disableInput();
-    const validationPromise = Promise.resolve().then(() => asPromise(innerParams.inputValidator(inputValue, innerParams.validationMessage)));
-    validationPromise.then(validationMessage => {
-      instance.enableButtons();
-      instance.enableInput();
-      if (validationMessage) {
-        instance.showValidationMessage(validationMessage);
-      } else if (type === 'deny') {
-        deny(instance, inputValue);
-      } else {
-        confirm(instance, inputValue);
-      }
-    });
-  };
-
-  /**
-   * @param {SweetAlert2} instance
-   * @param {any} value
-   */
-  const deny = (instance, value) => {
-    const innerParams = privateProps.innerParams.get(instance || undefined);
-    if (innerParams.showLoaderOnDeny) {
-      showLoading(getDenyButton());
-    }
-    if (innerParams.preDeny) {
-      privateProps.awaitingPromise.set(instance || undefined, true); // Flagging the instance as awaiting a promise so it's own promise's reject/resolve methods doesn't get destroyed until the result from this preDeny's promise is received
-      const preDenyPromise = Promise.resolve().then(() => asPromise(innerParams.preDeny(value, innerParams.validationMessage)));
-      preDenyPromise.then(preDenyValue => {
-        if (preDenyValue === false) {
-          instance.hideLoading();
-          handleAwaitingPromise(instance);
-        } else {
-          instance.close({
-            isDenied: true,
-            value: typeof preDenyValue === 'undefined' ? value : preDenyValue
-          });
-        }
-      }).catch(error => rejectWith(instance || undefined, error));
-    } else {
-      instance.close({
-        isDenied: true,
-        value
-      });
-    }
-  };
-
-  /**
-   * @param {SweetAlert2} instance
-   * @param {any} value
-   */
-  const succeedWith = (instance, value) => {
-    instance.close({
-      isConfirmed: true,
-      value
-    });
-  };
-
-  /**
-   *
-   * @param {SweetAlert2} instance
-   * @param {string} error
-   */
-  const rejectWith = (instance, error) => {
-    // @ts-ignore
-    instance.rejectPromise(error);
-  };
-
-  /**
-   *
-   * @param {SweetAlert2} instance
-   * @param {any} value
-   */
-  const confirm = (instance, value) => {
-    const innerParams = privateProps.innerParams.get(instance || undefined);
-    if (innerParams.showLoaderOnConfirm) {
-      showLoading();
-    }
-    if (innerParams.preConfirm) {
-      instance.resetValidationMessage();
-      privateProps.awaitingPromise.set(instance || undefined, true); // Flagging the instance as awaiting a promise so it's own promise's reject/resolve methods doesn't get destroyed until the result from this preConfirm's promise is received
-      const preConfirmPromise = Promise.resolve().then(() => asPromise(innerParams.preConfirm(value, innerParams.validationMessage)));
-      preConfirmPromise.then(preConfirmValue => {
-        if (isVisible$1(getValidationMessage()) || preConfirmValue === false) {
-          instance.hideLoading();
-          handleAwaitingPromise(instance);
-        } else {
-          succeedWith(instance, typeof preConfirmValue === 'undefined' ? value : preConfirmValue);
-        }
-      }).catch(error => rejectWith(instance || undefined, error));
-    } else {
-      succeedWith(instance, value);
-    }
-  };
 
   const handlePopupClick = (instance, domCache, dismissWith) => {
     const innerParams = privateProps.innerParams.get(instance);
@@ -3079,6 +3257,12 @@
     return params;
   };
 
+  /**
+   * Main method to create a new SweetAlert2 popup
+   *
+   * @param  {...SweetAlertOptions} args
+   * @returns {Promise<SweetAlertResult>}
+   */
   function fire() {
     const Swal = this; // eslint-disable-line @typescript-eslint/no-this-alias
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
@@ -3103,7 +3287,8 @@
    * const {value: firstName} = await TextPrompt('What is your first name?')
    * const {value: lastName} = await TextPrompt('What is your last name?')
    *
-   * @param mixinParams
+   * @param {SweetAlertOptions} mixinParams
+   * @returns {SweetAlert}
    */
   function mixin(mixinParams) {
     class MixinSwal extends this {
@@ -3111,6 +3296,7 @@
         return super._main(params, Object.assign({}, mixinParams, priorityMixinParams));
       }
     }
+    // @ts-ignore
     return MixinSwal;
   }
 
@@ -3218,45 +3404,45 @@
 
   var staticMethods = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    isValidParameter: isValidParameter,
-    isUpdatableParameter: isUpdatableParameter,
-    isDeprecatedParameter: isDeprecatedParameter,
     argsToParams: argsToParams,
-    getContainer: getContainer,
-    getPopup: getPopup,
-    getTitle: getTitle,
-    getHtmlContainer: getHtmlContainer,
-    getImage: getImage,
-    getIcon: getIcon,
-    getIconContent: getIconContent,
-    getInputLabel: getInputLabel,
-    getCloseButton: getCloseButton,
-    getActions: getActions,
-    getConfirmButton: getConfirmButton,
-    getDenyButton: getDenyButton,
-    getCancelButton: getCancelButton,
-    getLoader: getLoader,
-    getFooter: getFooter,
-    getTimerProgressBar: getTimerProgressBar,
-    getFocusableElements: getFocusableElements,
-    getValidationMessage: getValidationMessage,
-    getProgressSteps: getProgressSteps,
-    isLoading: isLoading,
-    isVisible: isVisible,
+    bindClickHandler: bindClickHandler,
+    clickCancel: clickCancel,
     clickConfirm: clickConfirm,
     clickDeny: clickDeny,
-    clickCancel: clickCancel,
-    fire: fire,
-    mixin: mixin,
-    showLoading: showLoading,
     enableLoading: showLoading,
+    fire: fire,
+    getActions: getActions,
+    getCancelButton: getCancelButton,
+    getCloseButton: getCloseButton,
+    getConfirmButton: getConfirmButton,
+    getContainer: getContainer,
+    getDenyButton: getDenyButton,
+    getFocusableElements: getFocusableElements,
+    getFooter: getFooter,
+    getHtmlContainer: getHtmlContainer,
+    getIcon: getIcon,
+    getIconContent: getIconContent,
+    getImage: getImage,
+    getInputLabel: getInputLabel,
+    getLoader: getLoader,
+    getPopup: getPopup,
+    getProgressSteps: getProgressSteps,
     getTimerLeft: getTimerLeft,
-    stopTimer: stopTimer,
-    resumeTimer: resumeTimer,
-    toggleTimer: toggleTimer,
+    getTimerProgressBar: getTimerProgressBar,
+    getTitle: getTitle,
+    getValidationMessage: getValidationMessage,
     increaseTimer: increaseTimer,
+    isDeprecatedParameter: isDeprecatedParameter,
+    isLoading: isLoading,
     isTimerRunning: isTimerRunning,
-    bindClickHandler: bindClickHandler
+    isUpdatableParameter: isUpdatableParameter,
+    isValidParameter: isValidParameter,
+    isVisible: isVisible,
+    mixin: mixin,
+    resumeTimer: resumeTimer,
+    showLoading: showLoading,
+    stopTimer: stopTimer,
+    toggleTimer: toggleTimer
   });
 
   class Timer {
@@ -3270,6 +3456,10 @@
       this.running = false;
       this.start();
     }
+
+    /**
+     * @returns {number}
+     */
     start() {
       if (!this.running) {
         this.running = true;
@@ -3278,14 +3468,23 @@
       }
       return this.remaining;
     }
+
+    /**
+     * @returns {number}
+     */
     stop() {
-      if (this.running) {
+      if (this.started && this.running) {
         this.running = false;
         clearTimeout(this.id);
         this.remaining -= new Date().getTime() - this.started.getTime();
       }
       return this.remaining;
     }
+
+    /**
+     * @param {number} n
+     * @returns {number}
+     */
     increase(n) {
       const running = this.running;
       if (running) {
@@ -3297,6 +3496,10 @@
       }
       return this.remaining;
     }
+
+    /**
+     * @returns {number}
+     */
     getTimerLeft() {
       if (this.running) {
         this.stop();
@@ -3304,6 +3507,10 @@
       }
       return this.remaining;
     }
+
+    /**
+     * @returns {boolean}
+     */
     isRunning() {
       return this.running;
     }
@@ -3686,8 +3893,13 @@
     init(params);
   }
 
+  /** @type {SweetAlert} */
   let currentInstance;
   class SweetAlert {
+    /**
+     * @param {...any} args
+     * @this {SweetAlert}
+     */
     constructor() {
       // Prevent run in Node env
       if (typeof window === 'undefined') {
@@ -3700,16 +3912,12 @@
         args[_key] = arguments[_key];
       }
       const outerParams = Object.freeze(this.constructor.argsToParams(args));
-      Object.defineProperties(this, {
-        params: {
-          value: outerParams,
-          writable: false,
-          enumerable: true,
-          configurable: true
-        }
-      });
 
-      // @ts-ignore
+      /** @type {Readonly<SweetAlertOptions>} */
+      this.params = outerParams;
+
+      /** @type {boolean} */
+      this.isAwaitingPromise = false;
       const promise = currentInstance._main(currentInstance.params);
       privateProps.promise.set(this, promise);
     }
@@ -3717,7 +3925,6 @@
       let mixinParams = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       showWarningsForParams(Object.assign({}, mixinParams, userParams));
       if (globalState.currentInstance) {
-        // @ts-ignore
         globalState.currentInstance._destroy();
         if (isModal()) {
           unsetAriaHidden();
@@ -3754,7 +3961,7 @@
   }
 
   /**
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    * @param {DomCache} domCache
    * @param {SweetAlertOptions} innerParams
    * @returns {Promise}
@@ -3766,7 +3973,6 @@
        * @param {DismissReason} dismiss
        */
       const dismissWith = dismiss => {
-        // @ts-ignore
         instance.close({
           isDismissed: true,
           dismiss
@@ -3784,7 +3990,6 @@
         handleCancelButtonClick(instance, dismissWith);
       };
       domCache.closeButton.onclick = () => {
-        // @ts-ignore
         dismissWith(DismissReason.close);
       };
       handlePopupClick(instance, domCache, dismissWith);
@@ -3815,7 +4020,7 @@
   };
 
   /**
-   * @param {SweetAlert2} instance
+   * @param {SweetAlert} instance
    * @returns {DomCache}
    */
   const populateDomCache = instance => {
@@ -3927,7 +4132,22 @@
   }
 
   // Assign instance methods from src/instanceMethods/*.js to prototype
-  Object.assign(SweetAlert.prototype, instanceMethods);
+  SweetAlert.prototype.disableButtons = disableButtons;
+  SweetAlert.prototype.enableButtons = enableButtons;
+  SweetAlert.prototype.getInput = getInput;
+  SweetAlert.prototype.disableInput = disableInput;
+  SweetAlert.prototype.enableInput = enableInput;
+  SweetAlert.prototype.hideLoading = hideLoading;
+  SweetAlert.prototype.disableLoading = hideLoading;
+  SweetAlert.prototype.showValidationMessage = showValidationMessage;
+  SweetAlert.prototype.resetValidationMessage = resetValidationMessage;
+  SweetAlert.prototype.close = close;
+  SweetAlert.prototype.closePopup = close;
+  SweetAlert.prototype.closeModal = close;
+  SweetAlert.prototype.closeToast = close;
+  SweetAlert.prototype.rejectPromise = rejectPromise;
+  SweetAlert.prototype.update = update;
+  SweetAlert.prototype._destroy = _destroy;
 
   // Assign static methods from src/staticMethods/*.js to constructor
   Object.assign(SweetAlert, staticMethods);
@@ -3939,13 +4159,14 @@
      * @returns {any | undefined}
      */
     SweetAlert[key] = function () {
-      if (currentInstance) {
+      if (currentInstance && currentInstance[key]) {
         return currentInstance[key](...arguments);
       }
+      return null;
     };
   });
   SweetAlert.DismissReason = DismissReason;
-  SweetAlert.version = '11.7.0';
+  SweetAlert.version = '11.7.10';
 
   const Swal = SweetAlert;
   // @ts-ignore

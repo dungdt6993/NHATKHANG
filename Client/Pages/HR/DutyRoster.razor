@@ -13,7 +13,7 @@
                 </h5>
 
                 <div class="ml-auto">
-                    @if (sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_UpdateShift").Result)
+                    @if (HR_DutyRoster_UpdateShift)
                     {
                         <button type="button" class="btn btn-sm btn-success" data-target="#InitializeModalUpdate_Shift" data-toggle="modal" @onclick="(() => InitializeModalUpdate_Shift(0, shiftVM))"><i class="fas fa-plus-circle"></i> Thêm mới</button>
                     }
@@ -97,12 +97,12 @@
     </div>
 </div>
 
-@if (sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_UpdateShift").Result)
+@if (HR_DutyRoster_UpdateShift)
 {
     <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Shift">
         <div class="modal-dialog">
             <div class="modal-content">
-                <EditForm Model="@shiftVM" OnValidSubmit="@UpdateShift">
+                <EditForm Model="@shiftVM" Context="formShiftVM">
 
                     <FluentValidationValidator />
 
@@ -111,7 +111,7 @@
                             <span>CẬP NHẬT CA</span>
                         </h5>
 
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => CloseModalUpdate_Shift())">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => InitializeModal_Shift())">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -122,7 +122,7 @@
                             <div class="col-sm-3">
                                 @if (shiftVM.IsTypeUpdate == 0)
                                 {
-                                    <InputText class="form-control" name="mask-uppercase" placeholder="Mã ca" @bind-Value="shiftVM.ShiftID" autofocus />
+                                    <InputText class="form-control" name="mask-uppercase" placeholder="Mã ca" @bind-Value:get="shiftVM.ShiftID" @bind-Value:set="(value) => {shiftVM.ShiftID = value.ToUpper();}" autofocus />
                                     <ValidationMessage For="@(() => shiftVM.ShiftID)" />
                                 }
                                 else
@@ -178,80 +178,80 @@
                                     <option value=@string.Empty>-----Loại ca-----</option>
                                     @if (shiftTypeVMs != null)
                                     {
-                                    @foreach (var _shiftTypeVM in shiftTypeVMs)
+                                        @foreach (var _shiftTypeVM in shiftTypeVMs)
                                         {
-                                        <option data-subtext="@_shiftTypeVM.ShiftTypeID" value="@_shiftTypeVM.ShiftTypeID">@_shiftTypeVM.ShiftTypeName</option>
+                                            <option data-subtext="@_shiftTypeVM.ShiftTypeID" value="@_shiftTypeVM.ShiftTypeID">@_shiftTypeVM.ShiftTypeName</option>
                                         }
                                     }
-                            </InputSelect>
-                            <ValidationMessage For="@(() => shiftVM.ShiftTypeID)" />
+                                </InputSelect>
+                                <ValidationMessage For="@(() => shiftVM.ShiftTypeID)" />
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Giờ vào</label>
-                        <div class="col-sm-4">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Giờ vào</label>
+                            <div class="col-sm-4">
 
-                            <div class="input-group">
-                                <input class="form-control"
+                                <div class="input-group">
+                                    <input class="form-control"
                                        name="time-mask"
                                        onClick="this.select();"
                                        @bind="onchange_BeginTime">
-                                <div class="input-group-append">
-                                    <div class="input-group-text"><i class="fa-solid fa-clock"></i></div>
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="fa-solid fa-clock"></i></div>
+                                    </div>
+                                    <ValidationMessage For="@(() => shiftVM.BeginTime)" />
                                 </div>
-                                <ValidationMessage For="@(() => shiftVM.BeginTime)" />
+
                             </div>
 
-                        </div>
-
-                        <label class="col-sm-2 col-form-label">Giờ ra</label>
-                        <div class="col-sm-4">
-                            <div class="input-group">
-                                <input class="form-control"
+                            <label class="col-sm-2 col-form-label">Giờ ra</label>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input class="form-control"
                                        name="time-mask"
                                        onClick="this.select();"
                                        @bind="onchange_EndTime">
-                                <div class="input-group-append">
-                                    <div class="input-group-text"><i class="fa-solid fa-clock"></i></div>
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="fa-solid fa-clock"></i></div>
+                                    </div>
+                                    <ValidationMessage For="@(() => shiftVM.EndTime)" />
                                 </div>
-                                <ValidationMessage For="@(() => shiftVM.EndTime)" />
+                            </div>
+
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-10">
+                                <div class="form-group clearfix">
+                                    <div class="icheck-success d-inline">
+                                        <input type="radio" id="isActive1" name="isActive" checked="@(shiftVM.isActive == true)" @onchange="(() => shiftVM.isActive = true)">
+                                        <label for="isActive1">
+                                            Hoạt động
+                                        </label>
+                                    </div>
+                                    <label>
+                                        &nbsp;&nbsp;
+                                    </label>
+                                    <div class="icheck-danger d-inline">
+                                        <input type="radio" id="isActive2" name="isActive" checked="@(shiftVM.isActive == false)" @onchange="(() => shiftVM.isActive = false)">
+                                        <label for="isActive2">
+                                            Không hoạt động
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                     </div>
-
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label"></label>
-                        <div class="col-sm-10">
-                            <div class="form-group clearfix">
-                                <div class="icheck-success d-inline">
-                                    <input type="radio" id="isActive1" name="isActive" checked="@(shiftVM.isActive == true)" @onchange="(() => shiftVM.isActive = true)">
-                                    <label for="isActive1">
-                                        Hoạt động
-                                    </label>
-                                </div>
-                                <label>
-                                    &nbsp;&nbsp;
-                                </label>
-                                <div class="icheck-danger d-inline">
-                                    <input type="radio" id="isActive2" name="isActive" checked="@(shiftVM.isActive == false)" @onchange="(() => shiftVM.isActive = false)">
-                                    <label for="isActive2">
-                                        Không hoạt động
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer justify-content-center">
-                    @if (shiftVM.ShiftID != "OFF" && shiftVM.ShiftID != "PH" && shiftVM.ShiftID != "DO" && shiftVM.ShiftID != "AL" && shiftVM.ShiftID != "CLDO" && shiftVM.ShiftID != "CLPH" && shiftVM.ShiftID != "UP")
+                    <div class="modal-footer justify-content-center">
+                        @if (shiftVM.ShiftID != "OFF" && shiftVM.ShiftID != "PH" && shiftVM.ShiftID != "DO" && shiftVM.ShiftID != "AL" && shiftVM.ShiftID != "CLDO" && shiftVM.ShiftID != "CLPH" && shiftVM.ShiftID != "UP")
                         {
-                            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                            <button type="submit" class="btn btn-success" @onclick=@(() => UpdateShift(formShiftVM, shiftVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                             @if (shiftVM.IsTypeUpdate == 1)
                             {
-                                <button type="submit" class="btn btn-danger" @onclick=@(() => shiftVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                                <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateShift(formShiftVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                             }
                         }
                     </div>
@@ -337,7 +337,6 @@
 
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times"></i> Thoát</button>
                     <button class="btn btn-success" @onclick=@(()=>lockDutyRosterVM.IsTypeUpdate = 1)>
                         <i class="fa-solid fa-lock"></i>
                         Khóa
@@ -457,7 +456,7 @@
                     <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
                         @if (position_filter_list != null)
                         {
-                            @foreach (var positiongroup_filter in position_filter_list.Select(x=> new {x.PositionGroupID, x.PositionGroupName}).Distinct())
+                            @foreach (var positiongroup_filter in position_filter_list.Select(x => new { x.PositionGroupID, x.PositionGroupName }).Distinct())
                             {
                                 <option value="@positiongroup_filter.PositionGroupID">@positiongroup_filter.PositionGroupName</option>
                             }
@@ -499,13 +498,13 @@
 
             <div class="card-header text-right">
                 <button type="button" class="btn btn-info" data-target="#InitializeModal_Shift" data-toggle="modal" @onclick="()=>InitializeModal_Shift()"><i class="fa-solid fa-clipboard-list"></i> Bảng ca</button>
-                @if (payrollService.IsOpenFunc(filterHrVM).Result)
+                @if (IsOpenFunc)
                 {
-                    @if (sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_ControlOFF").Result)
+                    @if (HR_DutyRoster_ControlOFF)
                     {
                         <button type="button" class="btn btn-success" @onclick="()=>CalcControlDAYOFF()"><i class="fa-solid fa-calculator"></i> Kiểm soát ngày nghỉ</button>
                     }
-                    @if (sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_Lock").Result)
+                    @if (HR_DutyRoster_Lock)
                     {
                         <button type="button" class="btn btn-danger" data-target="#InitializeModal_LockDutyRoster" data-toggle="modal" @onclick="()=>InitializeModal_LockDutyRoster()"><i class="fas fa-lock"></i> Khóa bảng công</button>
                     }
@@ -588,7 +587,7 @@
                                         <td>@_dutyRosterVM_0.PositionName</td>
                                         @if (_dutyRosterVM_0.isLock == 0)
                                         {
-                                            if (!sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_Update").Result)
+                                            if (!HR_DutyRoster_Update)
                                             {
                                                 <td class="text-danger">
                                                     <i class="fa-solid fa-lock"></i>
@@ -630,7 +629,7 @@
 
                                             _dutyRosterVM_1.InputAttributes = new Dictionary<string, object>() { { "style", colorDayoff }, { "onpaste", "focusInputNextID('" + _dutyRosterVM_1.InputNextID + "')" } };
 
-                                            if (_dutyRosterVM_1.ckJoined == 0 || _dutyRosterVM_1.ckTerminated == 1 || _dutyRosterVM_1.isLock == 1 || !sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_Update").Result)
+                                            if (_dutyRosterVM_1.ckJoined == 0 || _dutyRosterVM_1.ckTerminated == 1 || _dutyRosterVM_1.isLock == 1 || !HR_DutyRoster_Update)
                                             {
 
                                                 @if (_dutyRosterVM_1.ckJoined == 0 || _dutyRosterVM_1.ckTerminated == 1)

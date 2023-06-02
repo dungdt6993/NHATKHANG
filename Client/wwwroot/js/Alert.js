@@ -25,6 +25,7 @@ function Swal_Alert(title, type) {
         position: 'top-end',
         icon: 'success',
         title: title,
+        type: type,
         showConfirmButton: false,
         timer: 1000
     })

@@ -1,6 +1,7 @@
 ﻿using D69soft.Shared.Models.ViewModels.DOC;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using System.Collections;
 using System.Net.Http.Json;
 
 namespace D69soft.Client.Services.HR
@@ -30,7 +31,12 @@ namespace D69soft.Client.Services.HR
 
         public async Task<DutyRosterVM> GetDutyRosterByDay(FilterHrVM _filterHrVM, DutyRosterVM _dutyRosterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetDutyRosterByDay/{_dutyRosterVM}", _filterHrVM);
+            ArrayList arrayList = new ArrayList();
+
+            arrayList.Add(_filterHrVM);
+            arrayList.Add(_dutyRosterVM);
+
+            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetDutyRosterByDay", arrayList);
 
             return await response.Content.ReadFromJsonAsync<DutyRosterVM>();
         }
@@ -149,13 +155,6 @@ namespace D69soft.Client.Services.HR
             var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetEmplTrfList", _filterHrVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<DutyRosterVM>>();
-        }
-
-        public async Task<DutyRosterVM> GetDutyRosterByEserial(FilterHrVM _filterHrVM, DutyRosterVM _dutyRosterVM)
-        {
-            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetDutyRosterByEserial/{_dutyRosterVM}", _filterHrVM);
-
-            return await response.Content.ReadFromJsonAsync<DutyRosterVM>();
         }
 
         public async Task<bool> UpdatePositionWork(DutyRosterVM _dutyRosterVM)

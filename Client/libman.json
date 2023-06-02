@@ -29,7 +29,7 @@
       "destination": "wwwroot/plugins/overlayScrollbars/"
     },
     {
-      "library": "limonte-sweetalert2@11.7.0",
+      "library": "limonte-sweetalert2@11.7.10",
       "destination": "wwwroot/plugins/limonte-sweetalert2/"
     },
     {

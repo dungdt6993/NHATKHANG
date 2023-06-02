@@ -58,7 +58,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("DayOff_calcAL")]
-        public async Task<ActionResult<bool>> DayOff_calcAL(FilterHrVM entity)
+        public async Task<ActionResult<bool>> DayOff_calcAL(FilterHrVM _filterHrVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -66,10 +66,10 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@Y", entity.Year);
-                parm.Add("@M", entity.Month);
-                parm.Add("@DivsID", entity.DivisionID);
-                parm.Add("@Eserial", entity.Eserial);
+                parm.Add("@Y", _filterHrVM.Year);
+                parm.Add("@M", _filterHrVM.Month);
+                parm.Add("@DivsID", _filterHrVM.DivisionID);
+                parm.Add("@Eserial", _filterHrVM.Eserial);
 
                 await conn.ExecuteAsync("HR.DayOff_calcAL", parm, commandType: CommandType.StoredProcedure);
             }
@@ -77,7 +77,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("DayOff_calcDO")]
-        public async Task<ActionResult<bool>> DayOff_calcDO(FilterHrVM entity)
+        public async Task<ActionResult<bool>> DayOff_calcDO(FilterHrVM _filterHrVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -85,10 +85,10 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@Y", entity.Year);
-                parm.Add("@M", entity.Month);
-                parm.Add("@DivsID", entity.DivisionID);
-                parm.Add("@Eserial", entity.Eserial);
+                parm.Add("@Y", _filterHrVM.Year);
+                parm.Add("@M", _filterHrVM.Month);
+                parm.Add("@DivsID", _filterHrVM.DivisionID);
+                parm.Add("@Eserial", _filterHrVM.Eserial);
 
                 await conn.ExecuteAsync("HR.DayOff_calcDO", parm, commandType: CommandType.StoredProcedure);
             }
@@ -96,7 +96,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("DayOff_calcPH")]
-        public async Task<ActionResult<bool>> DayOff_calcPH(FilterHrVM entity)
+        public async Task<ActionResult<bool>> DayOff_calcPH(FilterHrVM _filterHrVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -104,10 +104,10 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@Y", entity.Year);
-                parm.Add("@M", entity.Month);
-                parm.Add("@DivsID", entity.DivisionID);
-                parm.Add("@Eserial", entity.Eserial);
+                parm.Add("@Y", _filterHrVM.Year);
+                parm.Add("@M", _filterHrVM.Month);
+                parm.Add("@DivsID", _filterHrVM.DivisionID);
+                parm.Add("@Eserial", _filterHrVM.Eserial);
 
                 await conn.ExecuteAsync("HR.DayOff_calcPH", parm, commandType: CommandType.StoredProcedure);
             }
@@ -115,7 +115,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("DayOff_calcControlDAYOFF")]
-        public async Task<ActionResult<bool>> DayOff_calcControlDAYOFF(FilterHrVM entity)
+        public async Task<ActionResult<bool>> DayOff_calcControlDAYOFF(FilterHrVM _filterHrVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -123,10 +123,10 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@Y", entity.Year);
-                parm.Add("@M", entity.Month);
-                parm.Add("@DivsID", entity.DivisionID);
-                parm.Add("@Eserial", entity.Eserial);
+                parm.Add("@Y", _filterHrVM.Year);
+                parm.Add("@M", _filterHrVM.Month);
+                parm.Add("@DivsID", _filterHrVM.DivisionID);
+                parm.Add("@Eserial", _filterHrVM.Eserial);
 
                 await conn.ExecuteAsync("HR.DayOff_calcControlDAYOFF", parm, commandType: CommandType.StoredProcedure);
             }
@@ -134,7 +134,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("DayOff_calcDODefault/{_typeCalc}")]
-        public async Task<ActionResult<bool>> DayOff_calcDODefault(FilterHrVM entity, int _typeCalc)
+        public async Task<ActionResult<bool>> DayOff_calcDODefault(FilterHrVM _filterHrVM, int _typeCalc)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -142,8 +142,8 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@Y", entity.Year);
-                parm.Add("@M", entity.Month);
+                parm.Add("@Y", _filterHrVM.Year);
+                parm.Add("@M", _filterHrVM.Month);
                 parm.Add("@typeCalc", _typeCalc);
 
                 await conn.ExecuteAsync("HR.DayOff_calcDODefault", parm, commandType: CommandType.StoredProcedure);
@@ -152,7 +152,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("DayOff_calcPHDefault/{_typeCalc}")]
-        public async Task<ActionResult<bool>> DayOff_calcPHDefault(FilterHrVM entity, int _typeCalc)
+        public async Task<ActionResult<bool>> DayOff_calcPHDefault(FilterHrVM _filterHrVM, int _typeCalc)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -183,7 +183,7 @@ namespace D69soft.Server.Controllers.HR
 
                 IEnumerable<DayOffVM> lunars;
 
-                lunars = await conn.QueryAsync<DayOffVM>(sql, entity);
+                lunars = await conn.QueryAsync<DayOffVM>(sql, _filterHrVM);
                 if(lunars.Count() != 0)
                 {
                     string sqlUpdateLunarToSolar = "";
@@ -260,7 +260,7 @@ namespace D69soft.Server.Controllers.HR
 
         //SpecialDayOff
         [HttpPost("GetSpecialDayOffList")]
-        public async Task<ActionResult<List<DayOffVM>>> GetSpecialDayOffList(FilterHrVM entity)
+        public async Task<ActionResult<List<DayOffVM>>> GetSpecialDayOffList(FilterHrVM _filterHrVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -268,15 +268,15 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@Y", entity.Year);
-                parm.Add("@M", entity.Month);
-                parm.Add("@DivsID", entity.DivisionID);
-                parm.Add("@SectionID", entity.SectionID);
-                parm.Add("@DeptID", entity.DepartmentID);
-                parm.Add("@arrPos", entity.PositionGroupID);
-                parm.Add("@Eserial", entity.Eserial);
-                parm.Add("@DayOffType", entity.ShiftID);
-                parm.Add("@UserID", entity.UserID);
+                parm.Add("@Y", _filterHrVM.Year);
+                parm.Add("@M", _filterHrVM.Month);
+                parm.Add("@DivsID", _filterHrVM.DivisionID);
+                parm.Add("@SectionID", _filterHrVM.SectionID);
+                parm.Add("@DeptID", _filterHrVM.DepartmentID);
+                parm.Add("@arrPos", _filterHrVM.PositionGroupID);
+                parm.Add("@Eserial", _filterHrVM.Eserial);
+                parm.Add("@DayOffType", _filterHrVM.ShiftID);
+                parm.Add("@UserID", _filterHrVM.UserID);
 
                 var result = await conn.QueryAsync<DayOffVM>("HR.DayOff_viewSpecialDayOffList", parm, commandType: CommandType.StoredProcedure);
                 return result.ToList();

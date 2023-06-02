@@ -8,6 +8,8 @@ using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extension;
+using Microsoft.AspNetCore.Components.Forms;
+using D69soft.Shared.Models.Entities.HR;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -28,6 +30,14 @@ namespace D69soft.Client.Pages.HR
         bool isLoading;
 
         bool isLoadingScreen = true;
+
+        //PermisFunc
+        bool IsOpenFunc;
+
+        bool HR_DutyRoster_UpdateShift;
+        bool HR_DutyRoster_ControlOFF;
+        bool HR_DutyRoster_Lock;
+        bool HR_DutyRoster_Update;
 
         LogVM logVM = new();
 
@@ -64,15 +74,22 @@ namespace D69soft.Client.Pages.HR
 
             if (await sysService.CheckAccessFunc(UserID, "HR_DutyRoster"))
             {
+                logVM.LogUser = UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "HR_DutyRoster";
-                logVM.LogUser = UserID;
                 await sysService.InsertLog(logVM);
             }
             else
             {
                 navigationManager.NavigateTo("/");
             }
+
+            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
+
+            HR_DutyRoster_UpdateShift = await sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_UpdateShift");
+            HR_DutyRoster_ControlOFF = await sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_ControlOFF");
+            HR_DutyRoster_Lock = await sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_Lock");
+            HR_DutyRoster_Update = await sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_Update");
 
             //Initialize Filter
             filterHrVM.UserID = dutyRosterVM.UserID = UserID;
@@ -557,15 +574,19 @@ namespace D69soft.Client.Pages.HR
             }
         }
 
-        private async Task UpdateShift()
+        private async Task UpdateShift(EditContext _formShiftVM, int _IsTypeUpdate)
         {
+            shiftVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formShiftVM.Validate()) return;
+
             isLoading = true;
 
             if (shiftVM.IsTypeUpdate != 2)
             {
                 await dutyRosterService.UpdateShift(shiftVM);
+                shiftVM.IsTypeUpdate = 1;
 
-                await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Shift");
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
             }
             else
@@ -576,6 +597,8 @@ namespace D69soft.Client.Pages.HR
 
                     if (affectedRows > 0)
                     {
+                        await InitializeModal_Shift();
+
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Shift");
                         await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
                     }
@@ -590,17 +613,6 @@ namespace D69soft.Client.Pages.HR
                     shiftVM.IsTypeUpdate = 1;
                 }
             }
-
-            shiftVMs = await dutyRosterService.GetShiftList();
-
-            isLoading = false;
-        }
-
-        private async Task CloseModalUpdate_Shift()
-        {
-            isLoading = true;
-
-            shiftVMs = await dutyRosterService.GetShiftList();
 
             isLoading = false;
         }

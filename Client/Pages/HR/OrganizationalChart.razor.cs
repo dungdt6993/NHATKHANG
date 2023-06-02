@@ -7,6 +7,8 @@ using D69soft.Client.Services.HR;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extension;
+using Microsoft.AspNetCore.Components.Forms;
+using D69soft.Shared.Models.Entities.HR;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -67,9 +69,9 @@ namespace D69soft.Client.Pages.HR
 
             if (await sysService.CheckAccessFunc(UserID, "HR_OrganizationalChart"))
             {
+                logVM.LogUser = UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "HR_OrganizationalChart";
-                logVM.LogUser = UserID;
                 await sysService.InsertLog(logVM);
             }
             else
@@ -102,7 +104,7 @@ namespace D69soft.Client.Pages.HR
 
             divisionVM = _divisionVM;
 
-            await LoadDepartmentList();
+            await GetDepartmentList();
 
             isLoading = false;
         }
@@ -130,8 +132,12 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        private async Task UpdateDivision()
+        private async Task UpdateDivision(EditContext _formDivisionVM, int _IsTypeUpdate)
         {
+            divisionVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formDivisionVM.Validate()) return;
+
             isLoading = true;
 
             if (divisionVM.IsTypeUpdate != 2)
@@ -149,7 +155,7 @@ namespace D69soft.Client.Pages.HR
 
                     if (affectedRows > 0)
                     {
-                        await LoadDivisionList();
+                        await GetDivisionList();
 
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Division");
                         await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
@@ -169,7 +175,7 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        private async Task LoadDivisionList()
+        private async Task GetDivisionList()
         {
             isLoading = true;
 
@@ -210,8 +216,12 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        private async Task UpdateDepartment()
+        private async Task UpdateDepartment(EditContext _formDepartmentVM, int _IsTypeUpdate)
         {
+            departmentVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formDepartmentVM.Validate()) return;
+
             isLoading = true;
 
             if (departmentVM.IsTypeUpdate != 2)
@@ -229,7 +239,7 @@ namespace D69soft.Client.Pages.HR
 
                     if (affectedRows > 0)
                     {
-                        await LoadDepartmentList();
+                        await GetDepartmentList();
 
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Department");
                         await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
@@ -249,7 +259,7 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        private async Task LoadDepartmentList()
+        private async Task GetDepartmentList()
         {
             isLoading = true;
 
@@ -280,8 +290,12 @@ namespace D69soft.Client.Pages.HR
 
             isLoading = false;
         }
-        private async Task UpdateDepartmentGroup()
+        private async Task UpdateDepartmentGroup(EditContext _formDepartmentGroupVM, int _IsTypeUpdate)
         {
+            departmentGroupVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formDepartmentGroupVM.Validate()) return;
+
             isLoading = true;
 
             if (departmentGroupVM.IsTypeUpdate != 2)
@@ -300,7 +314,7 @@ namespace D69soft.Client.Pages.HR
                     if (affectedRows > 0)
                     {
                         departmentGroupVM.DepartmentGroupID = String.Empty;
-                        await LoadDepartmentGroupList();
+                        await GetDepartmentGroupList();
 
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_DepartmentGroup");
                         await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
@@ -319,7 +333,7 @@ namespace D69soft.Client.Pages.HR
 
             isLoading = false;
         }
-        private async Task LoadDepartmentGroupList()
+        private async Task GetDepartmentGroupList()
         {
             isLoading = true;
 
@@ -355,8 +369,12 @@ namespace D69soft.Client.Pages.HR
 
             isLoading = false;
         }
-        private async Task UpdateSection()
+        private async Task UpdateSection(EditContext _formSectionVM, int _IsTypeUpdate)
         {
+            sectionVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formSectionVM.Validate()) return;
+
             isLoading = true;
 
             if (sectionVM.IsTypeUpdate != 2)
@@ -375,7 +393,7 @@ namespace D69soft.Client.Pages.HR
                     if (affectedRows > 0)
                     {
                         sectionVM.SectionID = String.Empty;
-                        await LoadSectionList();
+                        await GetSectionList();
 
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Section");
                         await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
@@ -394,7 +412,7 @@ namespace D69soft.Client.Pages.HR
 
             isLoading = false;
         }
-        private async Task LoadSectionList()
+        private async Task GetSectionList()
         {
             isLoading = true;
 
@@ -442,8 +460,12 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        private async Task UpdatePosition()
+        private async Task UpdatePosition(EditContext _formPositionVM, int _IsTypeUpdate)
         {
+            positionVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formPositionVM.Validate()) return;
+
             isLoading = true;
 
             if (positionVM.IsTypeUpdate != 2)
@@ -463,7 +485,7 @@ namespace D69soft.Client.Pages.HR
 
                     if (affectedRows > 0)
                     {
-                        await LoadPositionList();
+                        await GetPositionList();
 
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Position");
                         await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
@@ -492,7 +514,7 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        private async Task LoadPositionList()
+        private async Task GetPositionList()
         {
             isLoading = true;
 
@@ -523,8 +545,12 @@ namespace D69soft.Client.Pages.HR
 
             isLoading = false;
         }
-        private async Task UpdatePositionGroup()
+        private async Task UpdatePositionGroup(EditContext _formPositionGroupVM, int _IsTypeUpdate)
         {
+            positionGroupVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formPositionGroupVM.Validate()) return;
+
             isLoading = true;
 
             if (positionGroupVM.IsTypeUpdate != 2)

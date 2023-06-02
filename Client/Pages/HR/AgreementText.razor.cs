@@ -282,11 +282,12 @@ namespace D69soft.Client.Pages.HR
 
             foreach (var sysReport in sysRptVMs)
             {
-                await js.InvokeAsync<object>("openInNewTab", "/RPT/RptViewer/" + sysReport.RptUrl + "");
+                await js.InvokeAsync<object>("openInNewTab", "/SYS/RptViewer/" + sysReport.RptUrl + "");
             }
 
             filterHrVM.IsChecked = false;
-            agreementTextVMs = await agreementTextService.GetAgreementTextList(filterHrVM);
+
+            await GetAgreementTextList();
         }
 
         private async Task InitializeModal_AgreementText()
@@ -339,18 +340,12 @@ namespace D69soft.Client.Pages.HR
 
             await agreementTextService.UpdateAdjustProfile(adjustProfileVM);
 
+            await InitializeModal_AgreementText();
+
             await js.InvokeAsync<object>("CloseModal", "#InitializeModal_AdjustProfileRpt");
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
-            adjustProfileVMs = await agreementTextService.GetAdjustProfileList();
-            adjustProfileRptVMs = await agreementTextService.GetAdjustProfileRptList();
-
             isLoading = false;
-        }
-
-        private async Task CloseAdjustProfileRpt()
-        {
-            adjustProfileVMs = await agreementTextService.GetAdjustProfileList();
         }
     }
 }

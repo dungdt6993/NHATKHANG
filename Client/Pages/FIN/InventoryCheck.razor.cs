@@ -12,6 +12,7 @@ using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extension;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -128,9 +129,12 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            stockVoucherVMs = await voucherService.GetStockVouchers(filterFinVM);
-
             ReportName = "CustomNewReport";
+
+            stockVoucherVM = new();
+            stockVoucherDetailVMs = new();
+
+            stockVoucherVMs = await voucherService.GetStockVouchers(filterFinVM);
 
             isLoading = false;
         }
@@ -381,8 +385,12 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
-        private async Task UpdateVoucher()
+        private async Task UpdateVoucher(EditContext formStockVoucherVM, int _IsTypeUpdate)
         {
+            stockVoucherVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!formStockVoucherVM.Validate()) return;
+
             isLoading = true;
 
             stockVoucherVM.IsTypeUpdate = stockVoucherVM.IsTypeUpdate == 5 ? 0 : stockVoucherVM.IsTypeUpdate;
@@ -410,8 +418,6 @@ namespace D69soft.Client.Pages.FIN
                 stockVoucherVM.IsTypeUpdate = 3;
 
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
-
-                await GetVouchers();
             }
             else
             {
@@ -422,7 +428,6 @@ namespace D69soft.Client.Pages.FIN
                     await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Voucher");
                     await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
 
-                    stockVoucherVM = new();
                     await GetVouchers();
                 }
                 else
@@ -450,8 +455,6 @@ namespace D69soft.Client.Pages.FIN
                 stockVoucherVM.IsTypeUpdate = 3;
 
                 await js.Toast_Alert("" + question + " thành công!", SweetAlertMessageType.success);
-
-                await GetVouchers();
             }
 
             isLoading = false;
@@ -480,18 +483,6 @@ namespace D69soft.Client.Pages.FIN
         private async Task UpdateInventoryCheck_Qty(StockVoucherDetailVM _stockVoucherDetailVM)
         {
             _stockVoucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(stockVoucherVM.VDate.Value, _stockVoucherDetailVM);
-        }
-
-        private async Task InitializeModalClose_Voucher()
-        {
-            isLoading = true;
-
-            stockVoucherVM = new();
-            stockVoucherDetailVMs = new();
-
-            stockVoucherVMs = await voucherService.GetStockVouchers(filterFinVM);
-
-            isLoading = false;
         }
     }
 }

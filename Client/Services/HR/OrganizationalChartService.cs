@@ -100,7 +100,7 @@ namespace D69soft.Client.Services.HR
         //PositionGroup
         public async Task<IEnumerable<PositionGroupVM>> GetPositionGroupList()
         {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<PositionGroupVM>>($"api/GetPositionList/GetPositionGroupList");
+            return await _httpClient.GetFromJsonAsync<IEnumerable<PositionGroupVM>>($"api/OrganizationalChart/GetPositionGroupList");
         }
         public async Task<bool> CheckContainsPositionGroupID(string id)
         {

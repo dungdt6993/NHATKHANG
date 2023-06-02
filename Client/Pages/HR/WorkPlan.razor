@@ -7,7 +7,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
-            <EditForm Model="@workPlanVM" OnValidSubmit="@UpdateWorkPlan">
+            <EditForm Model="@workPlanVM" Context="formWorkPlanVM">
 
                 <FluentValidationValidator />
 
@@ -89,10 +89,10 @@
 
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdateWorkPlan(formWorkPlanVM, workPlanVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (workPlanVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => workPlanVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateWorkPlan(formWorkPlanVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
             </EditForm>

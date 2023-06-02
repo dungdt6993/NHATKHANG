@@ -55,8 +55,8 @@ namespace D69soft.Server.Controllers.HR
             }
         }
 
-        [HttpPost("PrintAgreementText/{_agreementTexts}/{_UserID}")]
-        public async Task<ActionResult<IEnumerable<SysRptVM>>> PrintAgreementText(IEnumerable<AgreementTextVM> _agreementTexts, string _UserID)
+        [HttpPost("PrintAgreementText/{_UserID}")]
+        public async Task<ActionResult<IEnumerable<SysRptVM>>> PrintAgreementText([FromBody] IEnumerable<AgreementTextVM> _agreementTexts, string _UserID)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {

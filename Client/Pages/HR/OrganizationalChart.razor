@@ -6,7 +6,7 @@
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Division">
     <div class="modal-dialog">
         <div class="modal-content">
-            <EditForm Model="@divisionVM" OnValidSubmit="@UpdateDivision">
+            <EditForm Model="@divisionVM" Context="formDivisionVM">
 
                 <FluentValidationValidator />
 
@@ -15,7 +15,7 @@
                         <span>CẬP NHẬT CÔNG TY</span>
                     </h5>
 
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="LoadDivisionList">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="GetDivisionList">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -107,10 +107,10 @@
 
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdateDivision(formDivisionVM, divisionVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (divisionVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => divisionVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateDivision(formDivisionVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
             </EditForm>
@@ -123,7 +123,7 @@
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Department">
     <div class="modal-dialog">
         <div class="modal-content">
-            <EditForm Model="@departmentVM" OnValidSubmit="@UpdateDepartment">
+            <EditForm Model="@departmentVM" Context="formDepartmentVM">
 
                 <FluentValidationValidator />
 
@@ -132,7 +132,7 @@
                         <span>CẬP NHẬT BỘ PHẬN</span>
                     </h5>
 
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="LoadDepartmentList">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="GetDepartmentList">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -212,10 +212,10 @@
 
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdateDepartment(formDepartmentVM, departmentVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (departmentVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => departmentVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateDepartment(formDepartmentVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
             </EditForm>
@@ -229,7 +229,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
 
-            <EditForm Model="@departmentGroupVM" OnValidSubmit="@UpdateDepartmentGroup">
+            <EditForm Model="@departmentGroupVM" Context="formDepartmentGroupVM">
 
                 <FluentValidationValidator />
 
@@ -238,7 +238,7 @@
                         <span>CẬP NHẬT NHÓM BỘ PHẬN</span>
                     </h5>
 
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="LoadDepartmentGroupList">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="GetDepartmentGroupList">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -270,10 +270,10 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdateDepartmentGroup(formDepartmentGroupVM, departmentGroupVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (departmentGroupVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => departmentGroupVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateDepartmentGroup(formDepartmentGroupVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
 
@@ -288,7 +288,7 @@
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Section">
     <div class="modal-dialog">
         <div class="modal-content">
-            <EditForm Model="@sectionVM" OnValidSubmit="@UpdateSection">
+            <EditForm Model="@sectionVM" Context="formSectionVM">
 
                 <FluentValidationValidator />
 
@@ -297,7 +297,7 @@
                         <span>CẬP NHẬT KHU VỰC</span>
                     </h5>
 
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="LoadSectionList">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="GetSectionList">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -347,10 +347,10 @@
 
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdateSection(formSectionVM, sectionVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (sectionVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => sectionVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateSection(formSectionVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
             </EditForm>
@@ -363,7 +363,7 @@
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Position">
     <div class="modal-dialog">
         <div class="modal-content">
-            <EditForm Model="@positionVM" OnValidSubmit="@UpdatePosition">
+            <EditForm Model="@positionVM" Context="formPositionVM">
 
                 <FluentValidationValidator />
 
@@ -372,7 +372,7 @@
                         <span>CẬP NHẬT VỊ TRÍ</span>
                     </h5>
 
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="LoadPositionList">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="GetPositionList">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -484,10 +484,10 @@
 
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdatePosition(formPositionVM, positionVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (positionVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => positionVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdatePosition(formPositionVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
             </EditForm>
@@ -501,7 +501,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
 
-            <EditForm Model="@positionGroupVM" OnValidSubmit="@UpdatePositionGroup">
+            <EditForm Model="@positionGroupVM" Context="formPositionGroupVM">
 
                 <FluentValidationValidator />
 
@@ -546,10 +546,10 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdatePositionGroup(formPositionGroupVM, positionGroupVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (positionGroupVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => positionGroupVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdatePositionGroup(formPositionGroupVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
 

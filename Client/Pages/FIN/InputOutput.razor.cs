@@ -492,7 +492,6 @@ namespace D69soft.Client.Pages.FIN
                     await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Voucher");
                     await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
 
-                    stockVoucherVM = new();
                     await GetVouchers();
                 }
                 else

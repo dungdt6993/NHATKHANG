@@ -9,6 +9,8 @@ using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extension;
+using Microsoft.AspNetCore.Components.Forms;
+using D69soft.Shared.Models.Entities.HR;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -64,9 +66,9 @@ namespace D69soft.Client.Pages.HR
 
             if (await sysService.CheckAccessFunc(UserID, "HR_WorkPlan"))
             {
-                logVM.LogType = "FUNC";
+				logVM.LogUser = UserID;
+				logVM.LogType = "FUNC";
                 logVM.LogName = "HR_WorkPlan";
-                logVM.LogUser = UserID;
                 await sysService.InsertLog(logVM);
             }
             else
@@ -193,8 +195,12 @@ namespace D69soft.Client.Pages.HR
             }
         }
 
-        private async Task UpdateWorkPlan()
+        private async Task UpdateWorkPlan(EditContext _formWorkPlanVM, int _IsTypeUpdate)
         {
+            workPlanVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formWorkPlanVM.Validate()) return;
+
             isLoading = true;
 
             if (workPlanVM.IsTypeUpdate != 2)
@@ -204,9 +210,6 @@ namespace D69soft.Client.Pages.HR
                 await dutyRosterService.UpdateWorkPlan(workPlanVM);
                 workPlanVM.IsTypeUpdate = 1;
 
-                await GetWorkPlans();
-
-                await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_WorkPlan");
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
             }
             else
@@ -244,6 +247,8 @@ namespace D69soft.Client.Pages.HR
             if ((bool)e.Value)
             {
                 _workPlanVM.WorkPlanIsDone = true;
+
+                _workPlanVM.WorkPlanDoneDate = DateTime.Now;
 
                 await dutyRosterService.UpdateWorkPlanIsDone(_workPlanVM);
 
