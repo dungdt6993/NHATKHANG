@@ -375,6 +375,19 @@ namespace D69soft.Client.Pages.HR
 
             await dayOffService.UpdateAddBalance(dayOffVM);
 
+            switch (filterHrVM.ShiftID)
+            {
+                case "AL":
+                    await dayOffService.DayOff_calcAL(filterHrVM);
+                    break;
+                case "DO":
+                    await dayOffService.DayOff_calcDO(filterHrVM);
+                    break;
+                case "PH":
+                    await dayOffService.DayOff_calcPH(filterHrVM);
+                    break;
+            }
+
             await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_AddBalance");
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 

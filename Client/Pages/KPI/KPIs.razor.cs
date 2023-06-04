@@ -25,8 +25,10 @@ namespace D69soft.Client.Pages.KPI
         protected string UserID;
 
         bool isLoading;
-
         bool isLoadingScreen = true;
+
+        //PermisFunc
+        bool KPI_KPIs_Management;
 
         LogVM logVM = new();
 
@@ -62,15 +64,17 @@ namespace D69soft.Client.Pages.KPI
 
             if (await sysService.CheckAccessFunc(UserID, "KPI_KPIs"))
             {
+                logVM.LogUser = UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "KPI_KPIs";
-                logVM.LogUser = UserID;
                 await sysService.InsertLog(logVM);
             }
             else
             {
                 navigationManager.NavigateTo("/");
             }
+
+            KPI_KPIs_Management = await sysService.CheckAccessSubFunc(UserID, "KPI_KPIs_Management");
 
             //Initialize Filter
             filterHrVM.UserID = UserID;

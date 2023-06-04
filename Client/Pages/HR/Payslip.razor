@@ -1,4 +1,5 @@
 ﻿@page "/HR/Payslip"
+@using D69soft.Client.Pages.SYS
 
 <Loading isLoading="@isLoading"></Loading>
 <LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
@@ -199,7 +200,7 @@
                                 <Virtualize Items="@payslipVMs" Context="_payslipVM" OverscanCount="50">
                                     <tr>
                                         <td class="text-center">
-                                            @if (String.IsNullOrWhiteSpace(_payslipVM.UrlPaySlipPDF))
+                                        @if (String.IsNullOrWhiteSpace(_payslipVM.UrlPaySlipPDF))
                                         {
                                             <a href="javascript:void(0);" @onclick="(() => viewPayslip(_payslipVM.ID))"><i class="fa-solid fa-file-invoice-dollar fa-2xl"></i></a>
                                         }

@@ -211,23 +211,20 @@ namespace D69soft.Server.Controllers.HR
         [HttpPost("UpdateAddBalance")]
         public async Task<ActionResult<bool>> UpdateAddBalance(DayOffVM _shiftVM)
         {
-            var sql = "BEGIN TRANSACTION ";
+            var sql = "";
             if (_shiftVM.dayOffType == "AL")
             {
                 sql += "Update HR.ALMonth set ALAddBalance = @ALAddBalance, ALNoteAddBalance = @ALNoteAddBalance, ALUserAddBalance = @UserID, ALTimeAddBalance = GETDATE() where Period=@Period and Eserial=@Eserial ";
-                sql += "exec HR.DayOff_calcAL @Year, @Month,'','','','',@Eserial,@UserID ";
             }
             if (_shiftVM.dayOffType == "DO")
             {
                 sql += "Update HR.CLDOMonth set CLDOAddBalance = @CLDOAddBalance, CLDONoteAddBalance = @CLDONoteAddBalance, CLDOUserAddBalance=@UserID, CLDOTimeAddBalance=GETDATE() where Period=@Period and Eserial=@Eserial ";
-                sql += "exec HR.DayOff_calcDO @Year, @Month,'','','','',@Eserial,@UserID ";
             }
             if (_shiftVM.dayOffType == "PH")
             {
                 sql += "Update HR.CLPHMonth set CLPHAddBalance = @CLPHAddBalance, CLPHNoteAddBalance = @CLPHNoteAddBalance, CLPHUserAddBalance=@UserID, CLPHTimeAddBalance=GETDATE() where Period=@Period and Eserial=@Eserial ";
-                sql += "exec HR.DayOff_calcPH @Year, @Month,'','','','',@Eserial,@UserID ";
             }
-            sql += "IF @@ERROR>0 BEGIN IF (@@TRANCOUNT>0) ROLLBACK TRANSACTION END ELSE BEGIN COMMIT TRANSACTION; END ";
+
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)

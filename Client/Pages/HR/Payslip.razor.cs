@@ -54,15 +54,13 @@ namespace D69soft.Client.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            
-
             UserID = (await authenticationStateTask).User.GetUserId();
 
             if (await sysService.CheckAccessFunc(UserID, "HR_Payslip"))
             {
+                logVM.LogUser = UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "HR_Payslip";
-                logVM.LogUser = UserID;
                 await sysService.InsertLog(logVM);
             }
             else

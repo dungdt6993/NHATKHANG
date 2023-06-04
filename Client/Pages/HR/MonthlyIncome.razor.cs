@@ -7,6 +7,7 @@ using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extension;
+using System.Data;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -24,8 +25,10 @@ namespace D69soft.Client.Pages.HR
         protected string UserID;
 
         bool isLoading;
-
         bool isLoadingScreen = true;
+
+        //PermisFunc
+        bool IsOpenFunc;
 
         LogVM logVM = new();
 
@@ -57,22 +60,22 @@ namespace D69soft.Client.Pages.HR
         }
 
         protected override async Task OnInitializedAsync()
-        {
-            
-
+        {      
             UserID = (await authenticationStateTask).User.GetUserId();
 
             if (await sysService.CheckAccessFunc(UserID, "HR_DutyRoster"))
             {
+                logVM.LogUser = UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "HR_DutyRoster";
-                logVM.LogUser = UserID;
                 await sysService.InsertLog(logVM);
             }
             else
             {
                 navigationManager.NavigateTo("/");
             }
+
+            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
 
             //Initialize Filter
             filterHrVM.UserID = monthlyIncomeTrnOtherVM.UserID = UserID;
@@ -367,6 +370,7 @@ namespace D69soft.Client.Pages.HR
             isLoading = true;
 
             await payrollService.UpdateMITrnOther(monthlyIncomeTrnOtherVM);
+
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
             await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_MonthlyIncomeTrnOther");
 

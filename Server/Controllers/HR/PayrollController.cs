@@ -46,7 +46,7 @@ namespace D69soft.Server.Controllers.HR
             }
         }
 
-        [HttpPost("_monthlyIncomeTrnOtherVM")]
+        [HttpPost("UpdateMITrnOther")]
         public async Task<ActionResult<bool>> UpdateMITrnOther(MonthlyIncomeTrnOtherVM _monthlyIncomeTrnOtherVM)
         {
             if (_monthlyIncomeTrnOtherVM.strSeqMITrnOther != string.Empty)

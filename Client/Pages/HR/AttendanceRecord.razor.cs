@@ -26,7 +26,6 @@ namespace D69soft.Client.Pages.HR
         protected string UserID;
 
         bool isLoading;
-
         bool isLoadingScreen = true;
 
         //PermisFunc
