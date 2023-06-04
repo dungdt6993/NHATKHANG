@@ -241,7 +241,6 @@ namespace D69soft.Client.Pages.OP
 
 					filterHrVM.SectionID = String.Empty;
                     filterHrVM.DepartmentID = String.Empty;
-                    filterHrVM.PositionGroupID = String.Empty;
                     filterHrVM.Eserial = _dutyRosterVM.Eserial;
 
                     DutyRosterVM tmpDutyRosterVM = (await dutyRosterService.GetDutyRosterList(filterHrVM)).First();
