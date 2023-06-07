@@ -9,6 +9,7 @@ using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.CRM;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extension;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace D69soft.Client.Pages.POS
 {
@@ -16,14 +17,15 @@ namespace D69soft.Client.Pages.POS
     {
         [Inject] IJSRuntime js { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
-
         [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
         [Inject] SysService sysService { get; set; }
         [Inject] CashierService cashierService { get; set; }
         [Inject] CustomerService customerService { get; set; }
 
-        bool isLoading;
+		private HubConnection hubConnection;
+
+		bool isLoading;
 
         bool isLoadingScreen = true;
 
@@ -74,9 +76,9 @@ namespace D69soft.Client.Pages.POS
 
             if (await sysService.CheckAccessFunc(filterPosVM.UserID, "POS_Cashier"))
             {
+                logVM.LogUser = filterPosVM.UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "POS_Cashier";
-                logVM.LogUser = filterPosVM.UserID;
                 await sysService.InsertLog(logVM);
             }
             else
@@ -96,30 +98,30 @@ namespace D69soft.Client.Pages.POS
                 search_itemsVMs = itemsVMs = await cashierService.GetItems(filterPosVM);
             }
 
-            //hubConnection = new HubConnectionBuilder()
-            //        .WithUrl(navigationManager.ToAbsoluteUri("/cashierHub"))
-            //        .Build();
+            hubConnection = new HubConnectionBuilder()
+                    .WithUrl(navigationManager.ToAbsoluteUri("/cashierHub"))
+                    .Build();
 
-            //hubConnection.On<string, string, string>("Receive_LoadRoomTable", (POSCode, roomTableID, userID) =>
-            //{
-            //    if (POSCode == filterPosVM.POSCode)
-            //    {
-            //        if (!String.IsNullOrEmpty(infoInvoice.CheckNo))
-            //        {
-            //            if (filterPosVM.UserID != userID && infoInvoice.RoomTableID == roomTableID && roomTableID != "TakeOut")
-            //            {
-            //                js.Swal_Message("" + infoInvoice.RoomTableAreaName + "/" + infoInvoice.RoomTableName + "", "Nhân viên mã <strong>#" + userID + "</strong> đang cập nhật!.", SweetAlertMessageType.warning);
-            //                infoInvoice = new();
-            //            }
-            //        }
+            hubConnection.On<string, string, string>("Receive_LoadRoomTable", (POSCode, roomTableID, userID) =>
+            {
+                if (POSCode == filterPosVM.POSCode)
+                {
+                    if (!String.IsNullOrEmpty(infoInvoice.CheckNo))
+                    {
+                        if (filterPosVM.UserID != userID && infoInvoice.RoomTableID == roomTableID && roomTableID != "TakeOut")
+                        {
+                            js.Swal_Message("" + infoInvoice.RoomTableAreaName + "/" + infoInvoice.RoomTableName + "", "Nhân viên mã <strong>#" + userID + "</strong> đang cập nhật!.", SweetAlertMessageType.warning);
+                            infoInvoice = new();
+                        }
+                    }
 
-            //        FilterRoomTable(filterPosVM.RoomTableAreaID);
-            //    }
+                    FilterRoomTable(filterPosVM.RoomTableAreaID);
+                }
 
-            //    StateHasChanged();
-            //});
+                StateHasChanged();
+            });
 
-            //await hubConnection.StartAsync();
+            await hubConnection.StartAsync();
 
 
             isLoadingScreen = false;
@@ -203,7 +205,7 @@ namespace D69soft.Client.Pages.POS
 
                 filterPosVM.ICode = String.Empty;
 
-                //await hubConnection.SendAsync("Send_LoadRoomTable", filterPosVM.POSCode, filterPosVM.RoomTableID, filterPosVM.UserID);
+                await hubConnection.SendAsync("Send_LoadRoomTable", filterPosVM.POSCode, filterPosVM.RoomTableID, filterPosVM.UserID);
             }
 
             isLoading = false;
@@ -221,7 +223,7 @@ namespace D69soft.Client.Pages.POS
             {
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
-                //await hubConnection.SendAsync("Send_LoadRoomTable", filterPosVM.POSCode, infoInvoice.RoomTableID, filterPosVM.UserID);
+                await hubConnection.SendAsync("Send_LoadRoomTable", filterPosVM.POSCode, infoInvoice.RoomTableID, filterPosVM.UserID);
             }
 
             infoInvoice = await cashierService.GetInfoInvoice(filterPosVM);
@@ -276,7 +278,7 @@ namespace D69soft.Client.Pages.POS
             {
                 await cashierService.DelInvoice(infoInvoice.CheckNo);
 
-                //await hubConnection.SendAsync("Send_LoadRoomTable", filterPosVM.POSCode, infoInvoice.RoomTableID, filterPosVM.UserID);
+                await hubConnection.SendAsync("Send_LoadRoomTable", filterPosVM.POSCode, infoInvoice.RoomTableID, filterPosVM.UserID);
 
                 infoInvoice = new();
             }
@@ -652,7 +654,7 @@ namespace D69soft.Client.Pages.POS
             await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Payment");
             await js.Toast_Alert("Thanh toán thành công!", SweetAlertMessageType.success);
 
-            //await hubConnection.SendAsync("Send_LoadRoomTable", filterPosVM.POSCode, infoInvoice.RoomTableID, filterPosVM.UserID);
+            await hubConnection.SendAsync("Send_LoadRoomTable", filterPosVM.POSCode, infoInvoice.RoomTableID, filterPosVM.UserID);
 
             payment.isPayment = 1;
 
@@ -673,19 +675,10 @@ namespace D69soft.Client.Pages.POS
             infoInvoice.IsClickChangeRoomTable = 0;
         }
 
-
         protected async Task PrintInvoice()
         {
             filterPosVM.ReportName = "POS_PrintInvoice?CheckNo="+ infoInvoice.CheckNo+ "";
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalView_Rpt");
-        }
-
-        private async ValueTask DisposeAsync()
-        {
-            //if (hubConnection is not null)
-            //{
-            //    await hubConnection.DisposeAsync();
-            //}
         }
     }
 }

@@ -5,6 +5,7 @@ using DevExpress.AspNetCore;
 using DevExpress.AspNetCore.Reporting;
 using DevExpress.XtraCharts;
 using DevExpress.XtraReports.Web.Extensions;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.FileProviders;
 
 namespace D69soft
@@ -25,7 +26,11 @@ namespace D69soft
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
-            builder.Services.AddControllers(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
+            builder.Services.AddControllers(options =>
+            {
+                options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+                options.OutputFormatters.RemoveType<HttpNoContentOutputFormatter>();
+            });
 
             //Report
             builder.Services.AddDevExpressControls();

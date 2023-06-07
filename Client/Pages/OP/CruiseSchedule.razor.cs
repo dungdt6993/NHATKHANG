@@ -56,15 +56,13 @@ namespace D69soft.Client.Pages.OP
 
         protected override async Task OnInitializedAsync()
         {
-            
-
             UserID = (await authenticationStateTask).User.GetUserId();
 
             if (await sysService.CheckAccessFunc(UserID, "OP_CruiseSchedule"))
             {
+                logVM.LogUser = UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "OP_CruiseSchedule";
-                logVM.LogUser = UserID;
                 await sysService.InsertLog(logVM);
             }
             else

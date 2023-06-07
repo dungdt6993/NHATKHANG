@@ -24,8 +24,11 @@ namespace D69soft.Client.Pages.POS
         [Inject] CashierService cashierService { get; set; }
 
         bool isLoading;
-
         bool isLoadingScreen = true;
+
+        //PermisFunc
+        bool POS_Invoices_Active;
+        bool POS_Invoices_CancelActive;
 
         LogVM logVM = new();
 
@@ -58,15 +61,18 @@ namespace D69soft.Client.Pages.POS
 
             if (await sysService.CheckAccessFunc(filterPosVM.UserID, "POS_Invoices"))
             {
+                logVM.LogUser = filterPosVM.UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "POS_Invoices";
-                logVM.LogUser = filterPosVM.UserID;
                 await sysService.InsertLog(logVM);
             }
             else
             {
                 navigationManager.NavigateTo("/");
             }
+
+			POS_Invoices_Active = await sysService.CheckAccessSubFunc(filterPosVM.UserID, "POS_Invoices_Active");
+			POS_Invoices_CancelActive = await sysService.CheckAccessSubFunc(filterPosVM.UserID, "POS_Invoices_CancelActive");
 
             pointOfSaleVMs = await cashierService.GetPointOfSale();
 

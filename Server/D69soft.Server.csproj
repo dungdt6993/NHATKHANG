@@ -35,6 +35,7 @@
   <ItemGroup>
     <Folder Include="DataProtection\Export\" />
     <Folder Include="DataProtection\Upload\DOC\" />
+    <Folder Include="Hubs\" />
   </ItemGroup>
 
   <ItemGroup>

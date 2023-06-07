@@ -172,12 +172,12 @@
 							}*@
 								@if (!invoiceVM.Reference_VActive)
 								{
-									@if (sysService.CheckAccessSubFunc(filterPosVM.UserID, "POS_Invoices_Active").Result && !invoiceVM.INVActive)
+									@if (POS_Invoices_Active && !invoiceVM.INVActive)
 									{
 										<button type="button" class="btn btn-secondary" @onclick="(() => ActiveInvoice(true))"><i class="fa-solid fa-file-pen"></i> Ghi sổ</button>
 									}
 
-									@if (sysService.CheckAccessSubFunc(filterPosVM.UserID, "POS_Invoices_CancelActive").Result && invoiceVM.INVActive)
+									@if (POS_Invoices_CancelActive && invoiceVM.INVActive)
 									{
 										<button type="button" class="btn btn-secondary" @onclick="(() => ActiveInvoice(false))"><i class="fa-solid fa-file-circle-xmark"></i> Bỏ ghi sổ</button>
 									}

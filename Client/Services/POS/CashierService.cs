@@ -92,9 +92,7 @@ namespace D69soft.Client.Services.POS
 
         public async Task<IEnumerable<InvoiceVM>> GetInvoiceItems(string _CheckNo)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Cashier/GetInvoiceItems", _CheckNo);
-
-            return await response.Content.ReadFromJsonAsync<IEnumerable<InvoiceVM>>();
+            return await _httpClient.GetFromJsonAsync<IEnumerable<InvoiceVM>>($"api/Cashier/GetInvoiceItems/{_CheckNo}");
         }
 
         public async Task<InvoiceVM> GetInvoiceTotal(string _CheckNo)

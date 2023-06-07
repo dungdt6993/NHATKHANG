@@ -295,7 +295,7 @@ namespace D69soft.Server.Controllers.POS
                     conn.Open();
 
                 var result = await conn.QueryFirstOrDefaultAsync<InvoiceVM>(sql, new { CheckNo = _CheckNo });
-                return result;
+                return result == null? new InvoiceVM(): result;
             }
         }
 

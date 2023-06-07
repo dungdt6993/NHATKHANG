@@ -1,8 +1,11 @@
 ﻿@page "/POS/Cashier"
+@using D69soft.Client.Pages.SYS
 @using D69soft.Shared.Models.ViewModels.CRM;
 
 <LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 <Loading isLoading="@isLoading"></Loading>
+
+<Modal_RptViewer ReportName=@filterPosVM.ReportName></Modal_RptViewer>
 
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_Customer">
 	<div class="modal-dialog">
@@ -417,8 +420,6 @@
 	</div>
 	<!-- /.modal-dialog -->
 </div>
-
-<Modal_RptViewer ReportName=@filterPosVM.ReportName></Modal_RptViewer>
 
 <section id="POS" class="content" style="padding-top:10px">
 
