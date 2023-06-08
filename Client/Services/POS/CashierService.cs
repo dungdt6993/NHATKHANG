@@ -5,6 +5,7 @@ using D69soft.Shared.Models.ViewModels.HR;
 using System.Net.Http.Json;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Shared.Models.Entities.POS;
+using System.Collections;
 
 namespace D69soft.Client.Services.POS
 {
@@ -43,7 +44,11 @@ namespace D69soft.Client.Services.POS
 
         public async Task<bool> OpenRoomTable(FilterPosVM _filterPosVM, InvoiceVM _invoiceVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Cashier/OpenRoomTable/{_invoiceVM}", _filterPosVM);
+            ArrayList _arrayList = new ArrayList();
+            _arrayList.Add(_filterPosVM);
+            _arrayList.Add(_invoiceVM);
+
+            var response = await _httpClient.PostAsJsonAsync($"api/Cashier/OpenRoomTable", _arrayList);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }

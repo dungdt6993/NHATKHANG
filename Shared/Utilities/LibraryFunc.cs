@@ -36,7 +36,7 @@ namespace D69soft.Shared.Utilities
             return regex.Replace(temp, String.Empty).Replace('\u0111', 'd').Replace('\u0110', 'D');
         }
 
-        //Hàm bỏ khoảng trắng
+        //Hàm thay thế => 1 khoảng trắng
         public static string RepalceWhiteSpace(string input)
         {
             while (input.IndexOf("  ") >= 0)    //tim trong chuoi vi tri co 2 khoang trong tro len      
@@ -44,7 +44,8 @@ namespace D69soft.Shared.Utilities
             return input;
         }
 
-        public static string RemoveWhitespace(string input)
+        //Hàm bỏ khoảng trắng
+        public static string RemoveWhiteSpace(string input)
         {
             return new string(input.ToCharArray()
                 .Where(c => !Char.IsWhiteSpace(c))

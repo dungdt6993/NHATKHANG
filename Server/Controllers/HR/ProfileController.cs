@@ -859,11 +859,11 @@ namespace D69soft.Server.Controllers.HR
 
         //Báo cáo biến động nhân sự
         [HttpPost("GetEmplChangeList")]
-        public async Task<ActionResult<DataTable>> GetEmplChangeList(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<string>> GetEmplChangeList(FilterHrVM _filterHrVM)
         {
-            return ExecuteStoredProcPrmsToDataTable("RPT.HR_Bao_cao_bien_dong_nhan_su",
+            return JsonConvert.SerializeObject(ExecuteStoredProcPrmsToDataTable("RPT.HR_Bao_cao_bien_dong_nhan_su",
                 "@Y", _filterHrVM.Year,
-                "@DivisionID", _filterHrVM.DivisionID);
+                "@DivisionID", _filterHrVM.DivisionID));
         }
 
         public DataTable ExecuteStoredProcPrmsToDataTable(string storedName, params object[] prms)

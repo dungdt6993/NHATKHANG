@@ -15,7 +15,7 @@ namespace D69soft.Client
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddOptions();
@@ -24,10 +24,14 @@ namespace D69soft.Client
             //Service
             builder.Services.AddInfrastructure();
 
-
-
             //Auth
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+
+            //API
+            builder.Services.AddScoped(sp => new HttpClient
+            {
+                BaseAddress = new Uri(builder.Configuration["BaseAddress"])
+            });
 
             await builder.Build().RunAsync();
         }

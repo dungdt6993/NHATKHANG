@@ -5,6 +5,9 @@ using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.POS;
 using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
+using Newtonsoft.Json;
+using System.Collections;
 
 namespace D69soft.Server.Controllers.POS
 {
@@ -89,9 +92,12 @@ namespace D69soft.Server.Controllers.POS
             }
         }
 
-        [HttpPost("OpenRoomTable/{_invoiceVM}")]
-        public async Task<ActionResult<bool>> OpenRoomTable(FilterPosVM _filterPosVM, [FromRouteAttribute] InvoiceVM _invoiceVM)
+        [HttpPost("OpenRoomTable")]
+        public async Task<ActionResult<bool>> OpenRoomTable(ArrayList _arrayList)
         {
+            FilterPosVM _filterPosVM = JsonConvert.DeserializeObject<FilterPosVM>(_arrayList[0].ToString());
+            InvoiceVM _invoiceVM = JsonConvert.DeserializeObject<InvoiceVM>(_arrayList[1].ToString());
+
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)

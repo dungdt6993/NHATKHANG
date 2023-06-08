@@ -294,7 +294,7 @@ namespace D69soft.Client.Pages.HR
 
             profileVMs = await profileService.GetProfileList(filterHrVM);
 
-            //dtEmplChange = await profileService.GetEmplChangeList(filterHrVM);
+            dtEmplChange = await profileService.GetEmplChangeList(filterHrVM);
 
             await virtualizeProfileList.RefreshDataAsync();
             StateHasChanged();

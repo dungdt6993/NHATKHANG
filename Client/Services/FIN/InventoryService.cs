@@ -2,6 +2,7 @@
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using System.Collections;
 using System.Net.Http.Json;
 using System.Reflection.Emit;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -76,7 +77,11 @@ namespace D69soft.Client.Services.FIN
 
         public async Task<string> UpdateItems(ItemsVM _itemsVM, IEnumerable<QuantitativeItemsVM> _quantitativeItemsVMs)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Inventory/UpdateItems/{_quantitativeItemsVMs}", _itemsVM);
+            ArrayList _arrayList = new ArrayList();
+            _arrayList.Add(_itemsVM);
+            _arrayList.Add(_quantitativeItemsVMs);
+
+            var response = await _httpClient.PostAsJsonAsync($"api/Inventory/UpdateItems", _arrayList);
 
             return await response.Content.ReadAsStringAsync();
         }
@@ -109,7 +114,11 @@ namespace D69soft.Client.Services.FIN
 
         public async Task<List<InventoryBookDetailVM>> GetInventoryBookDetails(FilterFinVM _filterFinVM, InventoryVM _inventoryVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Inventory/GetInventoryBookDetails/{_inventoryVM}", _filterFinVM );
+            ArrayList _arrayList = new ArrayList();
+            _arrayList.Add(_filterFinVM);
+            _arrayList.Add(_inventoryVM);
+
+            var response = await _httpClient.PostAsJsonAsync($"api/Inventory/GetInventoryBookDetails", _arrayList);
 
             return await response.Content.ReadFromJsonAsync<List<InventoryBookDetailVM>>();
         }

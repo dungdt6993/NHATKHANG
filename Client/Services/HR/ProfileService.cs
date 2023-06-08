@@ -1,5 +1,6 @@
 ﻿using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using Newtonsoft.Json;
 using System.Collections;
 using System.Data;
 using System.Net.Http.Json;
@@ -252,8 +253,7 @@ namespace D69soft.Server.Services.HR
         {
             var response = await _httpClient.PostAsJsonAsync($"api/Profile/GetEmplChangeList", _filterHrVM);
 
-            return await response.Content.ReadFromJsonAsync<DataTable>();
+            return JsonConvert.DeserializeObject<DataTable>(await response.Content.ReadAsStringAsync());
         }
-
     }
 }

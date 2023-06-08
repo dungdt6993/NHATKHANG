@@ -23,7 +23,8 @@ namespace D69soft.Client.Pages.POS
         [Inject] CashierService cashierService { get; set; }
         [Inject] CustomerService customerService { get; set; }
 
-		private HubConnection hubConnection;
+        [Inject] IConfiguration configuration { get; set; }
+        private HubConnection hubConnection;
 
 		bool isLoading;
 
@@ -99,7 +100,7 @@ namespace D69soft.Client.Pages.POS
             }
 
             hubConnection = new HubConnectionBuilder()
-                    .WithUrl(navigationManager.ToAbsoluteUri("/cashierHub"))
+                    .WithUrl(configuration["BaseAddress"] + "cashierHub")
                     .Build();
 
             hubConnection.On<string, string, string>("Receive_LoadRoomTable", (POSCode, roomTableID, userID) =>

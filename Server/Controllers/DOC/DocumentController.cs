@@ -108,7 +108,7 @@ namespace D69soft.Server.Controllers.DOC
 
             if (_documentVM.FileContent != null)
             {
-                var filename = $"{LibraryFunc.RemoveWhitespace(_documentVM.DocTypeID + "_" + DateTime.Now.ToString("ddMMyyyy_HHmmss"))}.{_documentVM.FileName}";
+                var filename = $"{_documentVM.DocTypeID + "_" + DateTime.Now.ToString("ddMMyyyy_HHmmss")}.{LibraryFunc.RemoveWhiteSpace(LibraryFunc.ConvertToUnSign(_documentVM.FileName))}";
                 var path = Path.Combine(_env.ContentRootPath, $"{UrlDirectory.Upload_DOC_Private}{filename}");
 
                 var fs = System.IO.File.Create(path);

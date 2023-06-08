@@ -1,9 +1,8 @@
 using D69soft.Client.Extension;
-using D69soft.Server.Services;
+using D69soft.Server.Hubs.POS;
 using Data.Infrastructure;
 using DevExpress.AspNetCore;
 using DevExpress.AspNetCore.Reporting;
-using DevExpress.XtraCharts;
 using DevExpress.XtraReports.Web.Extensions;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.FileProviders;
@@ -35,6 +34,9 @@ namespace D69soft
             //Report
             builder.Services.AddDevExpressControls();
             builder.Services.AddScoped<ReportStorageWebExtension, CustomReportStorageWebExtension>();
+
+            //SignalR
+            builder.Services.AddSignalR();
 
             var app = builder.Build();
 
@@ -71,7 +73,13 @@ namespace D69soft
             app.UseRouting();
 
             app.MapRazorPages();
-            app.MapControllers();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                app.MapHub<CashierHub>("/cashierHub");
+            });
+
             app.MapFallbackToFile("index.html");
 
             string contentPath = app.Environment.ContentRootPath;

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 
-namespace WebApp.Hubs.POS
+namespace D69soft.Server.Hubs.POS
 {
     public class CashierHub : Hub
     {

@@ -4,6 +4,9 @@ using System.Data;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
+using Newtonsoft.Json;
+using System.Collections;
 
 namespace D69soft.Server.Controllers.FIN
 {
@@ -211,9 +214,12 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
-        [HttpPost("UpdateItems/{_quantitativeItemsVMs}")]
-        public async Task<ActionResult<string>> UpdateItems(ItemsVM _itemsVM, [FromRouteAttribute] IEnumerable<QuantitativeItemsVM> _quantitativeItemsVMs)
+        [HttpPost("UpdateItems")]
+        public async Task<ActionResult<string>> UpdateItems(ArrayList _arrayList)
         {
+            ItemsVM _itemsVM = JsonConvert.DeserializeObject<ItemsVM>(_arrayList[0].ToString());
+            IEnumerable<QuantitativeItemsVM> _quantitativeItemsVMs = JsonConvert.DeserializeObject<IEnumerable<QuantitativeItemsVM>>(_arrayList[1].ToString());
+
             var sql = String.Empty;
             if (_itemsVM.IsTypeUpdate == 0)
             {
@@ -347,9 +353,12 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
-        [HttpPost("GetInventoryBookDetails/{_inventoryVM}")]
-        public async Task<ActionResult<List<InventoryBookDetailVM>>> GetInventoryBookDetails(FilterFinVM _filterFinVM, [FromRouteAttribute] InventoryVM _inventoryVM)
+        [HttpPost("GetInventoryBookDetails")]
+        public async Task<ActionResult<List<InventoryBookDetailVM>>> GetInventoryBookDetails(ArrayList _arrayList)
         {
+            FilterFinVM _filterFinVM = JsonConvert.DeserializeObject<FilterFinVM>(_arrayList[0].ToString());
+            InventoryVM _inventoryVM = JsonConvert.DeserializeObject<InventoryVM>(_arrayList[1].ToString());
+
             var sql = "select sv.VDate, sv.VNumber, sv.VDesc, ";
             sql += "case when svd.ToStockCode = @StockCode then svd.Qty else 0 end as QtyInput, ";
             sql += "case when svd.FromStockCode = @StockCode then svd.Qty else 0 end as QtyOutput ";
