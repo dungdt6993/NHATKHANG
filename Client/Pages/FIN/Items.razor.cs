@@ -8,6 +8,7 @@ using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extension;
+using D69soft.Shared.Models.ViewModels.HR;
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -342,22 +343,24 @@ namespace D69soft.Client.Pages.FIN
 
             var resizedFile = await e.File.RequestImageFileAsync(format, 640, 480); // resize the image file
             stream = resizedFile.OpenReadStream(maxFileSize);
-
             memoryStream = new();
             await stream.CopyToAsync(memoryStream);
 
             itemsVM.IURLPicture1 = $"data:{format};base64,{Convert.ToBase64String(memoryStream.ToArray())}";// convert to a base64 string!!
 
-            itemsVM.IsUpdateIURLPicture = true;
+            itemsVM.FileContent = memoryStream.ToArray();
+
+            memoryStream.Close();
 
             isLoading = false;
         }
 
         private void FileDefault()
         {
-            itemsVM.IURLPicture1 = "/images/_default/no-image.png";
             memoryStream = null;
-            itemsVM.IsUpdateIURLPicture = true;
+            itemsVM.IsDelFileUpload = true;
+            itemsVM.IURLPicture1 = UrlDirectory.Default_Items;
+            itemsVM.FileContent = null;
         }
 
         private async Task<IEnumerable<ItemsVM>> SearchItems(string searchText)
@@ -412,23 +415,6 @@ namespace D69soft.Client.Pages.FIN
 
                 itemsVM.ICode = await inventoryService.UpdateItems(itemsVM, quantitativeItemsVMs);
 
-                if (itemsVM.IsUpdateIURLPicture)
-                {
-                    LibraryFunc.DelFileFrom(Path.Combine(Directory.GetCurrentDirectory(), $"{UrlDirectory.Upload_FIN_Items_URL_Private}{itemsVM.ICode}.png"));
-
-                    if (memoryStream != null)
-                    {
-                        var path = $"{UrlDirectory.Upload_FIN_Items_URL_Private}{itemsVM.ICode}.png";
-
-                        File.WriteAllBytes(path, memoryStream.ToArray());
-
-                        itemsVM.IURLPicture1 = $"{UrlDirectory.Upload_FIN_Items_URL_Private}{itemsVM.ICode}.png";
-                    }
-
-                    await inventoryService.UpdateUrlImg(itemsVM.ICode, itemsVM.IURLPicture1);
-                }
-
-                await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Items");
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
             }
             else
@@ -455,8 +441,6 @@ namespace D69soft.Client.Pages.FIN
                     itemsVM.IsTypeUpdate = 1;
                 }
             }
-
-            await GetItems();
 
             isLoading = false;
         }

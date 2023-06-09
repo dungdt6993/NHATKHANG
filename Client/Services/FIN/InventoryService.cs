@@ -86,10 +86,6 @@ namespace D69soft.Client.Services.FIN
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<bool> UpdateUrlImg(string _ICode, string _UrlImg)
-        {
-            return await _httpClient.GetFromJsonAsync<bool>($"api/Inventory/UpdateUrlImg/{_ICode}/{_UrlImg}");
-        }
         public async Task<bool> ContainsICode(string id)
         {
             return await _httpClient.GetFromJsonAsync<bool>($"api/Inventory/ContainsICode/{id}");

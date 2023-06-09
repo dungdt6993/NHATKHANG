@@ -1,6 +1,7 @@
 ﻿using D69soft.Shared.Models.ViewModels.DOC;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using Newtonsoft.Json;
 using System.Data;
 using System.Net.Http.Json;
 using static System.Runtime.CompilerServices.RuntimeHelpers;
@@ -81,7 +82,7 @@ namespace D69soft.Client.Services.HR
         {
             var response = await _httpClient.PostAsJsonAsync($"api/Payroll/GetPayrollList", _filterHrVM);
 
-            return await response.Content.ReadFromJsonAsync<DataTable>();
+            return JsonConvert.DeserializeObject<DataTable>(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<LockSalaryVM> GetLockSalary(FilterHrVM _filterHrVM)

@@ -1,4 +1,5 @@
 ﻿@page "/HR/Payroll"
+@using System.Data;
 
 <Loading isLoading="@isLoading"></Loading>
 <LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
@@ -651,10 +652,9 @@
         <div class="card card-purple card-outline">
 
             <div class="card-header text-right">
-                @if (sysService.CheckAccessSubFunc(UserID, "HR_Payroll_Calc").Result)
+                @if (HR_Payroll_Calc)
                 {
-
-                    @if (lockSalaryVM != null)
+                    if (lockSalaryVM != null)
                     {
                         if (lockSalaryVM.isSalLock)
                         {
@@ -688,7 +688,7 @@
             <div class="card-body table-responsive table-fixed p-0" style="height: calc(100vh - 389px);">
                 @if (dtPayroll != null)
                 {
-@*                    <table class="table table-sm table-bordered table-hover" style="font-size: 11px;">
+                    <table class="table table-sm table-bordered table-hover" style="font-size: 11px;">
                         <thead class="thead-light">
                             <tr>
                                 <th rowspan="2">Họ tên</th>
@@ -696,21 +696,13 @@
                                 <th class="text-center" colspan="5">Công việc</th>
                                 <th class="text-center" colspan="11">Lương</th>
 
-                                @{
-                                    var sqlCountShiftTypeCalc = "select Count(ShiftTypeID) + 2 as cShiftTypeID from HR.ShiftType where coalesce(PercentIncome,0) > 0";
-                                    DataTable dtCountShiftTypeCalc = payrollService.ExecuteSQLQueryToDataTable(sqlCountShiftTypeCalc);
-                                    if (dtCountShiftTypeCalc.Rows.Count > 0)
+                                    @if (dtCountShiftTypeCalc.Rows.Count > 0)
                                     {
                                         DataRow drCountShiftTypeCalc = dtCountShiftTypeCalc.Rows[0];
                                         <th class="text-center" colspan=@drCountShiftTypeCalc["cShiftTypeID"]>Công tính lương</th>
                                     }
 
-                                    var sqlCountTrnGrp = "select '['+cast(stg.TrnGroupCode as varchar)+'] '+ stg.TrnGroupName as TrnGrp, count(TrnCode) as cTrnCode from HR.SalaryTransactionGroup stg ";
-                                    sqlCountTrnGrp += "join HR.SalaryTransactionCode stc on stc.TrnGroupCode = stg.TrnGroupCode group by stg.TrnGroupCode, stg.TrnGroupName order by TrnGrp ";
-
-                                    DataTable dtCountTrnGrp = payrollService.ExecuteSQLQueryToDataTable(sqlCountTrnGrp);
-
-                                    if (dtCountTrnGrp.Rows.Count > 0)
+                                    @if (dtCountTrnGrp.Rows.Count > 0)
                                     {
                                         for (int i = 0; i < dtCountTrnGrp.Rows.Count; i++)
                                         {
@@ -718,7 +710,6 @@
                                             <th class="text-center" colspan="@drCountTrnGrp["cTrnCode"]">@drCountTrnGrp["TrnGrp"]</th>
                                         }
                                     }
-                                }
 
                                 <th class="text-center" rowspan="2">Thực lĩnh</th>
                             </tr>
@@ -731,26 +722,19 @@
                                 <th class="text-center">Ngày vào làm</th>
                                 <th class="text-center">Ngày nghỉ việc</th>
 
-                                @{
-                                    var sqlSalaryDef = "select * from HR.SalaryDef";
-                                    DataTable dtSalaryDef = payrollService.ExecuteSQLQueryToDataTable(sqlSalaryDef);
-                                    if (dtSalaryDef.Rows.Count > 0)
+                                @if (dtSalaryDef.Rows.Count > 0)
+                                {
+                                    for (int i = 0; i < dtSalaryDef.Rows.Count; i++)
                                     {
-                                        for (int i = 0; i < dtSalaryDef.Rows.Count; i++)
-                                        {
-                                            DataRow drSalaryDef = dtSalaryDef.Rows[i];
-                                            <th class="text-center">@drSalaryDef["SalaryTypeName"]</th>
-                                        }
+                                        DataRow drSalaryDef = dtSalaryDef.Rows[i];
+                                        <th class="text-center">@drSalaryDef["SalaryTypeName"]</th>
                                     }
                                 }
-
+                                
                                 <th class="text-center">Tổng</th>
                                 <th class="text-center">Khóa công</th>
 
-                                @{
-                                    var sqlShiftTypeCalc = "select ShiftTypeID, PercentIncome from HR.ShiftType where coalesce(PercentIncome,0) > 0";
-                                    DataTable dtShiftTypeCalc = payrollService.ExecuteSQLQueryToDataTable(sqlShiftTypeCalc);
-                                    if (dtShiftTypeCalc.Rows.Count > 0)
+                                    @if (dtShiftTypeCalc.Rows.Count > 0)
                                     {
                                         for (int i = 0; i < dtShiftTypeCalc.Rows.Count; i++)
                                         {
@@ -758,15 +742,10 @@
                                             <th class="text-center">@drShiftTypeCalc["ShiftTypeID"]<span>[</span>@drShiftTypeCalc["PercentIncome"]<span>%]</span></th>
                                         }
                                     }
-                                }
-
+                                
                                 <th class="text-center">Tổng công</th>
 
-                                @{
-                                    var sqlTrn = "select '['+cast(TrnCode as varchar)+'-'+cast(TrnSubCode as varchar)+'] '+ [TrnName] as Trn from HR.SalaryTransactionCode  ";
-                                    sqlTrn += "order by TrnCode, TrnSubCode ";
-                                    DataTable dtTrn = payrollService.ExecuteSQLQueryToDataTable(sqlTrn);
-                                    if (dtTrn.Rows.Count > 0)
+                                    @if (dtTrn.Rows.Count > 0)
                                     {
                                         for (int i = 0; i < dtTrn.Rows.Count; i++)
                                         {
@@ -774,8 +753,6 @@
                                             <th class="text-center">@drTrn["Trn"]</th>
                                         }
                                     }
-                                }
-
                             </tr>
                         </thead>
                         <tbody>
@@ -810,10 +787,7 @@
                                             @string.Format("{0:dd/MM/yyyy}", _drPayroll["LockFrom"])<span> - </span>@string.Format("{0:dd/MM/yyyy}", _drPayroll["LockTo"])
                                         </td>
 
-                                        @{
-                                            var sqlContent_ShiftTypeCalc = "select ShiftTypeID from HR.ShiftType where coalesce(PercentIncome,0) > 0";
-                                            DataTable dtContent_ShiftTypeCalc = payrollService.ExecuteSQLQueryToDataTable(sqlContent_ShiftTypeCalc);
-                                            if (dtContent_ShiftTypeCalc.Rows.Count > 0)
+                                            @if (dtContent_ShiftTypeCalc.Rows.Count > 0)
                                             {
                                                 for (int j = 0; j < dtContent_ShiftTypeCalc.Rows.Count; j++)
                                                 {
@@ -821,14 +795,10 @@
                                                     <td class="text-center">@_drPayroll[drContent_ShiftTypeCalc["ShiftTypeID"].ToString()]</td>
                                                 }
                                             }
-                                        }
+                                        
                                         <td class="text-center">@_drPayroll["TotalPaidDay"].ToString()</td>
 
-                                        @{
-                                            var sqlContent_Trn = "select 'TRN'+cast(TrnCode as varchar)+'x'+cast(TrnSubCode as varchar)+'' as Trn from HR.SalaryTransactionCode  ";
-                                            sqlContent_Trn += "order by TrnCode, TrnSubCode ";
-                                            DataTable dtContent_Trn = payrollService.ExecuteSQLQueryToDataTable(sqlContent_Trn);
-                                            if (dtContent_Trn.Rows.Count > 0)
+                                            @if (dtContent_Trn.Rows.Count > 0)
                                             {
                                                 for (int j = 0; j < dtContent_Trn.Rows.Count; j++)
                                                 {
@@ -836,14 +806,14 @@
                                                     <td class="text-right">@string.Format("{0:#,#.}", _drPayroll[drContent_Trn["Trn"].ToString()])</td>
                                                 }
                                             }
-                                        }
+
                                         <td class="text-right">@string.Format("{0:#,#.}", _drPayroll["NetPay"])</td>
 
                                     </tr>
                                 }
                             }
                         </tbody>
-                    </table>*@
+                    </table>
                 }
             </div>
 

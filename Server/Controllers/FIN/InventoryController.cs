@@ -7,6 +7,8 @@ using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using Newtonsoft.Json;
 using System.Collections;
+using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Utilities;
 
 namespace D69soft.Server.Controllers.FIN
 {
@@ -15,10 +17,12 @@ namespace D69soft.Server.Controllers.FIN
     public class InventoryController : ControllerBase
     {
         private readonly SqlConnectionConfig _connConfig;
+        private readonly IWebHostEnvironment _env;
 
-        public InventoryController(SqlConnectionConfig connConfig)
+        public InventoryController(SqlConnectionConfig connConfig, IWebHostEnvironment env)
         {
             _connConfig = connConfig;
+            _env = env;
         }
 
         [HttpGet("GetItemsTypes")]
@@ -272,22 +276,30 @@ namespace D69soft.Server.Controllers.FIN
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.ExecuteScalarAsync<string>(sql, _itemsVM);
-                return result;
-            }
-        }
+                _itemsVM.ICode = await conn.ExecuteScalarAsync<string>(sql, _itemsVM);
 
-        [HttpGet("UpdateUrlImg/{_Icode}/{_UrlImg}")]
-        public async Task<ActionResult<bool>> UpdateUrlImg(string _Icode, string _UrlImg)
-        {
-            var sql = "Update FIN.Items set IURLPicture1=@UrlImg where ICode=@ICode";
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
+                //Update ImageItems
+                if (_itemsVM.IsDelFileUpload)
+                {
+                    LibraryFunc.DelFileFrom(Path.Combine(_env.ContentRootPath, $"{UrlDirectory.Upload_FIN_Items_URL_Private}{_itemsVM.ICode}.png"));
+                    _itemsVM.IURLPicture1 = UrlDirectory.Default_Items;
+                }
 
-                await conn.ExecuteAsync(sql, new { ICode = _Icode, UrlImg = _UrlImg });
-                return true;
+                if (_itemsVM.FileContent != null)
+                {
+                    var filename = $"{_itemsVM.ICode}.png";
+                    var path = Path.Combine(_env.ContentRootPath, $"{UrlDirectory.Upload_FIN_Items_URL_Private}{filename}");
+                    var fs = System.IO.File.Create(path);
+                    fs.Write(_itemsVM.FileContent, 0, _itemsVM.FileContent.Length);
+                    fs.Close();
+
+                    _itemsVM.IURLPicture1 = $"{UrlDirectory.Upload_FIN_Items_URL_Public}{filename}";
+                }
+
+                var sqlImageItems = "Update FIN.Items set IURLPicture1=@IURLPicture1 where ICode=@ICode";
+                await conn.ExecuteAsync(sqlImageItems, _itemsVM);
+
+                return _itemsVM.ICode;
             }
         }
 

@@ -13,7 +13,7 @@ namespace D69soft
     {
         public static void Main(string[] args)
         {
-            Dapper.SqlMapper.Settings.CommandTimeout = 180;
+            Dapper.SqlMapper.Settings.CommandTimeout = 0;
 
             var builder = WebApplication.CreateBuilder(args);
 

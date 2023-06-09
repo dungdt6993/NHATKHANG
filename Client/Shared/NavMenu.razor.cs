@@ -34,6 +34,10 @@ namespace D69soft.Client.Shared
 
             userVM = await sysService.GetInfoUser(UserID);
 
+            if (userVM == null) {
+                navigationManager.NavigateTo("/Auth/Login");
+            }
+
             modules = await sysService.GetModuleMenu(UserID);
 
             funcMenuGrps = await sysService.GetFuncMenuGroup(UserID);

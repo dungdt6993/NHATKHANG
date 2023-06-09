@@ -369,6 +369,7 @@ namespace D69soft.Client.Pages.HR
 
             isLoading = false;
         }
+
         private async Task UpdateSection(EditContext _formSectionVM, int _IsTypeUpdate)
         {
             sectionVM.IsTypeUpdate = _IsTypeUpdate;

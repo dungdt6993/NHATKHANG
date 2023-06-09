@@ -2,6 +2,7 @@
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using Newtonsoft.Json;
 using System.Data;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -15,6 +16,14 @@ namespace D69soft.Client.Services
         public SysService(HttpClient httpClient)
         {
             _httpClient = httpClient;
+        }
+
+        //ExecuteSQLQueryToDataTable
+        public async Task<DataTable> ExecuteSQLQueryToDataTable(string _sql)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/Sys/ExecuteSQLQueryToDataTable", _sql);
+
+            return JsonConvert.DeserializeObject<DataTable>(await response.Content.ReadAsStringAsync());
         }
 
         //Log

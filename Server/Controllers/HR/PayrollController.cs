@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Utilities;
+using Newtonsoft.Json;
 
 namespace D69soft.Server.Controllers.HR
 {
@@ -251,18 +252,6 @@ namespace D69soft.Server.Controllers.HR
                 parmJob.Add("@DivsID", _filterHrVM.DivisionID);
                 await conn.ExecuteAsync("HR.Payroll_calcAvgSalaryActive", parmJob, commandType: CommandType.StoredProcedure);
 
-                /***************Kiểm soát ngày công***************/
-                //DynamicParameters parmCalcControlOFF = new DynamicParameters();
-                //parmCalcControlOFF.Add("@Y", _filterHrVM.Year);
-                //parmCalcControlOFF.Add("@M", _filterHrVM.Month);
-                //parmCalcControlOFF.Add("@DivsID", _filterHrVM.DivisionID);
-                //parmCalcControlOFF.Add("@SectionID", string.Empty);
-                //parmCalcControlOFF.Add("@DeptID", string.Empty);
-                //parmCalcControlOFF.Add("@arrPos", string.Empty);
-                //parmCalcControlOFF.Add("@Eserial", string.Empty);
-                //parmCalcControlOFF.Add("@UserID", _filterHrVM.UserID);
-                //await conn.ExecuteAsync("HR.DayOff_calcControlDAYOFF", parmCalcControlOFF, commandType: CommandType.StoredProcedure);
-
                 /***************Cập nhật ngày công***************/
                 parmJob.Add("@Y", _filterHrVM.Year);
                 parmJob.Add("@M", _filterHrVM.Month);
@@ -438,9 +427,9 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("GetPayrollList")]
-        public DataTable GetPayrollList(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<string>> GetPayrollList(FilterHrVM _filterHrVM)
         {
-            return ExecuteStoredProcPrmsToDataTable("HR.Payroll_viewPayrollDetail", 
+            return JsonConvert.SerializeObject(ExecuteStoredProcPrmsToDataTable("HR.Payroll_viewPayrollDetail", 
                 "@Y", _filterHrVM.Year,
                 "@M", _filterHrVM.Month,
                 "@DivsID", _filterHrVM.DivisionID, 
@@ -449,26 +438,7 @@ namespace D69soft.Server.Controllers.HR
                 "@arrPos", _filterHrVM.PositionGroupID, 
                 "@Eserial", _filterHrVM.Eserial, 
                 "@PayByBank", 0, 
-                "@PayByCash", 0);
-        }
-
-        public DataTable ExecuteSQLQueryToDataTable(string sql)
-        {
-            DataTable dt = new DataTable();
-
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                SqlDataAdapter cmd = new SqlDataAdapter(sql, conn);
-                cmd.SelectCommand.CommandTimeout = 0;
-                cmd.Fill(dt);
-
-                cmd.Dispose();
-            }
-
-            return dt;
+                "@PayByCash", 0));
         }
 
         public DataTable ExecuteStoredProcPrmsToDataTable(string storedName, params object[] prms)

@@ -81,7 +81,6 @@ namespace D69soft.Client.Pages.HR
 
         IEnumerable<CountryVM> countryVMs;
         IEnumerable<EthnicVM> ethnicVMs;
-        IEnumerable<ShiftVM> shiftVMs;
         IEnumerable<PermissionUserVM> permissionUserVMs;
         List<ProfileVM> profileHistorys;
         List<SalaryDefVM> salaryDefVMs;
@@ -292,9 +291,11 @@ namespace D69soft.Client.Pages.HR
 
             profileVM = new();
 
-            profileVMs = await profileService.GetProfileList(filterHrVM);
+            //Bien dong nhan su
+            dtEmplChange = await profileService.dtEmplChange(filterHrVM);
 
-            dtEmplChange = await profileService.GetEmplChangeList(filterHrVM);
+            //Load profiles
+            profileVMs = await profileService.GetProfileList(filterHrVM);
 
             await virtualizeProfileList.RefreshDataAsync();
             StateHasChanged();
@@ -782,7 +783,6 @@ namespace D69soft.Client.Pages.HR
 
             contractTypeVMs = await profileService.GetContractTypeList();
             workTypeVMs = await profileService.GetWorkTypeList();
-            shiftVMs = (await dutyRosterService.GetShiftList()).Where(x => x.isOFF == 0);
 
             salaryDefVMs = await profileService.GetSalaryDef();
 

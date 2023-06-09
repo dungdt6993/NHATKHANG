@@ -23,6 +23,13 @@ namespace D69soft.Server.Services.HR
         }
 
         //Profile
+        public async Task<DataTable> dtEmplChange(FilterHrVM _filterHrVM)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/Profile/dtEmplChange", _filterHrVM);
+
+            return JsonConvert.DeserializeObject<DataTable>(await response.Content.ReadAsStringAsync());
+        }
+
         public async Task<IEnumerable<EserialVM>> GetEserialListByID(FilterHrVM _filterHrVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/Profile/GetEserialListByID", _filterHrVM);
@@ -248,12 +255,5 @@ namespace D69soft.Server.Services.HR
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        //Báo cáo biến động nhân sự
-        public async Task<DataTable> GetEmplChangeList(FilterHrVM _filterHrVM)
-        {
-            var response = await _httpClient.PostAsJsonAsync($"api/Profile/GetEmplChangeList", _filterHrVM);
-
-            return JsonConvert.DeserializeObject<DataTable>(await response.Content.ReadAsStringAsync());
-        }
     }
 }

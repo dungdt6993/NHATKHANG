@@ -47,6 +47,48 @@ namespace D69soft.Server.Controllers.HR
         }
 
         //Profile
+
+        [HttpPost("dtEmplChange")]
+        public async Task<ActionResult<string>> dtEmplChange(FilterHrVM _filterHrVM)
+        {
+            return JsonConvert.SerializeObject(ExecuteStoredProcPrmsToDataTable(
+                "RPT.HR_Bao_cao_bien_dong_nhan_su",
+                "@Y", _filterHrVM.Year,
+                "@DivisionID", _filterHrVM.DivisionID));
+        }
+
+        public DataTable ExecuteStoredProcPrmsToDataTable(string storedName, params object[] prms)
+        {
+            DataTable dt = new DataTable();
+
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                SqlCommand cmd = new SqlCommand();
+
+                cmd.Connection = conn;
+
+                cmd.CommandTimeout = 0;
+
+                cmd.CommandText = storedName;
+                cmd.CommandType = CommandType.StoredProcedure;
+                for (int i = 0; i < prms.Length; i += 2)
+                {
+                    SqlParameter pa = new SqlParameter(prms[i].ToString(), prms[i + 1]);
+                    cmd.Parameters.Add(pa);
+                }
+                SqlDataAdapter da = new SqlDataAdapter();
+                da.SelectCommand = cmd;
+                da.Fill(dt);
+
+                cmd.Dispose();
+            }
+
+            return dt;
+        }
+
         [HttpPost("GetEserialListByID")]
         public async Task<ActionResult<IEnumerable<EserialVM>>> GetEserialListByID(FilterHrVM _filterHrVM)
         {
@@ -857,45 +899,5 @@ namespace D69soft.Server.Controllers.HR
             }
         }
 
-        //Báo cáo biến động nhân sự
-        [HttpPost("GetEmplChangeList")]
-        public async Task<ActionResult<string>> GetEmplChangeList(FilterHrVM _filterHrVM)
-        {
-            return JsonConvert.SerializeObject(ExecuteStoredProcPrmsToDataTable("RPT.HR_Bao_cao_bien_dong_nhan_su",
-                "@Y", _filterHrVM.Year,
-                "@DivisionID", _filterHrVM.DivisionID));
-        }
-
-        public DataTable ExecuteStoredProcPrmsToDataTable(string storedName, params object[] prms)
-        {
-            DataTable dt = new DataTable();
-
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                SqlCommand cmd = new SqlCommand();
-
-                cmd.Connection = conn;
-
-                cmd.CommandTimeout = 0;
-
-                cmd.CommandText = storedName;
-                cmd.CommandType = CommandType.StoredProcedure;
-                for (int i = 0; i < prms.Length; i += 2)
-                {
-                    SqlParameter pa = new SqlParameter(prms[i].ToString(), prms[i + 1]);
-                    cmd.Parameters.Add(pa);
-                }
-                SqlDataAdapter da = new SqlDataAdapter();
-                da.SelectCommand = cmd;
-                da.Fill(dt);
-
-                cmd.Dispose();
-            }
-
-            return dt;
-        }
     }
 }

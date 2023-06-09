@@ -6,6 +6,7 @@ using Dapper;
 using Data.Infrastructure;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.HR;
+using Newtonsoft.Json;
 
 namespace D69soft.Server.Controllers
 {
@@ -18,6 +19,25 @@ namespace D69soft.Server.Controllers
         public SysController(SqlConnectionConfig connConfig)
         {
             _connConfig = connConfig;
+        }
+
+        //DataTable
+        [HttpPost("ExecuteSQLQueryToDataTable")]
+        public async Task<ActionResult<string>> ExecuteSQLQueryToDataTable([FromBody]string _sql)
+        {
+            DataTable dt = new DataTable();
+
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                SqlDataAdapter da = new SqlDataAdapter(_sql, conn);
+                da.SelectCommand.CommandTimeout = 0;
+                da.Fill(dt);
+            }
+
+            return JsonConvert.SerializeObject(dt);
         }
 
         //Log

@@ -25,10 +25,12 @@ namespace D69soft.Client.Pages.HR
         protected string UserID;
 
         bool isLoading;
-
         bool isLoadingScreen = true;
 
-        LogVM logVM = new();
+		//PermisFunc
+		bool HR_Payroll_Calc;
+
+		LogVM logVM = new();
 
         //Filter
         FilterHrVM filterHrVM = new();
@@ -46,6 +48,14 @@ namespace D69soft.Client.Pages.HR
         //Payroll
         DataTable dtPayroll;
 
+        DataTable dtCountShiftTypeCalc;
+        DataTable dtCountTrnGrp;
+        DataTable dtSalaryDef;
+        DataTable dtShiftTypeCalc;
+        DataTable dtTrn;
+        DataTable dtContent_ShiftTypeCalc;
+        DataTable dtContent_Trn;
+
         //LockSal
         LockSalaryVM lockSalaryVM = new();
 
@@ -60,15 +70,13 @@ namespace D69soft.Client.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            
-
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "HR_DutyRoster"))
+            if (await sysService.CheckAccessFunc(UserID, "HR_Payroll"))
             {
-                logVM.LogType = "FUNC";
-                logVM.LogName = "HR_DutyRoster";
-                logVM.LogUser = UserID;
+				logVM.LogUser = UserID;
+				logVM.LogType = "FUNC";
+                logVM.LogName = "HR_Payroll";
                 await sysService.InsertLog(logVM);
             }
             else
@@ -76,8 +84,10 @@ namespace D69soft.Client.Pages.HR
                 navigationManager.NavigateTo("/");
             }
 
-            //Initialize Filter
-            filterHrVM.UserID = UserID;
+            HR_Payroll_Calc = await sysService.CheckAccessSubFunc(UserID, "HR_Payroll_Calc");
+
+			//Initialize Filter
+			filterHrVM.UserID = UserID;
 
             year_filter_list = await sysService.GetYearFilter();
             filterHrVM.Year = DateTime.Now.Year;
@@ -103,9 +113,6 @@ namespace D69soft.Client.Pages.HR
             eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
             trngrp_filter_list = await payrollService.GetTrnGroupCodeList();
-
-            //DataExcel
-            filterHrVM.strDataFromExcel = string.Empty;
 
             //LockSal
             lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
@@ -299,16 +306,37 @@ namespace D69soft.Client.Pages.HR
             StateHasChanged();
         }
 
-        private async void GetSalaryList()
+        private async Task GetSalaryList()
         {
             isLoading = true;
 
-            await Task.Yield();
-
             dtPayroll = await payrollService.GetPayrollList(filterHrVM);
 
+            var sqlCountShiftTypeCalc = "select Count(ShiftTypeID) + 2 as cShiftTypeID from HR.ShiftType where coalesce(PercentIncome,0) > 0";
+            dtCountShiftTypeCalc = await sysService.ExecuteSQLQueryToDataTable(sqlCountShiftTypeCalc);
+
+            var sqlCountTrnGrp = "select '['+cast(stg.TrnGroupCode as varchar)+'] '+ stg.TrnGroupName as TrnGrp, count(TrnCode) as cTrnCode from HR.SalaryTransactionGroup stg ";
+            sqlCountTrnGrp += "join HR.SalaryTransactionCode stc on stc.TrnGroupCode = stg.TrnGroupCode group by stg.TrnGroupCode, stg.TrnGroupName order by TrnGrp ";
+            dtCountTrnGrp = await sysService.ExecuteSQLQueryToDataTable(sqlCountTrnGrp);
+
+            var sqlSalaryDef = "select * from HR.SalaryDef";
+            dtSalaryDef = await sysService.ExecuteSQLQueryToDataTable(sqlSalaryDef);
+
+            var sqlShiftTypeCalc = "select ShiftTypeID, PercentIncome from HR.ShiftType where coalesce(PercentIncome,0) > 0";
+            dtShiftTypeCalc = await sysService.ExecuteSQLQueryToDataTable(sqlShiftTypeCalc);
+
+            var sqlTrn = "select '['+cast(TrnCode as varchar)+'-'+cast(TrnSubCode as varchar)+'] '+ [TrnName] as Trn from HR.SalaryTransactionCode  ";
+            sqlTrn += "order by TrnCode, TrnSubCode ";
+            dtTrn = await sysService.ExecuteSQLQueryToDataTable(sqlTrn);
+
+            var sqlContent_ShiftTypeCalc = "select ShiftTypeID from HR.ShiftType where coalesce(PercentIncome,0) > 0";
+            dtContent_ShiftTypeCalc = await sysService.ExecuteSQLQueryToDataTable(sqlContent_ShiftTypeCalc);
+
+            var sqlContent_Trn = "select 'TRN'+cast(TrnCode as varchar)+'x'+cast(TrnSubCode as varchar)+'' as Trn from HR.SalaryTransactionCode  ";
+            sqlContent_Trn += "order by TrnCode, TrnSubCode ";
+            dtContent_Trn = await sysService.ExecuteSQLQueryToDataTable(sqlContent_Trn);
+
             isLoading = false;
-            StateHasChanged();
         }
 
         private async Task CalcSalary()
@@ -317,17 +345,11 @@ namespace D69soft.Client.Pages.HR
 
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn tính lương Tháng " + filterHrVM.Month + " năm " + filterHrVM.Year + "?", SweetAlertMessageType.question))
             {
-                dtPayroll = null;
-                StateHasChanged();
-
                 await payrollService.CalcSalary(filterHrVM);
 
-                dtPayroll = await payrollService.GetPayrollList(filterHrVM);
+                await GetSalaryList();
 
                 lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
-
-                isLoading = false;
-                StateHasChanged();
 
                 await js.Swal_Message("Thông báo.", "Tính lương thành công!", SweetAlertMessageType.success);
             }

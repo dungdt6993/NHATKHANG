@@ -12,7 +12,11 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         //Para
         public int IsTypeUpdate { get; set; }
         public bool IsChecked { get; set; }
-        public bool IsUpdateIURLPicture { get; set; }
+        public bool IsDelFileUpload { get; set; }
+
+        public string FileName { get; set; }
+        public byte[] FileContent { get; set; }
+        public string FileType { get; set; }
         //Para
 
         public string ICode { get; set; }

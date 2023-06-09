@@ -17,10 +17,12 @@ namespace D69soft.Shared.Utilities
 		public static readonly string Upload_DOC_Private = "DataProtection/Upload/DOC/";
 		public static readonly string Upload_DOC_Public = "Data/Upload/DOC/";
 
-		//FIN
-		public static readonly string Upload_FIN_Items_URL_Private = "DataProtection/Upload/FIN/Images/Items/";
+        //FIN
+        public static readonly string Default_Items = "images/_default/no-image.png";
+        public static readonly string Upload_FIN_Items_URL_Private = "DataProtection/Upload/FIN/Images/Items/";
+        public static readonly string Upload_FIN_Items_URL_Public = "Data/Upload/FIN/Images/Items/";
 
-		//RPT
-		public static readonly string Reports = "DataProtection/Reports";
+        //RPT
+        public static readonly string Reports = "DataProtection/Reports";
 	}
 }
