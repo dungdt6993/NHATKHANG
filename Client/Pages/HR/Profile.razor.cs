@@ -72,10 +72,9 @@ namespace D69soft.Client.Pages.HR
         IEnumerable<DepartmentVM> department_filter_list;
         IEnumerable<SectionVM> section_filter_list;
         IEnumerable<PositionVM> position_filter_list;
-        IEnumerable<EserialVM> eserial_filter_list;
 
         ProfileVM profileVM = new();
-        private List<ProfileVM> profileVMs { get; set; } =new();
+        private List<ProfileVM> profileVMs { get; set; } = new();
 
         private Virtualize<ProfileVM> virtualizeProfileList { get; set; }
 
@@ -149,7 +148,8 @@ namespace D69soft.Client.Pages.HR
             position_filter_list = await organizationalChartService.GetPositionList();
 
             filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
+
+            filterHrVM.searchValues = string.Empty;
 
             filterHrVM.Year = DateTime.Now.Year;
 
@@ -172,9 +172,6 @@ namespace D69soft.Client.Pages.HR
             filterHrVM.PositionGroupID = string.Empty;
             filterHrVM.arrPositionID = new string[] { };
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
-
             await GetProfileList();
 
             isLoading = false;
@@ -191,9 +188,6 @@ namespace D69soft.Client.Pages.HR
             filterHrVM.PositionGroupID = string.Empty;
             filterHrVM.arrPositionID = new string[] { };
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
-
             await GetProfileList();
 
             isLoading = false;
@@ -207,9 +201,6 @@ namespace D69soft.Client.Pages.HR
 
             filterHrVM.SectionID = value;
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
-
             await GetProfileList();
 
             isLoading = false;
@@ -217,24 +208,17 @@ namespace D69soft.Client.Pages.HR
             StateHasChanged();
         }
 
-        private string[] onchange_filter_positiongroup
+        private async Task onchange_filter_positiongroup(string[] value)
         {
-            get
-            {
-                return filterHrVM.arrPositionID;
-            }
-            set
-            {
-                isLoading = true;
+            isLoading = true;
 
-                filterHrVM.arrPositionID = (string[])value;
+            filterHrVM.arrPositionID = value;
 
-                filterHrVM.PositionGroupID = string.Join(",", (string[])value);
+            filterHrVM.PositionGroupID = string.Join(",", value);
 
-                //await GetProfileList();
+            await GetProfileList();
 
-                isLoading = false;
-            }
+            isLoading = false;
         }
 
         private async Task onchange_filter_typeprofile(ChangeEventArgs args)
@@ -242,9 +226,6 @@ namespace D69soft.Client.Pages.HR
             isLoading = true;
 
             filterHrVM.TypeProfile = int.Parse(args.Value.ToString());
-
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
 
             await GetProfileList();
 
@@ -254,7 +235,9 @@ namespace D69soft.Client.Pages.HR
         private async Task SearchProfile(string value)
         {
             filterHrVM.searchValues = value;
-            //return profileVMs.Where(x => x.Eserial.ToUpper().Contains(filterHrVM.searchValues.ToUpper()));
+
+            await virtualizeProfileList.RefreshDataAsync();
+            StateHasChanged();
         }
 
         //Profile
@@ -297,6 +280,8 @@ namespace D69soft.Client.Pages.HR
             //Load profiles
             profileVMs = await profileService.GetProfileList(filterHrVM);
 
+            filterHrVM.searchValues = string.Empty;
+
             await virtualizeProfileList.RefreshDataAsync();
             StateHasChanged();
 
@@ -306,8 +291,9 @@ namespace D69soft.Client.Pages.HR
         private ValueTask<ItemsProviderResult<ProfileVM>> LoadProfileList(ItemsProviderRequest request)
         {
             return new(new ItemsProviderResult<ProfileVM>(
-                profileVMs.Skip(request.StartIndex).Take(request.Count),
-                profileVMs.Count));
+                    profileVMs.Where(x => x.Eserial.Contains(filterHrVM.searchValues) || x.FullName.ToUpper().Contains(filterHrVM.searchValues.ToUpper())).Skip(request.StartIndex).Take(request.Count),
+                    profileVMs.Where(x => x.Eserial.Contains(filterHrVM.searchValues) || x.FullName.ToUpper().Contains(filterHrVM.searchValues.ToUpper())).Count()
+                ));
         }
 
         private void onclick_selectedEserial(ProfileVM _profileVM)
@@ -829,7 +815,7 @@ namespace D69soft.Client.Pages.HR
 
                 profileVM.IsTypeUpdate = profileVM.IsTypeUpdate == 4 ? 0 : 0;
 
-                profileVM.isAutoEserial = division_filter_list.Where(x=>x.DivisionID==filterHrVM.DivisionID).Select(x=>x.isAutoEserial).First();
+                profileVM.isAutoEserial = division_filter_list.Where(x => x.DivisionID == filterHrVM.DivisionID).Select(x => x.isAutoEserial).First();
 
                 if (!profileVM.isAutoEserial)
                 {
@@ -975,8 +961,6 @@ namespace D69soft.Client.Pages.HR
 
             profileHistorys = await profileService.GetProfileHistory(profileVM.Eserial);
 
-            eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
-
             isLoading = false;
         }
 
@@ -1011,7 +995,7 @@ namespace D69soft.Client.Pages.HR
                 }
             }
 
-            isLoading= false;
+            isLoading = false;
         }
 
         private async Task DelProfile()

@@ -75,8 +75,6 @@ namespace D69soft.Client.Pages.HR
                 navigationManager.NavigateTo("/");
             }
 
-            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
-
             //Initialize Filter
             filterHrVM.UserID = monthlyIncomeTrnOtherVM.UserID = UserID;
 
@@ -108,6 +106,8 @@ namespace D69soft.Client.Pages.HR
             //DataExcel
             filterHrVM.strDataFromExcel = string.Empty;
 
+            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
+
             isLoadingScreen = false;
         }
 
@@ -118,6 +118,8 @@ namespace D69soft.Client.Pages.HR
             filterHrVM.Month = value;
 
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
+
+            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
 
             filterHrVM.Eserial = string.Empty;
             eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
@@ -141,6 +143,8 @@ namespace D69soft.Client.Pages.HR
 
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
 
+            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
+
             filterHrVM.Eserial = string.Empty;
             eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
@@ -160,6 +164,8 @@ namespace D69soft.Client.Pages.HR
             isLoading = true;
 
             filterHrVM.DivisionID = value;
+
+            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
 
             filterHrVM.DepartmentID = string.Empty;
             department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);

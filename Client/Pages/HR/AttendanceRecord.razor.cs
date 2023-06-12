@@ -79,7 +79,6 @@ namespace D69soft.Client.Pages.HR
                 navigationManager.NavigateTo("/");
             }
 
-            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
             Role = await authService.GetRole(UserID);
 
             HR_AttendanceRecord_CalcFingerData = await sysService.CheckAccessSubFunc(UserID, "HR_AttendanceRecord_CalcFingerData");
@@ -128,6 +127,8 @@ namespace D69soft.Client.Pages.HR
 
             arVMs = await dutyRosterService.GetAttendanceRecordList(filterHrVM);
 
+            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
+
             isLoadingScreen = false;
         }
 
@@ -138,6 +139,8 @@ namespace D69soft.Client.Pages.HR
             filterHrVM.Month = value;
 
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
+
+            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
 
             //Initialize AttendanceRecordDutyRoster
             await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterHrVM);
@@ -164,6 +167,8 @@ namespace D69soft.Client.Pages.HR
 
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
 
+            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
+
             //Initialize AttendanceRecordDutyRoster
             await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterHrVM);
 
@@ -186,6 +191,8 @@ namespace D69soft.Client.Pages.HR
             isLoading = true;
 
             filterHrVM.DivisionID = value;
+
+            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
 
             filterHrVM.DepartmentID = string.Empty;
             department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);

@@ -84,8 +84,6 @@ namespace D69soft.Client.Pages.HR
                 navigationManager.NavigateTo("/");
             }
 
-            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
-
             HR_DutyRoster_UpdateShift = await sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_UpdateShift");
             HR_DutyRoster_ControlOFF = await sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_ControlOFF");
             HR_DutyRoster_Lock = await sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_Lock");
@@ -126,6 +124,8 @@ namespace D69soft.Client.Pages.HR
             filterHrVM.Eserial = string.Empty;
             eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
 
+            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
+
             isLoadingScreen = false;
         }
 
@@ -136,6 +136,8 @@ namespace D69soft.Client.Pages.HR
             filterHrVM.Month = value;
 
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
+
+            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
 
             //Initialize AttendanceRecordDutyRoster
             await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterHrVM);
@@ -161,6 +163,8 @@ namespace D69soft.Client.Pages.HR
 
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
 
+            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
+
             //Initialize AttendanceRecordDutyRoster
             await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterHrVM);
 
@@ -182,6 +186,8 @@ namespace D69soft.Client.Pages.HR
             isLoading = true;
 
             filterHrVM.DivisionID = value;
+
+            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
 
             filterHrVM.DepartmentID = string.Empty;
             department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);

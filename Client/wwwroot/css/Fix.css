@@ -14,6 +14,19 @@
 .card-body.p-0 .table tbody > tr > td:last-of-type, .card-body.p-0 .table tbody > tr > th:last-of-type, .card-body.p-0 .table tfoot > tr > td:last-of-type, .card-body.p-0 .table tfoot > tr > th:last-of-type, .card-body.p-0 .table thead > tr > td:last-of-type, .card-body.p-0 .table thead > tr > th:last-of-type {
     padding-right: 0.9rem;
 }
+
+.card {
+    margin-bottom: unset; 
+}
+
+.card-footer {
+    padding: 0.3rem 1.25rem;
+}
+
+.text-sm .main-footer {
+    padding: 0.3rem;
+}
+
 /*Modad*/
 .modal-title {
     text-transform: uppercase;
@@ -34,7 +47,7 @@
 }
 
 .form-group {
-    margin-bottom: 0.5rem !important;
+    margin-bottom: 0.3rem !important;
 }
 
 .form-control {
@@ -71,7 +84,6 @@
     max-width: 100%;
     width: 100%;
     height: 100%;
-
 
     margin: 0;
 }

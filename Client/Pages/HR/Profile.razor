@@ -1858,10 +1858,10 @@
 
             <div class="col-md-3">
                 <div class="form-group">
-                    <select class="selectpicker form-control"
+                    <InputSelect class="selectpicker form-control"
                             data-style="btn-selectpicker" data-container="body"
                             data-live-search="true" multiple data-actions-box="true"
-                            title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                            title="-----Nhóm vị trí-----" @bind-Value:get="filterHrVM.arrPositionID" @bind-Value:set="onchange_filter_positiongroup">
                         @if (position_filter_list != null)
                         {
                             @foreach (var positiongroup_filter in position_filter_list.Select(x => new { x.PositionGroupID, x.PositionGroupName }).Distinct())
@@ -1869,13 +1869,13 @@
                                 <option value="@positiongroup_filter.PositionGroupID">@positiongroup_filter.PositionGroupName</option>
                             }
                         }
-                    </select>
+                    </InputSelect>
                 </div>
             </div>
 
             <div class="col-sm-7 col-md-7">
                 <div class="form-group">
-                    <InputText type="search" class="form-control form-control-border border-width-2" placeholder="Tìm kiếm nhân viên..." @bind-Value:get="filterHrVM.searchValues" @bind-Value:set="SearchProfile" />
+                    <InputText type="search" class="form-control form-control-border" placeholder="Tìm kiếm nhân viên..." @bind-Value:get="filterHrVM.searchValues" @bind-Value:set="SearchProfile" />
                 </div>
             </div>
 

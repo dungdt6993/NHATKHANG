@@ -35,6 +35,9 @@
   <ItemGroup>
     <Folder Include="DataProtection\Export\" />
     <Folder Include="DataProtection\Upload\DOC\" />
+    <Folder Include="DataProtection\Upload\FIN\Images\Items\" />
+    <Folder Include="DataProtection\Upload\HR\Images\Profile\" />
+    <Folder Include="DataProtection\Upload\POS\Images\Items\" />
     <Folder Include="Hubs\" />
   </ItemGroup>
 

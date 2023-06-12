@@ -3,6 +3,7 @@ using D69soft.Server.Hubs.POS;
 using Data.Infrastructure;
 using DevExpress.AspNetCore;
 using DevExpress.AspNetCore.Reporting;
+using DevExpress.XtraCharts;
 using DevExpress.XtraReports.Web.Extensions;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.FileProviders;
@@ -74,11 +75,8 @@ namespace D69soft
 
             app.MapRazorPages();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-                app.MapHub<CashierHub>("/cashierHub");
-            });
+            app.MapControllers();
+            app.MapHub<CashierHub>("/cashierHub");
 
             app.MapFallbackToFile("index.html");
 
