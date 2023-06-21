@@ -1,5 +1,10 @@
 ﻿@page "/Auth/Login"
+
+@using Microsoft.Extensions.Localization;
+@inject IStringLocalizer<Login> localizerLogin
+
 @using Blazored.FluentValidation
+
 @layout LoginLayout
 
 <PageTitle>Đăng nhập hệ thống</PageTitle>
@@ -13,6 +18,7 @@
             <div class="card">
                 <div class="card-body login-card-body">
                     <p class="login-box-msg">Đăng nhập hệ thống <br /> Bhaya Soft</p>
+                    @*<p class="login-box-msg">@localizerLogin["titleLogin"] <br /> Bhaya Soft</p>*@
 
                     <div class="input-group mb-3">
                         <InputText class="form-control" placeholder="Tài khoản" @bind-Value:get="userVM.Eserial" @bind-Value:set="(value) => {userVM.Eserial = value.ToUpper();}" />
@@ -36,8 +42,8 @@
                     <div class="input-group mb-3">
                         <label class="col-3 col-form-label">Language</label>
                         <div class="col-9">
-                            <select class="selectpicker form-control" data-style="btn-selectpicker">
-                                <option data-content="<span class='fi fi-vn'></span> Tiếng Việt" value="vi"></option>
+                            <select class="selectpicker form-control" data-style="btn-selectpicker" @bind="Culture">
+                                <option data-content="<span class='fi fi-vn'></span> Tiếng Việt" value="en-US"></option>
                             </select>
                         </div>
                     </div>

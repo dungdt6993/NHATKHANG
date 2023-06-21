@@ -89,7 +89,7 @@ namespace D69soft.Client.Validator.HR
 
             RuleFor(x => x.SectionName).NotEmpty().WithMessage("Không được trống.");
         }
-    }
+    } 
 
     public class PositionValidator : AbstractValidator<PositionVM>
     {

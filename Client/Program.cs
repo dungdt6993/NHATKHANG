@@ -27,25 +27,18 @@ namespace D69soft.Client
             //Auth
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 
+            //Localization
+            builder.Services.AddLocalization();
+
             //API
             builder.Services.AddScoped(sp => new HttpClient
             {
                 BaseAddress = new Uri(builder.Configuration["BaseAddress"])
             });
 
-            builder.Services.Configure<RequestLocalizationOptions>(options =>
-            {
-                var supportedCultures = new[]
-                {
-                    new CultureInfo("en-US"),
-                    new CultureInfo("es-CL")
-                };
-
-                options.SupportedCultures = supportedCultures;
-                options.SupportedUICultures = supportedCultures;
-            });
-
-            await builder.Build().RunAsync();
+            var host = builder.Build();
+            await host.SetDefaultCulture();
+            await host.RunAsync();
         }
     }
 }

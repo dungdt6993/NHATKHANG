@@ -1,33 +1,35 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+		<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="BlazorDateRangePicker" Version="4.3.0" />
-    <PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
-    <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
-    <PackageReference Include="Blazored.TextEditor" Version="1.0.8" />
-    <PackageReference Include="Blazored.Typeahead" Version="4.7.0" />
-    <PackageReference Include="DevExpress.Blazor.Reporting.JSBasedControls.WebAssembly" Version="22.2.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.5" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.5" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="BlazorDateRangePicker" Version="4.3.0" />
+		<PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
+		<PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
+		<PackageReference Include="Blazored.TextEditor" Version="1.0.8" />
+		<PackageReference Include="Blazored.Typeahead" Version="4.7.0" />
+		<PackageReference Include="DevExpress.Blazor.Reporting.JSBasedControls.WebAssembly" Version="22.2.4" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.5" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.5" />
+		<PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.7" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Shared\D69soft.Shared.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Shared\D69soft.Shared.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
-  </ItemGroup>
+	<ItemGroup>
+		<ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+	</ItemGroup>
 
 </Project>

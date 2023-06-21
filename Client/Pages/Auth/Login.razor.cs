@@ -1,21 +1,25 @@
-﻿using D69soft.Client.Extension;
+﻿using Blazored.LocalStorage;
+using D69soft.Client.Extension;
 using D69soft.Client.Services;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.JSInterop;
+using System.Globalization;
 
 namespace D69soft.Client.Pages.Auth
 {
     partial class Login
     {
+        private readonly ILocalStorageService _localStorage;
+
         [Inject] IJSRuntime js { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
         [Inject] AuthenticationStateProvider authenticationStateProvider { get; set; }
 
         [Inject] AuthService authService { get; set; }
         [Inject] SysService sysService { get; set; }
+        [Inject] ILocalStorageService localStorageService { get; set; }
 
         LogVM logVM = new();
 
@@ -30,6 +34,19 @@ namespace D69soft.Client.Pages.Auth
                 await js.InvokeAsync<object>("bootrap_select");
             }
             await js.InvokeAsync<object>("bootrap_select_refresh");
+        }
+
+        CultureInfo Culture
+        {
+            get => CultureInfo.CurrentCulture;
+            set
+            {
+                if (CultureInfo.CurrentCulture != value)
+                {
+                    localStorageService.SetItemAsStringAsync("culture", value.Name);
+                    navigationManager.NavigateTo(navigationManager.Uri, forceLoad: true);
+                }
+            }
         }
 
         private async Task LoginRequest()
