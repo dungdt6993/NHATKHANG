@@ -5,7 +5,7 @@ using D69soft.Client.Services;
 using D69soft.Client.Services.HR;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Shared.Models.ViewModels.HR;
-using D69soft.Client.Extension;
+using D69soft.Client.Extensions;
 
 namespace D69soft.Client.Pages.SYS
 {
@@ -38,7 +38,7 @@ namespace D69soft.Client.Pages.SYS
             UserID = (await authenticationStateTask).User.GetUserId();
 
             logVM.LogType = "FUNC";
-            logVM.LogName = "PERSONAL";
+            logVM.LogName = "HR_PersonalProfile";
             logVM.LogUser = UserID;
             await sysService.InsertLog(logVM);
 

@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Security.Principal;
 
-namespace D69soft.Client.Extension
+namespace D69soft.Client.Extensions
 {
     public static class IdentityExtensions
     {

@@ -1,4 +1,4 @@
-﻿using D69soft.Client.Extension;
+﻿using D69soft.Client.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 

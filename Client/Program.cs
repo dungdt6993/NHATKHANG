@@ -1,5 +1,5 @@
 using Blazored.LocalStorage;
-using D69soft.Client.Extension;
+using D69soft.Client.Extensions;
 using D69soft.Client.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -26,9 +26,6 @@ namespace D69soft.Client
 
             //Auth
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-
-            //Localization
-            builder.Services.AddLocalization();
 
             //API
             builder.Services.AddScoped(sp => new HttpClient

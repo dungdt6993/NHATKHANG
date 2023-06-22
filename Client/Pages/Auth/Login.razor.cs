@@ -1,5 +1,5 @@
 ﻿using Blazored.LocalStorage;
-using D69soft.Client.Extension;
+using D69soft.Client.Extensions;
 using D69soft.Client.Services;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using Microsoft.AspNetCore.Components;
@@ -11,15 +11,12 @@ namespace D69soft.Client.Pages.Auth
 {
     partial class Login
     {
-        private readonly ILocalStorageService _localStorage;
-
+        [Inject] ILocalStorageService localStorage { get; set; }
         [Inject] IJSRuntime js { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
         [Inject] AuthenticationStateProvider authenticationStateProvider { get; set; }
-
-        [Inject] AuthService authService { get; set; }
         [Inject] SysService sysService { get; set; }
-        [Inject] ILocalStorageService localStorageService { get; set; }
+        [Inject] AuthService authService { get; set; }
 
         LogVM logVM = new();
 
@@ -43,7 +40,7 @@ namespace D69soft.Client.Pages.Auth
             {
                 if (CultureInfo.CurrentCulture != value)
                 {
-                    localStorageService.SetItemAsStringAsync("culture", value.Name);
+                    localStorage.SetItemAsStringAsync("culture", value.Name);
                     navigationManager.NavigateTo(navigationManager.Uri, forceLoad: true);
                 }
             }
@@ -61,8 +58,6 @@ namespace D69soft.Client.Pages.Auth
                 logVM.LogName = "Login";
                 logVM.LogUser = userVM.Eserial;
                 await sysService.InsertLog(logVM);
-
-                await js.InvokeAsync<object>("Cookie_User", "Cookie_UserID", userVM.Eserial, 100);
 
                 navigationManager.NavigateTo("/", true);
             }

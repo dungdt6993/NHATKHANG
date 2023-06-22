@@ -9,7 +9,7 @@ using D69soft.Shared.Models.ViewModels.DOC;
 using D69soft.Client.Services;
 using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
-using D69soft.Client.Extension;
+using D69soft.Client.Extensions;
 
 namespace D69soft.Client.Pages.DOC
 {

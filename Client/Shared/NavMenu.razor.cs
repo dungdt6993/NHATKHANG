@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using D69soft.Client.Services;
-using D69soft.Client.Extension;
+using D69soft.Client.Extensions;
 
 namespace D69soft.Client.Shared
 {

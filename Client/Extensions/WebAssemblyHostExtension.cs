@@ -1,9 +1,8 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.JSInterop;
 using System.Globalization;
 
-namespace D69soft.Client.Extension
+namespace D69soft.Client.Extensions
 {
     public static class WebAssemblyHostExtension
     {

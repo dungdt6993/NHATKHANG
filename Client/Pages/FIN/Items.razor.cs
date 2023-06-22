@@ -7,7 +7,7 @@ using D69soft.Client.Services.FIN;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
-using D69soft.Client.Extension;
+using D69soft.Client.Extensions;
 using D69soft.Shared.Models.ViewModels.HR;
 
 namespace D69soft.Client.Pages.FIN

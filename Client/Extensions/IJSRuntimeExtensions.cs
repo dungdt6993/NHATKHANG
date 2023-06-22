@@ -1,6 +1,6 @@
 ﻿using Microsoft.JSInterop;
 
-namespace D69soft.Client.Extension
+namespace D69soft.Client.Extensions
 {
     public static class IJSRuntimeExtensions
     {

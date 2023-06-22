@@ -10,7 +10,7 @@ using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.EA;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
-using D69soft.Client.Extension;
+using D69soft.Client.Extensions;
 using D69soft.Server.Services.HR;
 
 namespace D69soft.Client.Pages.EA

@@ -8,7 +8,7 @@ using D69soft.Shared.Models.ViewModels.POS;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.CRM;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
-using D69soft.Client.Extension;
+using D69soft.Client.Extensions;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace D69soft.Client.Pages.POS

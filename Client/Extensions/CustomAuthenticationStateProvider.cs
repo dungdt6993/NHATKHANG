@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
-namespace D69soft.Client.Extension
+namespace D69soft.Client.Extensions
 {
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {
