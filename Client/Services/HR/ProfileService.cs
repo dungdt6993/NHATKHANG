@@ -93,11 +93,11 @@ namespace D69soft.Server.Services.HR
             return await _httpClient.GetFromJsonAsync<bool>($"api/Profile/CkUpdateSalHistory/{_Eserial}");
         }
 
-        public async Task<bool> ResetPass(ProfileVM _profileVM)
+        public async Task<string> ResetPass(ProfileVM _profileVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/Profile/ResetPass", _profileVM);
 
-            return await response.Content.ReadFromJsonAsync<bool>();
+            return await response.Content.ReadAsStringAsync();
         }
 
         public async Task<bool> DelProfileHistory(ProfileVM _profileVM)

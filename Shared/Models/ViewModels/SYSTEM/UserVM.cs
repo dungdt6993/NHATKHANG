@@ -5,9 +5,6 @@ namespace D69soft.Shared.Models.ViewModels.SYSTEM
 {
     public class UserVM : Profile, Staff, JobHistory, Division, Department, Position
     {
-        //LoginResponse
-        public bool Successful { get; set; }
-
         public string Eserial { get; set; }
         public string LastName { get; set; }
         public string MiddleName { get; set; }

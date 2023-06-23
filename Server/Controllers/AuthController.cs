@@ -5,6 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 using System.Data;
 using D69soft.Shared.Utilities;
+using DevExpress.Utils.About;
+using DevExpress.XtraRichEdit.Import.Html;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using D69soft.Client.Pages.Auth;
 
 namespace D69soft.Server.Controllers
 {
@@ -14,27 +21,13 @@ namespace D69soft.Server.Controllers
     {
         private readonly SqlConnectionConfig _connConfig;
 
-        public AuthController(SqlConnectionConfig connConfig)
+        private readonly IConfiguration _configuration;
+
+        public AuthController(SqlConnectionConfig connConfig, IConfiguration configuration)
         {
             _connConfig = connConfig;
-        }
 
-        [HttpPost("LoginRequest")]
-        public async Task<ActionResult<int>> LoginRequest(UserVM _UserVM)
-        {
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                DynamicParameters parm = new DynamicParameters();
-                parm.Add("@txtUser", _UserVM.Eserial);
-                parm.Add("@txtPass", LibraryFunc.GennerateToMD5(_UserVM.User_Password));
-
-                var affectedRows = await conn.ExecuteAsync("SYSTEM.Authentication_login", parm, commandType: CommandType.StoredProcedure);
-
-                return affectedRows;
-            }
+            _configuration = configuration;
         }
 
         [HttpGet("CheckChangePassDefault/{_UserID}")]
@@ -96,6 +89,46 @@ namespace D69soft.Server.Controllers
 
                 return Ok(result);
             }
+        }
+
+        //JWT
+        [HttpPost("Login")]
+        public async Task<ActionResult<LoginResponseVM>> Login([FromBody] UserVM _userVM)
+        {
+            int loginResponse = 0;
+
+            //checking if the user exists in the database
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                DynamicParameters parm = new DynamicParameters();
+                parm.Add("@txtUser", _userVM.Eserial);
+                parm.Add("@txtPass", LibraryFunc.GennerateToMD5(_userVM.User_Password));
+
+                loginResponse = await conn.ExecuteAsync("SYSTEM.Authentication_login", parm, commandType: CommandType.StoredProcedure);
+            }
+
+            if (loginResponse != 1) return BadRequest(new LoginResponseVM { Successful = false, Error = "Tài khoản hoặc mật khẩu không đúng." });
+
+            var claims = new[]
+                {
+                    new Claim("UserID", _userVM.Eserial)
+                };
+
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSecurityKey"]));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                var expiry = DateTime.Now.AddDays(Convert.ToInt32(_configuration["JwtExpiryInDays"]));
+
+                var token = new JwtSecurityToken(
+                    _configuration["JwtIssuer"],
+                    _configuration["JwtAudience"],
+                    claims,
+                    expires: expiry,
+                    signingCredentials: creds
+                );
+            return Ok(new LoginResponseVM { Successful = true, Token = new JwtSecurityTokenHandler().WriteToken(token) });
         }
     }
 }

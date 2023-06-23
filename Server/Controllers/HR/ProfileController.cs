@@ -373,7 +373,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("ResetPass")]
-        public async Task<ActionResult<bool>> ResetPass(ProfileVM _profileVM)
+        public async Task<ActionResult<string>> ResetPass(ProfileVM _profileVM)
         {
             _profileVM.User_PassReset = LibraryFunc.RandomNumber(100000, 999999).ToString();
 
@@ -388,7 +388,7 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 await conn.ExecuteAsync(sql, _profileVM);
-                return true;
+                return _profileVM.User_PassReset;
             }
         }
 

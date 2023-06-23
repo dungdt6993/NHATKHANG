@@ -14,6 +14,9 @@ using D69soft.Client.Extensions;
 using D69soft.Shared.Models.ViewModels.DOC;
 using D69soft.Shared.Models.Entities.HR;
 using System.Reflection.Metadata;
+using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Client.Services.POS;
+using D69soft.Shared.Models.ViewModels.CRM;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -279,6 +282,11 @@ namespace D69soft.Client.Pages.HR
 
             //Load profiles
             profileVMs = await profileService.GetProfileList(filterHrVM);
+
+            if(empls == null)
+            {
+                empls = profileVMs;
+            }
 
             filterHrVM.searchValues = string.Empty;
 
@@ -772,7 +780,7 @@ namespace D69soft.Client.Pages.HR
 
             salaryDefVMs = await profileService.GetSalaryDef();
 
-            if (profileVM.IsTypeUpdate == 0 || profileVM.IsTypeUpdate == 4)
+            if (profileVM.IsTypeUpdate == 0)
             {
                 disabled_ContractTypeID = true;
                 disabled_EndContractDate = true;
@@ -797,23 +805,6 @@ namespace D69soft.Client.Pages.HR
                 profileVM.UrlAvatar = UrlDirectory.Default_Avatar;
 
                 profileHistorys = null;
-
-                if (profileVM.IsTypeUpdate == 4)
-                {
-                    profileVM.Eserial = null;
-                    profileVM.JoinDate = null;
-                    profileVM.StartDayAL = null;
-                    profileVM.StartContractDate = null;
-                    profileVM.ContractTypeID = String.Empty;
-                    profileVM.EndContractDate = null;
-                    profileVM.JobStartDate = null;
-                    profileVM.User_isChangePass = 0;
-                    profileVM.BeginSalaryDate = null;
-                    profileVM.Reason = String.Empty;
-                    profileVM.ApprovedBy = String.Empty;
-                }
-
-                profileVM.IsTypeUpdate = profileVM.IsTypeUpdate == 4 ? 0 : 0;
 
                 profileVM.isAutoEserial = division_filter_list.Where(x => x.DivisionID == filterHrVM.DivisionID).Select(x => x.isAutoEserial).First();
 
@@ -968,7 +959,9 @@ namespace D69soft.Client.Pages.HR
         {
             if (await js.Swal_Confirm("Xác nhận!", $"Đặt lại mật khẩu đăng nhập hệ thống?", SweetAlertMessageType.question))
             {
-                await profileService.ResetPass(profileVM);
+                profileVM.User_isChangePass = 0;
+                profileVM.User_PassReset = await profileService.ResetPass(profileVM);
+
                 await js.Swal_Message("Thông báo!", "Đặt lại mật khẩu đăng nhập thành công.", SweetAlertMessageType.success);
             }
         }
@@ -1474,24 +1467,6 @@ namespace D69soft.Client.Pages.HR
             }
 
             isLoading = false;
-        }
-
-        //KPI
-        private async void onchange_SearchEmpl(ChangeEventArgs e)
-        {
-            await Task.Delay(2000);
-
-            filterHrVM.searchEmpl = e.Value.ToString();
-
-            if (!String.IsNullOrEmpty(filterHrVM.searchEmpl))
-            {
-                empls = await profileService.GetSearchEmpl(filterHrVM);
-            }
-            else
-            {
-                empls = null;
-            }
-            StateHasChanged();
         }
 
     }

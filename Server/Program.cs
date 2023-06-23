@@ -1,12 +1,16 @@
-using D69soft.Client.Extension;
+using D69soft.Client.Extensions;
 using D69soft.Server.Hubs.POS;
 using Data.Infrastructure;
 using DevExpress.AspNetCore;
 using DevExpress.AspNetCore.Reporting;
 using DevExpress.XtraCharts;
 using DevExpress.XtraReports.Web.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace D69soft
 {
@@ -39,6 +43,38 @@ namespace D69soft
             //SignalR
             builder.Services.AddSignalR();
 
+            builder.Services.AddResponseCompression(opts =>
+            {
+                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/octet-stream" });
+            });
+
+            //JWT
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = builder.Configuration["JwtIssuer"],
+                        ValidAudience = builder.Configuration["JwtAudience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSecurityKey"]))
+                    };
+                });
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                        .SetIsOriginAllowed((host) => true)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -55,7 +91,8 @@ namespace D69soft
 
             app.UseHttpsRedirection();
 
-            app.UseReporting(builder => {
+            app.UseReporting(builder =>
+            {
                 builder.UserDesignerOptions.DataBindingMode =
                     DevExpress.XtraReports.UI.DataBindingMode.ExpressionsAdvanced;
             });
@@ -72,6 +109,8 @@ namespace D69soft
             });
 
             app.UseRouting();
+
+            app.UseCors("CorsPolicy");
 
             app.MapRazorPages();
 

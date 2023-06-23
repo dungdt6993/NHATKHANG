@@ -1,4 +1,5 @@
 ﻿using Blazored.LocalStorage;
+using D69soft.Client.Components;
 using D69soft.Client.Extensions;
 using D69soft.Client.Services;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
@@ -46,14 +47,13 @@ namespace D69soft.Client.Pages.Auth
             }
         }
 
-        private async Task LoginRequest()
+        public async Task HandleLogin()
         {
             btnLoading = true;
 
-            if (await authService.LoginRequest(userVM) > 0)
+            LoginResponseVM loginResponseVM = await authService.Login(userVM);
+            if (loginResponseVM.Successful)
             {
-                await ((CustomAuthenticationStateProvider)authenticationStateProvider).UpdateAuthenticationState(userVM.Eserial);
-
                 logVM.LogType = "AUTH";
                 logVM.LogName = "Login";
                 logVM.LogUser = userVM.Eserial;
@@ -63,7 +63,7 @@ namespace D69soft.Client.Pages.Auth
             }
             else
             {
-                await js.Swal_Message("Cảnh báo!", "Tài khoản hoặc mật khẩu không đúng.", SweetAlertMessageType.error);
+                await js.Swal_Message("Cảnh báo!", loginResponseVM.Error, SweetAlertMessageType.error);
             }
 
             btnLoading = false;

@@ -1,5 +1,6 @@
 ﻿@page "/HR/Profile"
 @using System.Data;
+@using D69soft.Shared.Models.ViewModels.HR;
 
 <LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 <Loading isLoading="@isLoading"></Loading>
@@ -519,9 +520,10 @@
                                                         }
                                                         else
                                                         {
-                                                            <button type="button" class="btn btn-block btn-danger"><i class="fa fa-key"></i> Mật khẩu: <strong>@profileVM.User_PassReset</strong></button>
+                                                            <h5 class="text-danger"><i class="fa fa-key"></i> Mật khẩu: <strong>@profileVM.User_PassReset</strong></h5>
                                                         }
                                                     }
+
                                                 </td>
                                                 <th style="width:10%"></th>
                                                 <td style="width:15%"></td>
@@ -537,88 +539,61 @@
                                             <div class="form-group col-md-3">
                                                 <label>Người đánh giá:</label>
 
-                                                <div class="dropdown dropup">
-                                                    <input class="form-control" placeholder="Tìm kiếm" @oninput="@((ChangeEventArgs e) => onchange_SearchEmpl(e))" value="@profileVM.Appraiser_Eserial" data-toggle="dropdown" />
-
-                                                    <div class="dropdown-menu">
-                                                        @if (empls != null)
+                                                <select class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind="profileVM.Appraiser_Eserial">
+                                                    <option value=@string.Empty>-----Chọn-----</option>
+                                                    @if (empls != null)
+                                                    {
+                                                        @foreach (var _empl in empls.Where(x => x.PermisId<4))
                                                         {
-                                                            @foreach (var _empl in empls)
-                                                            {
-                                                                <a class="dropdown-item" @onclick=@(() => profileVM.Appraiser_Eserial = _empl.Eserial)>@_empl.Eserial - @_empl.LastName @_empl.MiddleName @_empl.FirstName - @_empl.PositionName</a>
-                                                            }
+                                                            <option data-subtext="@_empl.PositionName" value="@_empl.Eserial">@_empl.FullName</option>
                                                         }
-                                                        else
-                                                        {
-                                                            <span>Không có dữ liệu</span>
-                                                        }
-                                                    </div>
-                                                </div>
+                                                    }
+                                                </select>
 
                                             </div>
                                             <div class="form-group col-md-3">
                                                 <label>Quản lý trực tiếp:</label>
 
-                                                <div class="dropdown dropup">
-                                                    <input class="form-control" placeholder="Tìm kiếm" @oninput="@((ChangeEventArgs e) => onchange_SearchEmpl(e))" value="@profileVM.DirectManager_Eserial" data-toggle="dropdown" />
+                                                <select class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind="profileVM.DirectManager_Eserial">
+                                                    <option value=@string.Empty>-----Chọn-----</option>
+                                                    @if (empls != null)
+                                                    {
+                                                        @foreach (var _empl in empls.Where(x => x.PermisId<4))
+                                                        {
+                                                            <option data-subtext="@_empl.PositionName" value="@_empl.Eserial">@_empl.FullName</option>
+                                                        }
+                                                    }
+                                                </select>
 
-                                                    <div class="dropdown-menu">
-                                                        @if (empls != null)
-                                                        {
-                                                            @foreach (var _empl in empls)
-                                                            {
-                                                                <a class="dropdown-item" @onclick=@(() => profileVM.DirectManager_Eserial = _empl.Eserial)>@_empl.Eserial - @_empl.LastName @_empl.MiddleName @_empl.FirstName - @_empl.PositionName</a>
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            <span>Không có dữ liệu</span>
-                                                        }
-                                                    </div>
-                                                </div>
                                             </div>
                                             <div class="form-group col-md-3">
                                                 <label>Phụ trách bộ phận:</label>
 
-                                                <div class="dropdown dropup">
-                                                    <input class="form-control" placeholder="Tìm kiếm" @oninput="@((ChangeEventArgs e) => onchange_SearchEmpl(e))" value="@profileVM.ControlDept_Eserial" data-toggle="dropdown" />
-
-                                                    <div class="dropdown-menu">
-                                                        @if (empls != null)
+                                                <select class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind="profileVM.ControlDept_Eserial">
+                                                    <option value=@string.Empty>-----Chọn-----</option>
+                                                    @if (empls != null)
+                                                    {
+                                                        @foreach (var _empl in empls.Where(x => x.PermisId<4))
                                                         {
-                                                            @foreach (var _empl in empls)
-                                                            {
-                                                                <a class="dropdown-item" @onclick=@(() => profileVM.ControlDept_Eserial = _empl.Eserial)>@_empl.Eserial - @_empl.LastName @_empl.MiddleName @_empl.FirstName - @_empl.PositionName</a>
-                                                            }
+                                                            <option data-subtext="@_empl.PositionName" value="@_empl.Eserial">@_empl.FullName</option>
                                                         }
-                                                        else
-                                                        {
-                                                            <span>Không có dữ liệu</span>
-                                                        }
-                                                    </div>
-                                                </div>
+                                                    }
+                                                </select>
 
                                             </div>
                                             <div class="form-group col-md-3">
                                                 <label>Phê duyệt:</label>
 
-                                                <div class="dropdown dropup">
-                                                    <input class="form-control" placeholder="Tìm kiếm" @oninput="@((ChangeEventArgs e) => onchange_SearchEmpl(e))" value="@profileVM.Approve_Eserial" data-toggle="dropdown" />
-
-                                                    <div class="dropdown-menu">
-                                                        @if (empls != null)
+                                                <select class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind="profileVM.Approve_Eserial">
+                                                    <option value=@string.Empty>-----Chọn-----</option>
+                                                    @if (empls != null)
+                                                    {
+                                                        @foreach (var _empl in empls.Where(x => x.PermisId < 4))
                                                         {
-                                                            @foreach (var _empl in empls)
-                                                            {
-                                                                <a class="dropdown-item" @onclick=@(() => profileVM.Approve_Eserial = _empl.Eserial)>@_empl.Eserial - @_empl.LastName @_empl.MiddleName @_empl.FirstName - @_empl.PositionName</a>
-                                                            }
+                                                            <option data-subtext="@_empl.PositionName" value="@_empl.Eserial">@_empl.FullName</option>
                                                         }
-                                                        else
-                                                        {
-                                                            <span>Không có dữ liệu</span>
-                                                        }
-                                                    </div>
-                                                </div>
+                                                    }
+                                                </select>
 
                                             </div>
                                         </div>
@@ -1859,9 +1834,9 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control"
-                            data-style="btn-selectpicker" data-container="body"
-                            data-live-search="true" multiple data-actions-box="true"
-                            title="-----Nhóm vị trí-----" @bind-Value:get="filterHrVM.arrPositionID" @bind-Value:set="onchange_filter_positiongroup">
+                                 data-style="btn-selectpicker" data-container="body"
+                                 data-live-search="true" multiple data-actions-box="true"
+                                 title="-----Nhóm vị trí-----" @bind-Value:get="filterHrVM.arrPositionID" @bind-Value:set="onchange_filter_positiongroup">
                         @if (position_filter_list != null)
                         {
                             @foreach (var positiongroup_filter in position_filter_list.Select(x => new { x.PositionGroupID, x.PositionGroupName }).Distinct())
@@ -1945,7 +1920,6 @@
                     @if (HR_Profile_Edit)
                     {
                         <button type="button" class="btn btn-secondary" data-target="#InitializeModal_Profile" data-toggle="modal" @onclick="()=>Initialize_ModalProfile(1)"><i class="fa-solid fa-user-pen"></i> Sửa</button>
-                        <button type="button" class="btn btn-secondary" data-target="#InitializeModal_Profile" data-toggle="modal" @onclick="()=>Initialize_ModalProfile(4)"><i class="fa-solid fa-copy"></i> Sao chép</button>
                     }
 
                     if (filterHrVM.TypeProfile != 1)

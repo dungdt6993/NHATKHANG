@@ -1,4 +1,5 @@
 ﻿using D69soft.Client.Extensions;
+using D69soft.Client.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
@@ -7,6 +8,7 @@ namespace D69soft.Client.Shared
     partial class NavBar
     {
         [Inject] AuthenticationStateProvider authenticationStateProvider { get; set; }
+        [Inject] AuthService authService { get; set; }
 
         protected string UserID;
 
@@ -21,7 +23,7 @@ namespace D69soft.Client.Shared
 
         private async Task Logout()
         {
-            await ((CustomAuthenticationStateProvider)authenticationStateProvider).UpdateAuthenticationState(null);
+            await authService.Logout();
         }
 
         //private async Task SeenNotificationsALL()

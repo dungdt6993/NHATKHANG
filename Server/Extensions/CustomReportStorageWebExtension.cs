@@ -2,7 +2,7 @@ using System.Web;
 using D69soft.Client.PredefinedReports;
 using DevExpress.XtraReports.UI;
 
-namespace D69soft.Client.Extension
+namespace D69soft.Client.Extensions
 {
     public class CustomReportStorageWebExtension : DevExpress.XtraReports.Web.Extensions.ReportStorageWebExtension
     {
