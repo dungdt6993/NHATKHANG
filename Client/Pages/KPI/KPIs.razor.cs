@@ -430,7 +430,10 @@ namespace D69soft.Client.Pages.KPI
 
                 await kpiService.SendKPI(rankVM, type);
 
-                await js.Toast_Alert("" + str + " thành công!", SweetAlertMessageType.success);
+                logVM.LogDesc = "" + str + " KPI " + rankVM.Eserial;
+                await sysService.InsertLog(logVM);
+
+                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
             }
 
             isLoading = false;

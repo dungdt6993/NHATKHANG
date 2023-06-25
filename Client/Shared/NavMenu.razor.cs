@@ -34,7 +34,8 @@ namespace D69soft.Client.Shared
 
             userVM = await sysService.GetInfoUser(UserID);
 
-            if (userVM == null) {
+            if (userVM == null)
+            {
                 navigationManager.NavigateTo("/Auth/Login");
             }
 
@@ -51,12 +52,15 @@ namespace D69soft.Client.Shared
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            await js.InvokeAsync<object>("menu_treeview");
+            if (firstRender)
+            {
+                await js.InvokeAsync<object>("menu_treeview");
+            }
         }
 
         private void ClickMenuFunc(string _urlFunc)
         {
-            navigationManager.NavigateTo(_urlFunc, true);
+            navigationManager.NavigateTo(_urlFunc, false);
         }
     }
 }

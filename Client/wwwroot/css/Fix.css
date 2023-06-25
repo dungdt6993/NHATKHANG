@@ -35,6 +35,7 @@
 }
 
 .modal-header {
+    padding: 0.5rem 1rem;
     background-color: #f4f6f9;
 }
 
@@ -42,7 +43,12 @@
     font-size: xx-large;
 }
 
+.modal-body {
+    padding: 0.5rem 1rem;
+}
+
 .modal-footer {
+    padding: 0.2rem 1rem;
     background-color: #f4f6f9;
 }
 
@@ -60,6 +66,10 @@
 
 .input-group [data-toggle=modal] {
     cursor: pointer;
+}
+
+.card-header {
+    padding: 0.3rem 1rem;
 }
 
 .card-header .btn {
@@ -86,6 +96,10 @@
     height: 100%;
 
     margin: 0;
+}
+
+.layout-footer-fixed .wrapper .content-wrapper {
+    padding-bottom: calc(2.5rem + 1px);
 }
 
 /*blazored-typeahead*/

@@ -8,6 +8,7 @@ using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extensions;
+using D69soft.Shared.Models.Entities.HR;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -351,7 +352,10 @@ namespace D69soft.Client.Pages.HR
 
                 lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
 
-                await js.Swal_Message("Thông báo.", "Tính lương thành công!", SweetAlertMessageType.success);
+                logVM.LogDesc = "Tính lương " + "Tháng " + filterHrVM.Month + " năm " + filterHrVM.Year + "";
+                await sysService.InsertLog(logVM);
+
+                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
             }
 
             isLoading = false;
@@ -369,7 +373,10 @@ namespace D69soft.Client.Pages.HR
 
                 lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
 
-                await js.Toast_Alert("Hủy tính lương thành công!", SweetAlertMessageType.success);
+                logVM.LogDesc = "Hủy tính lương " + "Tháng " + filterHrVM.Month + " năm " + filterHrVM.Year + "";
+                await sysService.InsertLog(logVM);
+
+                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
             }
 
             isLoading = false;
@@ -385,7 +392,10 @@ namespace D69soft.Client.Pages.HR
 
                 lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
 
-                await js.Swal_Message("Thông báo.", "Khóa lương thành công!", SweetAlertMessageType.success);
+                logVM.LogDesc = "Khóa lương " + "Tháng " + filterHrVM.Month + " năm " + filterHrVM.Year + "";
+                await sysService.InsertLog(logVM);
+
+                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
             }
 
             isLoading = false;
@@ -401,7 +411,10 @@ namespace D69soft.Client.Pages.HR
 
                 lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
 
-                await js.Toast_Alert("Hủy khóa lương thành công!", SweetAlertMessageType.success);
+                logVM.LogDesc = "Hủy khóa lương " + "Tháng " + filterHrVM.Month + " năm " + filterHrVM.Year + "";
+                await sysService.InsertLog(logVM);
+
+                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
             }
 
             isLoading = false;

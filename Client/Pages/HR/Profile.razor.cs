@@ -30,7 +30,6 @@ namespace D69soft.Client.Pages.HR
         [Inject] AuthService authService { get; set; }
         [Inject] ProfileService profileService { get; set; }
         [Inject] OrganizationalChartService organizationalChartService { get; set; }
-        [Inject] DutyRosterService dutyRosterService { get; set; }
 
         bool isLoading;
         bool isLoadingScreen = true;
@@ -287,8 +286,6 @@ namespace D69soft.Client.Pages.HR
             {
                 empls = profileVMs;
             }
-
-            filterHrVM.searchValues = string.Empty;
 
             await virtualizeProfileList.RefreshDataAsync();
             StateHasChanged();
@@ -927,14 +924,21 @@ namespace D69soft.Client.Pages.HR
 
             if (profileVM.IsTypeUpdate == 1)
             {
-                await js.Swal_Message("Thông báo!", "Cập nhật dữ liệu thành công.", SweetAlertMessageType.success);
+
+                logVM.LogDesc = "Cập nhật hồ sơ " + profileVM.Eserial + "";
+                await sysService.InsertLog(logVM);
+
+                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
 
                 disabled_btnUpdateProfile = false;
             }
 
             if (profileVM.IsTypeUpdate == 2)
             {
-                await js.Swal_Message("Thông báo!", "Cập nhật dữ liệu thành công.", SweetAlertMessageType.success);
+                logVM.LogDesc = "Điều chỉnh hồ sơ " + profileVM.Eserial + "";
+                await sysService.InsertLog(logVM);
+
+                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
 
                 disabled_btnUpdateProfile = true;
                 disable_ckContractExtension = true;
@@ -944,7 +948,11 @@ namespace D69soft.Client.Pages.HR
 
             if (profileVM.IsTypeUpdate == 0)
             {
-                await js.Swal_Message("Thông báo!", "Thêm mới dữ liệu thành công.", SweetAlertMessageType.success);
+
+                logVM.LogDesc = "Thêm mới hồ sơ " + profileVM.Eserial + "";
+                await sysService.InsertLog(logVM);
+
+                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
 
                 profileVM.IsTypeUpdate = 1;
                 disabled_btnUpdateProfile = false;
@@ -962,7 +970,10 @@ namespace D69soft.Client.Pages.HR
                 profileVM.User_isChangePass = 0;
                 profileVM.User_PassReset = await profileService.ResetPass(profileVM);
 
-                await js.Swal_Message("Thông báo!", "Đặt lại mật khẩu đăng nhập thành công.", SweetAlertMessageType.success);
+                logVM.LogDesc = "Đặt lại mật khẩu đăng nhập " + profileVM.Eserial + "";
+                await sysService.InsertLog(logVM);
+
+                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
             }
         }
 
@@ -984,7 +995,10 @@ namespace D69soft.Client.Pages.HR
 
                     filterHrVM.Eserial = String.Empty;
 
-                    await js.Swal_Message("Thông báo!", "Xóa thành công.", SweetAlertMessageType.success);
+                    logVM.LogDesc = "Xóa lịch sử hồ sơ " + profileVM.Eserial + "";
+                    await sysService.InsertLog(logVM);
+
+                    await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
                 }
             }
 
@@ -999,16 +1013,19 @@ namespace D69soft.Client.Pages.HR
             {
                 if (await profileService.DelProfile(profileVM.Eserial))
                 {
-                    await GetProfileList();
+                    logVM.LogDesc = "Xóa hồ sơ " + profileVM.Eserial + "";
+                    await sysService.InsertLog(logVM);
 
-                    await js.Swal_Message("Thông báo!", "Xóa thành công.", SweetAlertMessageType.success);
+                    await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
+
+                    await GetProfileList();
                 }
             }
 
             isLoading = false;
         }
 
-        private async Task InitializeModal_TerminateProfile()
+        private void InitializeModal_TerminateProfile()
         {
             isLoading = true;
 
@@ -1027,11 +1044,14 @@ namespace D69soft.Client.Pages.HR
 
             if (await profileService.TerminateProfile(profileVM))
             {
-                await GetProfileList();
+                logVM.LogDesc = "Chấm dứt hợp đồng " + profileVM.Eserial + "";
+                await sysService.InsertLog(logVM);
 
-                await js.Swal_Message("Thông báo!", "Chấm dứt hợp đồng thành công.", SweetAlertMessageType.success);
+                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModal_TerminateProfile");
+
+                await GetProfileList();
             }
             disabled_btnUpdateProfile = true;
 
@@ -1046,9 +1066,12 @@ namespace D69soft.Client.Pages.HR
             {
                 if (await profileService.RestoreTerminateProfile(profileVM.Eserial, UserID))
                 {
-                    await GetProfileList();
+                    logVM.LogDesc = "Hủy chấm dứt hợp đồng " + profileVM.Eserial + "";
+                    await sysService.InsertLog(logVM);
 
-                    await js.Swal_Message("Thông báo!", "Hủy chấm dứt hợp đồng thành công.", SweetAlertMessageType.success);
+                    await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
+
+                    await GetProfileList();
                 }
             }
 
@@ -1151,7 +1174,10 @@ namespace D69soft.Client.Pages.HR
         {
             await profileService.UpdatePermis(permis_funcs.Where(x => x.IsChecked), permis_subFuncs.Where(x => x.IsChecked), permis_depts.Where(x => x.IsChecked), permis_rpts.Where(x => x.IsChecked), profileVM.Eserial);
 
-            await js.Swal_Message("Thông báo!", "Cập nhật phân quyền thành công.", SweetAlertMessageType.success);
+            logVM.LogDesc = "Cập nhật phân quyền " + profileVM.Eserial + "";
+            await sysService.InsertLog(logVM);
+
+            await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
         }
 
         //EmployeeTransaction
@@ -1188,7 +1214,10 @@ namespace D69soft.Client.Pages.HR
         {
             await profileService.UpdateEmplTrn(salTrnCodes.Where(x => x.IsChecked), profileVM.Eserial);
 
-            await js.Swal_Message("Thông báo!", "Cập nhật thiết lập giao dịch lương thành công.", SweetAlertMessageType.success);
+            logVM.LogDesc = "Cập nhật thiết lập giao dịch lương " + profileVM.Eserial + "";
+            await sysService.InsertLog(logVM);
+
+            await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
         }
 
         //ContractType

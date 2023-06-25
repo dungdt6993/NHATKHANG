@@ -58,7 +58,7 @@
 
                 </div>
 
-                <div id="updateScrollToBottom" class="table-responsive" style="height: calc(100vh - 325px); min-height: 300px;">
+                <div id="updateScrollToBottom" class="table-responsive" style="height: calc(100vh - 299px); min-height: 300px;">
 
                     <div class="modal-body @(stockVoucherVM.IsTypeUpdate==3?"noClick":"")" style="background-color: #f4f6f9;">
 
@@ -656,7 +656,7 @@
 
             </div>
             <!-- /.card-header -->
-            <div class="card-body table-responsive p-0" style="height: calc(100vh - 263px);">
+            <div class="card-body table-responsive p-0" style="height: calc(100vh - 233px);">
 
                 @if (stockVoucherVMs != null)
                 {
@@ -672,6 +672,15 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @if(stockVoucherVMs.Count() > 0)
+                            {
+                                
+                            }
+                            else
+                            {
+                                                                            <img src="images/_default/no-results.png" />
+
+                            }
                             <Virtualize Items="@stockVoucherVMs" Context="stockVoucherVM" OverscanCount="50">
                                 @{
                                     var colorVoucher = !stockVoucherVM.VActive ? "text-danger" : "";
