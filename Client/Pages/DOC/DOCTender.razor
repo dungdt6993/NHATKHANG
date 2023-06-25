@@ -239,7 +239,7 @@
                         <option value=@string.Empty>-----Xuồng-----</option>
                         @if (tender_filter_list != null)
                         {
-                            @foreach (var _tender_filter in tender_filter_list.Where(x=>x.TenderActive))
+                            @foreach (var _tender_filter in tender_filter_list.Where(x => x.TenderActive))
                             {
                                 <option data-subtext="@_tender_filter.TenderCode" value="@_tender_filter.TenderCode">@_tender_filter.TenderName</option>
                             }
@@ -319,51 +319,57 @@
 
             <!-- /.card-header -->
             <div class="card-body table-responsive p-0" style="height: calc(100vh - 232px);">
-                    @if (documentVMs != null)
-                    {
-                        <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th class="text-center">File Scan</th>
-                                    <th>Xuồng</th>
-                                    <th>Loại tài liệu</th>
-                                    <th class="text-center">Số hiệu</th>
-                                    <th class="text-center">Ngày cấp</th>
-                                    <th class="text-center">Ngày hết hạn</th>
-                                    <th>Ghi chú</th>
+                @if (documentVMs != null)
+                {
+                    <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="text-center">File Scan</th>
+                                <th>Xuồng</th>
+                                <th>Loại tài liệu</th>
+                                <th class="text-center">Số hiệu</th>
+                                <th class="text-center">Ngày cấp</th>
+                                <th class="text-center">Ngày hết hạn</th>
+                                <th>Ghi chú</th>
+                                @if (DOC_DOCTender_Update)
+                                {
+                                    <th></th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <Virtualize Items="@documentVMs" Context="_documentVM" OverscanCount="50">
+                                <tr class="@(_documentVM.IsExpDoc?"text-danger":"")">
+                                    <td class="text-center">
+                                        @if (!String.IsNullOrWhiteSpace(_documentVM.FileScan))
+                                        {
+                                            <a href="@(UrlDirectory.Upload_DOC_Public + _documentVM.FileScan)" target="_blank"><i class="fa-regular fa-file-pdf fa-2xl"></i></a>
+                                        }
+                                    </td>
+                                    <td>@_documentVM.DepartmentName</td>
+                                    <td>@_documentVM.DocTypeName</td>
+                                    <td class="text-center">@_documentVM.TextNumber</td>
+                                    <td class="text-center">@(_documentVM.DateOfIssue.HasValue ? _documentVM.DateOfIssue.Value.ToString("dd/MM/yyyy") : "")</td>
+                                    <td class="text-center">@(_documentVM.ExpDate.HasValue ? _documentVM.ExpDate.Value.ToString("dd/MM/yyyy") : "")</td>
+                                    <td>@_documentVM.DocNote</td>
                                     @if (DOC_DOCTender_Update)
                                     {
-                                        <th></th>
+                                        <td class="text-center">
+                                            <button class="btn btn-default btn-xs" @onclick="(() => InitializeModalUpdate_Document(1, _documentVM))"><i class="fa-solid fa-pen"></i></button>
+                                        </td>
                                     }
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <Virtualize Items="@documentVMs" Context="_documentVM" OverscanCount="50">
-                                    <tr class="@(_documentVM.IsExpDoc?"text-danger":"")">
-                                        <td class="text-center">
-                                            @if (!String.IsNullOrWhiteSpace(_documentVM.FileScan))
-                                            {
-                                                <a href="@(UrlDirectory.Upload_DOC_Public + _documentVM.FileScan)" target="_blank"><i class="fa-regular fa-file-pdf fa-2xl"></i></a>
-                                            }
-                                        </td>
-                                        <td>@_documentVM.DepartmentName</td>
-                                        <td>@_documentVM.DocTypeName</td>
-                                        <td class="text-center">@_documentVM.TextNumber</td>
-                                        <td class="text-center">@(_documentVM.DateOfIssue.HasValue ? _documentVM.DateOfIssue.Value.ToString("dd/MM/yyyy") : "")</td>
-                                        <td class="text-center">@(_documentVM.ExpDate.HasValue ? _documentVM.ExpDate.Value.ToString("dd/MM/yyyy") : "")</td>
-                                        <td>@_documentVM.DocNote</td>
-                                        @if (DOC_DOCTender_Update)
-                                        {
-                                            <td class="text-center">
-                                                <button class="btn btn-default btn-xs" @onclick="(() => InitializeModalUpdate_Document(1, _documentVM))"><i class="fa-solid fa-pen"></i></button>
-                                            </td>
-                                        }
-                                    </tr>
-                                </Virtualize>
-                            </tbody>
-                        </table>
+                            </Virtualize>
+                        </tbody>
+                    </table>
+
+                    @if (documentVMs.Count() <= 0)
+                    {
+                        <img class="img-no-result" src="images/_default/no-results.png" />
                     }
-                </div>
+
+                }
+            </div>
             <!-- /.card-body -->
             @if (documentVMs != null)
             {

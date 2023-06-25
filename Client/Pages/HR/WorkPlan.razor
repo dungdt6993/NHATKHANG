@@ -244,7 +244,7 @@
                                         <a class="text-secondary" style="cursor: pointer; font-size: 12px;" @onclick="(() => InitializeModalUpdate_WorkPlan(1, _positionGroup.PositionGroupID, workPlanVMs.Where(x=>x.WorkPlanSeq==_workPlan.WorkPlanSeq).First()))">
                                             @if (_workPlan.WorkPlanSeq != 0)
                                             {
-                                                if(_workPlan.WorkPlanIsDone)
+                                                if (_workPlan.WorkPlanIsDone)
                                                 {
                                                     <i class="fa-solid fa-circle-check text-success"></i>
 
@@ -310,7 +310,10 @@
                     </table>
                 }
 
-
+                if (workPlanVMs.Count() <= 0)
+                {
+                    <img class="img-no-result" src="images/_default/no-results.png" />
+                }
             }
 
             <!-- /.card-body -->

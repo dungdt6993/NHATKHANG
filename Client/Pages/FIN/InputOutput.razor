@@ -672,15 +672,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if(stockVoucherVMs.Count() > 0)
-                            {
-                                
-                            }
-                            else
-                            {
-                                                                            <img src="images/_default/no-results.png" />
-
-                            }
                             <Virtualize Items="@stockVoucherVMs" Context="stockVoucherVM" OverscanCount="50">
                                 @{
                                     var colorVoucher = !stockVoucherVM.VActive ? "text-danger" : "";
@@ -716,6 +707,10 @@
                             </Virtualize>
                         </tbody>
                     </table>
+                    if (stockVoucherVMs.Count() <= 0)
+                    {
+                        <img class="img-no-result" src="images/_default/no-results.png" />
+                    }
                 }
             </div>
             <!-- /.card-body -->

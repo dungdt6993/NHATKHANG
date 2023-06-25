@@ -225,7 +225,7 @@
                                                     <a href="javascript:void(0)" @onclick="(() => FileDefault())"><i class="fa-solid fa-trash-can"></i></a>
                                                 }
                                                 @*<div class="product-image-thumb"><img src="/images/_default/no-image.png" alt="Product Image"></div>
-                                                    <div class="product-image-thumb"><img src="/images/_default/no-image.png" alt="Product Image"></div>*@
+                                                <div class="product-image-thumb"><img src="/images/_default/no-image.png" alt="Product Image"></div>*@
                                             </div>
 
                                         </div>
@@ -266,13 +266,13 @@
                                             </div>
 
                                             @*                                            <div class="form-group row clearfix" style="padding-top: 18px;">
-                                                <div class="icheck-success d-inline">
-                                                <input type="checkbox" id="checkboxPrimary1">
-                                                <label for="checkboxPrimary1">
-                                                Hiển thị màn hình bán hàng
-                                                </label>
-                                                </div>
-                                                </div>*@
+                                            <div class="icheck-success d-inline">
+                                            <input type="checkbox" id="checkboxPrimary1">
+                                            <label for="checkboxPrimary1">
+                                            Hiển thị màn hình bán hàng
+                                            </label>
+                                            </div>
+                                            </div>*@
 
                                             <div class="form-group clearfix">
                                                 <div class="icheck-success d-inline">
@@ -616,59 +616,60 @@
                             <button type="button" class="btn btn-secondary" @onclick="(() => SyncDataSmile())"><i class="fa-solid fa-arrows-rotate"></i> Đồng bộ dữ liệu SMILE</button>
 
                             @*                            <div class="input-group input-group-sm" style="width: auto;">
-                                <input type="search" class="form-control form-control-border border-width-2" style="margin: 0 10px;" placeholder="Tìm kiếm theo mã hoặc tên hàng..." />
-                                <div class="btn-group">
-                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa-solid fa-pencil"></i> Cập nhật
-                                </button>
-                                <div class="dropdown-menu">
-                                <a class="dropdown-item">Hoạt động</a>
-                                <a class="dropdown-item">Ngừng hoạt động</a>
-                                <a class="dropdown-item">Xóa hàng loạt</a>
-                                </div>
-                                </div>
-                                <button type="button" class="btn btn-success" @onclick="(() => InitializeModalUpdate_Items(0, itemsVM))"><i class="fa-solid fa-xl fa-plus"></i> Thêm</button>
-                                </div>*@
+                            <input type="search" class="form-control form-control-border border-width-2" style="margin: 0 10px;" placeholder="Tìm kiếm theo mã hoặc tên hàng..." />
+                            <div class="btn-group">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa-solid fa-pencil"></i> Cập nhật
+                            </button>
+                            <div class="dropdown-menu">
+                            <a class="dropdown-item">Hoạt động</a>
+                            <a class="dropdown-item">Ngừng hoạt động</a>
+                            <a class="dropdown-item">Xóa hàng loạt</a>
+                            </div>
+                            </div>
+                            <button type="button" class="btn btn-success" @onclick="(() => InitializeModalUpdate_Items(0, itemsVM))"><i class="fa-solid fa-xl fa-plus"></i> Thêm</button>
+                            </div>*@
 
                         </div>
 
                         <div class="card-body table-responsive p-0" style="height: calc(100vh - 181px);">
-                            <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
-                                <thead>
-                                    <tr>
-                                        @*                                        <th class="text-center">
-                                            @if (itemsVMs != null)
-                                            {
-                                            <div class="custom-control custom-checkbox">
-                                            <input class="custom-control-input custom-control-input-purple" type="checkbox" id="ckAll" @onchange="EventArgs => { CheckAll(EventArgs.Value); }" checked="@filterFinVM.IsChecked">
-                                            <label for="ckAll" class="custom-control-label"></label>
-                                            </div>
-                                            }
-                                            </th>*@
-                                        <th class="text-center">Hình ảnh</th>
-                                        <th class="text-center">Mã hàng hóa</th>
-                                        <th class="sort-th" @onclick=@(()=>SortTable("IName"))>
-                                            Tên hàng
-                                            <span class="fa-solid @(SetSortIcon("IName"))"></span>
-                                        </th>
-                                        <th>Loại hàng</th>
-                                        <th>Lớp hàng</th>
-                                        <th>Nhóm hàng</th>
+                            @if (search_itemsVMs != null)
+                            {
+                                <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                                    <thead>
+                                        <tr>
+                                            @*                                        <th class="text-center">
+                                        @if (itemsVMs != null)
+                                        {
+                                        <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input custom-control-input-purple" type="checkbox" id="ckAll" @onchange="EventArgs => { CheckAll(EventArgs.Value); }" checked="@filterFinVM.IsChecked">
+                                        <label for="ckAll" class="custom-control-label"></label>
+                                        </div>
+                                        }
+                                        </th>*@
+                                            <th class="text-center">Hình ảnh</th>
+                                            <th class="text-center">Mã hàng hóa</th>
+                                            <th class="sort-th" @onclick=@(()=>SortTable("IName"))>
+                                                Tên hàng
+                                                <span class="fa-solid @(SetSortIcon("IName"))"></span>
+                                            </th>
+                                            <th>Loại hàng</th>
+                                            <th>Lớp hàng</th>
+                                            <th>Nhóm hàng</th>
 
-                                        <th class="text-center">Giá</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (search_itemsVMs != null)
-                                    {
+                                            <th class="text-center">Giá</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
                                         <Virtualize Items="@search_itemsVMs" Context="_itemVMs" OverscanCount="50">
                                             <tr @onclick="() => InitializeModalUpdate_Items(1,_itemVMs)">
                                                 @*                                                <td class="text-center">
-                                                    <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input custom-control-input-purple custom-control-input-outline" id="@_itemVMs.ICode" type="checkbox" @bind="_itemVMs.IsChecked">
-                                                    <label for="@_itemVMs.ICode" class="custom-control-label"></label>
-                                                    </div>
-                                                    </td>*@
+                                            <div class="custom-control custom-checkbox">
+                                            <input class="custom-control-input custom-control-input-purple custom-control-input-outline" id="@_itemVMs.ICode" type="checkbox" @bind="_itemVMs.IsChecked">
+                                            <label for="@_itemVMs.ICode" class="custom-control-label"></label>
+                                            </div>
+                                            </td>*@
                                                 <td class="text-center">
                                                     <img class="table-picture" src="@_itemVMs.IURLPicture1">
                                                 </td>
@@ -680,10 +681,17 @@
                                                 <td class="text-right">@String.Format("{0:#,##0.##}", _itemVMs.IPrice)</td>
                                             </tr>
                                         </Virtualize>
-                                    }
-                                </tbody>
+                                    </tbody>
 
-                            </table>
+                                </table>
+
+                                if (search_itemsVMs.Count() <= 0)
+                                {
+                                    <img class="img-no-result" src="images/_default/no-results.png" />
+                                }
+
+                            }
+
                         </div>
                         <!-- /.card-body -->
                         @if (search_itemsVMs != null)

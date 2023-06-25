@@ -18,7 +18,7 @@
                         @if (filter_vTypeVMs != null && !String.IsNullOrEmpty(stockVoucherVM.VTypeID))
                         {
                             string _vTypeName = "BẢNG " + filter_vTypeVMs.Where(x => x.VTypeID == stockVoucherVM.VTypeID).Select(x => x.VTypeDesc).First();
-                            <span>@_vTypeName.ToUpper() @(String.IsNullOrEmpty(stockVoucherVM.VNumber)||stockVoucherVM.IsTypeUpdate==5?String.Empty:stockVoucherVM.VNumber)</span>
+                            <span>@_vTypeName.ToUpper() @(String.IsNullOrEmpty(stockVoucherVM.VNumber) || stockVoucherVM.IsTypeUpdate == 5 ? String.Empty : stockVoucherVM.VNumber)</span>
                         }
                     </h4>
                     @if (vSubTypeVMs != null)
@@ -99,7 +99,6 @@
 
                             </div>
                             <div class="col-sm-3" style="padding-left: 10px;">
-
                             </div>
                         </div>
 
@@ -202,14 +201,14 @@
                                                      ValueChanged="@((string value) =>onchange_InventoryCheck_StockCode(value, _stockVoucherDetailVM))">
                                                                 <option value=@String.Empty>-----Chọn kho-----</option>
                                                                 @if (stockVMs != null)
-                                                {
-                                                    @foreach (var _stockVM in stockVMs)
-                                                    {
-                                                        <option data-subtext="@_stockVM.StockCode" value="@_stockVM.StockCode">@_stockVM.StockName</option>
-                                                    }
-                                                }
-                                            </InputSelect>
-                                        </td>
+                                                                {
+                                                                    @foreach (var _stockVM in stockVMs)
+                                                                    {
+                                                                        <option data-subtext="@_stockVM.StockCode" value="@_stockVM.StockCode">@_stockVM.StockName</option>
+                                                                    }
+                                                                }
+                                                            </InputSelect>
+                                                        </td>
                                                     }
 
                                                     <td class="text-center">
@@ -223,7 +222,7 @@
                                                 <td class="text-center">
                                                     <input class="form-control text-center @(_stockVoucherDetailVM.InventoryCheck_ActualQty<0?"text-danger":"")" @bind="@_stockVoucherDetailVM.InventoryCheck_ActualQty" onClick="this.select();" />
                                                 </td>
-                                                <td class="text-center @(_stockVoucherDetailVM.InventoryCheck_ActualQty-_stockVoucherDetailVM.InventoryCheck_Qty<0?"text-danger":"")">@(_stockVoucherDetailVM.InventoryCheck_ActualQty-_stockVoucherDetailVM.InventoryCheck_Qty)</td>
+                                                <td class="text-center @(_stockVoucherDetailVM.InventoryCheck_ActualQty-_stockVoucherDetailVM.InventoryCheck_Qty<0?"text-danger":"")">@(_stockVoucherDetailVM.InventoryCheck_ActualQty - _stockVoucherDetailVM.InventoryCheck_Qty)</td>
                                                 <td class="text-center">
                                                     @if (_stockVoucherDetailVM.InventoryCheck_Qty < _stockVoucherDetailVM.InventoryCheck_ActualQty)
                                                     {
@@ -541,36 +540,42 @@
                                     <td class="text-center">@stockVoucherVM.VNumber</td>
                                     <td>
                                         @if (String.IsNullOrEmpty(stockVoucherVM.StockCode))
+                                        {
+                                            <span>Tất cả</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@stockVoucherVM.StockCode - @stockVoucherVM.StockName</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        @(stockVoucherVM.VDate.HasValue ? stockVoucherVM.VDate.Value.ToString("dd/MM/yyyy") : "")
+                                    </td>
+                                    <td>@stockVoucherVM.VDesc</td>
+                                    <td>@stockVoucherVM.VSubTypeDesc</td>
+                                    <td></td>
+                                    @if (!String.IsNullOrEmpty(@stockVoucherVM.FullNameEC))
                                     {
-                                        <span>Tất cả</span>
+                                        <td class="text-secondary">
+                                            <i class="fa-solid fa-user"> </i>
+                                            @stockVoucherVM.FullNameEC <i class="fa-solid fa-clock"> </i>
+                                            @(stockVoucherVM.TimeCreated.HasValue ? stockVoucherVM.TimeCreated.Value.ToString("dd/MM/yyyy HH:mm") : "")
+                                        </td>
                                     }
                                     else
                                     {
-                                        <span>@stockVoucherVM.StockCode - @stockVoucherVM.StockName</span>
+                                        <td></td>
                                     }
-                                </td>
-                                <td class="text-center">
-                                    @(stockVoucherVM.VDate.HasValue ? stockVoucherVM.VDate.Value.ToString("dd/MM/yyyy") : "")
-                                </td>
-                                <td>@stockVoucherVM.VDesc</td>
-                                <td>@stockVoucherVM.VSubTypeDesc</td>
-                                <td></td>
-                                @if (!String.IsNullOrEmpty(@stockVoucherVM.FullNameEC))
-                                {
-                                    <td class="text-secondary">
-                                        <i class="fa-solid fa-user"> </i>
-                                        @stockVoucherVM.FullNameEC <i class="fa-solid fa-clock"> </i>
-                                        @(stockVoucherVM.TimeCreated.HasValue ? stockVoucherVM.TimeCreated.Value.ToString("dd/MM/yyyy HH:mm") : "")
-                                    </td>
-                                }
-                                else
-                                {
-                                    <td></td>
-                                }
-                            </tr>
-                        </Virtualize>
-                    </tbody>
-                </table>
+                                </tr>
+                            </Virtualize>
+                        </tbody>
+                    </table>
+
+                    if (stockVoucherVMs.Count() <= 0)
+                    {
+                        <img class="img-no-result" src="images/_default/no-results.png" />
+                    }
+
                 }
             </div>
             <!-- /.card-body -->

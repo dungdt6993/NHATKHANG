@@ -5,760 +5,765 @@
 
 @if (HR_DayOff_Adjust)
 {
-	<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_AddBalance">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<EditForm Model="@dayOffVM" OnValidSubmit="@UpdateAddBalance">
+    <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_AddBalance">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <EditForm Model="@dayOffVM" OnValidSubmit="@UpdateAddBalance">
 
-					<FluentValidationValidator />
+                    <FluentValidationValidator />
 
-					<div class="modal-header">
-						<h5 class="modal-title">
-							<span>@dayOffVM.Eserial</span> - <span>@dayOffVM.LastName @dayOffVM.MiddleName @dayOffVM.FirstName</span>
-						</h5>
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <span>@dayOffVM.Eserial</span> - <span>@dayOffVM.LastName @dayOffVM.MiddleName @dayOffVM.FirstName</span>
+                        </h5>
 
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => CloseModalUpdate_AddBalance())">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => CloseModalUpdate_AddBalance())">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
 
-						@if (filterHrVM.ShiftID == "AL")
-						{
-							<div class="form-group row">
-								<label class="col-sm-3 col-form-label">Điều chỉnh</label>
-								<div class="col-sm-5">
-									<InputNumber class="form-control" @bind-Value="@dayOffVM.ALAddBalance"></InputNumber>
-									<ValidationMessage For="@(() => dayOffVM.ALAddBalance)" />
-								</div>
-							</div>
+                        @if (filterHrVM.ShiftID == "AL")
+                        {
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Điều chỉnh</label>
+                                <div class="col-sm-5">
+                                    <InputNumber class="form-control" @bind-Value="@dayOffVM.ALAddBalance"></InputNumber>
+                                    <ValidationMessage For="@(() => dayOffVM.ALAddBalance)" />
+                                </div>
+                            </div>
 
-							<div class="form-group row">
-								<label class="col-sm-3 col-form-label">Lý do</label>
-								<div class="col-sm-9">
-									<InputTextArea class="form-control" @bind-Value="@dayOffVM.ALNoteAddBalance"></InputTextArea>
-									<ValidationMessage For="@(() => dayOffVM.ALNoteAddBalance)" />
-								</div>
-							</div>
-						}
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Lý do</label>
+                                <div class="col-sm-9">
+                                    <InputTextArea class="form-control" @bind-Value="@dayOffVM.ALNoteAddBalance"></InputTextArea>
+                                    <ValidationMessage For="@(() => dayOffVM.ALNoteAddBalance)" />
+                                </div>
+                            </div>
+                        }
 
-						@if (filterHrVM.ShiftID == "DO")
-						{
-							<div class="form-group row">
-								<label class="col-sm-3 col-form-label">Điều chỉnh</label>
-								<div class="col-sm-5">
-									<InputNumber class="form-control" @bind-Value="@dayOffVM.CLDOAddBalance"></InputNumber>
-									<ValidationMessage For="@(() => dayOffVM.CLDOAddBalance)" />
-								</div>
-							</div>
+                        @if (filterHrVM.ShiftID == "DO")
+                        {
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Điều chỉnh</label>
+                                <div class="col-sm-5">
+                                    <InputNumber class="form-control" @bind-Value="@dayOffVM.CLDOAddBalance"></InputNumber>
+                                    <ValidationMessage For="@(() => dayOffVM.CLDOAddBalance)" />
+                                </div>
+                            </div>
 
-							<div class="form-group row">
-								<label class="col-sm-3 col-form-label">Lý do</label>
-								<div class="col-sm-9">
-									<InputTextArea class="form-control" @bind-Value="@dayOffVM.CLDONoteAddBalance"></InputTextArea>
-									<ValidationMessage For="@(() => dayOffVM.CLDONoteAddBalance)" />
-								</div>
-							</div>
-						}
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Lý do</label>
+                                <div class="col-sm-9">
+                                    <InputTextArea class="form-control" @bind-Value="@dayOffVM.CLDONoteAddBalance"></InputTextArea>
+                                    <ValidationMessage For="@(() => dayOffVM.CLDONoteAddBalance)" />
+                                </div>
+                            </div>
+                        }
 
-						@if (filterHrVM.ShiftID == "PH")
-						{
-							<div class="form-group row">
-								<label class="col-sm-3 col-form-label">Điều chỉnh</label>
-								<div class="col-sm-5">
-									<InputNumber class="form-control" @bind-Value="@dayOffVM.CLPHAddBalance"></InputNumber>
-									<ValidationMessage For="@(() => dayOffVM.CLPHAddBalance)" />
-								</div>
-							</div>
+                        @if (filterHrVM.ShiftID == "PH")
+                        {
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Điều chỉnh</label>
+                                <div class="col-sm-5">
+                                    <InputNumber class="form-control" @bind-Value="@dayOffVM.CLPHAddBalance"></InputNumber>
+                                    <ValidationMessage For="@(() => dayOffVM.CLPHAddBalance)" />
+                                </div>
+                            </div>
 
-							<div class="form-group row">
-								<label class="col-sm-3 col-form-label">Lý do</label>
-								<div class="col-sm-9">
-									<InputTextArea class="form-control" @bind-Value="@dayOffVM.CLPHNoteAddBalance"></InputTextArea>
-									<ValidationMessage For="@(() => dayOffVM.CLPHNoteAddBalance)" />
-								</div>
-							</div>
-						}
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Lý do</label>
+                                <div class="col-sm-9">
+                                    <InputTextArea class="form-control" @bind-Value="@dayOffVM.CLPHNoteAddBalance"></InputTextArea>
+                                    <ValidationMessage For="@(() => dayOffVM.CLPHNoteAddBalance)" />
+                                </div>
+                            </div>
+                        }
 
-					</div>
-				@if (IsOpenFunc)
-				{
-					<div class="modal-footer justify-content-center">
-						<button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
-					</div>
-				}
-				</EditForm>
-			</div>
-			<!-- /.modal-content -->
-		</div>
-		<!-- /.modal-dialog -->
-	</div>
+                    </div>
+                    @if (IsOpenFunc)
+                    {
+                        <div class="modal-footer justify-content-center">
+                            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                        </div>
+                    }
+                </EditForm>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
 }
 
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalList_PublicHoliday">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
 
-			<div class="modal-header">
-				<h5 class="modal-title">
-					<span>Ngày lễ tết</span>
-				</h5>
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span>Ngày lễ tết</span>
+                </h5>
 
-				<div class="ml-auto">
-					@if (HR_DayOff_Config)
-					{
-						<button type="button" class="btn btn-sm btn-success" data-target="#InitializeModalUpdate_PublicHoliday" data-toggle="modal" @onclick="(() => InitializeModalUpdate_PublicHoliday(0, publicHolidayDefVM))"><i class="fas fa-plus-circle"></i> Thêm mới</button>
-					}
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-			</div>
+                <div class="ml-auto">
+                    @if (HR_DayOff_Config)
+                    {
+                        <button type="button" class="btn btn-sm btn-success" data-target="#InitializeModalUpdate_PublicHoliday" data-toggle="modal" @onclick="(() => InitializeModalUpdate_PublicHoliday(0, publicHolidayDefVM))"><i class="fas fa-plus-circle"></i> Thêm mới</button>
+                    }
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
 
-			<div class="modal-body p-0">
+            <div class="modal-body p-0">
 
-				<div class="card-body table-responsive p-0" style="height: calc(100vh - 249px);">
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 249px);">
 
-					<table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
-						<thead>
-							<tr>
-								<th>Tên</th>
-								<th class="text-center">Ngày</th>
-								<th class="text-center">Lịch</th>
-							</tr>
-						</thead>
-						<tbody>
-							@if (publicHolidayDefVMs != null)
-							{
-								foreach (var _publicHolidayDefVM in publicHolidayDefVMs)
-								{
-									<tr data-target="#InitializeModalUpdate_PublicHoliday" data-toggle="modal" @onclick=@(()=>InitializeModalUpdate_PublicHoliday(1,_publicHolidayDefVM))>
-										<td>@_publicHolidayDefVM.PHName</td>
-										<td class="text-center">@_publicHolidayDefVM.PHDay<span>/</span>@_publicHolidayDefVM.PHMonth</td>
-										<td class="text-center">
-											@if (_publicHolidayDefVM.isLunar)
-											{
-												<span class="text-danger">Âm lịch</span>
-											}
-											else
-											{
-												<span class="text-success">Dương lịch</span>
-											}
-										</td>
-									</tr>
-								}
-							}
-						</tbody>
-					</table>
+                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <thead>
+                            <tr>
+                                <th>Tên</th>
+                                <th class="text-center">Ngày</th>
+                                <th class="text-center">Lịch</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (publicHolidayDefVMs != null)
+                            {
+                                foreach (var _publicHolidayDefVM in publicHolidayDefVMs)
+                                {
+                                    <tr data-target="#InitializeModalUpdate_PublicHoliday" data-toggle="modal" @onclick=@(()=>InitializeModalUpdate_PublicHoliday(1,_publicHolidayDefVM))>
+                                        <td>@_publicHolidayDefVM.PHName</td>
+                                        <td class="text-center">@_publicHolidayDefVM.PHDay<span>/</span>@_publicHolidayDefVM.PHMonth</td>
+                                        <td class="text-center">
+                                            @if (_publicHolidayDefVM.isLunar)
+                                            {
+                                                <span class="text-danger">Âm lịch</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-success">Dương lịch</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
 
-				</div>
+                </div>
 
-			</div>
+            </div>
 
-			<!-- /.modal-content -->
-		</div>
-		<!-- /.modal-dialog -->
-	</div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
 </div>
 
 @if (HR_DayOff_Config)
 {
-	<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_PublicHoliday">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<EditForm Model="@publicHolidayDefVM" OnValidSubmit="@UpdatePublicHoliday">
+    <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_PublicHoliday">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <EditForm Model="@publicHolidayDefVM" OnValidSubmit="@UpdatePublicHoliday">
 
-					<FluentValidationValidator />
+                    <FluentValidationValidator />
 
-					<div class="modal-header">
-						<h5 class="modal-title">
-							<span>CẬP NHẬT NGÀY LỄ TẾT</span>
-						</h5>
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <span>CẬP NHẬT NGÀY LỄ TẾT</span>
+                        </h5>
 
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => CloseModalUpdate_PublicHoliday())">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => CloseModalUpdate_PublicHoliday())">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
 
-						<div class="form-group row">
-							<label class="col-sm-2 col-form-label">Tên</label>
-							<div class="col-sm-10">
-								<InputText class="form-control" placeholder="Tên ngày lễ tết" @bind-Value="@publicHolidayDefVM.PHName" />
-								<ValidationMessage For="@(() => publicHolidayDefVM.PHName)" />
-							</div>
-						</div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Tên</label>
+                            <div class="col-sm-10">
+                                <InputText class="form-control" placeholder="Tên ngày lễ tết" @bind-Value="@publicHolidayDefVM.PHName" />
+                                <ValidationMessage For="@(() => publicHolidayDefVM.PHName)" />
+                            </div>
+                        </div>
 
-						<div class="form-group row">
-							<label class="col-sm-2 col-form-label">Ngày</label>
-							<div class="col-sm-2">
-								<InputNumber class="form-control" placeholder="dd" @bind-Value="@publicHolidayDefVM.PHDay" />
-								<ValidationMessage For="@(() => publicHolidayDefVM.PHDay)" />
-							</div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Ngày</label>
+                            <div class="col-sm-2">
+                                <InputNumber class="form-control" placeholder="dd" @bind-Value="@publicHolidayDefVM.PHDay" />
+                                <ValidationMessage For="@(() => publicHolidayDefVM.PHDay)" />
+                            </div>
 
-							<label class="col-sm-2 col-form-label">Tháng</label>
-							<div class="col-sm-2">
-								<InputNumber class="form-control" placeholder="MM" @bind-Value="@publicHolidayDefVM.PHMonth" />
-								<ValidationMessage For="@(() => publicHolidayDefVM.PHMonth)" />
-							</div>
+                            <label class="col-sm-2 col-form-label">Tháng</label>
+                            <div class="col-sm-2">
+                                <InputNumber class="form-control" placeholder="MM" @bind-Value="@publicHolidayDefVM.PHMonth" />
+                                <ValidationMessage For="@(() => publicHolidayDefVM.PHMonth)" />
+                            </div>
 
-							<div class="col-sm-4">
-								<div class="form-group clearfix">
-									<div class="icheck-danger d-inline">
-										<input type="checkbox" id="isLunar" @bind="publicHolidayDefVM.isLunar">
-										<label for="isLunar">
-											Âm lịch
-										</label>
-									</div>
-								</div>
-							</div>
+                            <div class="col-sm-4">
+                                <div class="form-group clearfix">
+                                    <div class="icheck-danger d-inline">
+                                        <input type="checkbox" id="isLunar" @bind="publicHolidayDefVM.isLunar">
+                                        <label for="isLunar">
+                                            Âm lịch
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
 
-						</div>
+                        </div>
 
-					</div>
-					<div class="modal-footer justify-content-center">
-						<button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
-						@if (publicHolidayDefVM.IsTypeUpdate == 1)
-						{
-							<button type="submit" class="btn btn-danger" @onclick=@(() => publicHolidayDefVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
-						}
-					</div>
-				</EditForm>
-			</div>
-			<!-- /.modal-content -->
-		</div>
-		<!-- /.modal-dialog -->
-	</div>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                        @if (publicHolidayDefVM.IsTypeUpdate == 1)
+                        {
+                            <button type="submit" class="btn btn-danger" @onclick=@(() => publicHolidayDefVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        }
+                    </div>
+                </EditForm>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
 }
 
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalList_GlobalParameter">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
 
-			<div class="modal-header">
-				<h5 class="modal-title">
-					<span>CẤU HÌNH NGÀY NGHỈ</span>
-				</h5>
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span>CẤU HÌNH NGÀY NGHỈ</span>
+                </h5>
 
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
 
-			<div class="modal-body p-0">
+            <div class="modal-body p-0">
 
-				<div class="card-body table-responsive p-0" style="height: calc(100vh - 249px);">
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 249px);">
 
-					<table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
-						<thead>
-							<tr>
-								<th class="text-center">Mã</th>
-								<th>Tên cấu hình</th>
-								<th class="text-center">Trạng thái</th>
-								<th class="text-center">Giá trị</th>
-								<th>Diễn giải</th>
-							</tr>
-						</thead>
-						<tbody>
-							@if (globalParameterVMs != null)
-							{
-								foreach (var _globalParameterVM in globalParameterVMs)
-								{
-									<tr data-target="#InitializeModalUpdate_GlobalParameter" data-toggle="modal" @onclick=@(()=>InitializeModalUpdate_GlobalParameter(1,_globalParameterVM))>
-										<td class="text-center">@_globalParameterVM.ParaId</td>
-										<td>@_globalParameterVM.ParaName</td>
-										<td class="text-center">
-											@if (_globalParameterVM.ParaStatus)
-											{
-												<i class="fas fa-check text-success"></i>
-											}
-											else
-											{
-												<i class="fas fa-times"></i>
-											}
-										</td>
-										<td class="text-center">@_globalParameterVM.ParaValues</td>
-										<td>@_globalParameterVM.Description</td>
+                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Mã</th>
+                                <th>Tên cấu hình</th>
+                                <th class="text-center">Trạng thái</th>
+                                <th class="text-center">Giá trị</th>
+                                <th>Diễn giải</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (globalParameterVMs != null)
+                            {
+                                foreach (var _globalParameterVM in globalParameterVMs)
+                                {
+                                    <tr data-target="#InitializeModalUpdate_GlobalParameter" data-toggle="modal" @onclick=@(()=>InitializeModalUpdate_GlobalParameter(1,_globalParameterVM))>
+                                        <td class="text-center">@_globalParameterVM.ParaId</td>
+                                        <td>@_globalParameterVM.ParaName</td>
+                                        <td class="text-center">
+                                            @if (_globalParameterVM.ParaStatus)
+                                            {
+                                                <i class="fas fa-check text-success"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-times"></i>
+                                            }
+                                        </td>
+                                        <td class="text-center">@_globalParameterVM.ParaValues</td>
+                                        <td>@_globalParameterVM.Description</td>
 
-									</tr>
-								}
-							}
-						</tbody>
-					</table>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
 
-				</div>
+                </div>
 
-			</div>
+            </div>
 
-			<!-- /.modal-content -->
-		</div>
-		<!-- /.modal-dialog -->
-	</div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
 </div>
 
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_GlobalParameter">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<EditForm Model="@globalParameterVM" OnValidSubmit="@UpdateGlobalParameter">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <EditForm Model="@globalParameterVM" OnValidSubmit="@UpdateGlobalParameter">
 
-				<FluentValidationValidator />
+                <FluentValidationValidator />
 
-				<div class="modal-header">
-					<h5 class="modal-title">
-						<span>CẬP NHẬT</span>
-					</h5>
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>CẬP NHẬT</span>
+                    </h5>
 
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => CloseModalUpdate_GlobalParameter())">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="(() => CloseModalUpdate_GlobalParameter())">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
 
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label">Tên</label>
-						<div class="col-sm-10">
-							<input type="text" readonly class="form-control" value="@globalParameterVM.ParaName" />
-						</div>
-					</div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Tên</label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly class="form-control" value="@globalParameterVM.ParaName" />
+                        </div>
+                    </div>
 
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label"></label>
-						<div class="col-sm-10">
-							<div class="form-group clearfix">
-								<div class="icheck-success d-inline">
-									<input type="radio" id="ParaStatus1" name="ParaStatus" checked="@(globalParameterVM.ParaStatus == true)" @onchange="(() => globalParameterVM.ParaStatus = true)">
-									<label for="ParaStatus1">
-										Hoạt động
-									</label>
-								</div>
-								<label>
-									&nbsp;&nbsp;
-								</label>
-								<div class="icheck-danger d-inline">
-									<input type="radio" id="ParaStatus2" name="ParaStatus" checked="@(globalParameterVM.ParaStatus == false)" @onchange="(() => globalParameterVM.ParaStatus = false)">
-									<label for="ParaStatus2">
-										Không hoạt động
-									</label>
-								</div>
-							</div>
-						</div>
-					</div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <div class="form-group clearfix">
+                                <div class="icheck-success d-inline">
+                                    <input type="radio" id="ParaStatus1" name="ParaStatus" checked="@(globalParameterVM.ParaStatus == true)" @onchange="(() => globalParameterVM.ParaStatus = true)">
+                                    <label for="ParaStatus1">
+                                        Hoạt động
+                                    </label>
+                                </div>
+                                <label>
+                                    &nbsp;&nbsp;
+                                </label>
+                                <div class="icheck-danger d-inline">
+                                    <input type="radio" id="ParaStatus2" name="ParaStatus" checked="@(globalParameterVM.ParaStatus == false)" @onchange="(() => globalParameterVM.ParaStatus = false)">
+                                    <label for="ParaStatus2">
+                                        Không hoạt động
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
 
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label">Giá trị</label>
-						<div class="col-sm-10">
-							<InputText class="form-control" placeholder="Giá trị" @bind-Value="@globalParameterVM.ParaValues" />
-							<ValidationMessage For="@(() => globalParameterVM.ParaValues)" />
-						</div>
-					</div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Giá trị</label>
+                        <div class="col-sm-10">
+                            <InputText class="form-control" placeholder="Giá trị" @bind-Value="@globalParameterVM.ParaValues" />
+                            <ValidationMessage For="@(() => globalParameterVM.ParaValues)" />
+                        </div>
+                    </div>
 
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label">Diễn giải</label>
-						<div class="col-sm-10">
-							<input type="text" readonly class="form-control" value="@globalParameterVM.Description" />
-						</div>
-					</div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Diễn giải</label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly class="form-control" value="@globalParameterVM.Description" />
+                        </div>
+                    </div>
 
-				</div>
-				<div class="modal-footer justify-content-center">
-					<button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
-				</div>
-			</EditForm>
-		</div>
-		<!-- /.modal-content -->
-	</div>
-	<!-- /.modal-dialog -->
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                </div>
+            </EditForm>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div>
 
 <section class="content-header">
 
-	<EditForm Model="@filterHrVM">
-		<div class="row">
+    <EditForm Model="@filterHrVM">
+        <div class="row">
 
-			<div class="col-md-2">
-				<div class="form-group row">
-					<label class="col-sm-3 col-form-label">Tháng:</label>
-					<div class="col-sm-9">
-						<InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-										   ValueExpression="@(()=>filterHrVM.Month)"
-										   Value="@filterHrVM.Month"
-										   ValueChanged="@((int value) => onchange_filter_month(value))">
-							@if (month_filter_list != null)
-							{
-								@foreach (var month in month_filter_list)
-								{
-									<option value="@month.Month">@month.Month</option>
-								}
-							}
-						</InputSelectNumber>
-					</div>
-				</div>
-			</div>
+            <div class="col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Tháng:</label>
+                    <div class="col-sm-9">
+                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                           ValueExpression="@(()=>filterHrVM.Month)"
+                                           Value="@filterHrVM.Month"
+                                           ValueChanged="@((int value) => onchange_filter_month(value))">
+                            @if (month_filter_list != null)
+                            {
+                                @foreach (var month in month_filter_list)
+                                {
+                                    <option value="@month.Month">@month.Month</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
 
-			<div class="col-md-2">
-				<div class="form-group row">
-					<label class="col-sm-3 col-form-label">Năm:</label>
-					<div class="col-sm-9">
-						<InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-										   ValueExpression="@(()=>filterHrVM.Year)"
-										   Value="@filterHrVM.Year"
-										   ValueChanged="@((int value) => onchange_filter_year(value))">
-							@if (year_filter_list != null)
-							{
-								@foreach (var year in year_filter_list)
-								{
-									<option value="@year.Year">@year.Year</option>
-								}
-							}
-						</InputSelectNumber>
-					</div>
-				</div>
-			</div>
+            <div class="col-md-2">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Năm:</label>
+                    <div class="col-sm-9">
+                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                           ValueExpression="@(()=>filterHrVM.Year)"
+                                           Value="@filterHrVM.Year"
+                                           ValueChanged="@((int value) => onchange_filter_year(value))">
+                            @if (year_filter_list != null)
+                            {
+                                @foreach (var year in year_filter_list)
+                                {
+                                    <option value="@year.Year">@year.Year</option>
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </div>
 
-			<div class="col-md-2">
-				<div class="form-group">
-					<InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-								 ValueExpression="@(()=>filterHrVM.DivisionID)"
-								 Value="@filterHrVM.DivisionID"
-								 ValueChanged="@((string value) => onchange_filter_division(value))">
-						@if (division_filter_list != null)
-						{
-							@foreach (var division_filter in division_filter_list)
-							{
-								<option data-subtext="@division_filter.DivisionID" value="@division_filter.DivisionID">@division_filter.DivisionName</option>
-							}
-						}
-					</InputSelect>
-				</div>
-			</div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
+                                 Value="@filterHrVM.DivisionID"
+                                 ValueChanged="@((string value) => onchange_filter_division(value))">
+                        @if (division_filter_list != null)
+                        {
+                            @foreach (var division_filter in division_filter_list)
+                            {
+                                <option data-subtext="@division_filter.DivisionID" value="@division_filter.DivisionID">@division_filter.DivisionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
 
-			<div class="col-md-4">
-				<div class="form-group">
-					<InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-								 ValueExpression="@(()=>filterHrVM.DepartmentID)"
-								 Value="@filterHrVM.DepartmentID"
-								 ValueChanged="@((string value) => onchange_filter_department(value))">
-						<option value=@string.Empty>-----Bộ phận-----</option>
-						@if (department_filter_list != null)
-						{
-							@foreach (var department_filter in department_filter_list)
-							{
-								<option data-subtext="@department_filter.DepartmentID" value="@department_filter.DepartmentID">@department_filter.DepartmentName</option>
-							}
-						}
-					</InputSelect>
-				</div>
-			</div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.DepartmentID)"
+                                 Value="@filterHrVM.DepartmentID"
+                                 ValueChanged="@((string value) => onchange_filter_department(value))">
+                        <option value=@string.Empty>-----Bộ phận-----</option>
+                        @if (department_filter_list != null)
+                        {
+                            @foreach (var department_filter in department_filter_list)
+                            {
+                                <option data-subtext="@department_filter.DepartmentID" value="@department_filter.DepartmentID">@department_filter.DepartmentName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
 
-			<div class="col-md-2">
-				<div class="form-group">
-					<InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-								 ValueExpression="@(()=>filterHrVM.SectionID)"
-								 Value="@filterHrVM.SectionID"
-								 ValueChanged="@((string value) => onchange_filter_section(value))">
-						<option value=@string.Empty>-----Khu vực-----</option>
-						@if (section_filter_list != null)
-						{
-							@foreach (var section_filter in section_filter_list)
-							{
-								<option data-subtext="@section_filter.SectionID" value="@section_filter.SectionID">@section_filter.SectionName</option>
-							}
-						}
-					</InputSelect>
-				</div>
-			</div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                 ValueExpression="@(()=>filterHrVM.SectionID)"
+                                 Value="@filterHrVM.SectionID"
+                                 ValueChanged="@((string value) => onchange_filter_section(value))">
+                        <option value=@string.Empty>-----Khu vực-----</option>
+                        @if (section_filter_list != null)
+                        {
+                            @foreach (var section_filter in section_filter_list)
+                            {
+                                <option data-subtext="@section_filter.SectionID" value="@section_filter.SectionID">@section_filter.SectionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
 
-			<div class="col-md-5">
-				<div class="form-group">
-					<select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
-						@if (position_filter_list != null)
-						{
-							@foreach (var positiongroup_filter in position_filter_list.Select(x => new { x.PositionGroupID, x.PositionGroupName }).Distinct())
-							{
-								<option data-subtext="@positiongroup_filter.PositionGroupID" value="@positiongroup_filter.PositionGroupID">@positiongroup_filter.PositionGroupName</option>
-							}
-						}
-					</select>
-				</div>
-			</div>
+            <div class="col-md-5">
+                <div class="form-group">
+                    <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                        @if (position_filter_list != null)
+                        {
+                            @foreach (var positiongroup_filter in position_filter_list.Select(x => new { x.PositionGroupID, x.PositionGroupName }).Distinct())
+                            {
+                                <option data-subtext="@positiongroup_filter.PositionGroupID" value="@positiongroup_filter.PositionGroupID">@positiongroup_filter.PositionGroupName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
 
-			<div class="col-md-4">
-				<div class="form-group">
-					<InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
-								 ValueExpression="@(()=>filterHrVM.Eserial)"
-								 Value="@filterHrVM.Eserial"
-								 ValueChanged="@((string value) => onchange_filter_eserial(value))">
-						<option value=@string.Empty>-----Nhân viên-----</option>
-						@if (eserial_filter_list != null)
-						{
-							@foreach (var eserial_filter in eserial_filter_list)
-							{
-								<option data-subtext="@eserial_filter.Eserial" value="@eserial_filter.Eserial">@eserial_filter.LastName @eserial_filter.MiddleName @eserial_filter.FirstName</option>
-							}
-						}
-					</InputSelect>
-				</div>
-			</div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                 ValueExpression="@(()=>filterHrVM.Eserial)"
+                                 Value="@filterHrVM.Eserial"
+                                 ValueChanged="@((string value) => onchange_filter_eserial(value))">
+                        <option value=@string.Empty>-----Nhân viên-----</option>
+                        @if (eserial_filter_list != null)
+                        {
+                            @foreach (var eserial_filter in eserial_filter_list)
+                            {
+                                <option data-subtext="@eserial_filter.Eserial" value="@eserial_filter.Eserial">@eserial_filter.LastName @eserial_filter.MiddleName @eserial_filter.FirstName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
 
-			<div class="col-md-2">
-				<div class="form-group">
-					<InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
-								 ValueExpression="@(()=>filterHrVM.ShiftID)"
-								 Value="@filterHrVM.ShiftID"
-								 ValueChanged="@((string value) => onchange_filter_dayofftype(value))">
-						@if (dayofftype_filter_list != null)
-						{
-							@foreach (var dayofftype_filter in dayofftype_filter_list)
-							{
-								<option data-subtext="@dayofftype_filter.ShiftTypeID" value="@dayofftype_filter.ShiftTypeID">@dayofftype_filter.ShiftTypeName</option>
-							}
-						}
-					</InputSelect>
-				</div>
-			</div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                 ValueExpression="@(()=>filterHrVM.ShiftID)"
+                                 Value="@filterHrVM.ShiftID"
+                                 ValueChanged="@((string value) => onchange_filter_dayofftype(value))">
+                        @if (dayofftype_filter_list != null)
+                        {
+                            @foreach (var dayofftype_filter in dayofftype_filter_list)
+                            {
+                                <option data-subtext="@dayofftype_filter.ShiftTypeID" value="@dayofftype_filter.ShiftTypeID">@dayofftype_filter.ShiftTypeName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
 
-			<div class="col-md-1">
-				<button type="button" class="btn btn-block bg-purple" @onclick="(() => GetDayOffList(filterHrVM.ShiftID))">
-					<i class="fas fa-search"></i>
-				</button>
-			</div>
-		</div>
-	</EditForm>
+            <div class="col-md-1">
+                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetDayOffList(filterHrVM.ShiftID))">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </EditForm>
 </section>
 
 <section class="content">
-	<div class="container-fluid">
-		<div class="card card-purple card-outline">
+    <div class="container-fluid">
+        <div class="card card-purple card-outline">
 
-			<div class="card-header text-right">
-				@if (HR_DayOff_Config)
-				{
-					<button type="button" class="btn btn-secondary" data-target="#InitializeModalList_GlobalParameter" data-toggle="modal" @onclick="()=>InitializeModalList_GlobalParameter()"><i class="fa-solid fa-calendar"></i> Cấu hình ngày nghỉ</button>
-					if (filterHrVM.ShiftID == "PH")
-					{
-						<button type="button" class="btn btn-secondary" data-target="#InitializeModalList_PublicHoliday" data-toggle="modal" @onclick="()=>InitializeModalList_PublicHoliday()"><i class="fa-solid fa-champagne-glasses"></i> Ngày lễ tết</button>
-					}
-				}
+            <div class="card-header text-right">
+                @if (HR_DayOff_Config)
+                {
+                    <button type="button" class="btn btn-secondary" data-target="#InitializeModalList_GlobalParameter" data-toggle="modal" @onclick="()=>InitializeModalList_GlobalParameter()"><i class="fa-solid fa-calendar"></i> Cấu hình ngày nghỉ</button>
+                    if (filterHrVM.ShiftID == "PH")
+                    {
+                        <button type="button" class="btn btn-secondary" data-target="#InitializeModalList_PublicHoliday" data-toggle="modal" @onclick="()=>InitializeModalList_PublicHoliday()"><i class="fa-solid fa-champagne-glasses"></i> Ngày lễ tết</button>
+                    }
+                }
 
-				@if (IsOpenFunc)
-				{
-					@if (HR_DayOff_Calc)
-					{
-						if (filterHrVM.ShiftID == "AL" || filterHrVM.ShiftID == "DO" || filterHrVM.ShiftID == "PH")
-						{
-							<button type="button" class="btn btn-secondary" @onclick="()=>CalcDayOff(filterHrVM.ShiftID)"><i class="fa-solid fa-calculator"></i> Tính dữ liệu</button>
-						}
-					}
-				}
+                @if (IsOpenFunc)
+                {
+                    @if (HR_DayOff_Calc)
+                    {
+                        if (filterHrVM.ShiftID == "AL" || filterHrVM.ShiftID == "DO" || filterHrVM.ShiftID == "PH")
+                        {
+                            <button type="button" class="btn btn-secondary" @onclick="()=>CalcDayOff(filterHrVM.ShiftID)"><i class="fa-solid fa-calculator"></i> Tính dữ liệu</button>
+                        }
+                    }
+                }
 
-			</div>
-			<!-- /.card-header -->
-			<div class="card-body table-responsive p-0" style="height: calc(100vh - 249px);">
-				@if (dayOffVMs != null)
-				{
-					if (filterHrVM.ShiftID == "AL")
-					{
-						<table class="table table-sm table-bordered table-head-fixed table-hover text-nowrap tblFontSizeMin tblDayOff">
-							<thead>
-								<tr>
-									<th>Nhân viên</th>
-									@if (@filterHrVM.DepartmentID == string.Empty)
-									{
-										<th>Bộ phận</th>
-									}
-									<th>Vị trí</th>
-									<th class="text-center">Ngày vào làm</th>
-									<th class="text-center">Ngày nghỉ việc</th>
-									<th class="text-center">Ngày tính phép</th>
-									<th class="text-center">Tồn tháng trước</th>
-									<th class="text-center">Thâm niên</th>
-									<th class="text-center">Phép tháng</th>
-									<th class="text-center">Điều chỉnh</th>
-									<th class="text-center">Tổng phép được sử dụng</th>
-									<th class="text-center">Đã sử dụng</th>
-									<th class="text-center">Còn lại</th>
-								</tr>
-							</thead>
-							<tbody>
-								<Virtualize Items="@dayOffVMs" Context="_dayOffVM" OverscanCount="50">
-									<tr>
-										<th>@_dayOffVM.Eserial - @_dayOffVM.LastName @_dayOffVM.MiddleName @_dayOffVM.FirstName</th>
-										@if (@filterHrVM.DepartmentID == string.Empty)
-										{
-									<td>@_dayOffVM.DepartmentName</td>
-										}
-								<td>@_dayOffVM.PositionName</td>
-								<td class="text-center">@(_dayOffVM.JoinDate.HasValue ? _dayOffVM.JoinDate.Value.ToString("dd/MM/yyyy") : "")</td>
-								<td class="text-center">@(_dayOffVM.TerminateDate.HasValue ? _dayOffVM.TerminateDate.Value.ToString("dd/MM/yyyy") : "")</td>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0" style="height: calc(100vh - 249px);">
+                @if (dayOffVMs != null)
+                {
+                    if (filterHrVM.ShiftID == "AL")
+                    {
+                        <table class="table table-sm table-bordered table-head-fixed table-hover text-nowrap tblFontSizeMin tblDayOff">
+                            <thead>
+                                <tr>
+                                    <th>Nhân viên</th>
+                                    @if (@filterHrVM.DepartmentID == string.Empty)
+                                    {
+                                        <th>Bộ phận</th>
+                                    }
+                                    <th>Vị trí</th>
+                                    <th class="text-center">Ngày vào làm</th>
+                                    <th class="text-center">Ngày nghỉ việc</th>
+                                    <th class="text-center">Ngày tính phép</th>
+                                    <th class="text-center">Tồn tháng trước</th>
+                                    <th class="text-center">Thâm niên</th>
+                                    <th class="text-center">Phép tháng</th>
+                                    <th class="text-center">Điều chỉnh</th>
+                                    <th class="text-center">Tổng phép được sử dụng</th>
+                                    <th class="text-center">Đã sử dụng</th>
+                                    <th class="text-center">Còn lại</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <Virtualize Items="@dayOffVMs" Context="_dayOffVM" OverscanCount="50">
+                                    <tr>
+                                        <th>@_dayOffVM.Eserial - @_dayOffVM.LastName @_dayOffVM.MiddleName @_dayOffVM.FirstName</th>
+                                        @if (@filterHrVM.DepartmentID == string.Empty)
+                                        {
+                                            <td>@_dayOffVM.DepartmentName</td>
+                                        }
+                                        <td>@_dayOffVM.PositionName</td>
+                                        <td class="text-center">@(_dayOffVM.JoinDate.HasValue ? _dayOffVM.JoinDate.Value.ToString("dd/MM/yyyy") : "")</td>
+                                        <td class="text-center">@(_dayOffVM.TerminateDate.HasValue ? _dayOffVM.TerminateDate.Value.ToString("dd/MM/yyyy") : "")</td>
 
-								<td class="text-center">@(_dayOffVM.StartDayAL.HasValue ? _dayOffVM.StartDayAL.Value.ToString("dd/MM/yyyy") : "")</td>
-								<td class="text-center">@_dayOffVM.ALPreMonth</td>
-								<td class="text-center">@_dayOffVM.ALExperience</td>
-								<td class="text-center">@_dayOffVM.ALActive</td>
-								<td class="text-center" data-target="#InitializeModalUpdate_AddBalance" data-toggle="modal" @onclick=@(()=>InitializeModalUpdate_AddBalance(_dayOffVM))>
-									<button type="button" class="btn btn-outline-secondary btn-xs">@_dayOffVM.ALAddBalance</button>
-								</td>
-								<td class="text-center">@_dayOffVM.ALTotal</td>
-								<td class="text-center">@_dayOffVM.ALTaken</td>
-								<td class="text-center font-weight-bold">@_dayOffVM.ALBalance</td>
-							</tr>
-						</Virtualize>
-					</tbody>
-				</table>
-					}
+                                        <td class="text-center">@(_dayOffVM.StartDayAL.HasValue ? _dayOffVM.StartDayAL.Value.ToString("dd/MM/yyyy") : "")</td>
+                                        <td class="text-center">@_dayOffVM.ALPreMonth</td>
+                                        <td class="text-center">@_dayOffVM.ALExperience</td>
+                                        <td class="text-center">@_dayOffVM.ALActive</td>
+                                        <td class="text-center" data-target="#InitializeModalUpdate_AddBalance" data-toggle="modal" @onclick=@(()=>InitializeModalUpdate_AddBalance(_dayOffVM))>
+                                            <button type="button" class="btn btn-outline-secondary btn-xs">@_dayOffVM.ALAddBalance</button>
+                                        </td>
+                                        <td class="text-center">@_dayOffVM.ALTotal</td>
+                                        <td class="text-center">@_dayOffVM.ALTaken</td>
+                                        <td class="text-center font-weight-bold">@_dayOffVM.ALBalance</td>
+                                    </tr>
+                                </Virtualize>
+                            </tbody>
+                        </table>
+                    }
 
-					if (filterHrVM.ShiftID == "DO")
-					{
-						<table class="table table-sm table-bordered table-head-fixed table-hover text-nowrap tblFontSizeMin tblDayOff">
-							<thead>
-								<tr>
-									<th></th>
-									@if (@filterHrVM.DepartmentID == string.Empty)
-									{
-										<th></th>
-									}
-									<th></th>
-									<th class="text-center"></th>
-									<th class="text-center"></th>
+                    if (filterHrVM.ShiftID == "DO")
+                    {
+                        <table class="table table-sm table-bordered table-head-fixed table-hover text-nowrap tblFontSizeMin tblDayOff">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    @if (@filterHrVM.DepartmentID == string.Empty)
+                                    {
+                                        <th></th>
+                                    }
+                                    <th></th>
+                                    <th class="text-center"></th>
+                                    <th class="text-center"></th>
 
-									<th class="text-center" colspan="4">Ngày nghỉ tuần DO</th>
+                                    <th class="text-center" colspan="4">Ngày nghỉ tuần DO</th>
 
-									<th class="text-center" colspan="6">Ngày nghỉ bù tuần CLDO</th>
-								</tr>
+                                    <th class="text-center" colspan="6">Ngày nghỉ bù tuần CLDO</th>
+                                </tr>
 
-								<tr>
-									<th>Nhân viên</th>
-									@if (@filterHrVM.DepartmentID == string.Empty)
-									{
-										<th>Bộ phận</th>
-									}
-									<th>Vị trí</th>
-									<th class="text-center">Ngày vào làm</th>
-									<th class="text-center">Ngày nghỉ việc</th>
+                                <tr>
+                                    <th>Nhân viên</th>
+                                    @if (@filterHrVM.DepartmentID == string.Empty)
+                                    {
+                                        <th>Bộ phận</th>
+                                    }
+                                    <th>Vị trí</th>
+                                    <th class="text-center">Ngày vào làm</th>
+                                    <th class="text-center">Ngày nghỉ việc</th>
 
-									<th class="text-center">Được sử dụng</th>
-									<th class="text-center">Đã sử dụng</th>
-									<th class="text-center">Còn lại</th>
+                                    <th class="text-center">Được sử dụng</th>
+                                    <th class="text-center">Đã sử dụng</th>
+                                    <th class="text-center">Còn lại</th>
 
-									<th class="text-center">Tồn tháng trước</th>
-									<th class="text-center">Nghỉ bù tuần tháng trước</th>
-									<th class="text-center">Điều chỉnh</th>
-									<th class="text-center">Tổng phép được sử dụng</th>
-									<th class="text-center">Đã sử dụng</th>
-									<th class="text-center">Còn lại</th>
-								</tr>
+                                    <th class="text-center">Tồn tháng trước</th>
+                                    <th class="text-center">Nghỉ bù tuần tháng trước</th>
+                                    <th class="text-center">Điều chỉnh</th>
+                                    <th class="text-center">Tổng phép được sử dụng</th>
+                                    <th class="text-center">Đã sử dụng</th>
+                                    <th class="text-center">Còn lại</th>
+                                </tr>
 
-							</thead>
-							<tbody>
-								<Virtualize Items="@dayOffVMs" Context="_dayOffVM" OverscanCount="50">
-									<tr>
-										<th>@_dayOffVM.Eserial - @_dayOffVM.LastName @_dayOffVM.MiddleName @_dayOffVM.FirstName</th>
-										@if (@filterHrVM.DepartmentID == string.Empty)
-										{
-									<td>@_dayOffVM.DepartmentName</td>
-										}
-								<td>@_dayOffVM.PositionName</td>
-								<td class="text-center">@(_dayOffVM.JoinDate.HasValue ? _dayOffVM.JoinDate.Value.ToString("dd/MM/yyyy") : "")</td>
-								<td class="text-center">@(_dayOffVM.TerminateDate.HasValue ? _dayOffVM.TerminateDate.Value.ToString("dd/MM/yyyy") : "")</td>
+                            </thead>
+                            <tbody>
+                                <Virtualize Items="@dayOffVMs" Context="_dayOffVM" OverscanCount="50">
+                                    <tr>
+                                        <th>@_dayOffVM.Eserial - @_dayOffVM.LastName @_dayOffVM.MiddleName @_dayOffVM.FirstName</th>
+                                        @if (@filterHrVM.DepartmentID == string.Empty)
+                                        {
+                                            <td>@_dayOffVM.DepartmentName</td>
+                                        }
+                                        <td>@_dayOffVM.PositionName</td>
+                                        <td class="text-center">@(_dayOffVM.JoinDate.HasValue ? _dayOffVM.JoinDate.Value.ToString("dd/MM/yyyy") : "")</td>
+                                        <td class="text-center">@(_dayOffVM.TerminateDate.HasValue ? _dayOffVM.TerminateDate.Value.ToString("dd/MM/yyyy") : "")</td>
 
-								<td class="text-center">@_dayOffVM.DOCurrent</td>
-								<td class="text-center">@_dayOffVM.DOTaken</td>
-								<td class="text-center font-weight-bold">@_dayOffVM.DOBalance</td>
+                                        <td class="text-center">@_dayOffVM.DOCurrent</td>
+                                        <td class="text-center">@_dayOffVM.DOTaken</td>
+                                        <td class="text-center font-weight-bold">@_dayOffVM.DOBalance</td>
 
-								<td class="text-center">@_dayOffVM.CLDOPreMonth</td>
-								<td class="text-center">@_dayOffVM.CLDOTransfer</td>
-								<td class="text-center" data-target="#InitializeModalUpdate_AddBalance" data-toggle="modal" @onclick=@(()=>InitializeModalUpdate_AddBalance(_dayOffVM))>
-									<button type="button" class="btn btn-outline-secondary btn-xs">@_dayOffVM.CLDOAddBalance</button>
-								</td>
-								<td class="text-center">@_dayOffVM.CLDOTotal</td>
-								<td class="text-center">@_dayOffVM.CLDOTaken</td>
-								<td class="text-center font-weight-bold">@_dayOffVM.CLDOBalance</td>
-							</tr>
-						</Virtualize>
-					</tbody>
-				</table>
-					}
+                                        <td class="text-center">@_dayOffVM.CLDOPreMonth</td>
+                                        <td class="text-center">@_dayOffVM.CLDOTransfer</td>
+                                        <td class="text-center" data-target="#InitializeModalUpdate_AddBalance" data-toggle="modal" @onclick=@(()=>InitializeModalUpdate_AddBalance(_dayOffVM))>
+                                            <button type="button" class="btn btn-outline-secondary btn-xs">@_dayOffVM.CLDOAddBalance</button>
+                                        </td>
+                                        <td class="text-center">@_dayOffVM.CLDOTotal</td>
+                                        <td class="text-center">@_dayOffVM.CLDOTaken</td>
+                                        <td class="text-center font-weight-bold">@_dayOffVM.CLDOBalance</td>
+                                    </tr>
+                                </Virtualize>
+                            </tbody>
+                        </table>
+                    }
 
-					if (filterHrVM.ShiftID == "PH")
-					{
-						<table class="table table-sm table-bordered table-head-fixed table-hover text-nowrap tblFontSizeMin tblDayOff">
-							<thead>
-								<tr>
-									<th></th>
-									@if (@filterHrVM.DepartmentID == string.Empty)
-									{
-										<th></th>
-									}
-									<th></th>
-									<th class="text-center"></th>
-									<th class="text-center"></th>
+                    if (filterHrVM.ShiftID == "PH")
+                    {
+                        <table class="table table-sm table-bordered table-head-fixed table-hover text-nowrap tblFontSizeMin tblDayOff">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    @if (@filterHrVM.DepartmentID == string.Empty)
+                                    {
+                                        <th></th>
+                                    }
+                                    <th></th>
+                                    <th class="text-center"></th>
+                                    <th class="text-center"></th>
 
-									<th class="text-center" colspan="4">Ngày nghỉ lễ tết PH</th>
+                                    <th class="text-center" colspan="4">Ngày nghỉ lễ tết PH</th>
 
-									<th class="text-center" colspan="6">Ngày nghỉ bù lễ tết CLPH</th>
-								</tr>
+                                    <th class="text-center" colspan="6">Ngày nghỉ bù lễ tết CLPH</th>
+                                </tr>
 
-								<tr>
-									<th>Nhân viên</th>
-									@if (@filterHrVM.DepartmentID == string.Empty)
-									{
-										<th>Bộ phận</th>
-									}
-									<th>Vị trí</th>
-									<th class="text-center">Ngày vào làm</th>
-									<th class="text-center">Ngày nghỉ việc</th>
+                                <tr>
+                                    <th>Nhân viên</th>
+                                    @if (@filterHrVM.DepartmentID == string.Empty)
+                                    {
+                                        <th>Bộ phận</th>
+                                    }
+                                    <th>Vị trí</th>
+                                    <th class="text-center">Ngày vào làm</th>
+                                    <th class="text-center">Ngày nghỉ việc</th>
 
-									<th class="text-center">Được sử dụng</th>
-									<th class="text-center">Đã sử dụng</th>
-									<th class="text-center">Đi làm ngày lễ</th>
+                                    <th class="text-center">Được sử dụng</th>
+                                    <th class="text-center">Đã sử dụng</th>
+                                    <th class="text-center">Đi làm ngày lễ</th>
 
-									<th class="text-center">Tồn tháng trước</th>
-									<th class="text-center">Nghỉ bù hiện tại</th>
-									<th class="text-center">Điều chỉnh</th>
-									<th class="text-center">Tổng phép được sử dụng</th>
-									<th class="text-center">Đã sử dụng</th>
-									<th class="text-center">Còn lại</th>
-								</tr>
+                                    <th class="text-center">Tồn tháng trước</th>
+                                    <th class="text-center">Nghỉ bù hiện tại</th>
+                                    <th class="text-center">Điều chỉnh</th>
+                                    <th class="text-center">Tổng phép được sử dụng</th>
+                                    <th class="text-center">Đã sử dụng</th>
+                                    <th class="text-center">Còn lại</th>
+                                </tr>
 
-							</thead>
-							<tbody>
-								<Virtualize Items="@dayOffVMs" Context="_dayOffVM" OverscanCount="50">
-									<tr>
-										<th>@_dayOffVM.Eserial - @_dayOffVM.LastName @_dayOffVM.MiddleName @_dayOffVM.FirstName</th>
-										@if (@filterHrVM.DepartmentID == string.Empty)
-										{
-											<td>@_dayOffVM.DepartmentName</td>
-										}
-										<td>@_dayOffVM.PositionName</td>
-										<td class="text-center">@(_dayOffVM.JoinDate.HasValue ? _dayOffVM.JoinDate.Value.ToString("dd/MM/yyyy") : "")</td>
-										<td class="text-center">@(_dayOffVM.TerminateDate.HasValue ? _dayOffVM.TerminateDate.Value.ToString("dd/MM/yyyy") : "")</td>
+                            </thead>
+                            <tbody>
+                                <Virtualize Items="@dayOffVMs" Context="_dayOffVM" OverscanCount="50">
+                                    <tr>
+                                        <th>@_dayOffVM.Eserial - @_dayOffVM.LastName @_dayOffVM.MiddleName @_dayOffVM.FirstName</th>
+                                        @if (@filterHrVM.DepartmentID == string.Empty)
+                                        {
+                                            <td>@_dayOffVM.DepartmentName</td>
+                                        }
+                                        <td>@_dayOffVM.PositionName</td>
+                                        <td class="text-center">@(_dayOffVM.JoinDate.HasValue ? _dayOffVM.JoinDate.Value.ToString("dd/MM/yyyy") : "")</td>
+                                        <td class="text-center">@(_dayOffVM.TerminateDate.HasValue ? _dayOffVM.TerminateDate.Value.ToString("dd/MM/yyyy") : "")</td>
 
-										<td class="text-center">@_dayOffVM.PHCurrentMonth</td>
-										<td class="text-center">@_dayOffVM.PHTaken</td>
-										<td class="text-center">@_dayOffVM.PHWDCL</td>
+                                        <td class="text-center">@_dayOffVM.PHCurrentMonth</td>
+                                        <td class="text-center">@_dayOffVM.PHTaken</td>
+                                        <td class="text-center">@_dayOffVM.PHWDCL</td>
 
-										<td class="text-center">@_dayOffVM.CLPHPreMonth</td>
-										<td class="text-center">@_dayOffVM.CLPHTransfer</td>
-										<td class="text-center" data-target="#InitializeModalUpdate_AddBalance" data-toggle="modal" @onclick=@(()=>InitializeModalUpdate_AddBalance(_dayOffVM))>
-											<button type="button" class="btn btn-outline-secondary btn-xs">@_dayOffVM.CLPHAddBalance</button>
-										</td>
-										<td class="text-center">@_dayOffVM.CLPHTotal</td>
-										<td class="text-center">@_dayOffVM.CLPHTaken</td>
-										<td class="text-center font-weight-bold">@_dayOffVM.CLPHBalance</td>
+                                        <td class="text-center">@_dayOffVM.CLPHPreMonth</td>
+                                        <td class="text-center">@_dayOffVM.CLPHTransfer</td>
+                                        <td class="text-center" data-target="#InitializeModalUpdate_AddBalance" data-toggle="modal" @onclick=@(()=>InitializeModalUpdate_AddBalance(_dayOffVM))>
+                                            <button type="button" class="btn btn-outline-secondary btn-xs">@_dayOffVM.CLPHAddBalance</button>
+                                        </td>
+                                        <td class="text-center">@_dayOffVM.CLPHTotal</td>
+                                        <td class="text-center">@_dayOffVM.CLPHTaken</td>
+                                        <td class="text-center font-weight-bold">@_dayOffVM.CLPHBalance</td>
 
-									</tr>
-								</Virtualize>
-					</tbody>
-				</table>
-					}
-				}
-			</div>
-			<!-- /.card-body -->
-			<div class="card-footer">
-			</div>
-			<!-- /.card-footer -->
+                                    </tr>
+                                </Virtualize>
+                            </tbody>
+                        </table>
+                    }
 
-		</div>
-	</div><!-- /.container-fluid -->
+                    if (dayOffVMs.Count() <= 0)
+                    {
+                        <img class="img-no-result" src="images/_default/no-results.png" />
+                    }
+                }
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+            </div>
+            <!-- /.card-footer -->
+
+        </div>
+    </div><!-- /.container-fluid -->
 </section>

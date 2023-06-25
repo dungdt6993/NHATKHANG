@@ -172,7 +172,7 @@
                     <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
                         @if (position_filter_list != null)
                         {
-                            @foreach (var positiongroup_filter in position_filter_list.Select(x=> new {x.PositionGroupID, x.PositionGroupName}).Distinct())
+                            @foreach (var positiongroup_filter in position_filter_list.Select(x => new { x.PositionGroupID, x.PositionGroupName }).Distinct())
                             {
                                 <option value="@positiongroup_filter.PositionGroupID">@positiongroup_filter.PositionGroupName</option>
                             }
@@ -326,35 +326,41 @@
                                     <td class="text-center text-secondary"><i class="fa-solid fa-user-check"></i> @_monthlyIncomeTrnOtherVM.Author - @_monthlyIncomeTrnOtherVM.FirstNameAuthor <i class="fa-solid fa-clock"></i> @_monthlyIncomeTrnOtherVM.DateUpdate.ToString("dd/MM/yyyy")</td>
                                     <td class="text-center">
                                         @if (_monthlyIncomeTrnOtherVM.isPostFromExcel)
-                                    {
-                                        <i class="fa-solid fa-file-excel text-success">&nbsp;</i>
-                                    }
-                                    @if (_monthlyIncomeTrnOtherVM.TrnCode == 0)
-                                    {
-                                        <span class="text-warning"><i class="fa-solid fa-circle-exclamation"></i> Mã giao dịch trống!</span>
-                                    }
-                                    else
-                                    {
-                                        @if (_monthlyIncomeTrnOtherVM.SalTrnID == 0)
                                         {
-                                            <span class="text-warning"><i class="fa-solid fa-circle-exclamation"></i> Kiểm tra lại tài khoản giao dịch lương!</span>
+                                            <i class="fa-solid fa-file-excel text-success">&nbsp;</i>
+                                        }
+                                        @if (_monthlyIncomeTrnOtherVM.TrnCode == 0)
+                                        {
+                                            <span class="text-warning"><i class="fa-solid fa-circle-exclamation"></i> Mã giao dịch trống!</span>
                                         }
                                         else
                                         {
-                                            <span class="text-success"><i class="fa-solid fa-circle-check"></i></span>
+                                            @if (_monthlyIncomeTrnOtherVM.SalTrnID == 0)
+                                            {
+                                                <span class="text-warning"><i class="fa-solid fa-circle-exclamation"></i> Kiểm tra lại tài khoản giao dịch lương!</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-success"><i class="fa-solid fa-circle-check"></i></span>
+                                            }
                                         }
-                                    }
-                                </td>
-                                <td class="text-center">
-                                    @if (IsOpenFunc)
-                                    {
-                                        <button class="btn btn-default btn-xs" data-target="#InitializeModalUpdate_MonthlyIncomeTrnOther" data-toggle="modal" @onclick="(() => InitializeModalUpdate_MonthlyIncomeTrnOther(1,_monthlyIncomeTrnOtherVM))"><i class="fa-solid fa-pen"></i></button>
-                                    }
-                                </td>
-                            </tr>
-                        </Virtualize>
-                    </tbody>
-                </table>
+                                    </td>
+                                    <td class="text-center">
+                                        @if (IsOpenFunc)
+                                        {
+                                            <button class="btn btn-default btn-xs" data-target="#InitializeModalUpdate_MonthlyIncomeTrnOther" data-toggle="modal" @onclick="(() => InitializeModalUpdate_MonthlyIncomeTrnOther(1,_monthlyIncomeTrnOtherVM))"><i class="fa-solid fa-pen"></i></button>
+                                        }
+                                    </td>
+                                </tr>
+                            </Virtualize>
+                        </tbody>
+                    </table>
+
+                    if (monthlyIncomeTrnOtherVMs.Count() <= 0)
+                    {
+                        <img class="img-no-result" src="images/_default/no-results.png" />
+                    }
+
                 }
             </div>
 

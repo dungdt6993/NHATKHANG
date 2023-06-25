@@ -543,7 +543,7 @@
                                                     <option value=@string.Empty>-----Chọn-----</option>
                                                     @if (empls != null)
                                                     {
-                                                        @foreach (var _empl in empls.Where(x => x.PermisId<4))
+                                                        @foreach (var _empl in empls.Where(x => x.PermisId < 4))
                                                         {
                                                             <option data-subtext="@_empl.PositionName" value="@_empl.Eserial">@_empl.FullName</option>
                                                         }
@@ -558,7 +558,7 @@
                                                     <option value=@string.Empty>-----Chọn-----</option>
                                                     @if (empls != null)
                                                     {
-                                                        @foreach (var _empl in empls.Where(x => x.PermisId<4))
+                                                        @foreach (var _empl in empls.Where(x => x.PermisId < 4))
                                                         {
                                                             <option data-subtext="@_empl.PositionName" value="@_empl.Eserial">@_empl.FullName</option>
                                                         }
@@ -573,7 +573,7 @@
                                                     <option value=@string.Empty>-----Chọn-----</option>
                                                     @if (empls != null)
                                                     {
-                                                        @foreach (var _empl in empls.Where(x => x.PermisId<4))
+                                                        @foreach (var _empl in empls.Where(x => x.PermisId < 4))
                                                         {
                                                             <option data-subtext="@_empl.PositionName" value="@_empl.Eserial">@_empl.FullName</option>
                                                         }
@@ -2127,6 +2127,11 @@
                                 }
                             </tbody>
                         </table>
+                    }
+
+                    if (profileVMs.Count() <= 0)
+                    {
+                        <img class="img-no-result" src="images/_default/no-results.png" />
                     }
 
                 }

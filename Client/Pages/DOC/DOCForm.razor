@@ -292,13 +292,19 @@
                             </Virtualize>
                         </tbody>
                     </table>
+
+                    @if (search_documentVMs.Count() <= 0)
+                    {
+                        <img class="img-no-result" src="images/_default/no-results.png" />
+                    }
+
                 }
             </div>
             <!-- /.card-body -->
             @if (documentVMs != null)
             {
                 <div class="card-footer text-muted">
-                    Tổng số: <b>@documentVMs.Count()</b> bản ghi
+                    Tổng số: <b>@search_documentVMs.Count()</b> bản ghi
                 </div>
             }
             <!-- /.card-footer -->
