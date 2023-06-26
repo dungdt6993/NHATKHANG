@@ -43,7 +43,7 @@
                                             <tr>
                                                 <td class="text-center">@_salaryDefVM.SalaryType</td>
                                                 <td>
-                                                    <InputText class="form-control" placeholder="Diễn giải" @bind-Value="@salaryDefVM.SalaryTypeName" />
+                                                    <InputText class="form-control form-control-sm" placeholder="Diễn giải" @bind-Value="@salaryDefVM.SalaryTypeName" />
                                                     <ValidationMessage For="@(() => salaryDefVM.SalaryTypeName)" />
                                                 </td>
                                                 <td class="text-center">
@@ -70,7 +70,7 @@
                                                     @if (!_salaryDefVM.isCalcByShift)
                                                     {
                                                         <div class="form-group">
-                                                            <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                                            <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
                                                          ValueExpression="@(()=>_salaryDefVM.TrnCode)"
                                                          Value="@_salaryDefVM.TrnCode"
                                                          ValueChanged="@((int value) => onchange_trncode(value))">
@@ -86,7 +86,7 @@
 
                                                             <ValidationMessage For="@(() => salaryDefVM.TrnCode)" />
 
-                                                            <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                                            <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
                                                          ValueExpression="@(()=>_salaryDefVM.TrnSubCode)"
                                                          Value="@_salaryDefVM.TrnSubCode"
                                                          ValueChanged="@((int value) => onchange_trnsubcode(value))">
@@ -293,7 +293,7 @@
                     @if (salaryTransactionCodeVM.IsTypeUpdate == 0)
                     {
                         <div class="form-group row">
-                            <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                            <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
                                      ValueExpression="@(()=>salaryTransactionCodeVM.TrnGroupCode)"
                                      Value="@salaryTransactionCodeVM.TrnGroupCode"
                                      ValueChanged="@((int value) => onchange_trngrpcode(value))">
@@ -314,22 +314,22 @@
                     <div class="form-group row">
 
                         <div class="col-sm-2">
-                            <input type="text" readonly class="form-control" value="@salaryTransactionCodeVM.TrnGroupCode" />
+                            <input type="text" readonly class="form-control form-control-sm" value="@salaryTransactionCodeVM.TrnGroupCode" />
                         </div>
                         <div class="col-sm-2">
                             @if (salaryTransactionCodeVM.IsTypeUpdate == 0)
                             {
-                                <InputNumber class="form-control" placeholder="Mã giao dịch" @bind-Value="salaryTransactionCodeVM.TrnSubCode"></InputNumber>
+                                <InputNumber class="form-control form-control-sm" placeholder="Mã giao dịch" @bind-Value="salaryTransactionCodeVM.TrnSubCode"></InputNumber>
                                 <ValidationMessage For="@(() => salaryTransactionCodeVM.TrnSubCode)" />
                             }
                             else
                             {
-                                <input type="text" readonly class="form-control" value="@salaryTransactionCodeVM.TrnSubCode" />
+                                <input type="text" readonly class="form-control form-control-sm" value="@salaryTransactionCodeVM.TrnSubCode" />
                             }
                         </div>
 
                         <div class="col-sm-8">
-                            <InputText class="form-control" placeholder="Tên giao dịch" @bind-Value="salaryTransactionCodeVM.TrnName" />
+                            <InputText class="form-control form-control-sm" placeholder="Tên giao dịch" @bind-Value="salaryTransactionCodeVM.TrnName" />
                             <ValidationMessage For="@(() => salaryTransactionCodeVM.TrnName)" />
                         </div>
 
@@ -394,7 +394,7 @@
 
                         <div class="col-sm-5">
                             <div class="input-group">
-                                <InputNumber class="form-control" @bind-Value="salaryTransactionCodeVM.InsPercent"></InputNumber>
+                                <InputNumber class="form-control form-control-sm" @bind-Value="salaryTransactionCodeVM.InsPercent"></InputNumber>
                                 <div class="input-group-append">
                                     <div class="input-group-text"><i class="fa-solid fa-percent"></i></div>
                                 </div>
@@ -407,12 +407,12 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save"></i> Lưu</button>
                     @if (salaryTransactionCodeVM.TrnGroupCode != 100)
                     {
                         @if (salaryTransactionCodeVM.IsTypeUpdate == 1)
                         {
-                            <button type="submit" class="btn btn-danger" @onclick=@(() => salaryTransactionCodeVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                            <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => salaryTransactionCodeVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
                         }
                     }
                 </div>
@@ -481,7 +481,7 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Tháng:</label>
                     <div class="col-sm-9">
-                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                            ValueExpression="@(()=>filterHrVM.Month)"
                                            Value="@filterHrVM.Month"
                                            ValueChanged="@((int value) => onchange_filter_month(value))">
@@ -501,7 +501,7 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Năm:</label>
                     <div class="col-sm-9">
-                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                            ValueExpression="@(()=>filterHrVM.Year)"
                                            Value="@filterHrVM.Year"
                                            ValueChanged="@((int value) => onchange_filter_year(value))">
@@ -519,7 +519,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DivisionID)"
                                  Value="@filterHrVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
@@ -536,7 +536,7 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DepartmentID)"
                                  Value="@filterHrVM.DepartmentID"
                                  ValueChanged="@((string value) => onchange_filter_department(value))">
@@ -554,7 +554,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.SectionID)"
                                  Value="@filterHrVM.SectionID"
                                  ValueChanged="@((string value) => onchange_filter_section(value))">
@@ -572,7 +572,7 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
                         @if (position_filter_list != null)
                         {
                             @foreach (var positiongroup_filter in position_filter_list.Select(x => new { x.PositionGroupID, x.PositionGroupName }).Distinct())
@@ -586,7 +586,7 @@
 
             <div class="col-md-3">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
                                  ValueExpression="@(()=>filterHrVM.Eserial)"
                                  Value="@filterHrVM.Eserial"
                                  ValueChanged="@((string value) => onchange_filter_eserial(value))">
@@ -604,7 +604,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
                                  ValueExpression="@(()=>filterHrVM.TrnCode)"
                                  Value="@filterHrVM.TrnCode"
                                  ValueChanged="@((int value) => onchange_filter_trncode(value))">
@@ -622,7 +622,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
                                  ValueExpression="@(()=>filterHrVM.TrnSubCode)"
                                  Value="@filterHrVM.TrnSubCode"
                                  ValueChanged="@((int value) => onchange_filter_trnsubcode(value))">
@@ -639,7 +639,7 @@
             </div>
 
             <div class="col-md-1">
-                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetSalaryList())">
+                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetSalaryList())">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -649,7 +649,7 @@
 
 <section class="content">
     <div class="container-fluid">
-        <div class="card card-purple card-outline">
+        <div class="card card-warning card-outline">
 
             <div class="card-header text-right">
                 @if (HR_Payroll_Calc)
@@ -668,15 +668,15 @@
                             {
                                 <div class="alert alert-success" role="alert">
                                     <i class="fa-solid fa-user-check"></i> @lockSalaryVM.EserialSalCalc<span> - </span>@lockSalaryVM.FullNameSalCalc<span> đã tính lương </span><i class="fa-solid fa-clock"></i> @lockSalaryVM.TimeSalCalc.ToString("dd/MM/yyyy HH:mm") <a @onclick="()=>CancelCalcSalary()" class="alert-link text-danger">Hủy tính lương</a>
-                                    <button type="button" class="btn btn-danger" data-target="#InitializeModal_LockSalary" data-toggle="modal" @onclick="()=>LockSalary()"><i class="fas fa-lock"></i> Khóa bảng lương</button>
+                                    <button type="button" class="btn btn-sm btn-danger" data-target="#InitializeModal_LockSalary" data-toggle="modal" @onclick="()=>LockSalary()"><i class="fas fa-lock"></i> Khóa bảng lương</button>
                                 </div>
                             }
                             else
                             {
-                                <button type="button" class="btn btn-secondary" data-target="#InitializeModalUpdate_SalaryDef" data-toggle="modal" @onclick="()=>InitializeModalUpdate_SalaryDef()"><i class="fa-solid fa-dollar-sign"></i> Lương</button>
-                                <button type="button" class="btn btn-secondary" data-target="#InitializeModalList_SalTrnCode" data-toggle="modal" @onclick="()=>InitializeModalList_SalTrnCode()"><i class="fa-solid fa-sack-dollar"></i> Tài khoản giao dịch lương</button>
-                                <button type="button" class="btn btn-secondary" data-target="#InitializeModalList_WDDefaut" data-toggle="modal" @onclick="()=>InitializeModalList_WDDefaut()"><i class="fa-solid fa-calendar-day"></i> Công tiêu chuẩn</button>
-                                <button type="button" class="btn btn-success" @onclick="()=>CalcSalary()"><i class="fa-solid fa-calculator"></i> Tính lương</button>
+                                <button type="button" class="btn btn-sm btn-secondary" data-target="#InitializeModalUpdate_SalaryDef" data-toggle="modal" @onclick="()=>InitializeModalUpdate_SalaryDef()"><i class="fa-solid fa-dollar-sign"></i> Lương</button>
+                                <button type="button" class="btn btn-sm btn-secondary" data-target="#InitializeModalList_SalTrnCode" data-toggle="modal" @onclick="()=>InitializeModalList_SalTrnCode()"><i class="fa-solid fa-sack-dollar"></i> Tài khoản giao dịch lương</button>
+                                <button type="button" class="btn btn-sm btn-secondary" data-target="#InitializeModalList_WDDefaut" data-toggle="modal" @onclick="()=>InitializeModalList_WDDefaut()"><i class="fa-solid fa-calendar-day"></i> Công tiêu chuẩn</button>
+                                <button type="button" class="btn btn-sm btn-success" @onclick="()=>CalcSalary()"><i class="fa-solid fa-calculator"></i> Tính lương</button>
                             }
                         }
                     }
@@ -685,7 +685,7 @@
             </div>
 
             <!-- /.card-header -->
-            <div class="card-body table-responsive table-fixed p-0" style="height: calc(100vh - 280px);">
+            <div class="card-body table-responsive table-fixed p-0" style="height: calc(100vh - 249px);">
                 @if (dtPayroll != null)
                 {
                     <table class="table table-sm table-bordered table-hover" style="font-size: 11px;">
@@ -815,7 +815,7 @@
                         </tbody>
                     </table>
 
-                    if (dtPayroll.Count() <= 0)
+                    if (dtPayroll.Rows.Count <= 0)
                     {
                         <img class="img-no-result" src="images/_default/no-results.png" />
                     }
@@ -825,11 +825,6 @@
 
             <!-- /.card-body -->
             <div class="card-footer">
-                <ul class="pagination pagination-sm m-0 float-right">
-                    <li class="page-item"><a class="page-link" href="#">«</a></li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">»</a></li>
-                </ul>
             </div>
             <!-- /.card-footer -->
         </div>

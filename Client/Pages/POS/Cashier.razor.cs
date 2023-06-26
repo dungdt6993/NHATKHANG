@@ -198,7 +198,7 @@ namespace D69soft.Client.Pages.POS
 
                 infoInvoice = await cashierService.GetInfoInvoice(filterPosVM);
 
-                customer = infoInvoice.CustomerID != "" ? await customerService.GetCustomerByID(infoInvoice.CustomerID) : new();
+                customer = infoInvoice.CustomerCode != "" ? await customerService.GetCustomerByID(infoInvoice.CustomerCode) : new();
 
                 invoiceItemsList = await cashierService.GetInvoiceItems(infoInvoice.CheckNo);
 
@@ -229,7 +229,7 @@ namespace D69soft.Client.Pages.POS
 
             infoInvoice = await cashierService.GetInfoInvoice(filterPosVM);
 
-            customer = infoInvoice.CustomerID != "" ? await customerService.GetCustomerByID(infoInvoice.CustomerID) : new();
+            customer = infoInvoice.CustomerCode != "" ? await customerService.GetCustomerByID(infoInvoice.CustomerCode) : new();
 
             invoiceItemsList = await cashierService.GetInvoiceItems(infoInvoice.CheckNo);
 
@@ -498,7 +498,7 @@ namespace D69soft.Client.Pages.POS
         {
             isLoading = true;
 
-            customer.CustomerID = infoInvoice.CustomerID = await customerService.UpdateCustomer(customer);
+            customer.CustomerCode = infoInvoice.CustomerCode = await customerService.UpdateCustomer(customer);
             await cashierService.UpdateInvoiceCustomer(infoInvoice);
 
             await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Customer");
@@ -517,12 +517,12 @@ namespace D69soft.Client.Pages.POS
             if (result != null)
             {
                 customer = result;
-                infoInvoice.CustomerID = result.CustomerID;
+                infoInvoice.CustomerCode = result.CustomerCode;
             }
             else
             {
                 customer = new();
-                infoInvoice.CustomerID = "";
+                infoInvoice.CustomerCode = "";
             }
             await cashierService.UpdateInvoiceCustomer(infoInvoice);
         }

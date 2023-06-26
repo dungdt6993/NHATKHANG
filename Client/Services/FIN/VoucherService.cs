@@ -53,5 +53,11 @@ namespace D69soft.Client.Services.FIN
             return await response.Content.ReadAsStringAsync();
         }
 
+        //VAT
+        public async Task<IEnumerable<VATDefVM>> GetVATDefs()
+        {
+            return await _httpClient.GetFromJsonAsync<IEnumerable<VATDefVM>>($"api/Voucher/GetVATDefs");
+        }
+
     }
 }

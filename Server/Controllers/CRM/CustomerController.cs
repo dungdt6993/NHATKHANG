@@ -3,6 +3,7 @@ using Dapper;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.CRM;
+using D69soft.Shared.Models.ViewModels.FIN;
 
 namespace D69soft.Server.Controllers.CRM
 {
@@ -21,37 +22,38 @@ namespace D69soft.Server.Controllers.CRM
         public async Task<ActionResult<string>> UpdateCustomer(CustomerVM _customerVM)
         {
             var sql = "";
-            if(_customerVM.IsTypeUpdate==0)
-            {
-                if (_customerVM.CustomerID != null)
-                {
-                    sql += "Insert into CRM.Customer (CustomerID,CustomerName,Tel,Address) Values (@CustomerID,@CustomerName,@Tel,@Address)";
-                    sql += "select @CustomerID";
-                }
-                else
-                {
-                    sql += "Create table #tmpAuto_Code_ID (Code_ID varchar(50)) ";
-                    sql += "Insert #tmpAuto_Code_ID ";
-                    sql += "exec SYSTEM.AUTO_CODE_ID 'CRM.Customer','CustomerID','KH','00' ";
-                    sql += "Insert into CRM.Customer (CustomerID,CustomerName,Tel,Address) ";
-                    sql += "select Code_ID, @CustomerName, @Tel, @Address from #tmpAuto_Code_ID ";
-                    sql += "select Code_ID from #tmpAuto_Code_ID";
-                }
-            }
-            else
-            {
-                sql += "Update CRM.Customer set CustomerName = @CustomerName, ";
-                sql += "Tel = @Tel, Address = @Address ";
-                sql += "where CustomerID = @CustomerID ";
-                sql += "select @CustomerID";
-            }
-  
+ 
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                return await conn.ExecuteScalarAsync<string>(sql, _customerVM);
+                if (_customerVM.IsTypeUpdate == 0)
+                {
+                    sql += "Create table #tmpAuto_Code_ID (Code_ID varchar(50)) ";
+                    sql += "Insert #tmpAuto_Code_ID ";
+                    sql += "exec SYSTEM.AUTO_CODE_ID 'CRM.Customer','CustomerCode','KH','0000' ";
+                    sql += "Insert into CRM.Customer (CustomerCode,CustomerName,CustomerTaxCode,CustomerBirthday,CustomerTel,CustomerAddress) ";
+                    sql += "select Code_ID, @CustomerName, @CustomerTaxCode, @CustomerBirthday, @CustomerTel, @CustomerAddress from #tmpAuto_Code_ID ";
+                    sql += "select Code_ID from #tmpAuto_Code_ID";
+
+                    _customerVM.CustomerCode = await conn.ExecuteScalarAsync<string>(sql, _customerVM);
+                }
+
+                if (_customerVM.IsTypeUpdate == 1)
+                {
+                    sql += "Update CRM.Customer set CustomerName = @CustomerName, CustomerTaxCode = @CustomerTaxCode, CustomerBirthday = @CustomerBirthday, CustomerTel = @CustomerTel, CustomerAddress = @CustomerAddress  ";
+                    sql += "where CustomerCode = @CustomerCode ";
+                    await conn.ExecuteAsync(sql, _customerVM);
+                }
+
+                if (_customerVM.IsTypeUpdate == 2)
+                {
+                    sql = "delete from CRM.Customer where CustomerCode=@CustomerCode ";
+                    await conn.ExecuteAsync(sql, _customerVM);
+                }
+
+                return _customerVM.CustomerCode;
             }
         }
 
@@ -97,29 +99,16 @@ namespace D69soft.Server.Controllers.CRM
             }
         }
 
-        [HttpGet("CheckContains_Customer/{_CustomerID}")]
-        public async Task<ActionResult<bool>> CheckContains_Customer(string _CustomerID)
+        [HttpGet("ContainsCustomerTel/{_CustomerTel}")]
+        public async Task<ActionResult<bool>> ContainsCustomerTel(string _CustomerTel)
         {
-            var sql = "SELECT CAST(CASE WHEN EXISTS (SELECT 1 FROM CRM.Customer where CustomerID = @CustomerID) THEN 0 ELSE 1 END as BIT)";
+            var sql = "SELECT CAST(CASE WHEN EXISTS (SELECT 1 FROM CRM.Customer where CustomerTel = @CustomerTel) THEN 0 ELSE 1 END as BIT)";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                return await conn.ExecuteScalarAsync<bool>(sql, new { CustomerID = _CustomerID });
-            }
-        }
-
-        [HttpGet("CheckContains_Tel/{_Tel}")]
-        public async Task<ActionResult<bool>> CheckContains_Tel(string _Tel)
-        {
-            var sql = "SELECT CAST(CASE WHEN EXISTS (SELECT 1 FROM CRM.Customer where Tel = @Tel) THEN 0 ELSE 1 END as BIT)";
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == System.Data.ConnectionState.Closed)
-                    conn.Open();
-
-                return await conn.ExecuteScalarAsync<bool>(sql, new { Tel = _Tel });
+                return await conn.ExecuteScalarAsync<bool>(sql, new { CustomerTel = _CustomerTel });
             }
         }
     }

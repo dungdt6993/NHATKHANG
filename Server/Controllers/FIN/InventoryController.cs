@@ -95,7 +95,7 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
-        [HttpPost("ContainsIGrpCode/{id}")]
+        [HttpGet("ContainsIGrpCode/{id}")]
         public async Task<ActionResult<bool>> ContainsIGrpCode(string id)
         {
             var sql = "SELECT CAST(CASE WHEN EXISTS (SELECT 1 FROM FIN.ItemsGroup where IGrpCode = @IGrpCode) THEN 0 ELSE 1 END as BIT)";
@@ -150,7 +150,7 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
-        [HttpPost("ContainsIUnitCode/{id}")]
+        [HttpGet("ContainsIUnitCode/{id}")]
         public async Task<ActionResult<bool>> ContainsIUnitCode(string id)
         {
             var sql = "SELECT CAST(CASE WHEN EXISTS (SELECT 1 FROM FIN.ItemsUnit where IUnitCode = @IUnitCode) THEN 0 ELSE 1 END as BIT)";
@@ -169,8 +169,8 @@ namespace D69soft.Server.Controllers.FIN
             var sql = "select * from FIN.Items i ";
             sql += "join FIN.ItemsUnit iu on iu.IUnitCode = i.IUnitCode ";
             sql += "join FIN.ItemsType it on it.ITypeCode = i.ITypeCode ";
-            sql += "join FIN.ItemsClass ic on ic.IClsCode = i.IClsCode ";
-            sql += "join FIN.ItemsGroup ig on ig.IGrpCode = i.IGrpCode ";
+            sql += "left join FIN.ItemsClass ic on ic.IClsCode = i.IClsCode ";
+            sql += "left join FIN.ItemsGroup ig on ig.IGrpCode = i.IGrpCode ";
             sql += "where IActive=@IActive ";
             sql += "and (i.IClsCode=@IClsCode or coalesce(@IClsCode,'') = '') ";
             sql += "and (i.IGrpCode=@IGrpCode or coalesce(@IGrpCode,'') = '') ";
@@ -231,7 +231,7 @@ namespace D69soft.Server.Controllers.FIN
                 {
                     sql = "Create table #tmpAuto_Code_ID (Code_ID varchar(50)) ";
                     sql += "Insert #tmpAuto_Code_ID ";
-                    sql += "exec SYSTEM.AUTO_CODE_ID 'FIN.Items','ICode','VT','00000' ";
+                    sql += "exec SYSTEM.AUTO_CODE_ID 'FIN.Items','ICode','VT','0000' ";
                     sql += "Insert into FIN.Items (ICode,IName,IUnitCode,ITypeCode,IClsCode,IGrpCode,StockDefault,VendorDefault,IActive) ";
                     sql += "select Code_ID, @IName,@IUnitCode,@ITypeCode,@IClsCode,@IGrpCode,@StockDefault,@VendorDefault,@IActive from #tmpAuto_Code_ID ";
 
@@ -262,7 +262,7 @@ namespace D69soft.Server.Controllers.FIN
             }
             if (_itemsVM.IsTypeUpdate == 2)
             {
-                sql = "if not exists (select * from FIN.Items where ICode=@ICode) ";
+                sql = "if not exists (select * from FIN.StockVoucherDetail where ICode=@ICode) ";
                 sql += "begin ";
                 sql += "delete from FIN.Items where ICode=@ICode ";
                 sql += "end ";
@@ -303,7 +303,7 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
-        [HttpPost("ContainsICode")]
+        [HttpGet("ContainsICode/{id}")]
         public async Task<ActionResult<bool>> ContainsICode(string id)
         {
             var sql = "SELECT CAST(CASE WHEN EXISTS (SELECT 1 FROM FIN.Items where ICode = @ICode) THEN 0 ELSE 1 END as BIT)";
@@ -316,24 +316,10 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
-        [HttpGet("GetStockTypeList")]
-        public async Task<ActionResult<IEnumerable<StockTypeVM>>> GetStockTypeList()
-        {
-            var sql = "select * from FIN.StockType ";
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                var result = await conn.QueryAsync<StockTypeVM>(sql);
-                return Ok(result);
-            }
-        }
-
         [HttpGet("GetStockList")]
         public async Task<ActionResult<IEnumerable<StockVM>>> GetStockList()
         {
-            var sql = "select * from FIN.Stock s join FIN.StockType st on st.StockTypeCode = s.StockTypeCode order by st.StockTypeName, s.StockName ";
+            var sql = "select * from FIN.Stock order by StockName ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)
@@ -341,6 +327,47 @@ namespace D69soft.Server.Controllers.FIN
 
                 var result = await conn.QueryAsync<StockVM>(sql);
                 return Ok(result);
+            }
+        }
+
+        [HttpGet("ContainsStockCode/{id}")]
+        public async Task<ActionResult<bool>> ContainsStockCode(string id)
+        {
+            var sql = "SELECT CAST(CASE WHEN EXISTS (SELECT 1 FROM FIN.Stock where StockCode = @StockCode) THEN 0 ELSE 1 END as BIT)";
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                return await conn.ExecuteScalarAsync<bool>(sql, new { StockCode = id });
+            }
+        }
+
+        [HttpPost("UpdateStock")]
+        public async Task<ActionResult<int>> UpdateStock(StockVM _stockVM)
+        {
+            var sql = "";
+            if (_stockVM.IsTypeUpdate == 0)
+            {
+                sql = "Insert into FIN.Stock (StockCode,StockName,StockAddress,DivisionID,StockActive) Values (@StockCode,@StockName,@StockAddress,@DivisionID,@StockActive)";
+            }
+            if (_stockVM.IsTypeUpdate == 1)
+            {
+                sql = "Update FIN.Stock set StockName = @StockName, StockAddress = @StockAddress, StockActive = @StockActive where StockCode = @StockCode";
+            }
+            if (_stockVM.IsTypeUpdate == 2)
+            {
+                sql = "if not exists (select * from FIN.StockVoucherDetail where FromStockCode=@StockCode or ToStockCode=@StockCode) ";
+                sql += "begin ";
+                sql += "delete from FIN.Stock where StockCode = @StockCode ";
+                sql += "end ";
+            }
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == System.Data.ConnectionState.Closed)
+                    conn.Open();
+
+                return await conn.ExecuteAsync(sql, _stockVM);
             }
         }
 
@@ -356,11 +383,10 @@ namespace D69soft.Server.Controllers.FIN
                 parm.Add("@DivisionID", _filterFinVM.DivisionID);
                 parm.Add("@StartDate", _filterFinVM.StartDate);
                 parm.Add("@EndDate", _filterFinVM.EndDate);
-                parm.Add("@StockTypeCode", _filterFinVM.StockTypeCode);
                 parm.Add("@StockCode", _filterFinVM.StockCode);
                 parm.Add("@ICode", _filterFinVM.ICode);
 
-                var result = await conn.QueryAsync<InventoryVM>("FIN.STOCK_Inventory_view", parm, commandType: CommandType.StoredProcedure);
+                var result = await conn.QueryAsync<InventoryVM>("FIN.FIN_Inventory_view", parm, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.FIN;
 using Newtonsoft.Json;
 using System.Collections;
+using System.Data;
 
 namespace D69soft.Server.Controllers.FIN
 {
@@ -52,8 +53,7 @@ namespace D69soft.Server.Controllers.FIN
         {
             var sql = "select sv.VNumber, sv.VDate, sv.VDesc, sv.VTypeID, sv.VSubTypeID, vType.VTypeDesc, vsType.VSubTypeDesc, ";
             sql += "pEU.Eserial + ' - ' + pEU.LastName + ' ' + pEU.MiddleName + ' ' + pEU.FirstName as FullNameEU, pEC.Eserial + ' - ' + pEC.LastName + ' ' + pEC.MiddleName + ' ' + pEC.FirstName as FullNameEC, sv.TimeUpdate, sv.TimeCreated, ";
-            sql += "v.VendorCode, v.VendorName, sv.VActive, sv.IsMultipleInvoice, sv.Reference_VNumber, ref_vtype.FuncURL, ref_vtype.Reference_VSubTypeName, sv.Reference_StockCode, s.StockCode, s.StockName from FIN.StockVoucher sv ";
-            sql += "left join FIN.Vendor v on v.VendorCode = sv.VendorCode ";
+            sql += "sv.VendorCode, sv.CustomerCode, sv.VActive, sv.IsMultipleInvoice, sv.Reference_VNumber, ref_vtype.FuncURL, ref_vtype.Reference_VSubTypeName, sv.Reference_StockCode, s.StockCode, s.StockName from FIN.StockVoucher sv ";
             sql += "left join FIN.Stock s on s.StockCode = sv.StockCode ";
             sql += "left join HR.Profile pEC on pEC.Eserial = sv.EserialCreated ";
             sql += "left join HR.Profile pEU on pEU.Eserial = sv.EserialUpdate ";
@@ -87,9 +87,12 @@ namespace D69soft.Server.Controllers.FIN
         public async Task<ActionResult<List<StockVoucherDetailVM>>> GetStockVoucherDetails(string _VNumber)
         {
             var sql = "select SeqVD, i.ICode, i.IName, i.IPrice, i.VendorDefault, i.StockDefault, svd.Qty, iu.IUnitName, svd.Price, svd.ToStockCode, toStock.StockName as ToStockName, svd.FromStockCode, fromStock.StockName as FromStockName, svd.VDNote, ";
-            sql += "svd.VendorCode, v.VendorName, svd.InventoryCheck_StockCode, inventorycheckStock.StockName as InventoryCheck_StockName, svd.InventoryCheck_Qty, svd.InventoryCheck_ActualQty, svd.Request_ICode, svd.IsReference from FIN.StockVoucherDetail svd ";
+            sql += "svd.VendorCode, v.VendorName, svd.InventoryCheck_StockCode, inventorycheckStock.StockName as InventoryCheck_StockName, svd.InventoryCheck_Qty, svd.InventoryCheck_ActualQty, svd.Request_ICode, svd.IsReference, ";
+            sql += "vat.VATCode, coalesce(vat.VATRate,0) as VATRate, vat.VATName ";
+            sql += "from FIN.StockVoucherDetail svd ";
             sql += "join FIN.Items i on i.ICode = svd.ICode ";
             sql += "join FIN.ItemsUnit iu on iu.IUnitCode = i.IUnitCode ";
+            sql += "left join FIN.VATDef vat on svd.VATCode = vat.VATCode ";
             sql += "left join FIN.Stock fromStock on fromStock.StockCode = svd.FromStockCode ";
             sql += "left join FIN.Stock toStock on toStock.StockCode = svd.ToStockCode ";
             sql += "left join FIN.Vendor v on v.VendorCode = svd.VendorCode ";
@@ -151,8 +154,8 @@ namespace D69soft.Server.Controllers.FIN
                     sqlStockVoucherVM += "Create table #tmpAuto_Code_ID (Code_ID varchar(50)) ";
                     sqlStockVoucherVM += "Insert #tmpAuto_Code_ID ";
                     sqlStockVoucherVM += "exec SYSTEM.AUTO_CODE_ID 'FIN.StockVoucher','VNumber',@VCode,'0000' ";
-                    sqlStockVoucherVM += "Insert into FIN.StockVoucher (DivisionID,VNumber,VDesc,VDate,VendorCode,VTypeID,VSubTypeID,IsMultipleInvoice,VActive,EserialCreated,TimeCreated,Reference_VNumber,Reference_StockCode,Reference_VSubTypeID,StockCode) ";
-                    sqlStockVoucherVM += "select @DivisionID,CODE_ID,@VDesc,@VDate,@VendorCode,@VTypeID,@VSubTypeID,@IsMultipleInvoice,@VActive,@UserID,GETDATE(),@Reference_VNumber,@Reference_StockCode,@Reference_VSubTypeID,@StockCode from #tmpAuto_Code_ID ";
+                    sqlStockVoucherVM += "Insert into FIN.StockVoucher (DivisionID,VNumber,VDesc,VDate,VendorCode,CustomerCode,VTypeID,VSubTypeID,IsMultipleInvoice,VActive,EserialCreated,TimeCreated,Reference_VNumber,Reference_StockCode,Reference_VSubTypeID,StockCode) ";
+                    sqlStockVoucherVM += "select @DivisionID,CODE_ID,@VDesc,@VDate,@VendorCode,@CustomerCode,@VTypeID,@VSubTypeID,@IsMultipleInvoice,@VActive,@UserID,GETDATE(),@Reference_VNumber,@Reference_StockCode,@Reference_VSubTypeID,@StockCode from #tmpAuto_Code_ID ";
                     sqlStockVoucherVM += "select CODE_ID from #tmpAuto_Code_ID ";
 
                     VNumber = await conn.ExecuteScalarAsync<string>(sqlStockVoucherVM, _stockVoucherVM);
@@ -160,8 +163,8 @@ namespace D69soft.Server.Controllers.FIN
                     //StockVoucherDetailVM
                     foreach (var _stockVoucherDetailVM in _stockVoucherDetailVMs)
                     {
-                        sqlStockVoucherDetailVM = "Insert into FIN.StockVoucherDetail(VNumber,ICode,Qty,Price,FromStockCode,ToStockCode,VendorCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty,Request_ICode,IsReference) ";
-                        sqlStockVoucherDetailVM += "Values('" + VNumber + "',@ICode,@Qty,@Price,@FromStockCode,@ToStockCode,@VendorCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty,@ICode,@IsReference) ";
+                        sqlStockVoucherDetailVM = "Insert into FIN.StockVoucherDetail(VNumber,ICode,Qty,Price,VATCode,FromStockCode,ToStockCode,VendorCode,CustomerCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty,Request_ICode,IsReference) ";
+                        sqlStockVoucherDetailVM += "Values('" + VNumber + "',@ICode,@Qty,@Price,@VATCode,@FromStockCode,@ToStockCode,@VendorCode,@CustomerCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty,@ICode,@IsReference) ";
                         await conn.ExecuteAsync(sqlStockVoucherDetailVM, _stockVoucherDetailVM);
                     }
                 }
@@ -169,7 +172,7 @@ namespace D69soft.Server.Controllers.FIN
                 if (_stockVoucherVM.IsTypeUpdate == 1)
                 {
                     //StockVoucherVM
-                    sqlStockVoucherVM = "Update FIN.StockVoucher set VTypeID=@VTypeID,VSubTypeID=@VSubTypeID,VDesc=@VDesc,VDate=@VDate,VendorCode=@VendorCode,IsMultipleInvoice=@IsMultipleInvoice,StockCode=@StockCode,EserialUpdate=@UserID,TimeUpdate=GETDATE() ";
+                    sqlStockVoucherVM = "Update FIN.StockVoucher set VTypeID=@VTypeID,VSubTypeID=@VSubTypeID,VDesc=@VDesc,VDate=@VDate,VendorCode=@VendorCode,CustomerCode=@CustomerCode,IsMultipleInvoice=@IsMultipleInvoice,StockCode=@StockCode,EserialUpdate=@UserID,TimeUpdate=GETDATE() ";
                     sqlStockVoucherVM += "where VNumber=@VNumber ";
                     sqlStockVoucherVM += "Delete from FIN.StockVoucherDetail where VNumber=@VNumber ";
                     await conn.ExecuteAsync(sqlStockVoucherVM, _stockVoucherVM);
@@ -177,8 +180,8 @@ namespace D69soft.Server.Controllers.FIN
                     //StockVoucherDetailVM
                     foreach (var _stockVoucherDetailVM in _stockVoucherDetailVMs)
                     {
-                        sqlStockVoucherDetailVM = "Insert into FIN.StockVoucherDetail(VNumber,ICode,Qty,Price,FromStockCode,ToStockCode,VendorCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty,Request_ICode,IsReference) ";
-                        sqlStockVoucherDetailVM += "Values('" + _stockVoucherVM.VNumber + "',@ICode,@Qty,@Price,@FromStockCode,@ToStockCode,@VendorCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty,@Request_ICode,@IsReference) ";
+                        sqlStockVoucherDetailVM = "Insert into FIN.StockVoucherDetail(VNumber,ICode,Qty,Price,VATCode,FromStockCode,ToStockCode,VendorCode,CustomerCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty,Request_ICode,IsReference) ";
+                        sqlStockVoucherDetailVM += "Values('" + _stockVoucherVM.VNumber + "',@ICode,@Qty,@Price,@VATCode,@FromStockCode,@ToStockCode,@VendorCode,@CustomerCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty,@Request_ICode,@IsReference) ";
                         await conn.ExecuteAsync(sqlStockVoucherDetailVM, _stockVoucherDetailVM);
                     }
                 }
@@ -197,6 +200,21 @@ namespace D69soft.Server.Controllers.FIN
                 }
 
                 return VNumber;
+            }
+        }
+
+        //VAT
+        [HttpGet("GetVATDefs")]
+        public async Task<ActionResult<IEnumerable<VATDefVM>>> GetVATDefs()
+        {
+            var sql = "select * from FIN.VATDef order by VATRate, VATName desc ";
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                var result = await conn.QueryAsync<VATDefVM>(sql);
+                return Ok(result);
             }
         }
 

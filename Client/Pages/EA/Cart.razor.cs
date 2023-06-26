@@ -66,7 +66,7 @@ namespace D69soft.Client.Pages.EA
             {
                 logVM.LogUser = UserID;
                 logVM.LogType = "FUNC";
-                logVM.LogName = "EA_Request";
+                logVM.LogName = "EA_Cart";
                 await sysService.InsertLog(logVM);
             }
             else
@@ -168,13 +168,13 @@ namespace D69soft.Client.Pages.EA
 
             await requestService.SendRequest(requestVM, UserID);
 
-            logVM.LogDesc = "Gửi yêu cầu cấp hàng thành công!";
+            logVM.LogDesc = "Gửi yêu cầu cấp hàng";
             await sysService.InsertLog(logVM);
 
             await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Request");
             await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
 
-            navigationManager.NavigateTo("/EA/Request", true);
+            navigationManager.NavigateTo("/EA/Request", false);
 
             isLoading = false;
         }

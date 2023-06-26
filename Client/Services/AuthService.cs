@@ -40,9 +40,9 @@ namespace D69soft.Client.Services
             return await _httpClient.GetFromJsonAsync<int>($"api/Auth/GetRole/{_UserID}");
         }
 
-        public async Task<IEnumerable<PermissionUserVM>> GetPermissionUser(string _Eserial, string _UserID)
+        public async Task<IEnumerable<PermissionUserVM>> GetPermissionUser(string _UserID)
         {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<PermissionUserVM>>($"api/Auth/GetPermissionUser/{_Eserial}/{_UserID}");
+            return await _httpClient.GetFromJsonAsync<IEnumerable<PermissionUserVM>>($"api/Auth/GetPermissionUser/{_UserID}");
         }
 
         //JWT

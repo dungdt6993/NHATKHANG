@@ -10,13 +10,11 @@ namespace D69soft.Shared.Models.Entities.FIN
     {
         public string VendorCode { get; set; }
         public string VendorName { get; set; }
-        public string VATCode { get; set; }
-        public string VAddress { get; set; }
-        public string VNote { get; set; }
-        public string Contract_FileScan { get; set; }
-        public DateTime? Contract_StartDate { get; set; }
-        public DateTime? Contract_EndDate { get; set; }
-        public string Contact_Tel { get; set; }
-        public bool VendorActive { get; set; }
+        public string VendorTaxCode { get; set; }
+        public string VendorAddress { get; set; }
+        public string VendorTel { get; set; }
+        public string VendorContractFile { get; set; }
+        public DateTime? VendorContractStartDate { get; set; }
+        public DateTime? VendorContractEndDate { get; set; }
     }
 }

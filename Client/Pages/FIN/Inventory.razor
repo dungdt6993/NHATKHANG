@@ -10,7 +10,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" data-container="body" @bind="filterFinVM.DivisionID">
+                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true" data-container="body" @bind="filterFinVM.DivisionID">
                         @if (divisionVMs != null)
                         {
                             @foreach (var _divisionVM in divisionVMs)
@@ -26,7 +26,7 @@
                 <div class="form-group">
                     <DateRangePicker Ranges="DateRanges" Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))" ApplyLabel="Thực hiện" CancelLabel="Hủy" CustomRangeLabel="Chọn ngày" OnRangeSelect="OnRangeSelect">
                         <PickerTemplate Context="c">
-                            <div id="@c.Id" @onclick="c.Toggle" class="form-control" style="cursor: pointer;">
+                            <div id="@c.Id" @onclick="c.Toggle" class="form-control form-control-sm" style="cursor: pointer;">
                                 <i class="fa-solid fa-calendar-days"></i>&nbsp;
                                 <span>
                                     @if (c.TStartDate == null && c.TEndDate == null)
@@ -63,31 +63,14 @@
 
             <div class="col-sm-2">
                 <div class="form-group">
-                    <select class="selectpicker form-control"
-                            data-style="btn-selectpicker form-control" data-container="body"
-                            data-live-search="true" data-show-subtext="true"
-                            @bind="onchange_StockTypeCode">
-                        @if (stockTypeVMs != null)
-                        {
-                            @foreach (var _stockTypeVM in stockTypeVMs)
-                            {
-                                <option data-subtext="@_stockTypeVM.StockTypeCode" value="@_stockTypeVM.StockTypeCode">@_stockTypeVM.StockTypeName</option>
-                            }
-                        }
-                    </select>
-                </div>
-            </div>
-
-            <div class="col-sm-2">
-                <div class="form-group">
-                    <select class="selectpicker form-control"
-                            data-style="btn-selectpicker form-control" data-container="body"
+                    <select class="selectpicker form-control form-control-sm"
+                            data-style="btn-selectpicker" data-container="body"
                             data-live-search="true" data-show-subtext="true"
                             @bind="filterFinVM.StockCode">
                         <option value=@String.Empty>-----Kho-----</option>
                         @if (stockVMs != null)
                         {
-                            @foreach (var _stockVM in stockVMs.Where(x=>x.StockTypeCode==filterFinVM.StockTypeCode))
+                            @foreach (var _stockVM in stockVMs)
                             {
                                 <option data-subtext="@_stockVM.StockCode" value="@_stockVM.StockCode">@_stockVM.StockName</option>
                             }
@@ -120,7 +103,7 @@
             </div>
 
             <div class="col-md-1">
-                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetInventorys())">
+                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetInventorys())">
                     @if (IsViewInventoryBookDetail)
                     {
                         <i class="fa-solid fa-rotate-left"></i>
@@ -137,7 +120,7 @@
 
 <section class="content">
     <div class="container-fluid">
-        <div class="card card-purple card-outline">
+        <div class="card card-warning card-outline">
 
             @if (IsViewInventoryBookDetail)
             {

@@ -29,12 +29,12 @@
                         <div class="col-sm-5">
                             @if (itemsGroupVM.IsTypeUpdate == 0)
                             {
-                                <InputText class="form-control" placeholder="Mã nhóm hàng" @bind-Value:get="itemsGroupVM.IGrpCode" @bind-Value:set="(value) => {itemsGroupVM.IGrpCode = value.ToUpper();}" />
+                                <InputText class="form-control form-control-sm" placeholder="Mã nhóm hàng" @bind-Value:get="itemsGroupVM.IGrpCode" @bind-Value:set="(value) => {itemsGroupVM.IGrpCode = value.ToUpper();}" />
                                 <ValidationMessage For="@(() => itemsGroupVM.IGrpCode)" />
                             }
                             else
                             {
-                                <input type="text" readonly class="form-control" placeholder="Mã nhóm hàng" value="@itemsGroupVM.IGrpCode" />
+                                <input type="text" readonly class="form-control form-control-sm" placeholder="Mã nhóm hàng" value="@itemsGroupVM.IGrpCode" />
                             }
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Tên</label>
                         <div class="col-sm-9">
-                            <InputText class="form-control" placeholder="Tên nhóm hàng" @bind-Value="itemsGroupVM.IGrpName" autofocus />
+                            <InputText class="form-control form-control-sm" placeholder="Tên nhóm hàng" @bind-Value="itemsGroupVM.IGrpName" autofocus />
                             <ValidationMessage For="@(() => itemsGroupVM.IGrpName)" />
                         </div>
                     </div>
@@ -50,8 +50,8 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Lớp hàng</label>
                         <div class="col-sm-9">
-                            <InputSelect class="selectpicker form-control"
-                                         data-style="btn-selectpicker form-control" data-container="body"
+                            <InputSelect class="selectpicker form-control form-control-sm"
+                                         data-style="btn-selectpicker" data-container="body"
                                          data-live-search="true" data-show-subtext="true"
                                          @bind-Value="itemsGroupVM.IClsCode">
                                 <option value=@String.Empty>-----Tất cả-----</option>
@@ -70,10 +70,10 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save"></i> Lưu</button>
                     @if (itemsGroupVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => itemsGroupVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => itemsGroupVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
 
@@ -89,7 +89,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
-            <EditForm Model="@itemsVM" OnValidSubmit="@UpdateItems">
+            <EditForm Model="@itemsVM" Context="formItemsVM">
 
                 <FluentValidationValidator />
 
@@ -105,7 +105,7 @@
 
                 <div class="modal-body">
 
-                    <div class="card card-purple card-outline card-outline-tabs" style="margin-bottom: 0;">
+                    <div class="card card-warning card-outline card-outline-tabs" style="margin-bottom: 0;">
                         <div class="card-header p-0 border-bottom-0">
                             <ul class="nav nav-tabs" id="custom-tabs-tab" role="tablist">
                                 <li class="nav-item">
@@ -117,7 +117,7 @@
                                 @if (itemsVM.ITypeCode == "TP")
                                 {
                                     <li class="nav-item">
-                                        <a class="nav-link" id="custom-tabs-ingredient-tab" data-toggle="pill" href="#custom-tabs-ingredient" role="tab" aria-controls="custom-tabs-ingredient" aria-selected="false">Thành phần, định lượng</a>
+                                        <a class="nav-link" id="custom-tabs-ingredient-tab" data-toggle="pill" href="#custom-tabs-ingredient" role="tab" aria-controls="custom-tabs-ingredient" aria-selected="false">Định mức nguyên vật liệu</a>
                                     </li>
                                 }
                             </ul>
@@ -132,12 +132,12 @@
                                                 <div class="col-sm-9">
                                                     @if (itemsVM.IsTypeUpdate == 0)
                                                     {
-                                                        <InputText class="form-control" placeholder="Mã mặc định" @bind-Value="itemsVM.ICode" />
+                                                        <InputText class="form-control form-control-sm" placeholder="Mã mặc định" @bind-Value="itemsVM.ICode" disabled />
                                                         <ValidationMessage For="@(() => itemsVM.ICode)" />
                                                     }
                                                     else
                                                     {
-                                                        <input type="text" readonly class="form-control" value="@itemsVM.ICode" />
+                                                        <input type="text" readonly class="form-control form-control-sm" value="@itemsVM.ICode" />
                                                     }
                                                 </div>
                                             </div>
@@ -145,7 +145,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Tên hàng</label>
                                                 <div class="col-sm-9">
-                                                    <InputText class="form-control" placeholder="Tên hàng" @bind-Value="itemsVM.IName" autofocus />
+                                                    <InputText class="form-control form-control-sm" placeholder="Tên hàng" @bind-Value="itemsVM.IName" autofocus />
                                                     <ValidationMessage For="@(() => itemsVM.IName)" />
                                                 </div>
                                             </div>
@@ -153,8 +153,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Loại hàng</label>
                                                 <div class="col-sm-9">
-                                                    <InputSelect class="selectpicker form-control"
-                                                                 data-style="btn-selectpicker form-control" data-container="body"
+                                                    <InputSelect class="selectpicker form-control form-control-sm"
+                                                                 data-style="btn-selectpicker" data-container="body"
                                                                  data-live-search="true" data-show-subtext="true"
                                                                  @bind-Value="itemsVM.ITypeCode">
                                                         <option value=@String.Empty>-----Tất cả-----</option>
@@ -173,8 +173,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Lớp hàng</label>
                                                 <div class="col-sm-9">
-                                                    <InputSelect class="selectpicker form-control"
-                                                                 data-style="btn-selectpicker form-control" data-container="body"
+                                                    <InputSelect class="selectpicker form-control form-control-sm"
+                                                                 data-style="btn-selectpicker" data-container="body"
                                                                  data-live-search="true" data-show-subtext="true"
                                                                  @bind-Value="onchange_IClsCode">
                                                         <option value=@String.Empty>-----Tất cả-----</option>
@@ -193,8 +193,8 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Nhóm hàng</label>
                                                 <div class="col-sm-9">
-                                                    <InputSelect class="selectpicker form-control"
-                                                                 data-style="btn-selectpicker form-control" data-container="body"
+                                                    <InputSelect class="selectpicker form-control form-control-sm"
+                                                                 data-style="btn-selectpicker" data-container="body"
                                                                  data-live-search="true" data-show-subtext="true"
                                                                  @bind-Value="itemsVM.IGrpCode">
                                                         <option value=@String.Empty>-----Tất cả-----</option>
@@ -224,8 +224,6 @@
                                                     <span>&nbsp;</span>
                                                     <a href="javascript:void(0)" @onclick="(() => FileDefault())"><i class="fa-solid fa-trash-can"></i></a>
                                                 }
-                                                @*<div class="product-image-thumb"><img src="/images/_default/no-image.png" alt="Product Image"></div>
-                                                <div class="product-image-thumb"><img src="/images/_default/no-image.png" alt="Product Image"></div>*@
                                             </div>
 
                                         </div>
@@ -235,8 +233,8 @@
                                                 <label class="col-sm-4 col-form-label">Đơn vị tính</label>
                                                 <div class="col-sm-8">
                                                     <div class="input-group">
-                                                        <InputSelect class="selectpicker form-control"
-                                                                     data-style="btn-selectpicker form-control" data-container="body"
+                                                        <InputSelect class="selectpicker form-control form-control-sm"
+                                                                     data-style="btn-selectpicker" data-container="body"
                                                                      data-live-search="true" data-show-subtext="true"
                                                                      @bind-Value="itemsVM.IUnitCode">
                                                             <option value=@String.Empty>-----Tất cả-----</option>
@@ -244,20 +242,20 @@
                                                             {
                                                                 @foreach (var _itemsUnitVM in itemsUnitVMs)
                                                                 {
-                                                                    <option data-subtext="@_itemsUnitVM.IUnitCode" value="@_itemsUnitVM.IUnitCode">@_itemsUnitVM.IUnitName</option>
+                                                                    <option value="@_itemsUnitVM.IUnitCode">@_itemsUnitVM.IUnitName</option>
                                                                 }
                                                             }
                                                         </InputSelect>
                                                         @if (String.IsNullOrEmpty(itemsVM.IUnitCode))
                                                         {
                                                             <div class="input-group-append">
-                                                                <a class="btn btn-success" @onclick="(() => InitializeModalUpdate_ItemsUnit(0))"><i class="fa-solid fa-plus"></i></a>
+                                                                <a class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_ItemsUnit(0))"><i class="fa-solid fa-plus"></i></a>
                                                             </div>
                                                         }
                                                         else
                                                         {
                                                             <div class="input-group-append">
-                                                                <a class="btn btn-secondary" @onclick="(() => InitializeModalUpdate_ItemsUnit(1))"><i class="fa-solid fa-pencil"></i></a>
+                                                                <a class="btn btn-sm btn-secondary" @onclick="(() => InitializeModalUpdate_ItemsUnit(1))"><i class="fa-solid fa-pencil"></i></a>
                                                             </div>
                                                         }
                                                         <ValidationMessage For="@(() => itemsVM.IUnitCode)" />
@@ -297,26 +295,21 @@
                                 </div>
                                 <div class="tab-pane fade" id="custom-tabs-default" role="tabpanel" aria-labelledby="custom-tabs-default">
                                     <div class="row">
-                                        <div class="col-12 col-sm-6">
+                                        <div class="col-12 col-sm-5">
 
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Kho</label>
-                                                <div class="col-sm-9">
-                                                    <select class="selectpicker form-control"
-                                                            data-style="btn-selectpicker form-control" data-container="body"
+                                                <label class="col-sm-2 col-form-label">Kho</label>
+                                                <div class="col-sm-10">
+                                                    <select class="selectpicker form-control form-control-sm"
+                                                            data-style="btn-selectpicker" data-container="body"
                                                             data-live-search="true" data-show-subtext="true"
                                                             @bind="itemsVM.StockDefault">
                                                         <option value=@String.Empty>-----Tất cả-----</option>
                                                         @if (stockVMs != null)
                                                         {
-                                                            @foreach (var _stockVM_0 in stockVMs.Select(x => new { x.StockTypeCode, x.StockTypeName }).Distinct())
+                                                            @foreach (var _stockVM in stockVMs)
                                                             {
-                                                                <optgroup label="@_stockVM_0.StockTypeName">
-                                                                    @foreach (var _stockVM_1 in stockVMs.Where(x => x.StockTypeCode == _stockVM_0.StockTypeCode))
-                                                                    {
-                                                                        <option data-subtext="@_stockVM_1.StockCode" value="@_stockVM_1.StockCode">@_stockVM_1.StockName</option>
-                                                                    }
-                                                                </optgroup>
+                                                                <option data-subtext="@_stockVM.StockCode" value="@_stockVM.StockCode">@_stockVM.StockName</option>
                                                             }
                                                         }
                                                     </select>
@@ -324,13 +317,13 @@
                                             </div>
 
                                         </div>
-                                        <div class="col-12 col-sm-6">
+                                        <div class="col-12 col-sm-7">
 
                                             <div class="form-group row">
                                                 <label class="col-sm-3 col-form-label">Nhà cung cấp</label>
                                                 <div class="col-sm-9">
-                                                    <select class="selectpicker form-control"
-                                                            data-style="btn-selectpicker form-control" data-container="body"
+                                                    <select class="selectpicker form-control form-control-sm"
+                                                            data-style="btn-selectpicker" data-container="body"
                                                             data-live-search="true" data-show-subtext="true"
                                                             @bind="itemsVM.VendorDefault">
                                                         <option value=@String.Empty>-----Tất cả-----</option>
@@ -377,7 +370,7 @@
                                                                 <td>@_quantitativeItemsVM.QI_ICode - @_quantitativeItemsVM.QI_IName</td>
                                                                 <td class="text-center">@_quantitativeItemsVM.QI_IUnitName</td>
                                                                 <td class="text-center">
-                                                                    <input class="form-control text-center" @bind="@_quantitativeItemsVM.QI_UnitRatio" onClick="this.select();" />
+                                                                    <input class="form-control form-control-sm text-center" @bind="@_quantitativeItemsVM.QI_UnitRatio" onClick="this.select();" />
                                                                 </td>
                                                                 <td class="text-center">
                                                                     <a @onclick=@(() => quantitativeItemsVMs.Remove(_quantitativeItemsVM))>
@@ -424,10 +417,10 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateItems(formItemsVM, itemsVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (itemsVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => itemsVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateItems(formItemsVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
 
@@ -464,12 +457,12 @@
                         <div class="col-sm-5">
                             @if (itemsUnitVM.IsTypeUpdate == 0)
                             {
-                                <InputText class="form-control" placeholder="Mã đơn vị tính" @bind-Value:get="itemsUnitVM.IUnitCode" @bind-Value:set="(value) => {itemsUnitVM.IUnitCode = value.ToUpper();}" />
+                                <InputText class="form-control form-control-sm" placeholder="Mã đơn vị tính" @bind-Value:get="itemsUnitVM.IUnitCode" @bind-Value:set="(value) => {itemsUnitVM.IUnitCode = value.ToUpper();}" />
                                 <ValidationMessage For="@(() => itemsUnitVM.IUnitCode)" />
                             }
                             else
                             {
-                                <input type="text" readonly class="form-control" placeholder="Mã đơn vị tính" value="@itemsUnitVM.IUnitCode" />
+                                <input type="text" readonly class="form-control form-control-sm" placeholder="Mã đơn vị tính" value="@itemsUnitVM.IUnitCode" />
                             }
                         </div>
                     </div>
@@ -477,7 +470,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Tên</label>
                         <div class="col-sm-10">
-                            <InputText class="form-control" placeholder="Tên đơn vị tính" @bind-Value="itemsUnitVM.IUnitName" autofocus />
+                            <InputText class="form-control form-control-sm" placeholder="Tên đơn vị tính" @bind-Value="itemsUnitVM.IUnitName" autofocus />
                             <ValidationMessage For="@(() => itemsUnitVM.IUnitName)" />
                         </div>
                     </div>
@@ -485,10 +478,10 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save"></i> Lưu</button>
                     @if (itemsUnitVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => itemsUnitVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => itemsUnitVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
 
@@ -509,13 +502,13 @@
 
                 <div class="col-12 col-sm-3">
 
-                    <div class="card card-purple card-outline">
+                    <div class="card card-warning card-outline">
                         <div class="card-header">
                             <h3 class="card-title">Lớp hàng</h3>
                         </div>
                         <div class="card-body">
-                            <InputSelect class="selectpicker form-control"
-                                         data-style="btn-selectpicker form-control" data-container="body"
+                            <InputSelect class="selectpicker form-control form-control-sm"
+                                         data-style="btn-selectpicker" data-container="body"
                                          data-live-search="true" data-show-subtext="true"
                                          ValueExpression="@(()=>filterFinVM.IClsCode)"
                                          Value="@filterFinVM.IClsCode"
@@ -532,7 +525,7 @@
                         </div>
                     </div>
 
-                    <div class="card card-purple card-outline">
+                    <div class="card card-warning card-outline">
                         <div class="card-header">
 
                             <div class="d-flex justify-content-between">
@@ -544,8 +537,8 @@
                         <div class="card-body">
 
                             <div class="input-group">
-                                <InputSelect class="selectpicker form-control"
-                                             data-style="btn-selectpicker form-control" data-container="body"
+                                <InputSelect class="selectpicker form-control form-control-sm"
+                                             data-style="btn-selectpicker" data-container="body"
                                              data-live-search="true" data-show-subtext="true"
                                              ValueExpression="@(()=>filterFinVM.IGrpCode)"
                                              Value="@filterFinVM.IGrpCode"
@@ -570,7 +563,7 @@
                         </div>
                     </div>
 
-                    <div class="card card-purple card-outline">
+                    <div class="card card-warning card-outline">
                         <div class="card-header">
 
                             <div class="d-flex justify-content-between">
@@ -580,12 +573,12 @@
                         </div>
                         <div class="card-body">
 
-                            <input type="search" @bind="onchange_SearchItems" @bind:event="oninput" class="form-control form-control-border border-width-2" placeholder="Theo mã hoặc tên hàng..." />
+                            <input type="search" @bind="onchange_SearchItems" @bind:event="oninput" class="form-control form-control-sm form-control-border border-width-2" placeholder="Theo mã hoặc tên hàng..." />
 
                         </div>
                     </div>
 
-                    <div class="card card-purple card-outline">
+                    <div class="card card-warning card-outline">
                         <div class="card-header">
                             <div class="d-flex justify-content-between">
                                 <h3 class="card-title">Trạng thái</h3>
@@ -611,24 +604,15 @@
 
                 <div class="col-12 col-sm-9">
 
-                    <div class="card card-purple card-outline">
+                    <div class="card card-warning card-outline">
                         <div class="card-header text-right">
-                            <button type="button" class="btn btn-secondary" @onclick="(() => SyncDataSmile())"><i class="fa-solid fa-arrows-rotate"></i> Đồng bộ dữ liệu SMILE</button>
 
-                            @*                            <div class="input-group input-group-sm" style="width: auto;">
-                            <input type="search" class="form-control form-control-border border-width-2" style="margin: 0 10px;" placeholder="Tìm kiếm theo mã hoặc tên hàng..." />
-                            <div class="btn-group">
-                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa-solid fa-pencil"></i> Cập nhật
-                            </button>
-                            <div class="dropdown-menu">
-                            <a class="dropdown-item">Hoạt động</a>
-                            <a class="dropdown-item">Ngừng hoạt động</a>
-                            <a class="dropdown-item">Xóa hàng loạt</a>
-                            </div>
-                            </div>
-                            <button type="button" class="btn btn-success" @onclick="(() => InitializeModalUpdate_Items(0, itemsVM))"><i class="fa-solid fa-xl fa-plus"></i> Thêm</button>
-                            </div>*@
+                            @if (!String.IsNullOrEmpty(itemsVM.ICode))
+                            {
+                                <button type="button" class="btn btn-sm btn-info" @onclick=@(() => InitializeModalUpdate_Items(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
+                            }
+
+                            <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Items(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm</button>
 
                         </div>
 
@@ -638,15 +622,6 @@
                                 <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
                                     <thead>
                                         <tr>
-                                            @*                                        <th class="text-center">
-                                        @if (itemsVMs != null)
-                                        {
-                                        <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input custom-control-input-purple" type="checkbox" id="ckAll" @onchange="EventArgs => { CheckAll(EventArgs.Value); }" checked="@filterFinVM.IsChecked">
-                                        <label for="ckAll" class="custom-control-label"></label>
-                                        </div>
-                                        }
-                                        </th>*@
                                             <th class="text-center">Hình ảnh</th>
                                             <th class="text-center">Mã hàng hóa</th>
                                             <th class="sort-th" @onclick=@(()=>SortTable("IName"))>
@@ -656,29 +631,33 @@
                                             <th>Loại hàng</th>
                                             <th>Lớp hàng</th>
                                             <th>Nhóm hàng</th>
+                                            <th>Đơn vị tính</th>
 
-                                            <th class="text-center">Giá</th>
+                                            <th class="text-center">Trạng thái</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-
-                                        <Virtualize Items="@search_itemsVMs" Context="_itemVMs" OverscanCount="50">
-                                            <tr @onclick="() => InitializeModalUpdate_Items(1,_itemVMs)">
-                                                @*                                                <td class="text-center">
-                                            <div class="custom-control custom-checkbox">
-                                            <input class="custom-control-input custom-control-input-purple custom-control-input-outline" id="@_itemVMs.ICode" type="checkbox" @bind="_itemVMs.IsChecked">
-                                            <label for="@_itemVMs.ICode" class="custom-control-label"></label>
-                                            </div>
-                                            </td>*@
+                                        <Virtualize Items="@search_itemsVMs" Context="_itemVM" OverscanCount="50">
+                                            <tr class="@(SetSelected(_itemVM))" @onclick="() => onclick_Selected(_itemVM)">
                                                 <td class="text-center">
-                                                    <img class="table-picture" src="@_itemVMs.IURLPicture1">
+                                                    <img class="table-picture" src="@_itemVM.IURLPicture1">
                                                 </td>
-                                                <td align="center">@_itemVMs.ICode</td>
-                                                <td>@_itemVMs.IName</td>
-                                                <td>@_itemVMs.ITypeName</td>
-                                                <td>@_itemVMs.IClsName</td>
-                                                <td>@_itemVMs.IGrpName</td>
-                                                <td class="text-right">@String.Format("{0:#,##0.##}", _itemVMs.IPrice)</td>
+                                                <td align="center">@_itemVM.ICode</td>
+                                                <td>@_itemVM.IName</td>
+                                                <td>@_itemVM.ITypeName</td>
+                                                <td>@_itemVM.IClsName</td>
+                                                <td>@_itemVM.IGrpName</td>
+                                                <td>@_itemVM.IUnitName</td>
+                                                <td class="text-center">
+                                                    @if (_itemVM.IActive)
+                                                    {
+                                                        <i class="fas fa-check text-success"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="fas fa-times"></i>
+                                                    }
+                                                </td>
                                             </tr>
                                         </Virtualize>
                                     </tbody>

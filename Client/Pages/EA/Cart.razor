@@ -24,7 +24,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Bộ phận yêu cầu</label>
                         <div class="col-sm-9">
-                            <select class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind="requestVM.DeptRequest">
+                            <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind="requestVM.DeptRequest">
                                 <option value=@string.Empty>-----Chọn-----</option>
                                 @if (departments != null)
                                 {
@@ -41,14 +41,14 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Lý do</label>
                         <div class="col-sm-9">
-                            <InputTextArea class="form-control" placeholder="Lý do yêu cầu cấp hàng" @bind-Value="@requestVM.ReasonOfRequest" />
+                            <InputTextArea class="form-control form-control-sm" placeholder="Lý do yêu cầu cấp hàng" @bind-Value="@requestVM.ReasonOfRequest" />
                             <ValidationMessage For="@(() => requestVM.ReasonOfRequest)" />
                         </div>
                     </div>
 
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fa-solid fa-paper-plane"></i> Gửi phê duyệt</button>
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fa-solid fa-paper-plane"></i> Gửi phê duyệt</button>
                 </div>
             </EditForm>
         </div>
@@ -62,13 +62,13 @@
         <div class="row">
 
             <div class="col-12 col-sm-8">
-                <div class="card card-purple card-outline">
+                <div class="card card-warning card-outline">
                     <div class="card-header">
                         <h3 class="card-title">
                             <i class="fa-solid fa-basket-shopping"></i> Giỏ hàng của bạn
                         </h3>
                         <div class="card-tools">
-                            <a href="/EA/Request" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-rotate-left"></i> Danh sách yêu cầu</a>
+                            <a href="/EA/Request" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-arrow-rotate-left"></i> Danh sách yêu cầu</a>
                         </div>
                     </div>
                     @if (cartVMs != null)
@@ -93,11 +93,11 @@
                                             <tr>
                                                 <td style="min-width: 150px;">@_cartVM.IName</td>
                                                 <td class="text-center">
-                                                    <input type="text" class="form-control text-center" @onchange="@((ChangeEventArgs e) => onchange_QtyItemsCart(e, _cartVM))" value="@_cartVM.Qty" onClick="this.select();" style="min-width: 50px;" />
+                                                    <input type="text" class="form-control form-control-sm text-center" @onchange="@((ChangeEventArgs e) => onchange_QtyItemsCart(e, _cartVM))" value="@_cartVM.Qty" onClick="this.select();" style="min-width: 50px;" />
                                                 </td>
                                                 <td class="text-center">@_cartVM.IUnitName</td>
                                                 <td style="min-width: 100px;">
-                                                    <textarea class="form-control" @onchange="@((ChangeEventArgs e) => onchange_NoteItemsCart(e, _cartVM))" placeholder="Ghi chú..." value="@_cartVM.Note" />
+                                                    <textarea class="form-control form-control-sm" @onchange="@((ChangeEventArgs e) => onchange_NoteItemsCart(e, _cartVM))" placeholder="Ghi chú..." value="@_cartVM.Note" />
                                                 </td>
                                                 <td class="text-center">
                                                     <a @onclick=@(()=>DelItemsCart(_cartVM))>
@@ -119,7 +119,7 @@
                         @if (cartVMs.Select(x => x.Qty).Sum() > 0)
                         {
                             <div class="card-footer text-center">
-                                <button type="submit" class="btn btn-success" @onclick="(() => InitializeModal_Request())"><i class="fa-solid fa-paper-plane"></i> Gửi yêu cầu cấp hàng</button>
+                                <button type="submit" class="btn btn-sm btn-success" @onclick="(() => InitializeModal_Request())"><i class="fa-solid fa-paper-plane"></i> Gửi yêu cầu cấp hàng</button>
                             </div>
                         }
                         <!-- /.card-footer -->
@@ -128,12 +128,12 @@
             </div>
 
             <div class="col-12 col-sm-4">
-                <div class="card card-purple card-outline">
+                <div class="card card-warning card-outline">
                     <div class="card-header text-center">
                         <input type="search" style="font-size: 1.25rem;" class="form-control form-control-lg" placeholder="Tìm kiếm mặt hàng..." @bind="onchange_SearchValues" @bind:event="oninput">
                     </div>
                     <!-- /.card-header -->
-                    <div class="card-body p-0" style="overflow: auto; height: calc(100vh - 181px);">
+                    <div class="card-body p-0" style="overflow: auto; height: calc(100vh - 151px);">
                         @if (itemsVMs != null)
                         {
                             <ul class="products-list product-list-in-card pl-2 pr-2">

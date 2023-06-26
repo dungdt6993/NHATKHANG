@@ -174,7 +174,7 @@ namespace D69soft.Server.Controllers.POS
                 await conn.ExecuteAsync(sql, new
                 {
                     CheckNo = _invoiceVM.CheckNo,
-                    CustomerID = _invoiceVM.CustomerID,
+                    CustomerID = _invoiceVM.CustomerCode,
                 });
 
                 return true;

@@ -94,8 +94,10 @@ img.table-profile-avatar {
 .dutyroster-input {
     text-align: center;
     font-weight: bold;
-    padding: 2px;
+    padding: 1px;
     color: #212529;
+    border: 0;
+    outline: 0;
 }
 
 .dutyroster-td {
@@ -149,7 +151,7 @@ img.table-profile-avatar {
 }
 
 #custom-tabs-four-menu #item-list .btn-both:hover, .pos #custom-tabs-four-menu #item-list .btn-img:hover {
-    background: #6f42c1;
+    background: #ffc107;
 }
 
 #custom-tabs-four-menu #item-list .btn-both .bg-img {
@@ -205,17 +207,17 @@ img.table-profile-avatar {
 
 #custom-tabs-four-room .button2, #custom-tabs-four-menu .button2 {
     background-color: white;
-    color: #6f42c1;
-    border: 2px solid #6f42c1;
+    color: #ffc107;
+    border: 2px solid #ffc107;
 }
 
 #custom-tabs-four-room .button2:hover, #custom-tabs-four-menu .button2:hover {
-    background-color: #6f42c1;
+    background-color: #ffc107;
     color: white;
 }
 
 #custom-tabs-four-room .active, #custom-tabs-four-menu .active {
-    background-color: #6f42c1;
+    background-color: #ffc107;
     color: white;
 }
 
@@ -235,7 +237,7 @@ img.table-profile-avatar {
 }
 
 #custom-tabs-four-tab .nav-item a {
-    color: #6f42c1;
+    color: #ffc107;
     font-weight: bold;
     font-size: medium;
 }
@@ -246,7 +248,7 @@ img.table-profile-avatar {
 }
 
 .active_btnPMode {
-    background-color: #6f42c1 !important;
+    background-color: #ffc107 !important;
     color: white !important;
 }
 

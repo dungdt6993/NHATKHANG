@@ -15,7 +15,6 @@ namespace D69soft.Client.Pages.Auth
         [Inject] ILocalStorageService localStorage { get; set; }
         [Inject] IJSRuntime js { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
-        [Inject] AuthenticationStateProvider authenticationStateProvider { get; set; }
         [Inject] SysService sysService { get; set; }
         [Inject] AuthService authService { get; set; }
 

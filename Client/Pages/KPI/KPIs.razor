@@ -12,7 +12,7 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Tháng:</label>
                     <div class="col-sm-9">
-                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                            ValueExpression="@(()=>filterHrVM.Month)"
                                            Value="@filterHrVM.Month"
                                            ValueChanged="@((int value) => onchange_filter_month(value))">
@@ -32,7 +32,7 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Năm:</label>
                     <div class="col-sm-9">
-                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                            ValueExpression="@(()=>filterHrVM.Year)"
                                            Value="@filterHrVM.Year"
                                            ValueChanged="@((int value) => onchange_filter_year(value))">
@@ -50,7 +50,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DivisionID)"
                                  Value="@filterHrVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
@@ -67,7 +67,7 @@
 
             <div class="col-md-6">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DepartmentID)"
                                  Value="@filterHrVM.DepartmentID"
                                  ValueChanged="@((string value) => onchange_filter_department(value))">
@@ -85,7 +85,7 @@
 
             <div class="col-md-6">
                 <div class="form-group">
-                    <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
                         @if (position_filter_list != null)
                         {
                             @foreach (var positiongroup_filter in position_filter_list.Select(x => new { x.PositionGroupID, x.PositionGroupName }).Distinct())
@@ -99,7 +99,7 @@
 
             <div class="col-md-5">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
                                  ValueExpression="@(()=>filterHrVM.Eserial)"
                                  Value="@filterHrVM.Eserial"
                                  ValueChanged="@((string value) => onchange_filter_eserial(value))">
@@ -116,7 +116,7 @@
             </div>
 
             <div class="col-md-1">
-                <button type="button" class="btn btn-block bg-purple" @onclick="(() => onchange_filter_eserial(String.Empty))">
+                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => onchange_filter_eserial(String.Empty))">
                     <i class="fa-solid fa-list-check"></i> Bảng tổng hợp
                 </button>
             </div>
@@ -126,7 +126,7 @@
 
 <section class="content">
     <div class="container-fluid">
-        <div class="card card-purple card-outline">
+        <div class="card card-warning card-outline">
 
             <div class="card-header text-right">
             </div>
@@ -168,7 +168,7 @@
                                             {
                                                 if ((rankVM.isSendAppraiser ? 1 : 0) + (rankVM.isSendDirectManager ? 1 : 0) + (rankVM.isSendControlDept ? 1 : 0) + (rankVM.isSendApprove ? 1 : 0) == 0)
                                                 {
-                                                    <button class="btn btn-block btn-danger" @onclick="@(() => SendKPI(false,"SendKPI"))"><i class="fa-solid fa-ban"></i> Hủy</button>
+                                                    <button class="btn btn-sm btn-block btn-danger" @onclick="@(() => SendKPI(false,"SendKPI"))"><i class="fa-solid fa-ban"></i> Hủy</button>
                                                 }
                                             }
                                         }
@@ -178,7 +178,7 @@
                                             {
                                                 if ((rankVM.isSendAppraiser ? 1 : 0) + (rankVM.isSendDirectManager ? 1 : 0) + (rankVM.isSendControlDept ? 1 : 0) + (rankVM.isSendApprove ? 1 : 0) == 0)
                                                 {
-                                                    <button class="btn btn-block btn-success" @onclick="@(() => SendKPI(true,"SendKPI"))"><i class="fa-solid fa-paper-plane"></i> Gửi duyệt</button>
+                                                    <button class="btn btn-sm btn-block btn-success" @onclick="@(() => SendKPI(true,"SendKPI"))"><i class="fa-solid fa-paper-plane"></i> Gửi duyệt</button>
                                                 }
                                                 else
                                                 {
@@ -202,7 +202,7 @@
                                                 {
                                                     if ((rankVM.isSendDirectManager ? 1 : 0) + (rankVM.isSendControlDept ? 1 : 0) + (rankVM.isSendApprove ? 1 : 0) == 0)
                                                     {
-                                                        <button class="btn btn-block btn-danger" @onclick="@(() => SendKPI(false,"SendAppraiser"))"><i class="fa-solid fa-ban"></i> Hủy</button>
+                                                        <button class="btn btn-sm btn-block btn-danger" @onclick="@(() => SendKPI(false,"SendAppraiser"))"><i class="fa-solid fa-ban"></i> Hủy</button>
                                                     }
                                                 }
                                             }
@@ -212,7 +212,7 @@
                                                 {
                                                     if ((rankVM.isSendDirectManager ? 1 : 0) + (rankVM.isSendControlDept ? 1 : 0) + (rankVM.isSendApprove ? 1 : 0) == 0)
                                                     {
-                                                        <button class="btn btn-block btn-success" @onclick="@(() => SendKPI(true,"SendAppraiser"))"><i class="fa-solid fa-check"></i> Duyệt</button>
+                                                        <button class="btn btn-sm btn-block btn-success" @onclick="@(() => SendKPI(true,"SendAppraiser"))"><i class="fa-solid fa-check"></i> Duyệt</button>
                                                     }
                                                     else
                                                     {
@@ -237,7 +237,7 @@
                                                 {
                                                     if ((rankVM.isSendControlDept ? 1 : 0) + (rankVM.isSendApprove ? 1 : 0) == 0)
                                                     {
-                                                        <button class="btn btn-block btn-danger" @onclick="@(() => SendKPI(false,"SendDirectManager"))"><i class="fa-solid fa-ban"></i> Hủy</button>
+                                                        <button class="btn btn-sm btn-block btn-danger" @onclick="@(() => SendKPI(false,"SendDirectManager"))"><i class="fa-solid fa-ban"></i> Hủy</button>
                                                     }
                                                 }
                                             }
@@ -247,7 +247,7 @@
                                                 {
                                                     if ((rankVM.isSendControlDept ? 1 : 0) + (rankVM.isSendApprove ? 1 : 0) == 0)
                                                     {
-                                                        <button class="btn btn-block btn-success" @onclick="@(() => SendKPI(true,"SendDirectManager"))"><i class="fa-solid fa-check"></i> Duyệt</button>
+                                                        <button class="btn btn-sm btn-block btn-success" @onclick="@(() => SendKPI(true,"SendDirectManager"))"><i class="fa-solid fa-check"></i> Duyệt</button>
                                                     }
                                                     else
                                                     {
@@ -272,7 +272,7 @@
                                                 {
                                                     if ((rankVM.isSendApprove ? 1 : 0) == 0)
                                                     {
-                                                        <button class="btn btn-block btn-danger" @onclick="@(() => SendKPI(false,"SendControlDept"))"><i class="fa-solid fa-ban"></i> Hủy</button>
+                                                        <button class="btn btn-sm btn-block btn-danger" @onclick="@(() => SendKPI(false,"SendControlDept"))"><i class="fa-solid fa-ban"></i> Hủy</button>
                                                     }
                                                 }
                                             }
@@ -282,7 +282,7 @@
                                                 {
                                                     if ((rankVM.isSendApprove ? 1 : 0) == 0)
                                                     {
-                                                        <button class="btn btn-block btn-success" @onclick="@(() => SendKPI(true,"SendControlDept"))"><i class="fa-solid fa-check"></i> Duyệt</button>
+                                                        <button class="btn btn-sm btn-block btn-success" @onclick="@(() => SendKPI(true,"SendControlDept"))"><i class="fa-solid fa-check"></i> Duyệt</button>
                                                     }
                                                     else
                                                     {
@@ -305,14 +305,14 @@
                                                 <span class="text-success">Đã duyệt<br>(@rankVM.TimeSendApprove.ToString("dd/MM/yyyy HH:mm"))</span>
                                                 @if (@rankVM.Approve_Eserial == UserID)
                                                 {
-                                                    <button class="btn btn-block btn-danger" @onclick="@(() => SendKPI(false,"SendApprove"))"><i class="fa-solid fa-ban"></i> Hủy</button>
+                                                    <button class="btn btn-sm btn-block btn-danger" @onclick="@(() => SendKPI(false,"SendApprove"))"><i class="fa-solid fa-ban"></i> Hủy</button>
                                                 }
                                             }
                                             else
                                             {
                                                 if (@rankVM.Approve_Eserial == UserID)
                                                 {
-                                                    <button class="btn btn-block btn-success" @onclick="@(() => SendKPI(true,"SendApprove"))"><i class="fa-solid fa-check"></i> Duyệt</button>
+                                                    <button class="btn btn-sm btn-block btn-success" @onclick="@(() => SendKPI(true,"SendApprove"))"><i class="fa-solid fa-check"></i> Duyệt</button>
                                                 }
                                                 else
                                                 {
@@ -411,11 +411,11 @@
                                                 <td style="min-width: 250px;">
                                                     @if (_kpi.isTarget)
                                                     {
-                                                        <textarea class="form-control text-danger text-bold" disabled>@_kpi.TargetCurrent</textarea>
+                                                        <textarea class="form-control form-control-sm text-danger text-bold" disabled>@_kpi.TargetCurrent</textarea>
 
                                                         <br />
 
-                                                        <textarea class="form-control text-danger text-bold" placeholder="Mục tiêu ưu tiên tháng tới"
+                                                        <textarea class="form-control form-control-sm text-danger text-bold" placeholder="Mục tiêu ưu tiên tháng tới"
                                           @onchange="@((ChangeEventArgs e) => onchange_Target(e, _kpi))"
                                           disabled="@disabled_staff">@_kpi.DescriptionName</textarea>
                                                     }
@@ -425,23 +425,23 @@
                                                     }
                                                 </td>
                                                 <td style="min-width: 200px;">
-                                                    <textarea class="form-control text-danger text-bold" placeholder="Ý kiến nhân viên"
+                                                    <textarea class="form-control form-control-sm text-danger text-bold" placeholder="Ý kiến nhân viên"
                                           @onchange="@((ChangeEventArgs e) => onchange_ActualDescription(e, _kpi))"
                                           disabled="@disabled_staff">@_kpi.ActualDescription</textarea><br />
 
-                                                    <textarea class="form-control text-danger text-bold" placeholder="Ý kiến người đánh giá"
+                                                    <textarea class="form-control form-control-sm text-danger text-bold" placeholder="Ý kiến người đánh giá"
                                           @onchange="@((ChangeEventArgs e) => onchange_ManagerComment(e, _kpi))"
                                           disabled="@disabled_manager">@_kpi.ManagerComment</textarea>
                                                 </td>
 
                                                 <td style="font-size: 14px; background-color: #b3b0f7;">
-                                                    <input class="form-control text-center text-bold @(_kpi.StaffScore>_kpi.Score?"text-success":"") @(_kpi.StaffScore<_kpi.Score?"text-danger":"")"
+                                                    <input class="form-control form-control-sm text-center text-bold @(_kpi.StaffScore>_kpi.Score?"text-success":"") @(_kpi.StaffScore<_kpi.Score?"text-danger":"")"
                                        @onchange="@((ChangeEventArgs e) => onchange_StaffScore(e, _kpi))" value="@_kpi.StaffScore"
                                        disabled="@disabled_staff" onClick="this.select();" />
                                                 </td>
 
                                                 <td style="font-size: 14px; background-color: #FABF8F;">
-                                                    <input class="form-control text-center text-bold @(_kpi.FinalScore>_kpi.Score?"text-success":"") @(_kpi.FinalScore<_kpi.Score?"text-danger":"")"
+                                                    <input class="form-control form-control-sm text-center text-bold @(_kpi.FinalScore>_kpi.Score?"text-success":"") @(_kpi.FinalScore<_kpi.Score?"text-danger":"")"
                                        @onchange="@((ChangeEventArgs e) => onchange_FinalScore(e, _kpi))" value="@_kpi.FinalScore"
                                        disabled="@disabled_manager" onClick="this.select();" />
                                                 </td>
@@ -483,12 +483,12 @@
                                 </tr>
                                 <tr>
                                     <td colspan="5">
-                                        <textarea class="form-control text-danger text-bold"
+                                        <textarea class="form-control form-control-sm text-danger text-bold"
                                           @onchange="@((ChangeEventArgs e) => onchange_StaffNote(e, rankVM))"
                                           disabled="@disabled_staff">@rankVM.StaffNote</textarea>
                                     </td>
                                     <td colspan="4">
-                                        <textarea class="form-control text-danger text-bold"
+                                        <textarea class="form-control form-control-sm text-danger text-bold"
                                           @onchange="@((ChangeEventArgs e) => onchange_ManagerNote(e, rankVM))"
                                           disabled="@disabled_manager">@rankVM.ManagerNote</textarea>
                                     </td>
@@ -518,7 +518,7 @@
                                     @if (KPI_KPIs_Management)
                                     {
                                         <th class="text-center">
-                                            <button type="button" class="btn btn-warning" @onclick="(() => InitializeKPI(String.Empty))"><i class="fa-solid fa-retweet"></i></button>
+                                            <button type="button" class="btn btn-sm btn-warning" @onclick="(() => InitializeKPI(String.Empty))"><i class="fa-solid fa-retweet"></i></button>
                                         </th>
                                     }
                                 </tr>
@@ -589,7 +589,7 @@
                                                         <br />
                                                         @if (!_rankVM.isSendApprove)
                                                         {
-                                                            <button class="btn btn-block btn-success" @onclick="@(() => SendApproveKPI(true,"SendApprove",_rankVM))"><i class="fa-solid fa-check"></i> Duyệt</button>
+                                                            <button class="btn btn-sm btn-block btn-success" @onclick="@(() => SendApproveKPI(true,"SendApprove",_rankVM))"><i class="fa-solid fa-check"></i> Duyệt</button>
                                                         }
                                                     }
                                                 }
@@ -599,7 +599,7 @@
                                             @if (KPI_KPIs_Management)
                                             {
                                                 <td class="text-center">
-                                                    <button type="button" class="btn btn-sm btn-warning" @onclick="(() => InitializeKPI(_rankVM.Eserial))"><i class="fa-solid fa-retweet"></i></button>
+                                                    <button type="button" class="btn btn-sm btn-sm btn-warning" @onclick="(() => InitializeKPI(_rankVM.Eserial))"><i class="fa-solid fa-retweet"></i></button>
                                                 </td>
                                             }
 

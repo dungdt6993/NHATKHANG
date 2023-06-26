@@ -25,7 +25,6 @@ namespace D69soft.Client.Pages.FIN
         [Inject] SysService sysService { get; set; }
         [Inject] OrganizationalChartService organizationalChartService { get; set; }
         [Inject] VoucherService voucherService { get; set; }
-        [Inject] PurchasingService purchasingService { get; set; }
         [Inject] InventoryService inventoryService { get; set; }
 
         protected string UserID;
@@ -37,8 +36,8 @@ namespace D69soft.Client.Pages.FIN
         LogVM logVM = new();
 
         //PermisFunc
-        bool STOCK_InventoryCheck_Update;
-        bool STOCK_InventoryCheck_CancelActive;
+        bool FIN_InventoryCheck_Update;
+        bool FIN_InventoryCheck_CancelActive;
 
         //Filter
         FilterFinVM filterFinVM = new();
@@ -86,11 +85,11 @@ namespace D69soft.Client.Pages.FIN
         {
             filterHrVM.UserID = UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "STOCK_InventoryCheck"))
+            if (await sysService.CheckAccessFunc(UserID, "FIN_InventoryCheck"))
             {
                 logVM.LogUser = UserID;
                 logVM.LogType = "FUNC";
-                logVM.LogName = "STOCK_InventoryCheck";
+                logVM.LogName = "FIN_InventoryCheck";
                 await sysService.InsertLog(logVM);
             }
             else
@@ -98,21 +97,21 @@ namespace D69soft.Client.Pages.FIN
                 navigationManager.NavigateTo("/");
             }
 
-            STOCK_InventoryCheck_Update = await sysService.CheckAccessSubFunc(UserID, "STOCK_InventoryCheck_Update");
-            STOCK_InventoryCheck_CancelActive = await sysService.CheckAccessSubFunc(UserID, "STOCK_InventoryCheck_CancelActive");
+            FIN_InventoryCheck_Update = await sysService.CheckAccessSubFunc(UserID, "FIN_InventoryCheck_Update");
+            FIN_InventoryCheck_CancelActive = await sysService.CheckAccessSubFunc(UserID, "FIN_InventoryCheck_CancelActive");
 
             filter_divisionVMs = await organizationalChartService.GetDivisionList(filterHrVM);
             filterFinVM.DivisionID = filter_divisionVMs.Count() > 0 ? filter_divisionVMs.ElementAt(0).DivisionID : string.Empty;
 
-            filterFinVM.FuncID = "STOCK_InventoryCheck";
+            filterFinVM.FuncID = "FIN_InventoryCheck";
 
             filterFinVM.searchActive = 2;
 
             filterFinVM.StartDate = DateTime.Now;
             filterFinVM.EndDate = DateTime.Now;
 
-            filter_vTypeVMs = await voucherService.GetVTypeVMs("STOCK_InventoryCheck");
-            filter_vSubTypeVMs = await voucherService.GetVSubTypeVMs("STOCK_InventoryCheck");
+            filter_vTypeVMs = await voucherService.GetVTypeVMs("FIN_InventoryCheck");
+            filter_vSubTypeVMs = await voucherService.GetVSubTypeVMs("FIN_InventoryCheck");
 
             await GetVouchers();
 
@@ -404,7 +403,7 @@ namespace D69soft.Client.Pages.FIN
                     return;
                 }
 
-                if (stockVoucherVM.VSubTypeID == "STOCK_InventoryCheck")
+                if (stockVoucherVM.VSubTypeID == "FIN_InventoryCheck")
                 {
                     stockVoucherDetailVMs.ToList().ForEach(x => x.FromStockCode = String.Empty);
                     stockVoucherDetailVMs.ToList().ForEach(x => x.ToStockCode = String.Empty);
@@ -417,7 +416,10 @@ namespace D69soft.Client.Pages.FIN
 
                 stockVoucherVM.IsTypeUpdate = 3;
 
-                await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+                logVM.LogDesc = "Cập nhật chứng từ " + stockVoucherVM.VNumber + "";
+                await sysService.InsertLog(logVM);
+
+                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
             }
             else
             {
@@ -425,10 +427,13 @@ namespace D69soft.Client.Pages.FIN
                 {
                     await voucherService.UpdateVoucher(stockVoucherVM, stockVoucherDetailVMs);
 
-                    await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Voucher");
-                    await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
+                    logVM.LogDesc = "Xóa chứng từ " + stockVoucherVM.VNumber + "";
+                    await sysService.InsertLog(logVM);
 
                     await GetVouchers();
+
+                    await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Voucher");
+                    await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
                 }
                 else
                 {
@@ -454,7 +459,10 @@ namespace D69soft.Client.Pages.FIN
 
                 stockVoucherVM.IsTypeUpdate = 3;
 
-                await js.Toast_Alert("" + question + " thành công!", SweetAlertMessageType.success);
+                logVM.LogDesc = question + " chứng từ " + stockVoucherVM.VNumber + "";
+                await sysService.InsertLog(logVM);
+
+                await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
             }
 
             isLoading = false;

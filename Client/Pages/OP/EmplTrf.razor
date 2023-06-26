@@ -8,7 +8,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <span style="color:#6f42c1">@dutyRosterVM.Eserial - @dutyRosterVM.LastName @dutyRosterVM.MiddleName @dutyRosterVM.FirstName</span>
+                    <span style="color:#ffc107">@dutyRosterVM.Eserial - @dutyRosterVM.LastName @dutyRosterVM.MiddleName @dutyRosterVM.FirstName</span>
                 </h5>
 
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -63,7 +63,7 @@
                                                         }
                                                         else
                                                         {
-                                                            <InputText type="text" class="form-control text-uppercase rounded-0 dutyroster-input"
+                                                            <InputText type="text" class="form-control form-control-sm text-uppercase rounded-0 dutyroster-input"
                                                            id="@dutyRosterVM.InputID"
                                                            @attributes="@dutyRosterVM.InputAttributes"
                                                            onClick="this.select();"
@@ -84,7 +84,7 @@
                         <div class="col-sm-9">
                             <div class="form-group">
                                 <label>Vị trí làm việc:</label>
-                                <InputSelect class="selectpicker form-control" data-style="btn-selectpicker"
+                                <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker"
                                              data-container="body" data-live-search="true"
                                              ValueExpression="@(()=>dutyRosterVM.PositionID)"
                                              Value="@dutyRosterVM.PositionID"
@@ -159,7 +159,7 @@
                     </BlazoredTextEditor>
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save"></i> Lưu</button>
                 </div>
             </EditForm>
 
@@ -173,7 +173,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <span style="color:#6f42c1">@tenderScheduleVM.TenderName</span>
+                    <span style="color:#ffc107">@tenderScheduleVM.TenderName</span>
                 </h5>
 
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -186,7 +186,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Điều động:</label>
                         <div class="col-sm-9">
-                            <InputSelect class="selectpicker form-control" data-style="btn-selectpicker"
+                            <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker"
                                          data-container="body" data-live-search="true"
                                          ValueExpression="@(()=>tenderScheduleVM.ShiftID)"
                                          Value="@tenderScheduleVM.ShiftID"
@@ -244,7 +244,7 @@
                     <div class="col-sm-9">
 
                         <div class="input-group">
-                            <DateRangePicker SingleDatePicker="true" class="form-control" name="date-mask"
+                            <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask"
                                              Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))"
                                              @bind-StartDate="filterHrVM.dDate" OnRangeSelect="OnRangeSelect_dDate" />
 
@@ -259,7 +259,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DivisionID)"
                                  Value="@filterHrVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
@@ -276,7 +276,7 @@
 
             <div class="col-md-3">
                 <div class="form-group">
-                    <select class="selectpicker form-control" data-container="body" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Ca làm việc-----" @bind="onchange_filter_shift">
+                    <select class="selectpicker form-control form-control-sm" data-container="body" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Ca làm việc-----" @bind="onchange_filter_shift">
                         @if (shiftVMs != null)
                         {
                             @foreach (var _shiftVM in shiftVMs.Where(x => x.isActive))
@@ -290,7 +290,7 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <select class="selectpicker form-control" data-container="body" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                    <select class="selectpicker form-control form-control-sm" data-container="body" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
                         @if (position_filter_list != null)
                         {
                             @foreach (var positiongroup_filter in position_filter_list.Select(x => new { x.PositionGroupID, x.PositionGroupName }).Distinct())
@@ -303,7 +303,7 @@
             </div>
 
             <div class="col-md-1">
-                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetEmplTrfList())">
+                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetEmplTrfList())">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -315,7 +315,7 @@
 <section class="content">
     <div class="container-fluid">
 
-        <div class="card card-purple card-outline table-responsive p-0">
+        <div class="card card-warning card-outline table-responsive p-0">
             <!-- /.card-header -->
             @if (dutyRosterVMs != null)
             {
@@ -462,6 +462,11 @@
                         }
                     </tbody>
                 </table>
+
+                if (dutyRosterVMs.Count() <= 0)
+                {
+                    <img class="img-no-result" src="images/_default/no-results.png" />
+                }
             }
 
             <!-- /.card-body -->

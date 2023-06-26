@@ -775,6 +775,8 @@ namespace D69soft.Client.Pages.HR
             contractTypeVMs = await profileService.GetContractTypeList();
             workTypeVMs = await profileService.GetWorkTypeList();
 
+            permissionUserVMs = await authService.GetPermissionUser(UserID);
+
             salaryDefVMs = await profileService.GetSalaryDef();
 
             if (profileVM.IsTypeUpdate == 0)
@@ -816,7 +818,6 @@ namespace D69soft.Client.Pages.HR
             }
             else
             {
-                permissionUserVMs = await authService.GetPermissionUser(profileVM.Eserial, UserID);
                 profileHistorys = await profileService.GetProfileHistory(profileVM.Eserial);
 
                 if (!await profileService.CkUpdateJobHistory(profileVM.Eserial))
@@ -948,7 +949,6 @@ namespace D69soft.Client.Pages.HR
 
             if (profileVM.IsTypeUpdate == 0)
             {
-
                 logVM.LogDesc = "Thêm mới hồ sơ " + profileVM.Eserial + "";
                 await sysService.InsertLog(logVM);
 

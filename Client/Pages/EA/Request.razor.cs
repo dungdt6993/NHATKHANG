@@ -153,7 +153,7 @@ namespace D69soft.Client.Pages.EA
             StateHasChanged();
         }
 
-        //Profile
+        //GetRequest
         protected async Task GetRequests()
         {
             isLoading = true;
@@ -185,11 +185,11 @@ namespace D69soft.Client.Pages.EA
             return new ItemsProviderResult<RequestVM>(requestVMs.DistinctBy(x => new { x.RequestCode }).Skip(request.StartIndex).Take(request.Count), requestVMs.DistinctBy(x => new { x.RequestCode }).Count());
         }
 
-        private async Task ShowEntity(ChangeEventArgs e)
+        private async Task GetMoreRequests()
         {
             isLoading = true;
 
-            filterFinVM.ShowEntity = int.Parse(e.Value.ToString());
+            filterFinVM.ShowEntity = filterFinVM.ShowEntity + 50;
 
             await GetRequests();
 
@@ -248,8 +248,8 @@ namespace D69soft.Client.Pages.EA
                             stockVoucherVM.DivisionID = _requestVM.DivisionID;
 
                             stockVoucherVM.IsTypeUpdate = 0;
-                            stockVoucherVM.VTypeID = "STOCK_Transfer";
-                            stockVoucherVM.VSubTypeID = "STOCK_Transfer_Internal";
+                            stockVoucherVM.VTypeID = "FIN_Transfer";
+                            stockVoucherVM.VSubTypeID = "FIN_Transfer_Internal";
                             stockVoucherVM.Reference_VNumber = _requestVM.RequestCode;
                             stockVoucherVM.VDesc = $"Yêu cầu cấp hàng số {_requestVM.RequestCode} - {_requestVM.ReasonOfRequest} ";
                             stockVoucherVM.VDate = _requestVM.TimeSendApprove;
@@ -263,7 +263,7 @@ namespace D69soft.Client.Pages.EA
 
                 await requestService.SendApprove(_requestVM, type);
 
-                logVM.LogDesc = str + " đơn số " + _requestVM.RequestCode + " thành công!";
+                logVM.LogDesc = str + " đơn số " + _requestVM.RequestCode;
                 await sysService.InsertLog(logVM);
 
                 await GetRequests();

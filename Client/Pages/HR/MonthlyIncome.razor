@@ -25,7 +25,7 @@
                             <label class="col-sm-2 col-form-label">Đơn giá:</label>
                             <div class="col-sm-5">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" name="currency-mask" @bind="monthlyIncomeTrnOtherVM.UnitPrice" onClick="this.select();"></input>
+                                    <input type="text" class="form-control form-control-sm" name="currency-mask" @bind="monthlyIncomeTrnOtherVM.UnitPrice" onClick="this.select();"></input>
                                     <div class="input-group-append">
                                         <div class="input-group-text"><i class="fa-solid fa-dong-sign"></i></div>
                                     </div>
@@ -39,7 +39,7 @@
                                     <div class="input-group-prepend">
                                         <div class="input-group-text"><i class="fa-solid fa-xmark"></i></div>
                                     </div>
-                                    <input type="text" class="form-control" name="currency-mask" @bind="monthlyIncomeTrnOtherVM.Qty" onClick="this.select();"></input>
+                                    <input type="text" class="form-control form-control-sm" name="currency-mask" @bind="monthlyIncomeTrnOtherVM.Qty" onClick="this.select();"></input>
                                 </div>
                                 <ValidationMessage For="@(() => monthlyIncomeTrnOtherVM.Qty)" />
                             </div>
@@ -49,7 +49,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Ghi chú:</label>
                         <div class="col-sm-10">
-                            <InputTextArea class="form-control" @bind-Value="monthlyIncomeTrnOtherVM.Note" />
+                            <InputTextArea class="form-control form-control-sm" @bind-Value="monthlyIncomeTrnOtherVM.Note" />
                             <ValidationMessage For="@(() => monthlyIncomeTrnOtherVM.Note)" />
                         </div>
                     </div>
@@ -57,8 +57,8 @@
 
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times"></i> Thoát</button>
-                    <button type="submit" class="btn btn-success">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="fas fa-times"></i> Thoát</button>
+                    <button type="submit" class="btn btn-sm btn-success">
                         <i class="fas fa-save"></i> Thực hiện
                     </button>
                 </div>
@@ -76,7 +76,7 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Tháng:</label>
                     <div class="col-sm-9">
-                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                            ValueExpression="@(()=>filterHrVM.Month)"
                                            Value="@filterHrVM.Month"
                                            ValueChanged="@((int value) => onchange_filter_month(value))">
@@ -96,7 +96,7 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Năm:</label>
                     <div class="col-sm-9">
-                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                            ValueExpression="@(()=>filterHrVM.Year)"
                                            Value="@filterHrVM.Year"
                                            ValueChanged="@((int value) => onchange_filter_year(value))">
@@ -114,7 +114,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DivisionID)"
                                  Value="@filterHrVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
@@ -132,7 +132,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <div class="form-group">
-                        <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                      ValueExpression="@(()=>filterHrVM.DepartmentID)"
                                      Value="@filterHrVM.DepartmentID"
                                      ValueChanged="@((string value) => onchange_filter_department(value))">
@@ -151,7 +151,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.SectionID)"
                                  Value="@filterHrVM.SectionID"
                                  ValueChanged="@((string value) => onchange_filter_section(value))">
@@ -169,7 +169,7 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
                         @if (position_filter_list != null)
                         {
                             @foreach (var positiongroup_filter in position_filter_list.Select(x => new { x.PositionGroupID, x.PositionGroupName }).Distinct())
@@ -183,7 +183,7 @@
 
             <div class="col-md-3">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
                                  ValueExpression="@(()=>filterHrVM.Eserial)"
                                  Value="@filterHrVM.Eserial"
                                  ValueChanged="@((string value) => onchange_filter_eserial(value))">
@@ -201,7 +201,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
                                  ValueExpression="@(()=>filterHrVM.TrnCode)"
                                  Value="@filterHrVM.TrnCode"
                                  ValueChanged="@((int value) => onchange_filter_trncode(value))">
@@ -219,7 +219,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
                                  ValueExpression="@(()=>filterHrVM.TrnSubCode)"
                                  Value="@filterHrVM.TrnSubCode"
                                  ValueChanged="@((int value) => onchange_filter_trnsubcode(value))">
@@ -236,7 +236,7 @@
             </div>
 
             <div class="col-md-1">
-                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetMonthlyIncomeTrnOtherList(0))">
+                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetMonthlyIncomeTrnOtherList(0))">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -246,7 +246,7 @@
 
 <section class="content">
     <div class="container-fluid">
-        <div class="card card-purple card-outline">
+        <div class="card card-warning card-outline">
 
             <div class="card-header text-right">
                 @if (IsOpenFunc)
@@ -254,20 +254,20 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="input-group">
-                                <input type="text" class="form-control form-control-border border-width-2" @bind="filterHrVM.strDataFromExcel" placeholder="Dữ liệu từ Excel...">
-                                <button type="button" class="btn btn-success" @onclick="()=>GetDataPayrollFromExcel()" data-title="Đẩy dữ liệu từ Excel"><i class="fas fa-upload"></i></button>
-                                <button type="button" class="btn bg-purple" @onclick="()=>GetMonthlyIncomeTrnOtherList(1)"><i class="fas fa-search"></i> <i class="fa-solid fa-file-excel"></i></button>
+                                <input type="text" class="form-control form-control-sm form-control-border border-width-2" @bind="filterHrVM.strDataFromExcel" placeholder="Dữ liệu từ Excel...">
+                                <button type="button" class="btn btn-sm btn-success" @onclick="()=>GetDataPayrollFromExcel()" data-title="Đẩy dữ liệu từ Excel"><i class="fas fa-upload"></i></button>
+                                <button type="button" class="btn btn-sm bg-warning" @onclick="()=>GetMonthlyIncomeTrnOtherList(1)"><i class="fas fa-search"></i> <i class="fa-solid fa-file-excel"></i></button>
                             </div>
                         </div>
 
                         <div class="col-md-6">
-                            <button type="button" class="btn btn-success" @onclick="(() => InitializeModalUpdate_MonthlyIncomeTrnOther(0,monthlyIncomeTrnOtherVM))"><i class="fa-solid fa-circle-plus"></i> Tạo giao dịch</button>
+                            <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_MonthlyIncomeTrnOther(0,monthlyIncomeTrnOtherVM))"><i class="fa-solid fa-circle-plus"></i> Tạo giao dịch</button>
                             @if (monthlyIncomeTrnOtherVMs != null)
                             {
                                 @if (monthlyIncomeTrnOtherVMs.Where(x => x.IsChecked).Count() > 0)
                                 {
-                                    <button type="button" class="btn btn-secondary" @onclick="()=>UpdateMITrnOtherByIsCheck(3)"><i class="fa-solid fa-pencil"></i> Cập nhật giao dịch</button>
-                                    <button type="button" class="btn btn-danger" @onclick="()=>UpdateMITrnOtherByIsCheck(2)"><i class="fa-solid fa-trash-can"></i> Xóa</button>
+                                    <button type="button" class="btn btn-sm btn-secondary" @onclick="()=>UpdateMITrnOtherByIsCheck(3)"><i class="fa-solid fa-pencil"></i> Cập nhật giao dịch</button>
+                                    <button type="button" class="btn btn-sm btn-danger" @onclick="()=>UpdateMITrnOtherByIsCheck(2)"><i class="fa-solid fa-trash-can"></i> Xóa</button>
                                 }
                             }
                         </div>
@@ -288,7 +288,7 @@
                                     @if (monthlyIncomeTrnOtherVMs != null)
                                     {
                                         <div class="custom-control custom-checkbox">
-                                            <input class="custom-control-input custom-control-input-purple" type="checkbox" id="ckAll" @onchange="EventArgs => { CheckAll(EventArgs.Value); }" checked="@filterHrVM.IsChecked">
+                                            <input class="custom-control-input custom-control-input-warning" type="checkbox" id="ckAll" @onchange="EventArgs => { CheckAll(EventArgs.Value); }" checked="@filterHrVM.IsChecked">
                                             <label for="ckAll" class="custom-control-label"></label>
                                         </div>
                                     }
@@ -311,7 +311,7 @@
                                 <tr>
                                     <td class="text-center">
                                         <div class="custom-control custom-checkbox">
-                                            <input class="custom-control-input custom-control-input-purple custom-control-input-outline" id="@_monthlyIncomeTrnOtherVM.SeqMITrnOther" type="checkbox" @bind="_monthlyIncomeTrnOtherVM.IsChecked">
+                                            <input class="custom-control-input custom-control-input-warning custom-control-input-outline" id="@_monthlyIncomeTrnOtherVM.SeqMITrnOther" type="checkbox" @bind="_monthlyIncomeTrnOtherVM.IsChecked">
                                             <label for="@_monthlyIncomeTrnOtherVM.SeqMITrnOther" class="custom-control-label"></label>
                                         </div>
                                     </td>
@@ -348,7 +348,7 @@
                                     <td class="text-center">
                                         @if (IsOpenFunc)
                                         {
-                                            <button class="btn btn-default btn-xs" data-target="#InitializeModalUpdate_MonthlyIncomeTrnOther" data-toggle="modal" @onclick="(() => InitializeModalUpdate_MonthlyIncomeTrnOther(1,_monthlyIncomeTrnOtherVM))"><i class="fa-solid fa-pen"></i></button>
+                                            <button class="btn btn-sm btn-default btn-xs" data-target="#InitializeModalUpdate_MonthlyIncomeTrnOther" data-toggle="modal" @onclick="(() => InitializeModalUpdate_MonthlyIncomeTrnOther(1,_monthlyIncomeTrnOtherVM))"><i class="fa-solid fa-pen"></i></button>
                                         }
                                     </td>
                                 </tr>

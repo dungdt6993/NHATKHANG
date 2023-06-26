@@ -165,8 +165,8 @@ namespace D69soft.Client.Pages.POS
                     stockVoucherVM.DivisionID = pointOfSaleVMs.Where(x => x.POSCode == invoiceVM.POSCode).Select(x => x.DivisionID).First();
 
                     stockVoucherVM.IsTypeUpdate = 0;
-                    stockVoucherVM.VTypeID = "STOCK_Output";
-                    stockVoucherVM.VSubTypeID = "STOCK_Output_SalePOS";
+                    stockVoucherVM.VTypeID = "FIN_Output";
+                    stockVoucherVM.VSubTypeID = "FIN_Output_SalePOS";
                     stockVoucherVM.Reference_VNumber = invoiceVM.CheckNo;
                     stockVoucherVM.Reference_StockCode = pointOfSaleVMs.Where(x => x.POSCode == invoiceVM.POSCode).Select(x => x.StockCode).First();
                     stockVoucherVM.Reference_VSubTypeID = "POS_Cashier";

@@ -10,7 +10,7 @@ namespace D69soft.Shared.Models.Entities.FIN
     {
         public string StockCode { get; set; }
         public string StockName { get; set; }
-        public string SAddress { get; set; }
-        public bool SActive { get; set; }
+        public string StockAddress { get; set; }
+        public bool StockActive { get; set; }
     }
 }

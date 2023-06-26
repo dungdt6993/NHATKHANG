@@ -12,7 +12,7 @@
 
             <div class="col-md-3">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DivisionID)"
                                  Value="@filterHrVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
@@ -29,7 +29,7 @@
 
             <div class="col-sm-4">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DepartmentID)"
                                  Value="@filterHrVM.DepartmentID"
                                  ValueChanged="@((string value) => onchange_filter_department(value))">
@@ -49,7 +49,7 @@
                 <div class="form-group">
                     <DateRangePicker Ranges="DateRanges" Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))" ApplyLabel="Thực hiện" CancelLabel="Hủy" CustomRangeLabel="Chọn ngày" OnRangeSelect="OnRangeSelect">
                         <PickerTemplate Context="c">
-                            <div id="@c.Id" @onclick="c.Toggle" class="form-control" style="cursor: pointer;">
+                            <div id="@c.Id" @onclick="c.Toggle" class="form-control form-control-sm" style="cursor: pointer;">
                                 <i class="fa-solid fa-calendar-days"></i>&nbsp;
 
                                 <span>@c.FormattedRange @(string.IsNullOrEmpty(c.FormattedRange) ? "Chọn ngày..." : "")</span>
@@ -66,7 +66,7 @@
             <div class="col-sm-2">
                 @if (EA_Request_Create)
                 {
-                    <a href="/EA/Cart" class="btn btn-block btn-success"><i class="fa-solid fa-xl fa-plus"></i> Tạo mới yêu cầu</a>
+                    <a href="/EA/Cart" class="btn btn-sm btn-block btn-success"><i class="fa-solid fa-xl fa-plus"></i> Tạo mới yêu cầu</a>
                 }
             </div>
         </div>
@@ -182,7 +182,7 @@
                                                         <td class="text-center">
                                                             @if (!_requestVM.isSendApprove && (_requestVM.DirectManager_Eserial == UserID || _requestVM.ControlDept_Eserial == UserID || _requestVM.Approve_Eserial == UserID))
                                                             {
-                                                                <input class="form-control text-center text-bold @(_requestVM_detail.QtyApproved>_requestVM_detail.Qty?"text-success":"") @(_requestVM_detail.QtyApproved<_requestVM_detail.Qty?"text-danger":"")"
+                                                                <input class="form-control form-control-sm text-center text-bold @(_requestVM_detail.QtyApproved>_requestVM_detail.Qty?"text-success":"") @(_requestVM_detail.QtyApproved<_requestVM_detail.Qty?"text-danger":"")"
                                                            @onchange="@((ChangeEventArgs e) => onchange_QtyApproved(e, _requestVM_detail))" value="@_requestVM_detail.QtyApproved"
                                                            onClick="this.select();" style="min-width: 50px;" />
                                                             }
@@ -230,7 +230,7 @@
                                                                 }
                                                                 else
                                                                 {
-                                                                    <textarea class="form-control" placeholder="Ghi chú..." @onchange="@((ChangeEventArgs e) => onchange_RDNote(e, _requestVM_detail))" value="@_requestVM_detail.RDNote" />
+                                                                    <textarea class="form-control form-control-sm" placeholder="Ghi chú..." @onchange="@((ChangeEventArgs e) => onchange_RDNote(e, _requestVM_detail))" value="@_requestVM_detail.RDNote" />
                                                                 }
                                                             }
                                                         </td>
@@ -239,7 +239,7 @@
                                             </tbody>
                                         </table>
 
-                                        <table class="table table-sm table-bordered tblFontSizeMin">
+                                        <table class="table table-sm tblFontSizeMin">
                                             <thead class="thead-light">
                                                 <tr>
                                                     <th class="text-center">
@@ -273,7 +273,7 @@
                                                         {
                                                             if ((_requestVM.isSendApprove ? 1 : 0) == 0)
                                                             {
-                                                                <button class="btn btn-danger" @onclick="@(() => SendApprove(false,"SendDelRequest",_requestVM))"><i class="fa-solid fa-ban"></i> Hủy</button>
+                                                                <button class="btn btn-sm btn-danger" @onclick="@(() => SendApprove(false,"SendDelRequest",_requestVM))"><i class="fa-solid fa-ban"></i> Hủy</button>
                                                             }
                                                         }
                                                     </th>
@@ -293,7 +293,7 @@
                                                                 {
                                                                     if ((_requestVM.isSendControlDept ? 1 : 0) + (_requestVM.isSendApprove ? 1 : 0) == 0)
                                                                     {
-                                                                        <button class="btn btn-danger" @onclick="@(() => SendApprove(false,"SendDirectManager",_requestVM))"><i class="fa-solid fa-ban"></i> Hủy</button>
+                                                                        <button class="btn btn-sm btn-danger" @onclick="@(() => SendApprove(false,"SendDirectManager",_requestVM))"><i class="fa-solid fa-ban"></i> Hủy</button>
                                                                     }
                                                                 }
                                                             }
@@ -303,7 +303,7 @@
                                                                 {
                                                                     if ((_requestVM.isSendControlDept ? 1 : 0) + (_requestVM.isSendApprove ? 1 : 0) == 0)
                                                                     {
-                                                                        <button class="btn btn-success" @onclick="@(() => SendApprove(true,"SendDirectManager",_requestVM))"><i class="fa-solid fa-check"></i> Duyệt</button>
+                                                                        <button class="btn btn-sm btn-success" @onclick="@(() => SendApprove(true,"SendDirectManager",_requestVM))"><i class="fa-solid fa-check"></i> Duyệt</button>
                                                                     }
                                                                     else
                                                                     {
@@ -333,7 +333,7 @@
                                                                 {
                                                                     if ((_requestVM.isSendApprove ? 1 : 0) == 0)
                                                                     {
-                                                                        <button class="btn btn-danger" @onclick="@(() => SendApprove(false,"SendControlDept",_requestVM))"><i class="fa-solid fa-ban"></i> Hủy</button>
+                                                                        <button class="btn btn-sm btn-danger" @onclick="@(() => SendApprove(false,"SendControlDept",_requestVM))"><i class="fa-solid fa-ban"></i> Hủy</button>
                                                                     }
                                                                 }
                                                             }
@@ -343,7 +343,7 @@
                                                                 {
                                                                     if ((_requestVM.isSendApprove ? 1 : 0) == 0)
                                                                     {
-                                                                        <button class="btn btn-success" @onclick="@(() => SendApprove(true,"SendControlDept",_requestVM))"><i class="fa-solid fa-check"></i> Duyệt</button>
+                                                                        <button class="btn btn-sm btn-success" @onclick="@(() => SendApprove(true,"SendControlDept",_requestVM))"><i class="fa-solid fa-check"></i> Duyệt</button>
                                                                     }
                                                                     else
                                                                     {
@@ -371,14 +371,14 @@
                                                                 <br />
                                                                 @if (_requestVM.Approve_Eserial == UserID && !_requestVM.VActive)
                                                                 {
-                                                                    <button class="btn btn-danger" @onclick="@(() => SendApprove(false,"SendApprove",_requestVM))"><i class="fa-solid fa-ban"></i> Hủy</button>
+                                                                    <button class="btn btn-sm btn-danger" @onclick="@(() => SendApprove(false,"SendApprove",_requestVM))"><i class="fa-solid fa-ban"></i> Hủy</button>
                                                                 }
                                                             }
                                                             else
                                                             {
                                                                 if (_requestVM.Approve_Eserial == UserID)
                                                                 {
-                                                                    <button class="btn btn-success" @onclick="@(() => SendApprove(true,"SendApprove",_requestVM))"><i class="fa-solid fa-check"></i> Duyệt</button>
+                                                                    <button class="btn btn-sm btn-success" @onclick="@(() => SendApprove(true,"SendApprove",_requestVM))"><i class="fa-solid fa-check"></i> Duyệt</button>
                                                                 }
                                                                 else
                                                                 {
@@ -392,6 +392,7 @@
                                             </tbody>
                                         </table>
                                     </div>
+
                                 </ItemContent>
                                 <Placeholder>
                                     <p>Đang tải dữ liệu...</p>
@@ -401,6 +402,10 @@
                             @if (requestVMs.Count() <= 0)
                             {
                                 <img class="img-no-result" src="images/_default/no-results.png" />
+                            }
+                            else
+                            {
+                                <a class="btn btn-sm btn-block btn-outline-secondary" @onclick="(() => GetMoreRequests())"><i class="fa-solid fa-eye"></i> Hiển thị thêm...</a>
                             }
                         }
 
@@ -413,15 +418,7 @@
             @if (requestVMs != null)
             {
                 <div class="card-footer text-muted">
-                    Hiển thị:
-                    <select class="form-select-sm" style="width: 100px;" @onchange="ShowEntity">
-                        <option value="@filterFinVM.ShowEntity" selected>@filterFinVM.ShowEntity</option>
-                        <option value="0">Tất cả</option>
-                    </select>
-
-                    <b>@requestVMs.DistinctBy(x => new {x.RequestCode}).Count()</b>
-
-                    bản ghi
+                    Hiển thị: <b>@requestVMs.DistinctBy(x => new {x.RequestCode}).Count()</b> bản ghi
                 </div>
             }
 

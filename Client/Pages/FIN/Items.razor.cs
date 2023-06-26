@@ -8,7 +8,6 @@ using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extensions;
-using D69soft.Shared.Models.ViewModels.HR;
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -82,11 +81,11 @@ namespace D69soft.Client.Pages.FIN
         {
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "STOCK_Items"))
+            if (await sysService.CheckAccessFunc(UserID, "FIN_Items"))
             {
                 logVM.LogUser = UserID;
                 logVM.LogType = "FUNC";
-                logVM.LogName = "STOCK_Items";
+                logVM.LogName = "FIN_Items";
                 await sysService.InsertLog(logVM);
             }
             else
@@ -124,10 +123,26 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
+            itemsVM = new();
+
             filterFinVM.searchText = String.Empty;
             search_itemsVMs = itemsVMs = await inventoryService.GetItemsList(filterFinVM);
 
             isLoading = false;
+        }
+
+        private void onclick_Selected(ItemsVM _itemsVM)
+        {
+            itemsVM = _itemsVM == itemsVM ? new() : _itemsVM;
+        }
+
+        private string SetSelected(ItemsVM _itemsVM)
+        {
+            if (itemsVM.ICode != _itemsVM.ICode)
+            {
+                return string.Empty;
+            }
+            return "selected";
         }
 
         private void SortTable(string columnName)
@@ -286,7 +301,7 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
-        private async Task InitializeModalUpdate_Items(int _IsTypeUpdate, ItemsVM _itemsVM)
+        private async Task InitializeModalUpdate_Items(int _IsTypeUpdate)
         {
             isLoading = true;
 
@@ -298,8 +313,6 @@ namespace D69soft.Client.Pages.FIN
 
             if (_IsTypeUpdate == 0)
             {
-                itemsVM = new();
-
                 itemsVM.IURLPicture1 = "/images/_default/no-image.png";
                 itemsVM.IClsCode = filterFinVM.IClsCode;
                 itemsVM.IGrpCode = filterFinVM.IGrpCode;
@@ -308,7 +321,6 @@ namespace D69soft.Client.Pages.FIN
 
             if (_IsTypeUpdate == 1)
             {
-                itemsVM = _itemsVM;
                 quantitativeItemsVMs = await inventoryService.GetQuantitativeItems(itemsVM.ICode);
             }
 
@@ -384,8 +396,12 @@ namespace D69soft.Client.Pages.FIN
             }
         }
 
-        private async Task UpdateItems()
+        private async Task UpdateItems(EditContext _formItemsVM, int _IsTypeUpdate)
         {
+            itemsVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formItemsVM.Validate()) return;
+
             isLoading = true;
 
             if (itemsVM.IsTypeUpdate != 2)
@@ -414,6 +430,7 @@ namespace D69soft.Client.Pages.FIN
                 }
 
                 itemsVM.ICode = await inventoryService.UpdateItems(itemsVM, quantitativeItemsVMs);
+                itemsVM.IsTypeUpdate = 1;
 
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
             }

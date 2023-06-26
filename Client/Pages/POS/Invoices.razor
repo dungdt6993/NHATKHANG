@@ -15,7 +15,7 @@
 
 				<div class="col-12 col-sm-3">
 
-					<div class="card card-purple card-outline">
+					<div class="card card-warning card-outline">
 						<div class="card-header">
 
 							<div class="d-flex justify-content-between">
@@ -44,7 +44,7 @@
 						</div>
 					</div>
 
-					<div class="card card-purple card-outline">
+					<div class="card card-warning card-outline">
 						<div class="card-header">
 							<div class="d-flex justify-content-between">
 								<h3 class="card-title">Thời gian</h3>
@@ -88,7 +88,7 @@
 						</div>
 					</div>
 
-					<div class="card card-purple card-outline">
+					<div class="card card-warning card-outline">
 						<div class="card-header">
 							<div class="d-flex justify-content-between">
 								<h3 class="card-title">Trạng thái</h3>
@@ -125,7 +125,7 @@
 						</div>
 					</div>
 
-					<div class="card card-purple card-outline">
+					<div class="card card-warning card-outline">
 						<div class="card-header">
 							<div class="d-flex justify-content-between">
 								<h3 class="card-title">Phương thức</h3>
@@ -156,7 +156,7 @@
 				</div>
 
 				<div class="col-12 col-sm-9">
-					<div class="card card-purple card-outline">
+					<div class="card card-warning card-outline">
 						<div class="card-header text-right">
 							<button type="button" class="btn btn-secondary" @onclick="(() => SyncDataSmile())"><i class="fa-solid fa-arrows-rotate"></i> Đồng bộ dữ liệu SMILE</button>
 							@if (!String.IsNullOrEmpty(invoiceVM.CheckNo))
@@ -183,11 +183,11 @@
 									}
 								}
 
-								<button type="button" class="btn bg-purple" @onclick="(() => PrintInvoice())"><i class="fas fa-print"></i> In</button>
+								<button type="button" class="btn bg-warning" @onclick="(() => PrintInvoice())"><i class="fas fa-print"></i> In</button>
 							}
 						</div>
 
-						<div class="card-body table-responsive p-0" style="overflow: auto;height: calc(100vh - 211px);">
+						<div class="card-body table-responsive p-0" style="overflow: auto;height: calc(100vh - 180px);">
 							@if (invoiceVMs != null)
 							{
 								<table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
@@ -242,6 +242,12 @@
 									</Virtualize>
 								</tbody>
 							</table>
+
+								if (invoiceVMs.Count() <= 0)
+								{
+									<img class="img-no-result" src="images/_default/no-results.png" />
+								}
+
 							}
 						</div>
 

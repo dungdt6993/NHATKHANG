@@ -13,7 +13,7 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Tháng:</label>
                     <div class="col-sm-9">
-                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                            ValueExpression="@(()=>filterHrVM.Month)"
                                            Value="@filterHrVM.Month"
                                            ValueChanged="@((int value) => onchange_filter_month(value))">
@@ -33,7 +33,7 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Năm:</label>
                     <div class="col-sm-9">
-                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                            ValueExpression="@(()=>filterHrVM.Year)"
                                            Value="@filterHrVM.Year"
                                            ValueChanged="@((int value) => onchange_filter_year(value))">
@@ -53,7 +53,7 @@
             {
                 <div class="col-md-2">
                     <div class="form-group">
-                        <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DivisionID)"
                                  Value="@filterHrVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
@@ -71,7 +71,7 @@
 
                 <div class="col-md-4">
                     <div class="form-group">
-                        <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DepartmentID)"
                                  Value="@filterHrVM.DepartmentID"
                                  ValueChanged="@((string value) => onchange_filter_department(value))">
@@ -89,7 +89,7 @@
 
                 <div class="col-md-2">
                     <div class="form-group">
-                        <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.SectionID)"
                                  Value="@filterHrVM.SectionID"
                                  ValueChanged="@((string value) => onchange_filter_section(value))">
@@ -107,7 +107,7 @@
 
                 <div class="col-md-7">
                     <div class="form-group">
-                        <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                        <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
                             @if (position_filter_list != null)
                             {
                                 @foreach (var positiongroup_filter in position_filter_list.Select(x=> new {x.PositionGroupID, x.PositionGroupName}).Distinct())
@@ -121,7 +121,7 @@
 
                 <div class="col-md-4">
                     <div class="form-group">
-                        <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                        <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
                                  ValueExpression="@(()=>filterHrVM.Eserial)"
                                  Value="@filterHrVM.Eserial"
                                  ValueChanged="@((string value) => onchange_filter_eserial(value))">
@@ -143,7 +143,7 @@
                 {
                     <div class="col-md-7">
                         <div class="form-group">
-                            <select class="selectpicker form-control" data-style="btn-selectpicker" data-show-subtext="true">
+                            <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-show-subtext="true">
                                 <option data-subtext="@profileUserVM.Eserial">@profileUserVM.LastName @profileUserVM.MiddleName @profileUserVM.FirstName</option>
                             </select>
                         </div>
@@ -152,7 +152,7 @@
             }
 
             <div class="col-md-1">
-                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetAttendanceRecordList())">
+                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetAttendanceRecordList())">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -162,19 +162,19 @@
 
 <section class="content">
     <div class="container-fluid">
-        <div class="card card-purple card-outline">
+        <div class="card card-warning card-outline">
 
             <div class="card-header text-right">
                 @if (IsOpenFunc)
                 {
                     @if (HR_AttendanceRecord_CalcFingerData)
                     {
-                        <button type="button" class="btn btn-secondary" data-target="#InitializeModal_CalcFingerData" data-toggle="modal" @onclick="()=>CalcFingerData()"><i class="fa-solid fa-calculator"></i> Tính dữ liệu chấm công</button>
+                        <button type="button" class="btn btn-sm btn-secondary" data-target="#InitializeModal_CalcFingerData" data-toggle="modal" @onclick="()=>CalcFingerData()"><i class="fa-solid fa-calculator"></i> Tính dữ liệu chấm công</button>
                     }
                 }
                 @if(!String.IsNullOrWhiteSpace(filterHrVM.Eserial))
                 {
-                   <button type="button" class="btn btn-info" @onclick="()=>InitializeModal_DayOffDetail(filterHrVM.Eserial)"><i class="fa-solid fa-clipboard-list"></i> Kiểm tra ngày nghỉ</button> 
+                   <button type="button" class="btn btn-sm btn-info" @onclick="()=>InitializeModal_DayOffDetail(filterHrVM.Eserial)"><i class="fa-solid fa-clipboard-list"></i> Kiểm tra ngày nghỉ</button> 
                 }
             </div>
             <!-- /.card-header -->
@@ -294,7 +294,7 @@
                                                     }
                                                     else
                                                     {
-                                                        <InputText type="text" class="form-control text-uppercase rounded-0 dutyroster-input"
+                                                        <InputText type="text" class="form-control form-control-sm text-uppercase rounded-0 dutyroster-input"
                                                id="@_arVM.InputID"
                                                    @attributes="@_arVM.InputAttributes"
                                                onClick="this.select();"
@@ -313,14 +313,14 @@
                                             {
                                                 @if (_arVM.isLock == 0)
                                                 {
-                                                    <InputTextArea type="text" style="min-width:110px;" class="form-control" placeholder="Giải trình chấm công"
+                                                    <InputTextArea type="text" style="min-width:110px;" class="form-control form-control-sm" placeholder="Giải trình chấm công"
                                                    ValueExpression="@(() => _arVM.Explain)"
                                                    Value="@_arVM.Explain"
                                                    ValueChanged="@((string value) => onchange_explain(value, _arVM))"></InputTextArea>
                                                 }
                                                 else
                                                 {
-                                                    <textarea type="text" style="min-width:110px;" class="form-control" value="@_arVM.Explain" placeholder="Ghi chú chấm công" disabled></textarea>
+                                                    <textarea type="text" style="min-width:110px;" class="form-control form-control-sm" value="@_arVM.Explain" placeholder="Ghi chú chấm công" disabled></textarea>
                                                 }
                                             }
                                         </td>
@@ -350,14 +350,14 @@
                                             {
                                                 @if (_arVM.isLock == 0)
                                                 {
-                                                    <InputTextArea type="text" style="min-width:110px;" class="form-control" placeholder="Ý kiến TBP"
+                                                    <InputTextArea type="text" style="min-width:110px;" class="form-control form-control-sm" placeholder="Ý kiến TBP"
                                                    ValueExpression="@(() => _arVM.ExplainHOD)"
                                                    Value="@_arVM.ExplainHOD"
                                                    ValueChanged="@((string value) => onchange_explainHOD(value, _arVM))"></InputTextArea>
                                                 }
                                                 else
                                                 {
-                                                    <textarea type="text" style="min-width:110px;" class="form-control" value="@_arVM.ExplainHOD" placeholder="Ý kiến TBP" disabled></textarea>
+                                                    <textarea type="text" style="min-width:110px;" class="form-control form-control-sm" value="@_arVM.ExplainHOD" placeholder="Ý kiến TBP" disabled></textarea>
                                                 }
                                             }
                                         </td>
@@ -367,14 +367,14 @@
                                             {
                                                 @if (_arVM.isLock == 0)
                                                 {
-                                                    <InputTextArea type="text" style="min-width:110px;" class="form-control" placeholder="Ý kiến nhân sự"
+                                                    <InputTextArea type="text" style="min-width:110px;" class="form-control form-control-sm" placeholder="Ý kiến nhân sự"
                                                    ValueExpression="@(() => _arVM.ExplainHR)"
                                                    Value="@_arVM.ExplainHR"
                                                    ValueChanged="@((string value) => onchange_explainHR(value, _arVM))"></InputTextArea>
                                                 }
                                                 else
                                                 {
-                                                    <textarea type="text" style="min-width:110px;" class="form-control" value="@_arVM.ExplainHR" placeholder="Ý kiến nhân sự" disabled></textarea>
+                                                    <textarea type="text" style="min-width:110px;" class="form-control form-control-sm" value="@_arVM.ExplainHR" placeholder="Ý kiến nhân sự" disabled></textarea>
                                                 }
                                             }
                                         </td>

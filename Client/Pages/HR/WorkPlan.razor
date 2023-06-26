@@ -89,10 +89,10 @@
 
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdateWorkPlan(formWorkPlanVM, workPlanVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateWorkPlan(formWorkPlanVM, workPlanVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (workPlanVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateWorkPlan(formWorkPlanVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateWorkPlan(formWorkPlanVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
             </EditForm>
@@ -128,7 +128,7 @@
 
             <div class="col-md-3">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DivisionID)"
                                  Value="@filterHrVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
@@ -145,7 +145,7 @@
 
             <div class="col-md-7">
                 <div class="form-group">
-                    <select class="selectpicker form-control" data-container="body" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                    <select class="selectpicker form-control form-control-sm" data-container="body" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
                         @if (position_filter_list != null)
                         {
                             @foreach (var positiongroup_filter in position_filter_list.Select(x => new { x.PositionGroupID, x.PositionGroupName }).Distinct())

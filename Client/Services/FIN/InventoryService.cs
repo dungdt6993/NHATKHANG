@@ -91,14 +91,22 @@ namespace D69soft.Client.Services.FIN
             return await _httpClient.GetFromJsonAsync<bool>($"api/Inventory/ContainsICode/{id}");
         }
 
-        public async Task<IEnumerable<StockTypeVM>> GetStockTypeList()
-        {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<StockTypeVM>>($"api/Inventory/GetStockTypeList");
-        }
-
+        //Stock
         public async Task<IEnumerable<StockVM>> GetStockList()
         {
             return await _httpClient.GetFromJsonAsync<IEnumerable<StockVM>>($"api/Inventory/GetStockList");
+        }
+
+        public async Task<bool> ContainsStockCode(string id)
+        {
+            return await _httpClient.GetFromJsonAsync<bool>($"api/Inventory/ContainsStockCode/{id}");
+        }
+
+        public async Task<int> UpdateStock(StockVM _stockVM)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/Inventory/UpdateStock", _stockVM);
+
+            return await response.Content.ReadFromJsonAsync<int>();
         }
 
         public async Task<List<InventoryVM>> GetInventorys(FilterFinVM _filterFinVM)

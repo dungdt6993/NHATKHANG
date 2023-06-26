@@ -61,11 +61,12 @@ namespace D69soft.Shared.Models.ViewModels.POS
         public string StockDefault { get; set; }
         public string VendorDefault { get; set; }
         public bool IActive { get; set; }
-        public string CustomerID { get; set; }
+        public string CustomerCode { get; set; }
         public string CustomerName { get; set; }
-        public DateTime Birthday { get; set; }
-        public string Tel { get; set; }
-        public string Address { get; set; }
+        public string CustomerTaxCode { get; set; }
+        public DateTime? CustomerBirthday { get; set; }
+        public string CustomerTel { get; set; }
+        public string CustomerAddress { get; set; }
         public string POSCode { get; set; }
         public string POSName { get; set; }
         public string POSAddress { get; set; }

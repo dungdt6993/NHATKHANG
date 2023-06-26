@@ -14,7 +14,6 @@ namespace D69soft.Shared.Models.Entities.FIN
         public decimal Price { get; set; }
         public string FromStockCode { get; set; }
         public string ToStockCode { get; set; }
-        public string VendorCode { get; set; }
         public string VDNote { get; set; }
         public string InventoryCheck_StockCode { get; set; }
         public float InventoryCheck_Qty { get; set; }

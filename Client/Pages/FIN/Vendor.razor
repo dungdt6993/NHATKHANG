@@ -1,0 +1,169 @@
+﻿@page "/FIN/Vendor"
+@using D69soft.Client.Pages.SYS
+@using D69soft.Shared.Models.ViewModels.FIN;
+
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
+<Loading isLoading="@isLoading"></Loading>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Vendor">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <EditForm Model="vendorVM" Context="formVendorVM">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>NHÀ CUNG CẤP</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="GetVendors">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label>Mã nhà cung cấp</label>
+                            @if (vendorVM.IsTypeUpdate == 0)
+                            {
+                                <InputText class="form-control form-control-sm" placeholder="Mã mặc định" @bind-Value="vendorVM.VendorCode" disabled/>
+                                <ValidationMessage For="@(() => vendorVM.VendorCode)" />
+                            }
+                            else
+                            {
+                                <input type="text" readonly class="form-control form-control-sm" value="@vendorVM.VendorCode" />
+                            }
+                        </div>
+                        <div class="form-group col-md-5">
+                            <label>Mã số thuế</label>
+                            <InputText class="form-control form-control-sm" @bind-Value="@vendorVM.VendorTaxCode" />
+                            <ValidationMessage For="@(() => vendorVM.VendorTaxCode)" />
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label>Điện thoại</label>
+                            <InputText class="form-control form-control-sm" @bind-Value="@vendorVM.VendorTel" />
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tên nhà cung cấp</label>
+                        <InputText class="form-control form-control-sm" @bind-Value="@vendorVM.VendorName" />
+                        <ValidationMessage For="@(() => vendorVM.VendorName)" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Địa chỉ</label>
+                        <InputTextArea class="form-control form-control-sm" @bind-Value="@vendorVM.VendorAddress" />
+                        <ValidationMessage For="@(() => vendorVM.VendorAddress)" />
+                    </div>
+
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateVendor(formVendorVM, vendorVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
+                    @if (vendorVM.IsTypeUpdate == 1)
+                    {
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateVendor(formVendorVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                    }
+                </div>
+
+            </EditForm>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+<EditForm Model="@filterFinVM">
+    <section class="content-header">
+        <div class="row">
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true" data-container="body" @bind="filterFinVM.DivisionID">
+                        @if (filter_divisionVMs != null)
+                        {
+                            @foreach (var _filter_divisionVM in filter_divisionVMs)
+                            {
+                                <option data-subtext="@_filter_divisionVM.DivisionID" value="@_filter_divisionVM.DivisionID">@_filter_divisionVM.DivisionName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-1">
+                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetVendors())">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+</EditForm>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-warning card-outline">
+
+            <div class="card-header text-right">
+
+                @if (!String.IsNullOrEmpty(vendorVM.VendorCode))
+                {
+                    <button type="button" class="btn btn-sm btn-info" @onclick=@(() => InitializeModalUpdate_Vendor(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
+                }
+
+                <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Vendor(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm mới</button>
+
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0" style="height: calc(100vh - 233px);">
+
+                @if (vendorVMs != null)
+                {
+                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="text-center">Mã nhà cung cấp</th>
+                                <th>Tên nhà cung cấp</th>
+                                <th class="text-center">Công nợ</th>
+                                <th class="text-center">Mã số thuế</th>
+                                <th class="text-center">Điện thoại</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <Virtualize Items="@vendorVMs" Context="_vendorVM" OverscanCount="50">
+                                <tr class="@(SetSelected(_vendorVM))" @onclick="() => onclick_Selected(_vendorVM)">
+                                    <td class="text-center">@_vendorVM.VendorCode</td>
+                                    <td>@_vendorVM.VendorName</td>
+                                    <td></td>
+                                    <td class="text-center">@_vendorVM.VendorTaxCode</td>
+                                    <td class="text-center">@_vendorVM.VendorTel</td>
+                                </tr>
+                            </Virtualize>
+                        </tbody>
+                    </table>
+                    if (vendorVMs.Count() <= 0)
+                    {
+                        <img class="img-no-result" src="images/_default/no-results.png" />
+                    }
+                }
+
+            </div>
+            <!-- /.card-body -->
+            @if (vendorVMs != null)
+            {
+                <div class="card-footer text-muted">
+                    Tổng số: <b>@vendorVMs.Count()</b> bản ghi
+                </div>
+            }
+            <!-- /.card-footer -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+

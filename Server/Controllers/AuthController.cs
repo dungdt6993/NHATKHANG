@@ -73,8 +73,8 @@ namespace D69soft.Server.Controllers
             }
         }
 
-        [HttpGet("GetPermissionUser/{_Eserial}/{_UserID}")]
-        public async Task<ActionResult<IEnumerable<PermissionUserVM>>> GetPermissionUser(string _Eserial, string _UserID)
+        [HttpGet("GetPermissionUser/{_UserID}")]
+        public async Task<ActionResult<IEnumerable<PermissionUserVM>>> GetPermissionUser(string _UserID)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -83,7 +83,6 @@ namespace D69soft.Server.Controllers
 
                 DynamicParameters parm = new DynamicParameters();
                 parm.Add("@UserID", _UserID);
-                parm.Add("@Eserial", _Eserial);
 
                 var result = await conn.QueryAsync<PermissionUserVM>("HR.Profile_viewPermission", parm, commandType: CommandType.StoredProcedure);
 
@@ -107,7 +106,7 @@ namespace D69soft.Server.Controllers
                 parm.Add("@txtUser", _userVM.Eserial);
                 parm.Add("@txtPass", LibraryFunc.GennerateToMD5(_userVM.User_Password));
 
-                loginResponse = await conn.ExecuteAsync("SYSTEM.Authentication_login", parm, commandType: CommandType.StoredProcedure);
+                loginResponse = await conn.ExecuteScalarAsync<int>("SYSTEM.Authentication_login", parm, commandType: CommandType.StoredProcedure);
             }
 
             if (loginResponse != 1) return BadRequest(new LoginResponseVM { Successful = false, Error = "Tài khoản hoặc mật khẩu không đúng." });

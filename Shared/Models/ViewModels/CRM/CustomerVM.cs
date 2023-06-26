@@ -4,13 +4,14 @@ namespace D69soft.Shared.Models.ViewModels.CRM
 {
     public class CustomerVM : Customer
     {
-        public string CustomerID { get; set; }
-        public string CustomerName { get; set; }
-        public DateTime Birthday { get; set; }
-        public string Tel { get; set; }
-        public string Address { get; set; }
-
-        //Bien
         public int IsTypeUpdate { get; set; }
+
+        public string CustomerCode { get; set; }
+        public string CustomerName { get; set; }
+        public string CustomerTaxCode { get; set; }
+        public DateTime? CustomerBirthday { get; set; }
+        public string CustomerTel { get; set; }
+        public string CustomerAddress { get; set; }
+
     }
 }

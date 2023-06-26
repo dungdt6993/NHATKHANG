@@ -26,17 +26,17 @@
                             <label>Mã:</label>
                             @if (divisionVM.IsTypeUpdate == 0)
                             {
-                                <InputText class="form-control" placeholder="Mã công ty" @bind-Value:get="divisionVM.DivisionID" @bind-Value:set="(value) => {divisionVM.DivisionID = value.ToUpper();}" autofocus />
+                                <InputText class="form-control form-control-sm" placeholder="Mã công ty" @bind-Value:get="divisionVM.DivisionID" @bind-Value:set="(value) => {divisionVM.DivisionID = value.ToUpper();}" autofocus />
                                 <ValidationMessage For="@(() => divisionVM.DivisionID)" />
                             }
                             else
                             {
-                                <input type="text" readonly class="form-control" value="@divisionVM.DivisionID" />
+                                <input type="text" readonly class="form-control form-control-sm" value="@divisionVM.DivisionID" />
                             }
                         </div>
                         <div class="form-group col-md-4">
                             <label>Đầu mã NV:</label>
-                            <InputText class="form-control" placeholder="Đầu Mã NV" @bind-Value:get="divisionVM.CodeDivs" @bind-Value:set="(value) => {divisionVM.CodeDivs = value.ToUpper();}" />
+                            <InputText class="form-control form-control-sm" placeholder="Đầu Mã NV" @bind-Value:get="divisionVM.CodeDivs" @bind-Value:set="(value) => {divisionVM.CodeDivs = value.ToUpper();}" />
                             <ValidationMessage For="@(() => divisionVM.CodeDivs)" />
                         </div>
                         <div class="form-group col-md-4">
@@ -54,7 +54,7 @@
 
                     <div class="form-group">
                         <label>Tên:</label>
-                        <InputText class="form-control" placeholder="Tên công ty" @bind-Value="@divisionVM.DivisionName" />
+                        <InputText class="form-control form-control-sm" placeholder="Tên công ty" @bind-Value="@divisionVM.DivisionName" />
                         <ValidationMessage For="@(() => divisionVM.DivisionName)" />
                     </div>
 
@@ -107,10 +107,10 @@
 
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdateDivision(formDivisionVM, divisionVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateDivision(formDivisionVM, divisionVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (divisionVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateDivision(formDivisionVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateDivision(formDivisionVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
             </EditForm>
@@ -143,18 +143,18 @@
                             <label>Mã:</label>
                             @if (departmentVM.IsTypeUpdate == 0)
                             {
-                                <InputText class="form-control" placeholder="Mã bộ phận" @bind-Value:get="departmentVM.DepartmentID" @bind-Value:set="(value) => {departmentVM.DepartmentID = value.ToUpper();}" autofocus />
+                                <InputText class="form-control form-control-sm" placeholder="Mã bộ phận" @bind-Value:get="departmentVM.DepartmentID" @bind-Value:set="(value) => {departmentVM.DepartmentID = value.ToUpper();}" autofocus />
                                 <ValidationMessage For="@(() => departmentVM.DepartmentID)" />
                             }
                             else
                             {
-                                <input type="text" readonly class="form-control" value="@departmentVM.DepartmentID" />
+                                <input type="text" readonly class="form-control form-control-sm" value="@departmentVM.DepartmentID" />
                             }
                         </div>
                         <div class="form-group col-md-8">
                             <label>Khối:</label>
                             <div class="input-group">
-                                <InputSelect class="selectpicker form-control"
+                                <InputSelect class="selectpicker form-control form-control-sm"
                                              data-style="btn-selectpicker form-control" data-container="body"
                                              data-live-search="true" data-show-subtext="true"
                                              @bind-Value="departmentVM.DepartmentGroupID">
@@ -186,7 +186,7 @@
 
                     <div class="form-group">
                         <label>Tên:</label>
-                        <InputText class="form-control" placeholder="Tên bộ phận" @bind-Value="@departmentVM.DepartmentName" />
+                        <InputText class="form-control form-control-sm" placeholder="Tên bộ phận" @bind-Value="@departmentVM.DepartmentName" />
                         <ValidationMessage For="@(() => departmentVM.DepartmentName)" />
                     </div>
 
@@ -212,10 +212,10 @@
 
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdateDepartment(formDepartmentVM, departmentVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateDepartment(formDepartmentVM, departmentVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (departmentVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateDepartment(formDepartmentVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateDepartment(formDepartmentVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
             </EditForm>
@@ -250,19 +250,19 @@
                             <label>Mã:</label>
                             @if (departmentGroupVM.IsTypeUpdate == 0)
                             {
-                                <InputText class="form-control" placeholder="Mã nhóm bộ phận" @bind-Value:get="departmentGroupVM.DepartmentGroupID" @bind-Value:set="(value) => {departmentGroupVM.DepartmentGroupID = value.ToUpper();}" autofocus />
+                                <InputText class="form-control form-control-sm" placeholder="Mã nhóm bộ phận" @bind-Value:get="departmentGroupVM.DepartmentGroupID" @bind-Value:set="(value) => {departmentGroupVM.DepartmentGroupID = value.ToUpper();}" autofocus />
                                 <ValidationMessage For="@(() => departmentGroupVM.DepartmentGroupID)" />
                             }
                             else
                             {
-                                <input type="text" readonly class="form-control" value="@departmentGroupVM.DepartmentGroupID" />
+                                <input type="text" readonly class="form-control form-control-sm" value="@departmentGroupVM.DepartmentGroupID" />
                             }
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label>Tên:</label>
-                        <InputText class="form-control" placeholder="Tên nhóm bộ phận" @bind-Value="departmentGroupVM.DepartmentGroupName" />
+                        <InputText class="form-control form-control-sm" placeholder="Tên nhóm bộ phận" @bind-Value="departmentGroupVM.DepartmentGroupName" />
                         <ValidationMessage For="@(() => departmentGroupVM.DepartmentGroupName)" />
                     </div>
 
@@ -270,10 +270,10 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdateDepartmentGroup(formDepartmentGroupVM, departmentGroupVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateDepartmentGroup(formDepartmentGroupVM, departmentGroupVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (departmentGroupVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateDepartmentGroup(formDepartmentGroupVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateDepartmentGroup(formDepartmentGroupVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
 
@@ -308,12 +308,12 @@
                             <label>Mã:</label>
                             @if (sectionVM.IsTypeUpdate == 0)
                             {
-                                <InputText class="form-control" placeholder="Mã khu vực" @bind-Value:get="sectionVM.SectionID" @bind-Value:set="(value) => {sectionVM.SectionID = value.ToUpper();}" autofocus />
+                                <InputText class="form-control form-control-sm" placeholder="Mã khu vực" @bind-Value:get="sectionVM.SectionID" @bind-Value:set="(value) => {sectionVM.SectionID = value.ToUpper();}" autofocus />
                                 <ValidationMessage For="@(() => sectionVM.SectionID)" />
                             }
                             else
                             {
-                                <input type="text" readonly class="form-control" value="@sectionVM.SectionID" />
+                                <input type="text" readonly class="form-control form-control-sm" value="@sectionVM.SectionID" />
                             }
                         </div>
 
@@ -321,7 +321,7 @@
 
                     <div class="form-group">
                         <label>Tên:</label>
-                        <InputText class="form-control" placeholder="Tên khu vực" @bind-Value="@sectionVM.SectionName" />
+                        <InputText class="form-control form-control-sm" placeholder="Tên khu vực" @bind-Value="@sectionVM.SectionName" />
                         <ValidationMessage For="@(() => sectionVM.SectionName)" />
                     </div>
 
@@ -347,10 +347,10 @@
 
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdateSection(formSectionVM, sectionVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateSection(formSectionVM, sectionVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (sectionVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateSection(formSectionVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateSection(formSectionVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
             </EditForm>
@@ -383,18 +383,18 @@
                             <label>Mã:</label>
                             @if (positionVM.IsTypeUpdate == 0)
                             {
-                                <InputText class="form-control" placeholder="Mã vị trí" @bind-Value:get="positionVM.PositionID" @bind-Value:set="(value) => {positionVM.PositionID = value.ToUpper();}" autofocus />
+                                <InputText class="form-control form-control-sm" placeholder="Mã vị trí" @bind-Value:get="positionVM.PositionID" @bind-Value:set="(value) => {positionVM.PositionID = value.ToUpper();}" autofocus />
                                 <ValidationMessage For="@(() => positionVM.PositionID)" />
                             }
                             else
                             {
-                                <input type="text" readonly class="form-control" value="@positionVM.PositionID" />
+                                <input type="text" readonly class="form-control form-control-sm" value="@positionVM.PositionID" />
                             }
                         </div>
                         <div class="form-group col-md-8">
                             <label>Nhóm vị trí:</label>
                             <div class="input-group">
-                                <InputSelect class="selectpicker form-control"
+                                <InputSelect class="selectpicker form-control form-control-sm"
                                              data-style="btn-selectpicker form-control" data-container="body"
                                              data-live-search="true" data-show-subtext="true"
                                              @bind-Value="positionVM.PositionGroupID">
@@ -426,7 +426,7 @@
 
                     <div class="form-group">
                         <label>Tên:</label>
-                        <InputText class="form-control" placeholder="Tên vị trí" @bind-Value="@positionVM.PositionName" />
+                        <InputText class="form-control form-control-sm" placeholder="Tên vị trí" @bind-Value="@positionVM.PositionName" />
                         <ValidationMessage For="@(() => positionVM.PositionName)" />
                     </div>
 
@@ -484,10 +484,10 @@
 
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdatePosition(formPositionVM, positionVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdatePosition(formPositionVM, positionVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (positionVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdatePosition(formPositionVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdatePosition(formPositionVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
             </EditForm>
@@ -522,23 +522,23 @@
                             <label>Mã:</label>
                             @if (positionGroupVM.IsTypeUpdate == 0)
                             {
-                                <InputText class="form-control" placeholder="Mã nhóm vị trí" @bind-Value:get="positionGroupVM.PositionGroupID" @bind-Value:set="(value) => {positionGroupVM.PositionGroupID = value.ToUpper();}" autofocus />
+                                <InputText class="form-control form-control-sm" placeholder="Mã nhóm vị trí" @bind-Value:get="positionGroupVM.PositionGroupID" @bind-Value:set="(value) => {positionGroupVM.PositionGroupID = value.ToUpper();}" autofocus />
                                 <ValidationMessage For="@(() => positionGroupVM.PositionGroupID)" />
                             }
                             else
                             {
-                                <input type="text" readonly class="form-control" value="@positionGroupVM.PositionGroupID" />
+                                <input type="text" readonly class="form-control form-control-sm" value="@positionGroupVM.PositionGroupID" />
                             }
                         </div>
                         <div class="form-group col-md-3">
                             <label>STT:</label>
-                            <InputNumber class="form-control" @bind-Value="positionGroupVM.PositionGroupNo" />
+                            <InputNumber class="form-control form-control-sm" @bind-Value="positionGroupVM.PositionGroupNo" />
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label>Tên:</label>
-                        <InputText class="form-control" placeholder="Tên nhóm vị trí" @bind-Value="positionGroupVM.PositionGroupName" />
+                        <InputText class="form-control form-control-sm" placeholder="Tên nhóm vị trí" @bind-Value="positionGroupVM.PositionGroupName" />
                         <ValidationMessage For="@(() => positionGroupVM.PositionGroupName)" />
                     </div>
 
@@ -546,10 +546,10 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdatePositionGroup(formPositionGroupVM, positionGroupVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdatePositionGroup(formPositionGroupVM, positionGroupVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (positionGroupVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdatePositionGroup(formPositionGroupVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdatePositionGroup(formPositionGroupVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
 
@@ -567,7 +567,7 @@
 
         <div class="card-columns">
 
-            <div class="card card-purple card-outline">
+            <div class="card card-warning card-outline">
                 <div class="card-header">
                     <h3 class="card-title">CÔNG TY</h3>
                     <div class="text-right">
@@ -619,7 +619,7 @@
                 </div>
             </div>
 
-            <div class="card card-purple card-outline">
+            <div class="card card-warning card-outline">
                 <div class="card-header">
                     <h3 class="card-title">KHU VỰC</h3>
                     <div class="text-right">
@@ -671,7 +671,7 @@
                 </div>
             </div>
 
-            <div class="card card-purple card-outline">
+            <div class="card card-warning card-outline">
                 <div class="card-header">
                     <h3 class="card-title">BỘ PHẬN</h3>
                     <div class="text-right">
@@ -734,11 +734,11 @@
                 </div>
             </div>
 
-            <div class="card card-purple card-outline">
+            <div class="card card-warning card-outline">
                 <div class="card-header">
                     <h3 class="card-title">VỊ TRÍ</h3>
                     <div class="input-group input-group-sm" style="width: auto;">
-                        <input type="search" class="form-control form-control-border border-width-2" style="margin: 0 10px;" placeholder="Tìm kiếm vị trí..." @oninput="FilterPosition" />
+                        <input type="search" class="form-control form-control-sm form-control-border border-width-2" style="margin: 0 10px;" placeholder="Tìm kiếm vị trí..." @oninput="FilterPosition" />
                         @if (String.IsNullOrEmpty(filterHrVM.PositionID))
                         {
                             <button type="button" class="btn btn-sm btn-success" title="Thêm mới" @onclick="(() => InitializeModalUpdate_Position(0))"><i class="fa-solid fa-plus"></i></button>

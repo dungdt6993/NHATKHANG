@@ -40,7 +40,7 @@ namespace D69soft.Client.Services.HR
         }
         public async Task<bool> CheckContainsDepartmentID(string id)
         {
-            return await _httpClient.GetFromJsonAsync<bool>($"api/OrganizationalChart/CheckContainsDepartment/{id}");
+            return await _httpClient.GetFromJsonAsync<bool>($"api/OrganizationalChart/CheckContainsDepartmentID/{id}");
         }
         public async Task<int> UpdateDepartment(DepartmentVM _departmentVM)
         {

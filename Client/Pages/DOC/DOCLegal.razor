@@ -27,7 +27,7 @@
                         <label class="col-sm-2 col-form-label">Loại tài liệu</label>
                         <div class="col-sm-10">
                             <div class="input-group">
-                                <InputSelectNumber class="selectpicker form-control"
+                                <InputSelectNumber class="selectpicker form-control form-control-sm"
                                                    data-style="btn-selectpicker form-control" data-container="body"
                                                    data-live-search="true" data-show-subtext="true"
                                                    @bind-Value="documentVM.DocTypeID">
@@ -60,7 +60,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Số hiệu</label>
                         <div class="col-sm-10">
-                            <InputText class="form-control" placeholder="Số hiệu văn bản" @bind-Value="documentVM.TextNumber" />
+                            <InputText class="form-control form-control-sm" placeholder="Số hiệu văn bản" @bind-Value="documentVM.TextNumber" />
                         </div>
                     </div>
 
@@ -68,7 +68,7 @@
                         <label class="col-sm-2 col-form-label">Ngày cấp</label>
                         <div class="col-sm-3">
                             <div class="input-group date">
-                                <input type="text" class="form-control" name="date-mask" @bind="onchange_DateOfIssue" onClick="this.select();"></input>
+                                <input type="text" class="form-control form-control-sm" name="date-mask" @bind="onchange_DateOfIssue" onClick="this.select();"></input>
                                 <div class="input-group-append">
                                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -78,7 +78,7 @@
                         <label class="col-sm-2 col-form-label">Ngày hết hạn</label>
                         <div class="col-sm-3">
                             <div class="input-group date">
-                                <input type="text" class="form-control" name="date-mask" @bind="onchange_ExpDate" onClick="this.select();"></input>
+                                <input type="text" class="form-control form-control-sm" name="date-mask" @bind="onchange_ExpDate" onClick="this.select();"></input>
                                 <div class="input-group-append">
                                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -108,17 +108,17 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Ghi chú</label>
                         <div class="col-sm-10">
-                            <InputTextArea class="form-control" placeholder="Ghi chú" @bind-Value="documentVM.DocNote" />
+                            <InputTextArea class="form-control form-control-sm" placeholder="Ghi chú" @bind-Value="documentVM.DocNote" />
                         </div>
                     </div>
 
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdateDocument(formDocumentVM, documentVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateDocument(formDocumentVM, documentVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (documentVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateDocument(formDocumentVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateDocument(formDocumentVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
 
@@ -153,7 +153,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Tên *</label>
                         <div class="col-sm-9">
-                            <InputText class="form-control" placeholder="Tên loại tài liệu" @bind-Value="doctypeVM.DocTypeName" autofocus />
+                            <InputText class="form-control form-control-sm" placeholder="Tên loại tài liệu" @bind-Value="doctypeVM.DocTypeName" autofocus />
                             <ValidationMessage For="@(() => doctypeVM.DocTypeName)" />
                         </div>
                     </div>
@@ -162,7 +162,7 @@
                         <label class="col-sm-3 col-form-label">Hạn báo trước</label>
                         <div class="col-sm-4">
                             <div class="input-group">
-                                <InputNumber class="form-control" placeholder="Số ngày báo trước hết hạn giấy tờ" @bind-Value="doctypeVM.NumExpDate" autofocus />
+                                <InputNumber class="form-control form-control-sm" placeholder="Số ngày báo trước hết hạn giấy tờ" @bind-Value="doctypeVM.NumExpDate" autofocus />
                                 <div class="input-group-append">
                                     <span class="input-group-text">Ngày</span>
                                 </div>
@@ -173,10 +173,10 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success" @onclick=@(() => UpdateDocType(formDocTypeVM, doctypeVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateDocType(formDocTypeVM, doctypeVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
                     @if (doctypeVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateDocType(formDocTypeVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateDocType(formDocTypeVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
 
@@ -195,7 +195,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DivisionID)"
                                  Value="@filterHrVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
@@ -213,7 +213,7 @@
 
             <div class="col-md-6">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DocTypeID)"
                                  Value="@filterHrVM.DocTypeID"
                                  ValueChanged="@((int value) => onchange_filter_doctype(value))">
@@ -260,7 +260,7 @@
             </div>
 
             <div class="col-sm-1 col-md-1">
-                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetDOCLegalList())">
+                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetDOCLegalList())">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -271,12 +271,12 @@
 
 <section class="content">
     <div class="container-fluid">
-        <div class="card card-purple card-outline">
+        <div class="card card-warning card-outline">
 
             <div class="card-header text-right">
                 @if (DOC_DOCLegal_Update)
                 {
-                    <button type="button" class="btn btn-success" @onclick="()=>InitializeModalUpdate_Document(0, documentVM)"><i class="fa-solid fa-xl fa-plus"></i> Cật nhật</button>
+                    <button type="button" class="btn btn-sm btn-success" @onclick="()=>InitializeModalUpdate_Document(0, documentVM)"><i class="fa-solid fa-xl fa-plus"></i> Thêm mới</button>
                 }
             </div>
 
@@ -316,7 +316,7 @@
                                     @if (DOC_DOCLegal_Update)
                                     {
                                         <td class="text-center">
-                                            <button class="btn btn-default btn-xs" data-target="#InitializeModalUpdate_Document" data-toggle="modal" @onclick="(() => InitializeModalUpdate_Document(1, _documentVM))"><i class="fa-solid fa-pen"></i></button>
+                                            <button class="btn btn-sm btn-default btn-xs" data-target="#InitializeModalUpdate_Document" data-toggle="modal" @onclick="(() => InitializeModalUpdate_Document(1, _documentVM))"><i class="fa-solid fa-pen"></i></button>
                                         </td>
                                     }
                                 </tr>

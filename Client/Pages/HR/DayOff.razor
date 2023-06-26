@@ -28,7 +28,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Điều chỉnh</label>
                                 <div class="col-sm-5">
-                                    <InputNumber class="form-control" @bind-Value="@dayOffVM.ALAddBalance"></InputNumber>
+                                    <InputNumber class="form-control form-control-sm" @bind-Value="@dayOffVM.ALAddBalance"></InputNumber>
                                     <ValidationMessage For="@(() => dayOffVM.ALAddBalance)" />
                                 </div>
                             </div>
@@ -36,7 +36,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Lý do</label>
                                 <div class="col-sm-9">
-                                    <InputTextArea class="form-control" @bind-Value="@dayOffVM.ALNoteAddBalance"></InputTextArea>
+                                    <InputTextArea class="form-control form-control-sm" @bind-Value="@dayOffVM.ALNoteAddBalance"></InputTextArea>
                                     <ValidationMessage For="@(() => dayOffVM.ALNoteAddBalance)" />
                                 </div>
                             </div>
@@ -47,7 +47,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Điều chỉnh</label>
                                 <div class="col-sm-5">
-                                    <InputNumber class="form-control" @bind-Value="@dayOffVM.CLDOAddBalance"></InputNumber>
+                                    <InputNumber class="form-control form-control-sm" @bind-Value="@dayOffVM.CLDOAddBalance"></InputNumber>
                                     <ValidationMessage For="@(() => dayOffVM.CLDOAddBalance)" />
                                 </div>
                             </div>
@@ -55,7 +55,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Lý do</label>
                                 <div class="col-sm-9">
-                                    <InputTextArea class="form-control" @bind-Value="@dayOffVM.CLDONoteAddBalance"></InputTextArea>
+                                    <InputTextArea class="form-control form-control-sm" @bind-Value="@dayOffVM.CLDONoteAddBalance"></InputTextArea>
                                     <ValidationMessage For="@(() => dayOffVM.CLDONoteAddBalance)" />
                                 </div>
                             </div>
@@ -66,7 +66,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Điều chỉnh</label>
                                 <div class="col-sm-5">
-                                    <InputNumber class="form-control" @bind-Value="@dayOffVM.CLPHAddBalance"></InputNumber>
+                                    <InputNumber class="form-control form-control-sm" @bind-Value="@dayOffVM.CLPHAddBalance"></InputNumber>
                                     <ValidationMessage For="@(() => dayOffVM.CLPHAddBalance)" />
                                 </div>
                             </div>
@@ -74,7 +74,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Lý do</label>
                                 <div class="col-sm-9">
-                                    <InputTextArea class="form-control" @bind-Value="@dayOffVM.CLPHNoteAddBalance"></InputTextArea>
+                                    <InputTextArea class="form-control form-control-sm" @bind-Value="@dayOffVM.CLPHNoteAddBalance"></InputTextArea>
                                     <ValidationMessage For="@(() => dayOffVM.CLPHNoteAddBalance)" />
                                 </div>
                             </div>
@@ -84,7 +84,7 @@
                     @if (IsOpenFunc)
                     {
                         <div class="modal-footer justify-content-center">
-                            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                            <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save"></i> Lưu</button>
                         </div>
                     }
                 </EditForm>
@@ -184,7 +184,7 @@
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Tên</label>
                             <div class="col-sm-10">
-                                <InputText class="form-control" placeholder="Tên ngày lễ tết" @bind-Value="@publicHolidayDefVM.PHName" />
+                                <InputText class="form-control form-control-sm" placeholder="Tên ngày lễ tết" @bind-Value="@publicHolidayDefVM.PHName" />
                                 <ValidationMessage For="@(() => publicHolidayDefVM.PHName)" />
                             </div>
                         </div>
@@ -192,13 +192,13 @@
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Ngày</label>
                             <div class="col-sm-2">
-                                <InputNumber class="form-control" placeholder="dd" @bind-Value="@publicHolidayDefVM.PHDay" />
+                                <InputNumber class="form-control form-control-sm" placeholder="dd" @bind-Value="@publicHolidayDefVM.PHDay" />
                                 <ValidationMessage For="@(() => publicHolidayDefVM.PHDay)" />
                             </div>
 
                             <label class="col-sm-2 col-form-label">Tháng</label>
                             <div class="col-sm-2">
-                                <InputNumber class="form-control" placeholder="MM" @bind-Value="@publicHolidayDefVM.PHMonth" />
+                                <InputNumber class="form-control form-control-sm" placeholder="MM" @bind-Value="@publicHolidayDefVM.PHMonth" />
                                 <ValidationMessage For="@(() => publicHolidayDefVM.PHMonth)" />
                             </div>
 
@@ -217,10 +217,10 @@
 
                     </div>
                     <div class="modal-footer justify-content-center">
-                        <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                        <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save"></i> Lưu</button>
                         @if (publicHolidayDefVM.IsTypeUpdate == 1)
                         {
-                            <button type="submit" class="btn btn-danger" @onclick=@(() => publicHolidayDefVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                            <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => publicHolidayDefVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
                         }
                     </div>
                 </EditForm>
@@ -317,7 +317,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Tên</label>
                         <div class="col-sm-10">
-                            <input type="text" readonly class="form-control" value="@globalParameterVM.ParaName" />
+                            <input type="text" readonly class="form-control form-control-sm" value="@globalParameterVM.ParaName" />
                         </div>
                     </div>
 
@@ -348,7 +348,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Giá trị</label>
                         <div class="col-sm-10">
-                            <InputText class="form-control" placeholder="Giá trị" @bind-Value="@globalParameterVM.ParaValues" />
+                            <InputText class="form-control form-control-sm" placeholder="Giá trị" @bind-Value="@globalParameterVM.ParaValues" />
                             <ValidationMessage For="@(() => globalParameterVM.ParaValues)" />
                         </div>
                     </div>
@@ -356,13 +356,13 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Diễn giải</label>
                         <div class="col-sm-10">
-                            <input type="text" readonly class="form-control" value="@globalParameterVM.Description" />
+                            <input type="text" readonly class="form-control form-control-sm" value="@globalParameterVM.Description" />
                         </div>
                     </div>
 
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save"></i> Lưu</button>
                 </div>
             </EditForm>
         </div>
@@ -380,7 +380,7 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Tháng:</label>
                     <div class="col-sm-9">
-                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                            ValueExpression="@(()=>filterHrVM.Month)"
                                            Value="@filterHrVM.Month"
                                            ValueChanged="@((int value) => onchange_filter_month(value))">
@@ -400,7 +400,7 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Năm:</label>
                     <div class="col-sm-9">
-                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                            ValueExpression="@(()=>filterHrVM.Year)"
                                            Value="@filterHrVM.Year"
                                            ValueChanged="@((int value) => onchange_filter_year(value))">
@@ -418,7 +418,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DivisionID)"
                                  Value="@filterHrVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
@@ -435,7 +435,7 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DepartmentID)"
                                  Value="@filterHrVM.DepartmentID"
                                  ValueChanged="@((string value) => onchange_filter_department(value))">
@@ -453,7 +453,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.SectionID)"
                                  Value="@filterHrVM.SectionID"
                                  ValueChanged="@((string value) => onchange_filter_section(value))">
@@ -471,7 +471,7 @@
 
             <div class="col-md-5">
                 <div class="form-group">
-                    <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
                         @if (position_filter_list != null)
                         {
                             @foreach (var positiongroup_filter in position_filter_list.Select(x => new { x.PositionGroupID, x.PositionGroupName }).Distinct())
@@ -485,7 +485,7 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
                                  ValueExpression="@(()=>filterHrVM.Eserial)"
                                  Value="@filterHrVM.Eserial"
                                  ValueChanged="@((string value) => onchange_filter_eserial(value))">
@@ -503,7 +503,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
                                  ValueExpression="@(()=>filterHrVM.ShiftID)"
                                  Value="@filterHrVM.ShiftID"
                                  ValueChanged="@((string value) => onchange_filter_dayofftype(value))">
@@ -519,7 +519,7 @@
             </div>
 
             <div class="col-md-1">
-                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetDayOffList(filterHrVM.ShiftID))">
+                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetDayOffList(filterHrVM.ShiftID))">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -529,15 +529,15 @@
 
 <section class="content">
     <div class="container-fluid">
-        <div class="card card-purple card-outline">
+        <div class="card card-warning card-outline">
 
             <div class="card-header text-right">
                 @if (HR_DayOff_Config)
                 {
-                    <button type="button" class="btn btn-secondary" data-target="#InitializeModalList_GlobalParameter" data-toggle="modal" @onclick="()=>InitializeModalList_GlobalParameter()"><i class="fa-solid fa-calendar"></i> Cấu hình ngày nghỉ</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-target="#InitializeModalList_GlobalParameter" data-toggle="modal" @onclick="()=>InitializeModalList_GlobalParameter()"><i class="fa-solid fa-calendar"></i> Cấu hình ngày nghỉ</button>
                     if (filterHrVM.ShiftID == "PH")
                     {
-                        <button type="button" class="btn btn-secondary" data-target="#InitializeModalList_PublicHoliday" data-toggle="modal" @onclick="()=>InitializeModalList_PublicHoliday()"><i class="fa-solid fa-champagne-glasses"></i> Ngày lễ tết</button>
+                        <button type="button" class="btn btn-sm btn-secondary" data-target="#InitializeModalList_PublicHoliday" data-toggle="modal" @onclick="()=>InitializeModalList_PublicHoliday()"><i class="fa-solid fa-champagne-glasses"></i> Ngày lễ tết</button>
                     }
                 }
 
@@ -547,7 +547,7 @@
                     {
                         if (filterHrVM.ShiftID == "AL" || filterHrVM.ShiftID == "DO" || filterHrVM.ShiftID == "PH")
                         {
-                            <button type="button" class="btn btn-secondary" @onclick="()=>CalcDayOff(filterHrVM.ShiftID)"><i class="fa-solid fa-calculator"></i> Tính dữ liệu</button>
+                            <button type="button" class="btn btn-sm btn-secondary" @onclick="()=>CalcDayOff(filterHrVM.ShiftID)"><i class="fa-solid fa-calculator"></i> Tính dữ liệu</button>
                         }
                     }
                 }

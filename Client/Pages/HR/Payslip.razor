@@ -14,7 +14,7 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Tháng:</label>
                     <div class="col-sm-9">
-                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                            ValueExpression="@(()=>filterHrVM.Month)"
                                            Value="@filterHrVM.Month"
                                            ValueChanged="@((int value) => onchange_filter_month(value))">
@@ -34,7 +34,7 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Năm:</label>
                     <div class="col-sm-9">
-                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                            ValueExpression="@(()=>filterHrVM.Year)"
                                            Value="@filterHrVM.Year"
                                            ValueChanged="@((int value) => onchange_filter_year(value))">
@@ -52,7 +52,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DivisionID)"
                                  Value="@filterHrVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
@@ -69,7 +69,7 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DepartmentID)"
                                  Value="@filterHrVM.DepartmentID"
                                  ValueChanged="@((string value) => onchange_filter_department(value))">
@@ -87,7 +87,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.SectionID)"
                                  Value="@filterHrVM.SectionID"
                                  ValueChanged="@((string value) => onchange_filter_section(value))">
@@ -105,7 +105,7 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
                         @if (position_filter_list != null)
                         {
                             @foreach (var positiongroup_filter in position_filter_list.Select(x=> new {x.PositionGroupID, x.PositionGroupName}).Distinct())
@@ -119,7 +119,7 @@
 
             <div class="col-md-3">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
                                  ValueExpression="@(()=>filterHrVM.Eserial)"
                                  Value="@filterHrVM.Eserial"
                                  ValueChanged="@((string value) => onchange_filter_eserial(value))">
@@ -166,7 +166,7 @@
             </div>
 
             <div class="col-md-1">
-                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetPayslipList())">
+                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetPayslipList())">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -176,7 +176,7 @@
 
 <section class="content">
     <div class="container-fluid">
-        <div class="card card-purple card-outline">
+        <div class="card card-warning card-outline">
 
             <!-- /.card-header -->
             <EditForm Model="@payslipVM">
@@ -231,7 +231,7 @@
                                         <td class="text-success">
                                             <i class="fa-solid fa-user"></i> @_payslipVM.EserialSalaryReply <i class="fa-solid fa-clock"></i> @_payslipVM.TimeSalaryReply.ToString("dd/MM/yyyy HH:mm")
                                             <br />
-                                            <InputTextArea type="text" style="min-width:110px;" class="form-control" placeholder="Giải đáp"
+                                            <InputTextArea type="text" style="min-width:110px;" class="form-control form-control-sm" placeholder="Giải đáp"
                                                        ValueExpression="@(() => _payslipVM.SalaryReply)"
                                                        Value="@_payslipVM.SalaryReply"
                                                        ValueChanged="@((string value) => onchange_salaryReply(value, _payslipVM))"></InputTextArea>
@@ -240,7 +240,7 @@
                                     else
                                     {
                                         <td class="text-success">
-                                            <InputTextArea type="text" style="min-width:110px;" class="form-control" placeholder="Giải đáp"
+                                            <InputTextArea type="text" style="min-width:110px;" class="form-control form-control-sm" placeholder="Giải đáp"
                                                        ValueExpression="@(() => _payslipVM.SalaryReply)"
                                                        Value="@_payslipVM.SalaryReply"
                                                        ValueChanged="@((string value) => onchange_salaryReply(value, _payslipVM))"></InputTextArea>

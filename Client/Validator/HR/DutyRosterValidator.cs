@@ -9,7 +9,7 @@ namespace D69soft.Client.Validator.HR
     {
         public LockDutyRosterValidator()
         {
-            RuleFor(x => x.LockTo).NotEmpty().When(x => x.IsTypeUpdate == 1).WithMessage("Ngày khóa không được trống.");
+            RuleFor(x => x.LockTo).NotEmpty().When(x => x.IsTypeUpdate == 1).WithMessage("Không được trống.");
         }
     }
 
@@ -19,8 +19,8 @@ namespace D69soft.Client.Validator.HR
         {
             When(x => x.IsTypeUpdate != 2, () =>
             {
-                RuleFor(x => x.ShiftID).NotEmpty().WithMessage("Mã ca không được trống.")
-                .Matches(@"^[a-zA-Z0-9]+$").WithMessage("Mã ca không hợp lệ.")
+                RuleFor(x => x.ShiftID).NotEmpty().WithMessage("Không được trống.")
+                .Matches(@"^[a-zA-Z0-9]+$").WithMessage("Không hợp lệ.")
                 .MinimumLength(2).WithMessage("Tối thiểu 2 kí tự.")
                 .MustAsync(async (id, cancellation) =>
                 {
@@ -30,13 +30,13 @@ namespace D69soft.Client.Validator.HR
                         result = await _dutyRosterService.ContainsShiftID(id);
                     }
                     return result;
-                }).When(x => x.IsTypeUpdate == 0).WithMessage("Mã ca đã tồn tại.");
+                }).When(x => x.IsTypeUpdate == 0).WithMessage("Đã tồn tại.");
 
-                RuleFor(x => x.ShiftName).NotEmpty().WithMessage("Tên ca không được trống.");
-                RuleFor(x => x.ShiftTypeID).NotEmpty().WithMessage("Loại ca không được trống.");
+                RuleFor(x => x.ShiftName).NotEmpty().WithMessage("Không được trống.");
+                RuleFor(x => x.ShiftTypeID).NotEmpty().WithMessage("Không được trống.");
 
-                RuleFor(x => x.BeginTime).NotEmpty().When(x => x.EndTime != null).WithMessage("Giờ vào không được trống.");
-                RuleFor(x => x.EndTime).NotEmpty().When(x => x.BeginTime != null).WithMessage("Giờ ra không được trống.");
+                RuleFor(x => x.BeginTime).NotEmpty().When(x => x.EndTime != null).WithMessage("Không được trống.");
+                RuleFor(x => x.EndTime).NotEmpty().When(x => x.BeginTime != null).WithMessage("Không được trống.");
 
                 RuleFor(x => x.EndTime).Must((x, EndTime) => EndTime != x.BeginTime).When(x => x.EndTime != null).WithMessage("Giờ ra phải khác giờ vào.");
 

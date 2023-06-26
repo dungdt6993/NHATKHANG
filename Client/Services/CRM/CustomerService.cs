@@ -34,14 +34,9 @@ namespace D69soft.Client.Services.CRM
             return await _httpClient.GetFromJsonAsync<IEnumerable<CustomerVM>>($"api/Customer/SearchCustomers/{searchText}");
         }
 
-        public async Task<bool> CheckContains_Customer(string _CustomerID)
+        public async Task<bool> ContainsCustomerTel(string _CustomerTel)
         {
-            return await _httpClient.GetFromJsonAsync<bool>($"api/Customer/CheckContains_Customer/{_CustomerID}");
-        }
-
-        public async Task<bool> CheckContains_Tel(string _Tel)
-        {
-            return await _httpClient.GetFromJsonAsync<bool>($"api/Customer/CheckContains_Tel/{_Tel}");
+            return await _httpClient.GetFromJsonAsync<bool>($"api/Customer/ContainsCustomerTel/{_CustomerTel}");
         }
     }
 }

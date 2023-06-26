@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace D69soft.Shared.Models.Entities.FIN
 {
-    interface StockType
+    interface VATDef
     {
-        public string StockTypeCode { get; set; }
-        public string StockTypeName { get; set; }
+        public string VATCode { get; set; }
+        public float VATRate { get; set; }
+        public string VATName { get; set; }
     }
 }

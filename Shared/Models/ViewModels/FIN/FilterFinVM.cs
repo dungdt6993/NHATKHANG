@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace D69soft.Shared.Models.ViewModels.FIN
 {
-    public class FilterFinVM : Division, Department, ItemsClass, ItemsGroup, Items, VSubType, StockVoucher, Func, StockType, Stock
+    public class FilterFinVM : Division, Department, ItemsClass, ItemsGroup, Items, VSubType, StockVoucher, Func, Stock
     {
         //Parameter
         public string UserID { get; set; }
@@ -69,11 +69,9 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string FuncName { get; set; }
         public string FuncURL { get; set; }
         public bool isActive { get; set; }
-        public string StockTypeCode { get; set; }
-        public string StockTypeName { get; set; }
         public string StockCode { get; set; }
         public string StockName { get; set; }
-        public string SAddress { get; set; }
-        public bool SActive { get; set; }
+        public string StockAddress { get; set; }
+        public bool StockActive { get; set; }
     }
 }

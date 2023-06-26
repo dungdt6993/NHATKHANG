@@ -14,6 +14,9 @@ using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extensions;
 using Microsoft.AspNetCore.Components.Forms;
 using D69soft.Shared.Models.Entities.HR;
+using D69soft.Client.Pages.HR;
+using D69soft.Shared.Models.ViewModels.CRM;
+using D69soft.Client.Services.CRM;
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -28,8 +31,7 @@ namespace D69soft.Client.Pages.FIN
         [Inject] VoucherService voucherService { get; set; }
         [Inject] PurchasingService purchasingService { get; set; }
         [Inject] InventoryService inventoryService { get; set; }
-
-
+        [Inject] CustomerService customerService { get; set; }
 
         bool isLoading;
         bool isLoadingScreen = true;
@@ -37,8 +39,8 @@ namespace D69soft.Client.Pages.FIN
         protected string UserID;
 
         //PermisFunc
-        bool STOCK_InOut_Update;
-        bool STOCK_InOut_CancelActive;
+        bool FIN_InOut_Update;
+        bool FIN_InOut_CancelActive;
 
         LogVM logVM = new();
 
@@ -66,8 +68,14 @@ namespace D69soft.Client.Pages.FIN
         //Vendor
         IEnumerable<VendorVM> vendorVMs;
 
+        //Customer
+        IEnumerable<CustomerVM> customerVMs;
+
         //Stock
         IEnumerable<StockVM> stockVMs;
+
+        //VAT
+        IEnumerable<VATDefVM> vatDefVMs;
 
         private BlazoredTypeahead<StockVoucherDetailVM, StockVoucherDetailVM> txtSearchItems;
 
@@ -91,11 +99,11 @@ namespace D69soft.Client.Pages.FIN
         {
             filterHrVM.UserID = UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "STOCK_InOut"))
+            if (await sysService.CheckAccessFunc(UserID, "FIN_InOut"))
             {
                 logVM.LogUser = UserID;
                 logVM.LogType = "FUNC";
-                logVM.LogName = "STOCK_InOut";
+                logVM.LogName = "FIN_InOut";
                 await sysService.InsertLog(logVM);
             }
             else
@@ -103,21 +111,21 @@ namespace D69soft.Client.Pages.FIN
                 navigationManager.NavigateTo("/");
             }
 
-            STOCK_InOut_Update = await sysService.CheckAccessSubFunc(UserID, "STOCK_InOut_Update");
-            STOCK_InOut_CancelActive = await sysService.CheckAccessSubFunc(UserID, "STOCK_InOut_CancelActive");
+            FIN_InOut_Update = await sysService.CheckAccessSubFunc(UserID, "FIN_InOut_Update");
+            FIN_InOut_CancelActive = await sysService.CheckAccessSubFunc(UserID, "FIN_InOut_CancelActive");
 
             filter_divisionVMs = await organizationalChartService.GetDivisionList(filterHrVM);
             filterFinVM.DivisionID = filter_divisionVMs.Count() > 0 ? filter_divisionVMs.ElementAt(0).DivisionID : string.Empty;
 
-            filterFinVM.FuncID = "STOCK_InOut";
+            filterFinVM.FuncID = "FIN_InOut";
 
             filterFinVM.searchActive = 2;
 
             filterFinVM.StartDate = DateTime.Now;
             filterFinVM.EndDate = DateTime.Now;
 
-            filter_vTypeVMs = await voucherService.GetVTypeVMs("STOCK_InOut");
-            filter_vSubTypeVMs = await voucherService.GetVSubTypeVMs("STOCK_InOut");
+            filter_vTypeVMs = await voucherService.GetVTypeVMs("FIN_InOut");
+            filter_vSubTypeVMs = await voucherService.GetVSubTypeVMs("FIN_InOut");
 
             await GetVouchers();
 
@@ -164,7 +172,11 @@ namespace D69soft.Client.Pages.FIN
 
             vendorVMs = await purchasingService.GetVendorList();
 
+            customerVMs = await customerService.GetCustomers();
+
             stockVMs = await inventoryService.GetStockList();
+
+            vatDefVMs = await voucherService.GetVATDefs();
 
             if (_IsTypeUpdate == 0)
             {
@@ -236,6 +248,23 @@ namespace D69soft.Client.Pages.FIN
             }
         }
 
+        private string onchange_CustomerCode
+        {
+            get { return stockVoucherVM.CustomerCode; }
+            set
+            {
+                stockVoucherVM.CustomerCode = value;
+                if (String.IsNullOrEmpty(value))
+                {
+                    stockVoucherVM.VDesc = "Xuất kho bán hàng";
+                }
+                else
+                {
+                    stockVoucherVM.VDesc = "Xuất kho bán hàng cho " + customerVMs.Where(x => x.CustomerCode == stockVoucherVM.CustomerCode).Select(x => x.CustomerName).First() + "";
+                }
+            }
+        }
+
         private async Task<IEnumerable<StockVoucherDetailVM>> SearchItems(string searchText)
         {
             filterFinVM.searchText = searchText;
@@ -249,13 +278,13 @@ namespace D69soft.Client.Pages.FIN
             {
                 result.SeqVD = stockVoucherDetailVMs.Count == 0 ? 1 : stockVoucherDetailVMs.Select(x => x.SeqVD).Max() + 1;
 
-                if (stockVoucherVM.VSubTypeID == "STOCK_Output_SalePOS" && !String.IsNullOrEmpty(stockVoucherVM.Reference_VNumber))
+                if (stockVoucherVM.VSubTypeID == "FIN_Output_SalePOS" && !String.IsNullOrEmpty(stockVoucherVM.Reference_VNumber))
                 {
                     result.FromStockCode = stockVoucherVM.Reference_StockCode;
                     result.FromStockName = stockVMs.Where(x => x.StockCode == stockVoucherVM.Reference_StockCode).Select(x => x.StockName).First();
                 }
 
-                if (stockVoucherVM.VTypeID == "STOCK_Output" || stockVoucherVM.VTypeID == "STOCK_Transfer")
+                if (stockVoucherVM.VTypeID == "FIN_Output" || stockVoucherVM.VTypeID == "FIN_Transfer")
                 {
                     await UpdateInventoryCheck_Qty(result);
                 }
@@ -317,6 +346,19 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
+        private async void onchange_VAT(string value, StockVoucherDetailVM _stockVoucherDetailVM)
+        {
+            isLoading = true;
+
+            _stockVoucherDetailVM.VATCode = value;
+
+            _stockVoucherDetailVM.VATRate = vatDefVMs.Where(x => x.VATCode == _stockVoucherDetailVM.VATCode).Select(x => x.VATRate).FirstOrDefault();
+
+            isLoading = false;
+
+            StateHasChanged();
+        }
+
         private async Task InitializeModalUpdate_PostExcel()
         {
             isLoading = true;
@@ -349,20 +391,20 @@ namespace D69soft.Client.Pages.FIN
                     IEnumerable<StockVoucherDetailVM> _stockVoucherDetailVMs;
 
                     _stockVoucherDetailVMs = await SearchItems(filterFinVM.ICode);
-                    
+
                     stockVoucherDetailVM = _stockVoucherDetailVMs.First();
 
                     stockVoucherDetailVM.Qty = float.Parse(itemSplit[1].Trim());
 
                     stockVoucherDetailVM.SeqVD = stockVoucherDetailVMs.Count == 0 ? 1 : stockVoucherDetailVMs.Select(x => x.SeqVD).Max() + 1;
 
-                    if (stockVoucherVM.VSubTypeID == "STOCK_Output_SalePOS" && !String.IsNullOrEmpty(stockVoucherVM.Reference_VNumber))
+                    if (stockVoucherVM.VSubTypeID == "FIN_Output_SalePOS" && !String.IsNullOrEmpty(stockVoucherVM.Reference_VNumber))
                     {
                         stockVoucherDetailVM.FromStockCode = stockVoucherVM.Reference_StockCode;
                         stockVoucherDetailVM.FromStockName = stockVMs.Where(x => x.StockCode == stockVoucherVM.Reference_StockCode).Select(x => x.StockName).First();
                     }
 
-                    if (stockVoucherVM.VTypeID == "STOCK_Output" || stockVoucherVM.VTypeID == "STOCK_Transfer")
+                    if (stockVoucherVM.VTypeID == "FIN_Output" || stockVoucherVM.VTypeID == "FIN_Transfer")
                     {
                         await UpdateInventoryCheck_Qty(stockVoucherDetailVM);
                     }
@@ -403,50 +445,52 @@ namespace D69soft.Client.Pages.FIN
                     return;
                 }
 
-                if (stockVoucherVM.VTypeID == "STOCK_Input")
+                if (stockVoucherVM.VTypeID == "FIN_Input")
                 {
                     stockVoucherDetailVMs.ToList().ForEach(x => x.FromStockCode = String.Empty);
 
-                    if (stockVoucherVM.VSubTypeID == "STOCK_Input_Purchasing")
+                    if (stockVoucherVM.VSubTypeID == "FIN_Input_Purchasing")
                     {
-                        if (stockVoucherVM.IsMultipleInvoice)
-                        {
-                            stockVoucherVM.VendorCode = String.Empty;
-                        }
-                        else
-                        {
-                            stockVoucherDetailVMs.ToList().ForEach(x => x.VendorCode = stockVoucherVM.VendorCode);
-                        }
+                        stockVoucherDetailVMs.ToList().ForEach(x => x.VendorCode = stockVoucherVM.VendorCode);
                     }
                     else
                     {
                         stockVoucherDetailVMs.ToList().ForEach(x => x.VendorCode = String.Empty);
                     }
 
-                    if (stockVoucherDetailVMs.Where(x => x.ToStockCode == String.Empty).Count() > 0)
+                    if (stockVoucherDetailVMs.Where(x => String.IsNullOrEmpty(x.ToStockCode)).Count() > 0)
                     {
-                        await js.Swal_Message("Cảnh báo!", "Nhập kho không được trống.", SweetAlertMessageType.warning);
+                        await js.Swal_Message("Cảnh báo!", "Kho nhập không được trống.", SweetAlertMessageType.warning);
                         isLoading = false;
                         return;
                     }
                 }
 
-                if (stockVoucherVM.VTypeID == "STOCK_Output")
+                if (stockVoucherVM.VTypeID == "FIN_Output")
                 {
                     stockVoucherDetailVMs.ToList().ForEach(x => x.ToStockCode = String.Empty);
                     stockVoucherDetailVMs.ToList().ForEach(x => x.VendorCode = String.Empty);
 
-                    if (stockVoucherDetailVMs.Where(x => x.FromStockCode == String.Empty).Count() > 0)
+                    if (stockVoucherVM.VSubTypeID == "FIN_Output_SalePOS")
                     {
-                        await js.Swal_Message("Cảnh báo!", "Xuất kho không được trống.", SweetAlertMessageType.warning);
+                        stockVoucherDetailVMs.ToList().ForEach(x => x.CustomerCode = stockVoucherVM.CustomerCode);
+                    }
+                    else
+                    {
+                        stockVoucherDetailVMs.ToList().ForEach(x => x.CustomerCode = String.Empty);
+                    }
+
+                    if (stockVoucherDetailVMs.Where(x => String.IsNullOrEmpty(x.FromStockCode)).Count() > 0)
+                    {
+                        await js.Swal_Message("Cảnh báo!", "Kho xuất không được trống.", SweetAlertMessageType.warning);
                         isLoading = false;
                         return;
                     }
                 }
 
-                if (stockVoucherVM.VTypeID == "STOCK_Transfer")
+                if (stockVoucherVM.VTypeID == "FIN_Transfer")
                 {
-                    if (stockVoucherVM.VSubTypeID == "STOCK_Transfer_Purchasing")
+                    if (stockVoucherVM.VSubTypeID == "FIN_Transfer_Purchasing")
                     {
                         if (stockVoucherVM.IsMultipleInvoice)
                         {
@@ -462,16 +506,16 @@ namespace D69soft.Client.Pages.FIN
                         stockVoucherDetailVMs.ToList().ForEach(x => x.VendorCode = String.Empty);
                     }
 
-                    if (stockVoucherDetailVMs.Where(x => x.FromStockCode == String.Empty).Count() > 0)
+                    if (stockVoucherDetailVMs.Where(x => String.IsNullOrEmpty(x.FromStockCode)).Count() > 0)
                     {
-                        await js.Swal_Message("Cảnh báo!", "Xuất kho không được trống.", SweetAlertMessageType.warning);
+                        await js.Swal_Message("Cảnh báo!", "Kho xuất không được trống.", SweetAlertMessageType.warning);
                         isLoading = false;
                         return;
                     }
 
                     if (stockVoucherDetailVMs.Where(x => x.ToStockCode == String.Empty).Count() > 0)
                     {
-                        await js.Swal_Message("Cảnh báo!", "Nhập kho không được trống.", SweetAlertMessageType.warning);
+                        await js.Swal_Message("Cảnh báo!", "Kho nhập không được trống.", SweetAlertMessageType.warning);
                         isLoading = false;
                         return;
                     }
@@ -481,7 +525,11 @@ namespace D69soft.Client.Pages.FIN
 
                 stockVoucherVM.IsTypeUpdate = 3;
 
-                await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+
+                logVM.LogDesc = "Cập nhật chứng từ " + stockVoucherVM.VNumber + "";
+                await sysService.InsertLog(logVM);
+
+                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
             }
             else
             {
@@ -489,10 +537,13 @@ namespace D69soft.Client.Pages.FIN
                 {
                     await voucherService.UpdateVoucher(stockVoucherVM, stockVoucherDetailVMs);
 
-                    await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Voucher");
-                    await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
+                    logVM.LogDesc = "Xóa chứng từ " + stockVoucherVM.VNumber + "";
+                    await sysService.InsertLog(logVM);
 
                     await GetVouchers();
+
+                    await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Voucher");
+                    await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
                 }
                 else
                 {
@@ -513,7 +564,7 @@ namespace D69soft.Client.Pages.FIN
             {
                 if (_VActive)
                 {
-                    if (stockVoucherVM.VTypeID == "STOCK_Output" || stockVoucherVM.VTypeID == "STOCK_Transfer")
+                    if (stockVoucherVM.VTypeID == "FIN_Output" || stockVoucherVM.VTypeID == "FIN_Transfer")
                     {
                         foreach (var _stockVoucherDetailVM in stockVoucherDetailVMs)
                         {
@@ -536,7 +587,10 @@ namespace D69soft.Client.Pages.FIN
 
                 stockVoucherVM.IsTypeUpdate = 3;
 
-                await js.Toast_Alert("" + question + " thành công!", SweetAlertMessageType.success);
+                logVM.LogDesc = question + " chứng từ " + stockVoucherVM.VNumber + "";
+                await sysService.InsertLog(logVM);
+
+                await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
             }
 
             isLoading = false;
@@ -544,9 +598,9 @@ namespace D69soft.Client.Pages.FIN
 
         string ReportName = String.Empty;
 
-        protected async Task PrintVoucher()
+        protected async Task PrintVoucher(string _ReportName)
         {
-            ReportName = "Phieu_xuat_chuyen_kho_noi_bo?VNumber=" + stockVoucherVM.VNumber + "";
+            ReportName = $"{_ReportName}?VNumber={stockVoucherVM.VNumber}";
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalView_Rpt");
         }
 

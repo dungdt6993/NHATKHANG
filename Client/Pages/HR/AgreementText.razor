@@ -46,7 +46,7 @@
                                             }
                                         </td>
                                         <td class="text-center">
-                                            <button class="btn btn-default btn-xs" data-target="#InitializeModal_AdjustProfileRpt" data-toggle="modal" @onclick="(() => InitializeModal_AdjustProfileRpt(_adjustProfileVM))"><i class="fa-solid fa-pen"></i></button>
+                                            <button class="btn btn-sm btn-default btn-xs" data-target="#InitializeModal_AdjustProfileRpt" data-toggle="modal" @onclick="(() => InitializeModal_AdjustProfileRpt(_adjustProfileVM))"><i class="fa-solid fa-pen"></i></button>
                                         </td>
                                     </tr>
                                 }
@@ -85,14 +85,14 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Mã điều chỉnh</label>
                         <div class="col-sm-5">
-                            <input type="text" readonly class="form-control" placeholder="Mã Công ty" value="@adjustProfileVM.AdjustProfileID" />
+                            <input type="text" readonly class="form-control form-control-sm" placeholder="Mã Công ty" value="@adjustProfileVM.AdjustProfileID" />
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Diễn giải</label>
                         <div class="col-sm-9">
-                            <InputText class="form-control" placeholder="Tên Công ty" @bind-Value="@adjustProfileVM.AdjustProfileName" />
+                            <InputText class="form-control form-control-sm" placeholder="Tên Công ty" @bind-Value="@adjustProfileVM.AdjustProfileName" />
                             <ValidationMessage For="@(() => adjustProfileVM.AdjustProfileName)" />
                         </div>
                     </div>
@@ -100,7 +100,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Báo cáo</label>
                         <div class="col-sm-9">
-                            <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="Chọn báo cáo nhân sự..." @bind="onchange_rpt">
+                            <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="Chọn báo cáo nhân sự..." @bind="onchange_rpt">
                                 @if (sysRptVMs != null)
                                 {
                                     @foreach (var _sysRptVM_0 in sysRptVMs.Select(x => new { x.RptGrpID, x.RptGrpName }).Distinct())
@@ -119,8 +119,8 @@
 
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" @onclick="(() => InitializeModal_AgreementText())"><i class="fas fa-times"></i> Thoát</button>
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal" @onclick="(() => InitializeModal_AgreementText())"><i class="fas fa-times"></i> Thoát</button>
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save"></i> Lưu</button>
                 </div>
             </EditForm>
         </div>
@@ -138,7 +138,7 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Tháng:</label>
                     <div class="col-sm-9">
-                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                            ValueExpression="@(()=>filterHrVM.Month)"
                                            Value="@filterHrVM.Month"
                                            ValueChanged="@((int value) => onchange_filter_month(value))">
@@ -158,7 +158,7 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Năm:</label>
                     <div class="col-sm-9">
-                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                            ValueExpression="@(()=>filterHrVM.Year)"
                                            Value="@filterHrVM.Year"
                                            ValueChanged="@((int value) => onchange_filter_year(value))">
@@ -176,7 +176,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DivisionID)"
                                  Value="@filterHrVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
@@ -194,7 +194,7 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DepartmentID)"
                                  Value="@filterHrVM.DepartmentID"
                                  ValueChanged="@((string value) => onchange_filter_department(value))">
@@ -212,7 +212,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.SectionID)"
                                  Value="@filterHrVM.SectionID"
                                  ValueChanged="@((string value) => onchange_filter_section(value))">
@@ -230,7 +230,7 @@
 
             <div class="col-sm-4 col-md-4">
                 <div class="form-group">
-                    <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
+                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
                         @if (position_filter_list != null)
                         {
                             @foreach (var positiongroup_filter in position_filter_list.Select(x=> new {x.PositionGroupID, x.PositionGroupName}).Distinct())
@@ -244,7 +244,7 @@
 
             <div class="col-md-3">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
                                  ValueExpression="@(()=>filterHrVM.Eserial)"
                                  Value="@filterHrVM.Eserial"
                                  ValueChanged="@((string value) => onchange_filter_eserial(value))">
@@ -262,7 +262,7 @@
 
             <div class="col-sm-4 col-md-4">
                 <div class="form-group">
-                    <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                        ValueExpression="@(()=>filterHrVM.RptID)"
                                        Value="@filterHrVM.RptID"
                                        ValueChanged="@((int value) => onchange_filter_agreementtext(value))">
@@ -279,7 +279,7 @@
             </div>
 
             <div class="col-sm-1 col-md-1">
-                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetAgreementTextList())">
+                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetAgreementTextList())">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -289,15 +289,15 @@
 
 <section class="content">
     <div class="container-fluid">
-        <div class="card card-purple card-outline">
+        <div class="card card-warning card-outline">
 
             <div class="card-header text-right">
-                <button type="button" class="btn btn-secondary" data-target="#InitializeModal_AgreementText" data-toggle="modal" @onclick="()=>InitializeModal_AgreementText()"><i class="fa-solid fa-file-pen"></i> Cấu hình văn bản thỏa thuận</button>
+                <button type="button" class="btn btn-sm btn-secondary" data-target="#InitializeModal_AgreementText" data-toggle="modal" @onclick="()=>InitializeModal_AgreementText()"><i class="fa-solid fa-file-pen"></i> Cấu hình văn bản thỏa thuận</button>
                 @if (agreementTextVMs != null)
                 {
                     if (agreementTextVMs.Where(x => x.IsChecked).Count() > 0)
                     {
-                        <button type="button" class="btn bg-purple" @onclick="(() => PrintAgreementText())"><i class="fas fa-print"></i></button>
+                        <button type="button" class="btn bg-warning" @onclick="(() => PrintAgreementText())"><i class="fas fa-print"></i></button>
                     }
                 }
             </div>
@@ -312,7 +312,7 @@
                                     @if (agreementTextVMs != null)
                                     {
                                         <div class="custom-control custom-checkbox">
-                                            <input class="custom-control-input custom-control-input-purple" type="checkbox" id="ckAll" @onchange="EventArgs => { CheckAll(EventArgs.Value); }" checked="@filterHrVM.IsChecked">
+                                            <input class="custom-control-input custom-control-input-warning" type="checkbox" id="ckAll" @onchange="EventArgs => { CheckAll(EventArgs.Value); }" checked="@filterHrVM.IsChecked">
                                             <label for="ckAll" class="custom-control-label"></label>
                                         </div>
                                     }
@@ -332,7 +332,7 @@
                                 <tr>
                                     <td class="text-center">
                                         <div class="custom-control custom-checkbox">
-                                            <input class="custom-control-input custom-control-input-purple custom-control-input-outline" id="@agreementText.Seq" type="checkbox" @bind="agreementText.IsChecked">
+                                            <input class="custom-control-input custom-control-input-warning custom-control-input-outline" id="@agreementText.Seq" type="checkbox" @bind="agreementText.IsChecked">
                                             <label for="@agreementText.Seq" class="custom-control-label"></label>
                                         </div>
                                     </td>

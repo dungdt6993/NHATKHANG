@@ -1,9 +1,10 @@
-﻿using D69soft.Shared.Models.Entities.FIN;
+﻿using D69soft.Shared.Models.Entities.CRM;
+using D69soft.Shared.Models.Entities.FIN;
 using D69soft.Shared.Models.Entities.HR;
 
 namespace D69soft.Shared.Models.ViewModels.FIN
 {
-    public class StockVoucherVM : Division, VType, VSubType, StockVoucher, Vendor, Stock
+    public class StockVoucherVM : Division, VType, VSubType, StockVoucher, Vendor, Stock, Customer
     {
         //Para
         public string UserID { get; set; }
@@ -44,17 +45,22 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string Reference_VSubTypeID { get; set; }
         public string VendorCode { get; set; }
         public string VendorName { get; set; }
-        public string VATCode { get; set; }
-        public string VAddress { get; set; }
-        public string VNote { get; set; }
-        public string Contract_FileScan { get; set; }
-        public DateTime? Contract_StartDate { get; set; }
-        public DateTime? Contract_EndDate { get; set; }
-        public string Contact_Tel { get; set; }
+        public string VendorTaxCode { get; set; }
+        public string VendorAddress { get; set; }
+        public string VendorTel { get; set; }
         public bool VendorActive { get; set; }
+        public string VendorContractFile { get; set; }
+        public DateTime? VendorContractStartDate { get; set; }
+        public DateTime? VendorContractEndDate { get; set; }
         public string StockCode { get; set; }
         public string StockName { get; set; }
-        public string SAddress { get; set; }
-        public bool SActive { get; set; }
+        public string StockAddress { get; set; }
+        public bool StockActive { get; set; }
+        public string CustomerCode { get; set; }
+        public string CustomerName { get; set; }
+        public string CustomerTaxCode { get; set; }
+        public DateTime? CustomerBirthday { get; set; }
+        public string CustomerTel { get; set; }
+        public string CustomerAddress { get; set; }
     }
 }

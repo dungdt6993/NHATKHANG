@@ -21,7 +21,7 @@
                         <div class="col-sm-8">
                             <div class="form-group">
                                 <label>Trạng thái tàu:</label>
-                                <select class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind="cruiseScheduleVM.CruiseStatusCode">
+                                <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind="cruiseScheduleVM.CruiseStatusCode">
                                     @if (cruiseStatusVMs != null)
                                     {
                                         @foreach (var _cruiseStatusVM in cruiseStatusVMs)
@@ -35,7 +35,7 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label>Số khách:</label>
-                                <input type="text" class="form-control text-center" @bind="cruiseScheduleVM.GuestNumber" onClick="this.select();" />
+                                <input type="text" class="form-control form-control-sm text-center" @bind="cruiseScheduleVM.GuestNumber" onClick="this.select();" />
                             </div>
                         </div>
                     </div>
@@ -44,7 +44,7 @@
                         <label class="col-sm-6 col-form-label">Chi phí thực phẩm/1 khách:</label>
                         <div class="col-sm-6">
                             <div class="input-group">
-                                <input type="text" class="form-control text-right" name="currency-mask" @bind="@cruiseScheduleVM.BudgetFoodCost" onClick="this.select();" />
+                                <input type="text" class="form-control form-control-sm text-right" name="currency-mask" @bind="@cruiseScheduleVM.BudgetFoodCost" onClick="this.select();" />
                                 <div class="input-group-append">
                                     <div class="input-group-text"><i class="fa-solid fa-dong-sign"></i></div>
                                 </div>
@@ -55,13 +55,13 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Ghi chú:</label>
                         <div class="col-sm-10">
-                            <textarea class="form-control" @bind="cruiseScheduleVM.CruiseScheduleNote" />
+                            <textarea class="form-control form-control-sm" @bind="cruiseScheduleVM.CruiseScheduleNote" />
                         </div>
                     </div>
 
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Cập nhật</button>
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save"></i> Cập nhật</button>
                 </div>
             </EditForm>
         </div>
@@ -78,7 +78,7 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Tháng:</label>
                     <div class="col-sm-9">
-                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                            ValueExpression="@(()=>filterHrVM.Month)"
                                            Value="@filterHrVM.Month"
                                            ValueChanged="@((int value) => onchange_filter_month(value))">
@@ -98,7 +98,7 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Năm:</label>
                     <div class="col-sm-9">
-                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                        <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                            ValueExpression="@(()=>filterHrVM.Year)"
                                            Value="@filterHrVM.Year"
                                            ValueChanged="@((int value) => onchange_filter_year(value))">
@@ -116,7 +116,7 @@
 
             <div class="col-md-8">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterHrVM.DivisionID)"
                                  Value="@filterHrVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
@@ -137,7 +137,7 @@
 
 <section class="content">
     <div class="container-fluid">
-        <div class="card card-purple card-outline">
+        <div class="card card-warning card-outline">
 
             @if (cruiseScheduleVMs != null)
             {
@@ -151,7 +151,7 @@
                 </div>
                 <!-- /.card-header -->
 
-                <div class="card-body table-responsive p-0" style="height: calc(100vh - 205px);">
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 185px);">
 
                     <table class="table table-sm table-bordered table-head-fixed table-hover-cursor text-nowrap tblFontSizeMin tblDutyRoster">
                         <thead>
@@ -177,7 +177,7 @@
                                         @if (_cruisestatus.isCI)
                                         {
                                             <td class="text-center dutyroster-td" style="background-color: @_cruisestatus.ColorHEX;" @onclick="(() => InitializeModalUpdate_CruiseSchedule(_cruisestatus))">
-                                                <span>@_cruisestatus.CruiseStatusCode</span>
+                                                <span>@_cruisestatus.GuestNumber</span>
                                             </td>
                                         }
                                         else

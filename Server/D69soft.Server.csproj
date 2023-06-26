@@ -9,12 +9,16 @@
   <ItemGroup>
     <None Remove="DataProtection\Reports\Bang_cham_cong.repx" />
     <None Remove="DataProtection\Reports\Bang_ke_ban_hang_NCC.repx" />
+    <None Remove="DataProtection\Reports\Phieu_xuat_chuyen_kho_noi_bo.repx" />
+    <None Remove="DataProtection\Reports\Phieu_xuat_kho_ban_hang.repx" />
     <None Remove="PredefinedReports\CustomNewReport.vsrepx" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="DataProtection\Reports\Bang_cham_cong.repx" />
     <EmbeddedResource Include="DataProtection\Reports\Bang_ke_ban_hang_NCC.repx" />
+    <EmbeddedResource Include="DataProtection\Reports\Phieu_xuat_chuyen_kho_noi_bo.repx" />
+    <EmbeddedResource Include="DataProtection\Reports\Phieu_xuat_kho_ban_hang.repx" />
     <EmbeddedResource Include="PredefinedReports\CustomNewReport.vsrepx" />
   </ItemGroup>
 
@@ -54,6 +58,18 @@
     </Compile>
     <Compile Update="DataProtection\Reports\Bang_ke_ban_hang_NCC.Designer.cs">
       <DependentUpon>Bang_ke_ban_hang_NCC.repx</DependentUpon>
+    </Compile>
+    <Compile Update="DataProtection\Reports\Phieu_xuat_chuyen_kho_noi_bo.cs">
+      <DependentUpon>Phieu_xuat_chuyen_kho_noi_bo.repx</DependentUpon>
+    </Compile>
+    <Compile Update="DataProtection\Reports\Phieu_xuat_chuyen_kho_noi_bo.Designer.cs">
+      <DependentUpon>Phieu_xuat_chuyen_kho_noi_bo.repx</DependentUpon>
+    </Compile>
+    <Compile Update="DataProtection\Reports\Phieu_xuat_kho_ban_hang.cs">
+      <DependentUpon>Phieu_xuat_kho_ban_hang.repx</DependentUpon>
+    </Compile>
+    <Compile Update="DataProtection\Reports\Phieu_xuat_kho_ban_hang.Designer.cs">
+      <DependentUpon>Phieu_xuat_kho_ban_hang.repx</DependentUpon>
     </Compile>
     <Compile Update="PredefinedReports\CustomNewReport.cs">
       <DependentUpon>CustomNewReport.vsrepx</DependentUpon>

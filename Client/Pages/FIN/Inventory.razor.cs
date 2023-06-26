@@ -40,7 +40,6 @@ namespace D69soft.Client.Pages.FIN
 
         //Stock
         IEnumerable<StockVM> stockVMs;
-        IEnumerable<StockTypeVM> stockTypeVMs;
 
         //Items
         ItemsVM itemsVM = null;
@@ -69,10 +68,10 @@ namespace D69soft.Client.Pages.FIN
 
             UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "Stock_Inventory"))
+            if (await sysService.CheckAccessFunc(UserID, "FIN_Inventory"))
             {
                 logVM.LogType = "FUNC";
-                logVM.LogName = "Stock_Inventory";
+                logVM.LogName = "FIN_Inventory";
                 logVM.LogUser = UserID;
                 await sysService.InsertLog(logVM);
             }
@@ -89,9 +88,6 @@ namespace D69soft.Client.Pages.FIN
             filterFinVM.StartDate = DateTime.Now;
             filterFinVM.EndDate = DateTime.Now;
 
-            stockTypeVMs = await inventoryService.GetStockTypeList();
-            filterFinVM.StockTypeCode = stockTypeVMs.ElementAt(0).StockTypeCode;
-
             stockVMs = await inventoryService.GetStockList();
 
             await GetInventorys();
@@ -103,19 +99,6 @@ namespace D69soft.Client.Pages.FIN
         {
             filterFinVM.StartDate = _range.Start;
             filterFinVM.EndDate = _range.End;
-        }
-
-        public string onchange_StockTypeCode
-        {
-            get
-            {
-                return filterFinVM.StockTypeCode;
-            }
-            set
-            {
-                filterFinVM.StockTypeCode = value;
-                filterFinVM.StockCode = String.Empty;
-            }
         }
 
         private async Task<IEnumerable<ItemsVM>> SearchItems(string searchText)

@@ -24,7 +24,7 @@
                     @if (vSubTypeVMs != null)
                     {
                         <div class="col-sm-3 @(stockVoucherVM.IsTypeUpdate==3?"noClick":"")">
-                            <select class="selectpicker form-control" data-style="btn-selectpicker form-control" data-container="body" @bind="stockVoucherVM.VSubTypeID">
+                            <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" @bind="stockVoucherVM.VSubTypeID">
                                 @foreach (var _vSubTypeVM in vSubTypeVMs)
                                 {
                                     <option value="@_vSubTypeVM.VSubTypeID">@_vSubTypeVM.VSubTypeDesc</option>
@@ -35,7 +35,7 @@
 
                     @if (!String.IsNullOrEmpty(stockVoucherVM.Reference_VNumber))
                     {
-                        <button type="button" class="btn btn-outline-secondary"><i class="fa-solid fa-file-import"></i> Tham chiếu @stockVoucherVM.Reference_VSubTypeName số @stockVoucherVM.Reference_VNumber</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-file-import"></i> Tham chiếu @stockVoucherVM.Reference_VSubTypeName số @stockVoucherVM.Reference_VNumber</button>
                     }
 
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="()=> GetVouchers()">
@@ -52,7 +52,7 @@
                             <div class="col-sm-9" style="padding-right: 10px; border-right: 1px solid #e9ecef;">
                                 <div class="form-group">
                                     <label>Diễn giải</label>
-                                    <InputText class="form-control" @bind-Value="stockVoucherVM.VDesc" />
+                                    <InputText class="form-control form-control-sm" @bind-Value="stockVoucherVM.VDesc" />
                                     <ValidationMessage For="@(() => stockVoucherVM.VDesc)" />
                                 </div>
 
@@ -60,8 +60,8 @@
                                     <div class="col-sm-3">
                                         <div class="form-group">
                                             <label>Kiểm kê kho</label>
-                                            <InputSelect class="selectpicker form-control"
-                                                         data-style="btn-selectpicker form-control" data-container="body"
+                                            <InputSelect class="selectpicker form-control form-control-sm"
+                                                         data-style="btn-selectpicker" data-container="body"
                                                          data-live-search="true" data-show-subtext="true"
                                                          ValueExpression="@(()=>stockVoucherVM.StockCode)"
                                                          Value="@stockVoucherVM.StockCode"
@@ -83,7 +83,7 @@
                                         <div class="form-group">
                                             <label>Đến ngày</label>
                                             <div class="input-group">
-                                                <DateRangePicker SingleDatePicker="true" class="form-control" name="date-mask"
+                                                <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask"
                                                                  Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))"
                                                                  @bind-StartDate="stockVoucherVM.VDate" OnRangeSelect="OnRangeSelect_VDate"
                                                                  onClick="this.select();" />
@@ -193,8 +193,8 @@
                                                     else
                                                     {
                                                         <td>
-                                                            <InputSelect class="selectpicker form-control"
-                                                     data-style="btn-selectpicker form-control" data-container="body"
+                                                            <InputSelect class="selectpicker form-control form-control-sm"
+                                                     data-style="btn-selectpicker" data-container="body"
                                                      data-live-search="true" data-show-subtext="true"
                                                      ValueExpression="@(()=>_stockVoucherDetailVM.InventoryCheck_StockCode)"
                                                      Value="@_stockVoucherDetailVM.InventoryCheck_StockCode"
@@ -220,7 +220,7 @@
 
                                                 <td class="text-center @(_stockVoucherDetailVM.InventoryCheck_Qty<=0?"text-danger":"")">@_stockVoucherDetailVM.InventoryCheck_Qty</td>
                                                 <td class="text-center">
-                                                    <input class="form-control text-center @(_stockVoucherDetailVM.InventoryCheck_ActualQty<0?"text-danger":"")" @bind="@_stockVoucherDetailVM.InventoryCheck_ActualQty" onClick="this.select();" />
+                                                    <input class="form-control form-control-sm text-center @(_stockVoucherDetailVM.InventoryCheck_ActualQty<0?"text-danger":"")" @bind="@_stockVoucherDetailVM.InventoryCheck_ActualQty" onClick="this.select();" />
                                                 </td>
                                                 <td class="text-center @(_stockVoucherDetailVM.InventoryCheck_ActualQty-_stockVoucherDetailVM.InventoryCheck_Qty<0?"text-danger":"")">@(_stockVoucherDetailVM.InventoryCheck_ActualQty - _stockVoucherDetailVM.InventoryCheck_Qty)</td>
                                                 <td class="text-center">
@@ -234,7 +234,7 @@
                                                     }
                                                 </td>
                                                 <td>
-                                                    <input class="form-control" @bind="@_stockVoucherDetailVM.VDNote" />
+                                                    <input class="form-control form-control-sm" @bind="@_stockVoucherDetailVM.VDNote" />
                                                 </td>
 
                                                 <td class="text-center">
@@ -300,7 +300,7 @@
                         </BlazoredTypeahead>
                     </div>
 
-                    <a class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Thêm dữ liệu từ Excel" @onclick="(() => InitializeModalUpdate_PostExcel())"><i class="fa-solid fa-file-excel"></i></a>
+                    <a class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="Thêm dữ liệu từ Excel" @onclick="(() => InitializeModalUpdate_PostExcel())"><i class="fa-solid fa-file-excel"></i></a>
 
 
                 </div>
@@ -309,33 +309,33 @@
 
                     @if (stockVoucherVM.VActive)
                     {
-                        @if (STOCK_InventoryCheck_CancelActive)
+                        @if (FIN_InventoryCheck_CancelActive)
                         {
-                            <button type="button" class="btn btn-danger" @onclick="(() => ActiveVoucher(4,false))"><i class="fa-solid fa-file-circle-xmark"></i> Bỏ ghi sổ</button>
+                            <button type="button" class="btn btn-sm btn-danger" @onclick="(() => ActiveVoucher(4,false))"><i class="fa-solid fa-file-circle-xmark"></i> Bỏ ghi sổ</button>
                         }
                     }
                     else
                     {
                         @if (stockVoucherVM.IsTypeUpdate == 3)
                         {
-                            @if (STOCK_InventoryCheck_Update)
+                            @if (FIN_InventoryCheck_Update)
                             {
-                                <button type="button" class="btn btn-secondary" @onclick="(() => stockVoucherVM.IsTypeUpdate=1)"><i class="fa-solid fa-pencil"></i> Sửa</button>
+                                <button type="button" class="btn btn-sm btn-secondary" @onclick="(() => stockVoucherVM.IsTypeUpdate=1)"><i class="fa-solid fa-pencil"></i> Sửa</button>
                                 @if (!String.IsNullOrEmpty(stockVoucherVM.VNumber))
                                 {
-                                    <button type="button" class="btn btn-success" @onclick="(() => ActiveVoucher(4,true))"><i class="fa-solid fa-file-pen"></i> Ghi sổ</button>
+                                    <button type="button" class="btn btn-sm btn-success" @onclick="(() => ActiveVoucher(4,true))"><i class="fa-solid fa-file-pen"></i> Ghi sổ</button>
                                 }
                             }
                         }
                         else
                         {
-                            <button type="submit" class="btn btn-success" @onclick=@(() => UpdateVoucher(formStockVoucherVM, stockVoucherVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
+                            <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateVoucher(formStockVoucherVM, stockVoucherVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
 
                             @if (String.IsNullOrEmpty(stockVoucherVM.Reference_VNumber))
                             {
                                 @if (stockVoucherVM.IsTypeUpdate == 1)
                                 {
-                                    <button type="submit" class="btn btn-danger" @onclick=@(() => UpdateVoucher(formStockVoucherVM, 2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                                    <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateVoucher(formStockVoucherVM, 2))><i class="fas fa-trash-alt"></i> Xóa</button>
                                 }
                             }
                         }
@@ -375,7 +375,7 @@
                     <tbody>
                         <tr>
                             <td colspan="2">
-                                <input class="form-control" placeholder="Copy dữ liệu từ excel và dán vào đây..." @bind="stockVoucherVM.DataFromExcel" />
+                                <input class="form-control form-control-sm" placeholder="Copy dữ liệu từ excel và dán vào đây..." @bind="stockVoucherVM.DataFromExcel" />
                             </td>
                         </tr>
                     </tbody>
@@ -383,7 +383,7 @@
 
             </div>
             <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-success" @onclick="(() => GetDataFromExcel())"><i class="fa-solid fa-floppy-disk"></i> Cập nhật</button>
+                <button type="button" class="btn btn-sm btn-success" @onclick="(() => GetDataFromExcel())"><i class="fa-solid fa-floppy-disk"></i> Cập nhật</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -398,7 +398,7 @@
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <select class="selectpicker form-control" data-style="btn-selectpicker" data-live-search="true" data-container="body" @bind="filterFinVM.DivisionID">
+                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true" data-container="body" @bind="filterFinVM.DivisionID">
                         @if (filter_divisionVMs != null)
                         {
                             @foreach (var _filter_divisionVM in filter_divisionVMs)
@@ -412,7 +412,7 @@
 
             <div class="col-sm-3">
                 <div class="form-group">
-                    <select class="selectpicker form-control" data-style="btn-selectpicker form-control" data-container="body" @bind="filterFinVM.VSubTypeID">
+                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" @bind="filterFinVM.VSubTypeID">
                         <option value=@String.Empty>-----Loại chứng từ-----</option>
                         @if (filter_vSubTypeVMs != null)
                         {
@@ -427,7 +427,7 @@
 
             <div class="col-sm-2">
                 <div class="form-group">
-                    <select class="selectpicker form-control" data-style="btn-selectpicker form-control" @bind="filterFinVM.searchActive">
+                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" @bind="filterFinVM.searchActive">
                         <option value=2>-----Trạng thái ghi sổ-----</option>
                         <option value=1>Đã ghi sổ</option>
                         <option value=0>Chưa ghi sổ</option>
@@ -439,7 +439,7 @@
                 <div class="form-group">
                     <DateRangePicker Ranges="DateRanges" Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))" ApplyLabel="Thực hiện" CancelLabel="Hủy" CustomRangeLabel="Chọn ngày" OnRangeSelect="OnRangeSelect">
                         <PickerTemplate Context="c">
-                            <div id="@c.Id" @onclick="c.Toggle" class="form-control" style="cursor: pointer;">
+                            <div id="@c.Id" @onclick="c.Toggle" class="form-control form-control-sm" style="cursor: pointer;">
                                 <i class="fa-solid fa-calendar-days"></i>&nbsp;
                                 <span>
                                     @if (c.TStartDate == null && c.TEndDate == null)
@@ -476,12 +476,12 @@
 
             <div class="col-sm-2">
                 <div class="form-group">
-                    <input type="search" class="form-control" placeholder="Số chứng từ" @bind="filterFinVM.VNumber" />
+                    <input type="search" class="form-control form-control-sm" placeholder="Số chứng từ" @bind="filterFinVM.VNumber" />
                 </div>
             </div>
 
             <div class="col-md-1">
-                <button type="button" class="btn btn-block bg-purple" @onclick="(() => GetVouchers())">
+                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetVouchers())">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -491,22 +491,22 @@
 
 <section class="content">
     <div class="container-fluid">
-        <div class="card card-purple card-outline">
+        <div class="card card-warning card-outline">
 
             <div class="card-header text-right">
 
                 @if (!String.IsNullOrEmpty(stockVoucherVM.VNumber))
                 {
-                    <button type="button" class="btn bg-purple" @onclick="(() => PrintVoucher())"><i class="fas fa-print"></i> In</button>
+                    <button type="button" class="btn btn-sm bg-warning" @onclick="(() => PrintVoucher())"><i class="fas fa-print"></i> In</button>
 
-                    <button type="button" class="btn btn-secondary" @onclick="(() => InitializeModalUpdate_Voucher(stockVoucherVM.VTypeID,5))"><i class="fa-solid fa-copy"></i> Sao chép</button>
+                    <button type="button" class="btn btn-sm btn-secondary" @onclick="(() => InitializeModalUpdate_Voucher(stockVoucherVM.VTypeID,5))"><i class="fa-solid fa-copy"></i> Sao chép</button>
 
-                    <button type="button" class="btn btn-info" @onclick=@(() => InitializeModalUpdate_Voucher(stockVoucherVM.VTypeID,3))><i class="fa-solid fa-file-invoice"></i> Mở chứng từ</button>
+                    <button type="button" class="btn btn-sm btn-info" @onclick=@(() => InitializeModalUpdate_Voucher(stockVoucherVM.VTypeID,3))><i class="fa-solid fa-file-invoice"></i> Mở chứng từ</button>
                 }
                 @if (filter_vTypeVMs != null)
                 {
                     <div class="btn-group">
-                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fa-solid fa-xl fa-plus"></i> Thêm
                         </button>
                         <div class="dropdown-menu dropdown-menu-right">

@@ -1,10 +1,10 @@
 ﻿a {
-    color: #6f42c1;
+    color: #ffc107;
     cursor: pointer;
 }
 
 .nav-pills .nav-link.active {
-    background-color: #6f42c1;
+    background-color: #ffc107;
 }
 
 .card-body.p-0 .table tbody > tr > td:first-of-type, .card-body.p-0 .table tbody > tr > th:first-of-type, .card-body.p-0 .table tfoot > tr > td:first-of-type, .card-body.p-0 .table tfoot > tr > th:first-of-type, .card-body.p-0 .table thead > tr > td:first-of-type, .card-body.p-0 .table thead > tr > th:first-of-type {
@@ -60,9 +60,9 @@
     font-size: unset;
 }
 
-.form-control:focus {
-    border-color: #6f42c1;
-}
+    .form-control:focus {
+        border-color: #ffc107;
+    }
 
 .input-group [data-toggle=modal] {
     cursor: pointer;
@@ -81,12 +81,12 @@
 }
 
 .page-item.active .page-link {
-    background-color: #6f42c1;
-    border-color: #6f42c1;
+    background-color: #ffc107;
+    border-color: #ffc107;
 }
 
 .page-link {
-    color: #6f42c1;
+    color: #ffc107;
 }
 
 .modal-xxl {
@@ -108,9 +108,9 @@
 }
 
 .blazored-typeahead__active-item, .blazored-typeahead__result:hover, .blazored-typeahead__result:focus {
-    background-color: #6f42c1;
-    border-top: 1px solid #6f42c1;
-    border-bottom: 1px solid #6f42c1;
+    background-color: #ffc107;
+    border-top: 1px solid #ffc107;
+    border-bottom: 1px solid #ffc107;
 }
 
 /*Table*/
@@ -167,6 +167,10 @@ label:not(.form-check-label):not(.custom-file-label) {
     color: #495057;
 }
 
+label {
+    margin-bottom: 0.1rem;
+}
+
 /*bootstrap-select*/
 .btn-selectpicker {
     border-color: #ddd;
@@ -177,7 +181,7 @@ label:not(.form-check-label):not(.custom-file-label) {
 }
 
 .dropdown-item.active, .dropdown-item:active {
-    background-color: #6f42c1;
+    background-color: #ffc107;
 }
 
 .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
@@ -186,15 +190,15 @@ label:not(.form-check-label):not(.custom-file-label) {
 
 /*daterangepicker*/
 .daterangepicker .ranges li.active {
-    background-color: #6f42c1;
+    background-color: #ffc107;
 }
 
 .daterangepicker td.active, .daterangepicker td.active:hover {
-    background-color: #6f42c1;
+    background-color: #ffc107;
 }
 
 .applyBtn {
-    background-color: #6f42c1;
+    background-color: #ffc107;
 }
 
 .daterangepicker .ranges li {
