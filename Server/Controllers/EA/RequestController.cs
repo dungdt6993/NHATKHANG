@@ -258,7 +258,7 @@ namespace D69soft.Server.Controllers.FIN
 
         //Get RequestDetail to Stock
         [HttpGet("GetRequestDetailToStockVoucherDetail/{_RequestCode}")]
-        public async Task<ActionResult<List<StockVoucherDetailVM>>> GetRequestDetailToStockVoucherDetail(string _RequestCode)
+        public async Task<ActionResult<List<VoucherDetailVM>>> GetRequestDetailToStockVoucherDetail(string _RequestCode)
         {
             var sql = "select rd.ICode, QtyApproved as Qty, INote + case when coalesce(RDNote,'') <> '' then ', ' + RDNote else '' end as VDNote, i.StockDefault as FromStockCode, 1 as IsReference from EA.RequestDetail rd ";
             sql += "join FIN.Items i on i.ICode = rd.ICode ";
@@ -269,7 +269,7 @@ namespace D69soft.Server.Controllers.FIN
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<StockVoucherDetailVM>(sql, new { RequestCode = _RequestCode });
+                var result = await conn.QueryAsync<VoucherDetailVM>(sql, new { RequestCode = _RequestCode });
                 return result.ToList();
             }
         }

@@ -64,11 +64,11 @@ namespace D69soft.Client.Pages.FIN
         {
             filterHrVM.UserID = UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "PUR_Vendor"))
+            if (await sysService.CheckAccessFunc(UserID, "FIN_Vendor"))
             {
                 logVM.LogUser = UserID;
                 logVM.LogType = "FUNC";
-                logVM.LogName = "PUR_Vendor";
+                logVM.LogName = "FIN_Vendor";
                 await sysService.InsertLog(logVM);
             }
             else

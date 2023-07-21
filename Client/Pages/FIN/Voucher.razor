@@ -1,0 +1,935 @@
+﻿@page "/FIN/Voucher/{_FuncID}"
+@using D69soft.Client.Pages.SYS
+@using D69soft.Shared.Models.ViewModels.FIN;
+
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
+<Loading isLoading="@isLoading"></Loading>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Voucher">
+    <div class="modal-dialog modal-xxl">
+        <div class="modal-content">
+
+            <EditForm Model="voucherVM" Context="formVoucherVM">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        @if (filter_vTypeVMs != null && !String.IsNullOrEmpty(voucherVM.VTypeID))
+                        {
+                            string _vTypeName = "CHỨNG TỪ " + filter_vTypeVMs.Where(x => x.VTypeID == voucherVM.VTypeID).Select(x => x.VTypeDesc).First();
+                            <span>@_vTypeName.ToUpper() @(String.IsNullOrEmpty(voucherVM.VNumber) || voucherVM.IsTypeUpdate == 5 ? String.Empty : voucherVM.VNumber)</span>
+                        }
+                    </h4>
+
+                    <div class="col-sm-2 @(voucherVM.IsTypeUpdate==3?"noClick":"")">
+                        <select class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" @bind="onchange_ITypeCode">
+                            <option value="HH">Hàng hóa</option>
+                            <option value="DV">Dịch vụ</option>
+                        </select>
+                    </div>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="()=> GetVouchers()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
+                </div>
+
+                <div id="updateScrollToBottom" class="table-responsive" style="height: calc(100vh - 299px); min-height: 300px;">
+
+                    <div class="modal-body @(voucherVM.IsTypeUpdate==3?"noClick":"")" style="background-color: #f4f6f9;">
+                        @if (voucherVM.VTypeID == "FIN_Purchasing" || voucherVM.VTypeID == "FIN_Sale")
+                        {
+                            <div class="row" style="padding-bottom: 10px">
+                                <div class="col-12 col-sm-2">
+
+                                    <div class="form-group clearfix">
+                                        <div class="icheck-danger d-inline">
+                                            <input type="radio" id="rIsPayment0" name="rIsPayment" value="0" checked="@(voucherVM.IsPayment == false)" @onchange="(() => voucherVM.IsPayment = false)" />
+                                            <label for="rIsPayment0">
+                                                Chưa thanh toán
+                                            </label>
+                                        </div>
+                                        <label>
+                                            &nbsp;&nbsp;
+                                        </label>
+                                        <div class="icheck-success d-inline">
+                                            <input type="radio" id="rIsPayment1" name="rIsPayment" value="1" checked="@(voucherVM.IsPayment == true)" @onchange="(() => voucherVM.IsPayment = true)" />
+                                            <label for="rIsPayment1">
+                                                Thanh toán
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                @if (voucherVM.IsPayment)
+                                {
+                                    <div class="col-12 col-sm-2">
+                                        <select class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" @bind="voucherVM.PaymentTypeCode">
+                                            <option value="CASH">Tiền mặt</option>
+                                            <option value="BANK">Chuyển khoản</option>
+                                        </select>
+                                    </div>
+                                }
+
+                                <div class="col-12 col-sm-3">
+                                    <div class="form-group clearfix">
+                                        @if (voucherVM.ITypeCode == "HH")
+                                        {
+                                            <div class="icheck-success d-inline">
+                                                <input type="checkbox" id="IsInventory" @bind="voucherVM.IsInventory" />
+                                                @if (voucherVM.VTypeID == "FIN_Purchasing")
+                                                {
+                                                    <label for="IsInventory">
+                                                        Phiếu nhập kho
+                                                    </label>
+                                                }
+                                                @if (voucherVM.VTypeID == "FIN_Sale")
+                                                {
+                                                    <label for="IsInventory">
+                                                        Phiếu xuất kho
+                                                    </label>
+                                                }
+                                            </div>
+                                            <label>
+                                                &nbsp;&nbsp;
+                                            </label>
+                                        }
+                                        <div class="icheck-success d-inline">
+                                            <input type="checkbox" id="IsInvoice" @bind="onchange_IsInvoice" />
+                                            <label for="IsInvoice">
+                                                Lập kèm hóa đơn
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+
+                        <div class="row">
+                            <div class="col-sm-7" style="padding-right: 10px; border-right: 1px solid #e9ecef;">
+
+                                @if (voucherVM.VTypeID == "FIN_Purchasing")
+                                {
+                                    <div class="form-group">
+                                        <label>Nhà cung cấp</label>
+                                        <select class="selectpicker form-control form-control-sm"
+                                            data-style="btn-selectpicker" data-container="body"
+                                            data-live-search="true" data-show-subtext="true"
+                                            @bind="onchange_VendorCode">
+                                            <option value=@String.Empty>-----Chọn-----</option>
+                                            @if (vendorVMs != null)
+                                            {
+                                                @foreach (var _vendorVM in vendorVMs)
+                                                {
+                                                    <option data-subtext="@_vendorVM.VendorCode" value="@_vendorVM.VendorCode">@_vendorVM.VendorName</option>
+                                                }
+                                            }
+                                        </select>
+                                        <ValidationMessage For="@(() => voucherVM.VendorCode)" />
+                                    </div>
+                                }
+
+                                @if (voucherVM.VTypeID == "FIN_Sale")
+                                {
+                                    <div class="form-group">
+                                        <label>Khách hàng</label>
+                                        <select class="selectpicker form-control form-control-sm"
+                                            data-style="btn-selectpicker" data-container="body"
+                                            data-live-search="true" data-show-subtext="true"
+                                            @bind="onchange_CustomerCode">
+                                            <option value=@String.Empty>-----Chọn-----</option>
+                                            @if (customerVMs != null)
+                                            {
+                                                @foreach (var _customerVM in customerVMs)
+                                                {
+                                                    <option data-subtext="@_customerVM.CustomerCode" value="@_customerVM.CustomerCode">@_customerVM.CustomerName</option>
+                                                }
+                                            }
+                                        </select>
+                                        <ValidationMessage For="@(() => voucherVM.CustomerCode)" />
+                                    </div>
+                                }
+
+                                <div class="form-group">
+                                    <label>Diễn giải</label>
+                                    <InputText class="form-control form-control-sm" @bind-Value="voucherVM.VDesc" />
+                                    <ValidationMessage For="@(() => voucherVM.VDesc)" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3" style="padding-left: 10px;">
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        @if (voucherVM.VTypeID == "FIN_InventoryCheck")
+                                        {
+                                            <label>Ngày kiểm kê</label>
+                                        }
+                                        else
+                                        {
+                                            <label>Ngày chứng từ</label>
+                                        }
+                                        <div class="input-group">
+                                            <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask"
+                                                             Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))"
+                                                             @bind-StartDate="voucherVM.VDate" OnRangeSelect="OnRangeSelect_VDate"
+                                                             onClick="this.select();" />
+
+                                            <div class="input-group-append">
+                                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                            </div>
+                                        </div>
+                                        <ValidationMessage For="@(() => voucherVM.VDate)" />
+                                    </div>
+                                </div>
+
+                                @if (voucherVM.IsInvoice)
+                                {
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label>Số hóa đơn</label>
+                                            <InputNumber class="form-control form-control-sm" @bind-Value="voucherVM.InvoiceNumber" />
+                                            <ValidationMessage For="@(() => voucherVM.InvoiceNumber)" />
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>Ngày hóa đơn</label>
+                                            <div class="input-group">
+                                                <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask"
+                                                             Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))"
+                                                             @bind-StartDate="voucherVM.InvoiceDate"
+                                                             onClick="this.select();" />
+
+                                                <div class="input-group-append">
+                                                    <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                                </div>
+                                            </div>
+                                            <ValidationMessage For="@(() => voucherVM.InvoiceDate)" />
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+                            @if (voucherVM.VTypeID == "FIN_Purchasing" || voucherVM.VTypeID == "FIN_Sale")
+                            {
+                                <div class="col-sm-2" style="padding-left: 10px;">
+
+                                    <h5 class="text-right">Tổng tiền thanh toán</h5><br />
+                                    <h2 class="text-bold text-right">
+                                        @if (voucherDetailVMs != null)
+                                        {
+                                            @String.Format("{0:#,##0.##}",@voucherDetailVMs.Select(x=>x.VDPrice*(decimal)x.VDQty+x.VDPrice*(decimal)x.VDQty*(decimal)x.VATRate).Sum())
+                                        }
+                                    </h2>
+
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+
+                    <div class="modal-body p-0 @(voucherVM.IsTypeUpdate==3?"noClick":"")">
+
+                        <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin" id="keyPressNextInput">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-center">STT</th>
+                                    <th>Tên hàng</th>
+
+                                    <th class="text-center">Đơn vị</th>
+
+                                    @if (voucherVM.VTypeID == "FIN_InventoryCheck")
+                                    {
+                                        <th class="text-center" colspan=2>Kho</th>
+
+                                        <th class="text-center">
+                                            Tồn kho
+                                            @if (voucherDetailVMs != null)
+                                            {
+                                                <a data-toggle="tooltip" data-placement="top" title="Lấy lại tồn" @onclick=@(() => UpdateAllInventoryCheck_Qty())>
+                                                    <span class="badge bg-success"><i class="fa-solid fa-arrows-rotate"></i></span>
+                                                </a>
+                                            }
+                                        </th>
+                                        <th class="text-center" style="width: 80px;">Thực tế</th>
+                                        <th class="text-center">Chênh lệch</th>
+                                        <th class="text-center">Xử lý</th>
+                                    }
+
+                                    @if (voucherVM.VTypeID != "FIN_InventoryCheck")
+                                    {
+                                        <th class="text-center" style="width: 80px;">Số lượng</th>
+                                    }
+
+                                    @if (voucherVM.VTypeID == "FIN_Purchasing" || voucherVM.VTypeID == "FIN_Sale")
+                                    {
+                                        <th class="text-center" style="width: 110px;">
+                                            Đơn giá
+                                        </th>
+                                        <th class="text-center" style="width: 110px;">Thành tiền</th>
+                                        @if (voucherVM.IsInvoice)
+                                        {
+                                            <th class="text-center" style="width: 110px;">% Thuế GTGT</th>
+                                            <th class="text-center" style="width: 110px;">Tiền thuế GTGT</th>
+                                        }
+                                    }
+                                    @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory))
+                                    {
+                                        <th class="text-center" colspan=3>
+                                            Xuất tại kho
+                                            @if (voucherDetailVMs != null)
+                                            {
+                                                <a data-toggle="tooltip" data-placement="top" title="Lấy lại tồn" @onclick=@(() => UpdateAllInventoryCheck_Qty())>
+                                                    <span class="badge bg-success"><i class="fa-solid fa-arrows-rotate"></i></span>
+                                                </a>
+                                            }
+                                        </th>
+                                    }
+                                    @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Input" || (voucherVM.VTypeID == "FIN_Purchasing" && voucherVM.IsInventory))
+                                    {
+                                        <th class="text-center" colspan=2>Nhập tại kho</th>
+                                    }
+                                    <th>Ghi chú</th>
+                                    <th class="text-center"></th>
+                                </tr>
+                            </thead>
+                            @if (voucherDetailVMs != null)
+                            {
+                                <tbody>
+                                    @{
+                                        int rowNum = 1;
+                                        foreach (var _voucherDetailVM in voucherDetailVMs)
+                                        {
+                                            <tr>
+                                                <td class="text-center">@rowNum</td>
+
+                                                @if (_voucherDetailVM.IsUpdateItem == 0)
+                                                {
+                                                    <td><a @onclick=@(() => _voucherDetailVM.IsUpdateItem = 1)>@_voucherDetailVM.ICode - @_voucherDetailVM.IName</a></td>
+                                                }
+                                                else
+                                                {
+                                                    voucherDetailVM = new();
+                                                    <td>
+                                                        <BlazoredTypeahead SearchMethod="SearchItems"
+                                                           Value="voucherDetailVM"
+                                                           ValueChanged="@( (VoucherDetailVM i) => UpdateItem(i, _voucherDetailVM) )"
+                                                           ValueExpression="@( () => voucherDetailVM)"
+                                                           Debounce="500"
+                                                           MinimumLength="2"
+                                                           MaximumSuggestions="6"
+                                                           placeholder="Tìm kiếm theo mã hàng hoặc tên hàng...">
+                                                            <SelectedTemplate Context="_item">
+                                                                <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm theo mã hàng hoặc tên hàng...
+                                                            </SelectedTemplate>
+                                                            <ResultTemplate Context="_item">
+                                                                <i class="fa-solid fa-barcode"></i> @_item.ICode <i class="fa-solid fa-box"></i> @_item.IName
+                                                            </ResultTemplate>
+                                                            <NotFoundTemplate Context="_item">
+                                                                <i class="fa-solid fa-file-circle-xmark text-danger"></i> Không có dữ liệu
+                                                            </NotFoundTemplate>
+                                                        </BlazoredTypeahead>
+                                                    </td>
+                                                }
+
+                                                <td class="text-center">@_voucherDetailVM.IUnitName</td>
+
+                                                @if (voucherVM.VTypeID == "FIN_InventoryCheck")
+                                                {
+                                                    @if (_voucherDetailVM.IsUpdateInventoryCheck_Stock == 0)
+                                                    {
+                                                        <td>
+                                                            @if (String.IsNullOrEmpty(_voucherDetailVM.InventoryCheck_StockCode))
+                                                            {
+                                                                <a class="text-center" @onclick=@(() => _voucherDetailVM.IsUpdateInventoryCheck_Stock = 1)>-----Chọn kho-----</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a @onclick=@(() => _voucherDetailVM.IsUpdateInventoryCheck_Stock = 1)>@_voucherDetailVM.InventoryCheck_StockCode - @_voucherDetailVM.InventoryCheck_StockName</a>
+                                                            }
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td>
+                                                            <InputSelect class="selectpicker form-control form-control-sm"
+                                                     data-style="btn-selectpicker" data-container="body"
+                                                     data-live-search="true" data-show-subtext="true"
+                                                     ValueExpression="@(()=>_voucherDetailVM.InventoryCheck_StockCode)"
+                                                     Value="@_voucherDetailVM.InventoryCheck_StockCode"
+                                                     ValueChanged="@((string value) =>onchange_InventoryCheck_StockCode(value, _voucherDetailVM))">
+                                                                <option value=@String.Empty>-----Chọn kho-----</option>
+                                                                @if (stockVMs != null)
+                                                                {
+                                                                    @foreach (var _stockVM in stockVMs)
+                                                                    {
+                                                                        <option data-subtext="@_stockVM.StockCode" value="@_stockVM.StockCode">@_stockVM.StockName</option>
+                                                                    }
+                                                                }
+                                                            </InputSelect>
+                                                        </td>
+                                                    }
+
+                                                    <td class="text-center">
+                                                        <a data-toggle="tooltip" data-placement="top" title="Sao chép cho các dòng dưới" @onclick="(() => onclick_copyInventoryCheck_StockCode(_voucherDetailVM))">
+                                                            <span class="badge bg-success"><i class="fa-solid fa-copy"></i></span>
+                                                        </a>
+                                                    </td>
+
+                                                    <td class="text-center @(_voucherDetailVM.InventoryCheck_Qty<=0?"text-danger":"")">@_voucherDetailVM.InventoryCheck_Qty</td>
+                                                    <td class="text-center">
+                                                        <input class="form-control form-control-sm text-center @(_voucherDetailVM.InventoryCheck_ActualQty<0?"text-danger":"")" @bind="@_voucherDetailVM.InventoryCheck_ActualQty" onClick="this.select();" />
+                                                    </td>
+                                                    <td class="text-center @(_voucherDetailVM.InventoryCheck_ActualQty-_voucherDetailVM.InventoryCheck_Qty<0?"text-danger":"")">@(_voucherDetailVM.InventoryCheck_ActualQty - _voucherDetailVM.InventoryCheck_Qty)</td>
+                                                    <td class="text-center">
+                                                        @if (_voucherDetailVM.InventoryCheck_Qty < _voucherDetailVM.InventoryCheck_ActualQty)
+                                                        {
+                                                            <span>Nhập kho</span>
+                                                        }
+                                                        @if (_voucherDetailVM.InventoryCheck_Qty > _voucherDetailVM.InventoryCheck_ActualQty)
+                                                        {
+                                                            <span>Xuất kho</span>
+                                                        }
+                                                    </td>
+                                                }
+
+                                                @if (voucherVM.VTypeID != "FIN_InventoryCheck")
+                                                {
+                                                    <td class="text-center">
+                                                        <input class="form-control form-control-sm text-center" @bind="@_voucherDetailVM.VDQty" onClick="this.select();" />
+                                                    </td>
+                                                }
+
+                                                @if (voucherVM.VTypeID == "FIN_Purchasing" || voucherVM.VTypeID == "FIN_Sale")
+                                                {
+                                                    <td class="text-center">
+                                                        <input class="form-control form-control-sm" name="currency-mask" @bind="@_voucherDetailVM.VDPrice" onClick="this.select();" />
+                                                    </td>
+                                                    <td class="text-right">@String.Format("{0:#,##0.##}", (_voucherDetailVM.VDPrice*(decimal)_voucherDetailVM.VDQty))</td>
+
+                                                    @if (voucherVM.IsInvoice)
+                                                    {
+                                                        @if (_voucherDetailVM.IsUpdateVAT == 0)
+                                                        {
+                                                            <td class="text-center">
+                                                                @if (String.IsNullOrEmpty(_voucherDetailVM.VATCode))
+                                                                {
+                                                                    <a class="text-center" @onclick=@(() => _voucherDetailVM.IsUpdateVAT = 1)>-----Chọn-----</a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a @onclick=@(() => _voucherDetailVM.IsUpdateVAT = 1)>@_voucherDetailVM.VATName</a>
+                                                                }
+                                                            </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td>
+                                                                <InputSelect class="selectpicker form-control form-control-sm"
+                                                     data-style="btn-selectpicker"
+                                                     data-container="body"
+                                                     ValueExpression="@(()=>_voucherDetailVM.VATCode)"
+                                                     Value="@_voucherDetailVM.VATCode"
+                                                     ValueChanged="@((string value) =>onchange_VAT(value, _voucherDetailVM))">
+
+                                                                    <option value=@String.Empty>-----Chọn-----</option>
+                                                                    @if (vatDefVMs != null)
+                                                                    {
+                                                                        @foreach (var _vatDefVM in vatDefVMs)
+                                                                        {
+                                                                            <option value="@_vatDefVM.VATCode">@_vatDefVM.VATName</option>
+                                                                        }
+                                                                    }
+                                                                </InputSelect>
+                                                            </td>
+                                                        }
+
+                                                        <td class="text-right">@String.Format("{0:#,##0.##}", (_voucherDetailVM.VDPrice*(decimal)_voucherDetailVM.VDQty*(decimal)_voucherDetailVM.VATRate))</td>
+                                                    }
+                                                }
+
+                                                @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory))
+                                                {
+                                                    @if (_voucherDetailVM.IsUpdateFromStock == 0)
+                                                    {
+                                                        <td>
+                                                            @if (String.IsNullOrEmpty(_voucherDetailVM.FromStockCode))
+                                                            {
+                                                                <a class="text-center" @onclick=@(() => _voucherDetailVM.IsUpdateFromStock = 1)>-----Chọn-----</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a @onclick=@(() => _voucherDetailVM.IsUpdateFromStock = 1)>@_voucherDetailVM.FromStockCode - @_voucherDetailVM.FromStockName</a>
+                                                            }
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td>
+                                                            <InputSelect class="selectpicker form-control form-control-sm"
+                                                     data-style="btn-selectpicker"
+                                                     data-container="body" data-live-search="true"
+                                                     data-show-subtext="true"
+                                                     ValueExpression="@(()=>_voucherDetailVM.FromStockCode)"
+                                                     Value="@_voucherDetailVM.FromStockCode"
+                                                     ValueChanged="@((string value) =>onchange_FromStockCode(value, _voucherDetailVM))">
+
+                                                                <option value=@String.Empty>-----Chọn-----</option>
+                                                                @if (stockVMs != null)
+                                                                {
+                                                                    @foreach (var _stockVM in stockVMs)
+                                                                    {
+                                                                        <option data-subtext="@_stockVM.StockCode" value="@_stockVM.StockCode">@_stockVM.StockName</option>
+                                                                    }
+                                                                }
+                                                            </InputSelect>
+                                                        </td>
+                                                    }
+
+                                                    <td class="@(_voucherDetailVM.InventoryCheck_Qty<=0?"text-danger":"")">Tồn: @_voucherDetailVM.InventoryCheck_Qty</td>
+
+                                                    <td class="text-center">
+                                                        <a data-toggle="tooltip" data-placement="top" title="Sao chép cho các dòng dưới" @onclick="(() => onclick_copyFromStockCode(_voucherDetailVM))">
+                                                            <span class="badge bg-success"><i class="fa-solid fa-copy"></i></span>
+                                                        </a>
+                                                    </td>
+                                                }
+
+                                                @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Input" || (voucherVM.VTypeID == "FIN_Purchasing" && voucherVM.IsInventory))
+                                                {
+                                                    @if (_voucherDetailVM.IsUpdateToStock == 0)
+                                                    {
+                                                        <td>
+                                                            @if (String.IsNullOrEmpty(_voucherDetailVM.ToStockCode))
+                                                            {
+                                                                <a class="text-center" @onclick=@(() => _voucherDetailVM.IsUpdateToStock = 1)>-----Chọn-----</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a @onclick=@(() => _voucherDetailVM.IsUpdateToStock = 1)>@_voucherDetailVM.ToStockCode - @_voucherDetailVM.ToStockName</a>
+                                                            }
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td>
+                                                            <select class="selectpicker form-control form-control-sm"
+                                                data-style="btn-selectpicker" data-container="body"
+                                                data-live-search="true" data-show-subtext="true"
+                                                    @bind="_voucherDetailVM.ToStockCode">
+                                                                <option value=@String.Empty>-----Chọn-----</option>
+                                                                @if (stockVMs != null)
+                                                                {
+                                                                    @foreach (var _stockVM in stockVMs)
+                                                                    {
+                                                                        <option data-subtext="@_stockVM.StockCode" value="@_stockVM.StockCode">@_stockVM.StockName</option>
+                                                                    }
+                                                                }
+                                                            </select>
+                                                        </td>
+                                                    }
+
+                                                    <td class="text-center">
+                                                        <a data-toggle="tooltip" data-placement="top" title="Sao chép cho các dòng dưới" @onclick=@(() => voucherDetailVMs.Where(x=>x.SeqVD > _voucherDetailVM.SeqVD).ToList().ForEach(e => {e.ToStockCode = _voucherDetailVM.ToStockCode; e.ToStockName = stockVMs.Where(x=>x.StockCode==_voucherDetailVM.ToStockCode).Select(x=>x.StockName).FirstOrDefault();}))>
+                                                            <span class="badge bg-success"><i class="fa-solid fa-copy"></i></span>
+                                                        </a>
+                                                    </td>
+                                                }
+
+                                                <td>
+                                                    <input class="form-control form-control-sm" @bind="@_voucherDetailVM.VDNote" />
+                                                </td>
+
+                                                <td class="text-center">
+                                                    <a @onclick=@(() => voucherDetailVMs.Remove(_voucherDetailVM))>
+                                                        <span class="badge bg-danger"><i class="fas fa-trash"></i></span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            ++rowNum;
+                                        }
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th class="text-center">@voucherDetailVMs.Count()</th>
+                                        <th></th>
+
+                                        <th class="text-center"></th>
+
+                                        @if (voucherVM.VTypeID == "FIN_InventoryCheck")
+                                        {
+                                            <th class="text-center" colspan=2></th>
+                                            <th class="text-center">@voucherDetailVMs.Select(x=>x.InventoryCheck_Qty).Sum()</th>
+                                            <th class="text-center">@voucherDetailVMs.Select(x=>x.InventoryCheck_ActualQty).Sum()</th>
+                                            <th class="text-center">@voucherDetailVMs.Select(x=>x.InventoryCheck_ActualQty - x.InventoryCheck_Qty).Sum()</th>
+                                            <th></th>
+                                        }
+
+                                        @if (voucherVM.VTypeID != "FIN_InventoryCheck")
+                                        {
+                                            <th class="text-center">@voucherDetailVMs.Select(x=>x.VDQty).Sum()</th>
+                                        }
+                                        @if (voucherVM.VTypeID == "FIN_Purchasing" || voucherVM.VTypeID == "FIN_Sale")
+                                        {
+                                            <th class="text-center"></th>
+
+                                            <th class="text-right">@String.Format("{0:#,##0.##}",@voucherDetailVMs.Select(x=>x.VDPrice*(decimal)x.VDQty).Sum())</th>
+
+                                            @if (voucherVM.IsInvoice)
+                                            {
+                                                <th class="text-center"></th>
+
+                                                <th class="text-right">@String.Format("{0:#,##0.##}",@voucherDetailVMs.Select(x=>x.VDPrice*(decimal)x.VDQty*(decimal)x.VATRate).Sum())</th>
+                                            }
+                                        }
+                                        @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory))
+                                        {
+                                            <th class="text-center" colspan=3></th>
+                                        }
+                                        @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Input" || (voucherVM.VTypeID == "FIN_Purchasing" && voucherVM.IsInventory))
+                                        {
+                                            <th class="text-center" colspan=2></th>
+                                        }
+                                        <th></th>
+                                        <th class="text-center"></th>
+                                    </tr>
+                                </tfoot>
+                            }
+                        </table>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer justify-content-center @(voucherVM.IsTypeUpdate==3?"noClick":"")">
+
+                    @{
+                        voucherDetailVM = null;
+                    }
+
+                    <div class="col-sm-11">
+                        <BlazoredTypeahead SearchMethod="SearchItems"
+                                           Value="voucherDetailVM"
+                                           ValueChanged="@( (VoucherDetailVM i) => SelectedItem(i) )"
+                                           ValueExpression="@( () => voucherDetailVM)"
+                                           Debounce="500"
+                                           MinimumLength="2"
+                                           MaximumSuggestions="6"
+                                           placeholder="Tìm kiếm theo mã hàng hoặc tên hàng..."
+                                           @ref="txtSearchItems">
+                            <SelectedTemplate Context="_item">
+                                <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm theo mã hàng hoặc tên hàng...
+                            </SelectedTemplate>
+                            <ResultTemplate Context="_item">
+                                <i class="fa-solid fa-barcode"></i> @_item.ICode <i class="fa-solid fa-box"></i> @_item.IName
+                            </ResultTemplate>
+                            <NotFoundTemplate Context="_item">
+                                <i class="fa-solid fa-file-circle-xmark text-danger"></i> Không có dữ liệu
+                            </NotFoundTemplate>
+                        </BlazoredTypeahead>
+                    </div>
+
+                    <a class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="Thêm dữ liệu từ Excel" @onclick="(() => InitializeModalUpdate_PostExcel())"><i class="fa-solid fa-file-excel"></i></a>
+
+                </div>
+
+                <div class="modal-footer justify-content-center">
+
+                    @if (voucherVM.VActive)
+                    {
+                        @if (FIN_Voucher_CancelActive)
+                        {
+                            <button type="button" class="btn btn-sm btn-danger" @onclick="(() => ActiveVoucher(4,false))"><i class="fa-solid fa-file-circle-xmark"></i> Bỏ ghi sổ</button>
+                        }
+                    }
+                    else
+                    {
+                        @if (voucherVM.IsTypeUpdate == 3)
+                        {
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-print"></i> In
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    @if (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory)
+                                    {
+                                        <a class="dropdown-item" @onclick=@(() => PrintVoucher("Phieu_xuat_kho_ban_hang"))>Phiếu xuất kho bán hàng</a>
+                                    }
+                                </div>
+                            </div>
+
+                            @if (FIN_Voucher_Update)
+                            {
+                                <button type="button" class="btn btn-sm btn-secondary" @onclick="(() => voucherVM.IsTypeUpdate=1)"><i class="fa-solid fa-pencil"></i> Sửa</button>
+                                @if (!String.IsNullOrEmpty(voucherVM.VNumber))
+                                {
+                                    <button type="button" class="btn btn-sm btn-success" @onclick="(() => ActiveVoucher(4,true))"><i class="fa-solid fa-file-pen"></i> Ghi sổ</button>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateVoucher(formVoucherVM, voucherVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
+
+                            @if (voucherVM.IsTypeUpdate == 1)
+                            {
+                                <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateVoucher(formVoucherVM, 2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                            }
+                        }
+                    }
+
+                </div>
+
+            </EditForm>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_PostExcel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <span>THÊM DỮ LIỆU TỪ EXCEL</span>
+                </h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Mã mặt hàng</th>
+                            <th class="text-center">Số lượng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="2">
+                                <input class="form-control form-control-sm" placeholder="Copy dữ liệu từ excel và dán vào đây..." @bind="voucherVM.DataFromExcel" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-sm btn-success" @onclick="(() => GetDataFromExcel())"><i class="fa-solid fa-floppy-disk"></i> Cập nhật</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+
+<Modal_RptViewer ReportName=@ReportName></Modal_RptViewer>
+
+<EditForm Model="@filterFinVM">
+    <section class="content-header">
+        <div class="row">
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true" data-container="body" @bind="filterFinVM.DivisionID">
+                        @if (filter_divisionVMs != null)
+                        {
+                            @foreach (var _filter_divisionVM in filter_divisionVMs)
+                            {
+                                <option data-subtext="@_filter_divisionVM.DivisionID" value="@_filter_divisionVM.DivisionID">@_filter_divisionVM.DivisionName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" @bind="filterFinVM.VTypeID">
+                        <option value=@String.Empty>-----Loại chứng từ-----</option>
+                        @if (filter_vTypeVMs != null)
+                        {
+                            @foreach (var _filter_vTypeVM in filter_vTypeVMs)
+                            {
+                                <option value="@_filter_vTypeVM.VTypeID">@_filter_vTypeVM.VTypeDesc</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" @bind="filterFinVM.searchActive">
+                        <option value=2>-----Trạng thái ghi sổ-----</option>
+                        <option value=1>Đã ghi sổ</option>
+                        <option value=0>Chưa ghi sổ</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <DateRangePicker Ranges="DateRanges" Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))" ApplyLabel="Thực hiện" CancelLabel="Hủy" CustomRangeLabel="Chọn ngày" OnRangeSelect="OnRangeSelect">
+                        <PickerTemplate Context="c">
+                            <div id="@c.Id" @onclick="c.Toggle" class="form-control form-control-sm" style="cursor: pointer;">
+                                <i class="fa-solid fa-calendar-days"></i>&nbsp;
+                                <span>
+                                    @if (c.TStartDate == null && c.TEndDate == null)
+                                    {
+                                        <span>Ngày hôm nay</span>
+                                    }
+                                    else if (c.TStartDate != null && c.TEndDate == null)
+                                    {
+                                        if (c.HoverDate > c.TStartDate)
+                                        {
+                                            @($"{c.TStartDate.Value.ToString(c.DateFormat)} - {c.HoverDate.Value.ToString(c.DateFormat)}")
+                                        }
+                                        else
+                                        {
+                                            <span>@c.TStartDate.Value.ToString("dd/MM/yyyy")</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            @c.FormattedRange
+                                        </span>
+                                    }
+                                </span>
+
+                                <span class="float-right">
+                                    <i class="fa-solid fa-angle-down"></i>
+                                </span>
+                            </div>
+                        </PickerTemplate>
+                    </DateRangePicker>
+                </div>
+            </div>
+
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <input type="search" class="form-control form-control-sm" placeholder="Số chứng từ" @bind="filterFinVM.VNumber" />
+                </div>
+            </div>
+
+            <div class="col-md-1">
+                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetVouchers())">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+</EditForm>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-warning card-outline">
+
+            <div class="card-header text-right">
+
+                @if (!String.IsNullOrEmpty(voucherVM.VNumber))
+                {
+                    <button type="button" class="btn btn-sm btn-secondary" @onclick="(() => InitializeModalUpdate_Voucher(voucherVM.VTypeID,5))"><i class="fa-solid fa-copy"></i> Sao chép</button>
+
+                    <button type="button" class="btn btn-sm btn-info" @onclick=@(() => InitializeModalUpdate_Voucher(voucherVM.VTypeID,3))><i class="fa-solid fa-file-invoice"></i> Mở chứng từ</button>
+                }
+                @if (filter_vTypeVMs != null)
+                {
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa-solid fa-xl fa-plus"></i> Thêm
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            @foreach (var _filter_vTypeVM in filter_vTypeVMs)
+                            {
+                                <a class="dropdown-item" @onclick=@(() => InitializeModalUpdate_Voucher(_filter_vTypeVM.VTypeID,0))>@_filter_vTypeVM.VTypeDesc</a>
+                            }
+                        </div>
+                    </div>
+                }
+
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0" style="height: calc(100vh - 233px);">
+
+                @if (voucherVMs != null)
+                {
+                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="text-center">Ngày chứng từ</th>
+                                <th class="text-center">Số chứng từ</th>
+                                <th>Diễn giải</th>
+                                <th>Loại chứng từ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <Virtualize Items="@voucherVMs" Context="voucherVM" OverscanCount="50">
+                                @{
+                                    var colorVoucher = !voucherVM.VActive ? "text-danger" : "";
+                                }
+                                <tr class="@colorVoucher @(SetSelected(voucherVM))" @onclick="() => onclick_Selected(voucherVM)">
+                                    <td class="text-center">
+                                        @(voucherVM.VDate.HasValue ? voucherVM.VDate.Value.ToString("dd/MM/yyyy") : "")
+                                    </td>
+                                    <td class="text-center">@voucherVM.VNumber</td>
+                                    <td>@voucherVM.VDesc</td>
+                                    <td>@voucherVM.VTypeDesc</td>
+                                </tr>
+                            </Virtualize>
+                        </tbody>
+                    </table>
+                    if (voucherVMs.Count() <= 0)
+                    {
+                        <img class="img-no-result" src="images/_default/no-results.png" />
+                    }
+                }
+            </div>
+            <!-- /.card-body -->
+            @if (voucherVMs != null)
+            {
+                <div class="card-footer text-muted">
+                    Tổng số: <b>@voucherVMs.Count()</b> bản ghi
+                </div>
+            }
+            <!-- /.card-footer -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+@code {
+    Dictionary<string, DateRange> DateRanges => new Dictionary<string, DateRange> {
+            {"Ngày hôm nay", new DateRange
+                    {
+                        Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),
+                        End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)
+                    }
+                },
+            {"Ngày hôm qua", new DateRange
+                    {
+                        Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(-1),
+                        End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(-1)
+                    }
+                },
+            {"Tháng này", new DateRange
+                    {
+                        Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
+                        End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1).AddTicks(-1)
+                    }
+                },
+            {"Tháng trước", new DateRange
+                    {
+                        Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-1),
+                        End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddTicks(-1)
+                    }
+                },
+            };
+}
+

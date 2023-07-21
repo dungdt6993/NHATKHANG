@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace D69soft.Shared.Models.Entities.FIN
 {
-    interface VSubType
+    interface PaymentType
     {
-        public string VSubTypeID { get; set; }
-        public string VSubTypeDesc { get; set; }
+        public string PaymentTypeCode { get; set; }
+        public string PaymentTypeName { get; set; }
     }
 }

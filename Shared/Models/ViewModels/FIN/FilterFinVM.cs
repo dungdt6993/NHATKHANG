@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace D69soft.Shared.Models.ViewModels.FIN
 {
-    public class FilterFinVM : Division, Department, ItemsClass, ItemsGroup, Items, VSubType, StockVoucher, Func, Stock
+    public class FilterFinVM : Division, Department, ItemsClass, ItemsGroup, Items, Voucher, Func, Stock, ItemsType, VType
     {
         //Parameter
         public string UserID { get; set; }
@@ -25,8 +25,6 @@ namespace D69soft.Shared.Models.ViewModels.FIN
 
         public DateTimeOffset StartDate { get; set; }
         public DateTimeOffset EndDate { get; set; }
-        //Parameter
-
         public string DivisionID { get; set; }
         public string DivisionName { get; set; }
         public string CodeDivs { get; set; }
@@ -35,10 +33,8 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public bool isAutoEserial { get; set; }
         public int is2625 { get; set; }
         public int INOUTNumber { get; set; }
-
         public string DepartmentID { get; set; }
         public string DepartmentName { get; set; }
-
         public string IClsCode { get; set; }
         public string IClsName { get; set; }
         public string IClsDesc { get; set; }
@@ -54,16 +50,14 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string StockDefault { get; set; }
         public string VendorDefault { get; set; }
         public bool IActive { get; set; }
-        public string VSubTypeID { get; set; }
-        public string VSubTypeDesc { get; set; }
         public string VNumber { get; set; }
         public string VDesc { get; set; }
         public DateTimeOffset? VDate { get; set; }
-        public bool IsMultipleInvoice { get; set; }
         public bool VActive { get; set; }
-        public string Reference_VNumber { get; set; }
-        public string Reference_StockCode { get; set; }
-        public string Reference_VSubTypeID { get; set; }
+        public bool IsPayment { get; set; }
+        public bool IsInvoice { get; set; }
+        public int InvoiceNumber { get; set; }
+        public DateTimeOffset? InvoiceDate { get; set; }
         public int FNo { get; set; }
         public string FuncID { get; set; }
         public string FuncName { get; set; }
@@ -73,5 +67,12 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string StockName { get; set; }
         public string StockAddress { get; set; }
         public bool StockActive { get; set; }
+        public string ITypeCode { get; set; }
+        public string ITypeName { get; set; }
+        public string ITypeDesc { get; set; }
+        public bool IsInventory { get; set; }
+        public string VTypeID { get; set; }
+        public string VTypeDesc { get; set; }
+        public string VCode { get; set; }
     }
 }

@@ -435,7 +435,7 @@ namespace D69soft.Server.Controllers.POS
         }
 
         [HttpGet("QI_StockVoucherDetails/{_CheckNo}")]
-        public async Task<ActionResult<List<StockVoucherDetailVM>>> QI_StockVoucherDetails(string _CheckNo)
+        public async Task<ActionResult<List<VoucherDetailVM>>> QI_StockVoucherDetails(string _CheckNo)
         {
             var sql = "select invoice.ICode, SUM(invoice.Qty) as Qty, invoice.VDNote, invoice.FromStockCode, 1 as IsReference from FIN.Items i  ";
             sql += "join (select * from FIN.ItemsType where IsInventory=1) it on it.ITypeCode = i.ITypeCode ";
@@ -458,7 +458,7 @@ namespace D69soft.Server.Controllers.POS
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<StockVoucherDetailVM>(sql, new { CheckNo = _CheckNo });
+                var result = await conn.QueryAsync<VoucherDetailVM>(sql, new { CheckNo = _CheckNo });
                 return result.ToList();
             }
         }

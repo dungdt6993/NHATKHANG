@@ -147,15 +147,9 @@ namespace D69soft.Client.Services.POS
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<List<StockVoucherDetailVM>> QI_StockVoucherDetails(string _CheckNo)
+        public async Task<List<VoucherDetailVM>> QI_StockVoucherDetails(string _CheckNo)
         {
-            return await _httpClient.GetFromJsonAsync<List<StockVoucherDetailVM>>($"api/Cashier/QI_StockVoucherDetails/{_CheckNo}");
-        }
-
-        //SyncSmile
-        public async Task<bool> SyncDataSmile()
-        {
-            return await _httpClient.GetFromJsonAsync<bool>($"api/Cashier/SyncDataSmile");
+            return await _httpClient.GetFromJsonAsync<List<VoucherDetailVM>>($"api/Cashier/QI_StockVoucherDetails/{_CheckNo}");
         }
 
     }

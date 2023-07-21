@@ -6,16 +6,15 @@ using System.Threading.Tasks;
 
 namespace D69soft.Shared.Models.Entities.FIN
 {
-    interface StockVoucher
+    interface Voucher
     {
         public string VNumber { get; set; }
         public string VDesc { get; set; }
         public DateTimeOffset? VDate { get; set; }
-        public bool IsMultipleInvoice { get; set; }
         public bool VActive { get; set; }
-
-        public string Reference_VNumber { get; set; }
-        public string Reference_StockCode { get; set; }
-        public string Reference_VSubTypeID { get; set; }
+        public bool IsPayment { get; set; }
+        public bool IsInvoice { get; set; }
+        public int InvoiceNumber { get; set; }
+        public DateTimeOffset? InvoiceDate { get; set; }
     }
 }

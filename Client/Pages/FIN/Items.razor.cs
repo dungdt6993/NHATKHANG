@@ -106,19 +106,6 @@ namespace D69soft.Client.Pages.FIN
             isLoadingScreen = false;
         }
 
-        private async Task SyncDataSmile()
-        {
-            isLoading = true;
-
-            await inventoryService.SyncDataSmile();
-
-            await GetItems();
-
-            isLoading = false;
-
-            await js.Toast_Alert("Đồng bộ dữ liệu thành công!", SweetAlertMessageType.success);
-        }
-
         private async Task GetItems()
         {
             isLoading = true;

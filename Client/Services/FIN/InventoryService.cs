@@ -127,17 +127,11 @@ namespace D69soft.Client.Services.FIN
             return await response.Content.ReadFromJsonAsync<List<InventoryBookDetailVM>>();
         }
 
-        public async Task<float> GetInventoryCheck_Qty(DateTimeOffset _VDate, StockVoucherDetailVM _stockVoucherDetailVM)
+        public async Task<float> GetInventoryCheck_Qty(DateTimeOffset _VDate, VoucherDetailVM _voucherDetailVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Inventory/GetInventoryCheck_Qty/{_VDate.ToString("yyyy-MM-dd")}", _stockVoucherDetailVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Inventory/GetInventoryCheck_Qty/{_VDate.ToString("yyyy-MM-dd")}", _voucherDetailVM);
 
             return await response.Content.ReadFromJsonAsync<float>();
-        }
-
-        //SyncSmile
-        public async Task<bool> SyncDataSmile()
-        {
-            return await _httpClient.GetFromJsonAsync<bool>($"api/Inventory/SyncDataSmile");
         }
 
     }

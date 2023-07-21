@@ -5,10 +5,48 @@ using FluentValidation;
 
 namespace D69soft.Client.Validator.FIN
 {
-    public class VoucherValidator : AbstractValidator<StockVoucherVM>
+    public class VoucherValidator : AbstractValidator<VoucherVM>
     {
         public VoucherValidator()
         {
+            When(x => x.VTypeID == "FIN_Purchasing", () =>
+            {
+                When(x => x.IsTypeUpdate != 2, () =>
+                {
+                    RuleFor(x => x.VDate).NotEmpty().WithMessage("Không được trống.");
+
+                    RuleFor(x => x.VDesc).NotEmpty().WithMessage("Không được trống.");
+
+                    RuleFor(x => x.VendorCode).NotEmpty().WithMessage("Không được trống.");
+
+                    When(x => x.IsInvoice, () =>
+                    {
+                        RuleFor(x => x.InvoiceNumber).NotEmpty().WithMessage("Không được trống.");
+
+                        RuleFor(x => x.InvoiceDate).NotEmpty().WithMessage("Không được trống.");
+                    });
+                });
+            });
+
+            When(x => x.VTypeID == "FIN_Sale", () =>
+            {
+                When(x => x.IsTypeUpdate != 2, () =>
+                {
+                    RuleFor(x => x.VDate).NotEmpty().WithMessage("Không được trống.");
+
+                    RuleFor(x => x.VDesc).NotEmpty().WithMessage("Không được trống.");
+
+                    RuleFor(x => x.CustomerCode).NotEmpty().WithMessage("Không được trống.");
+
+                    When(x => x.IsInvoice, () =>
+                    {
+                        RuleFor(x => x.InvoiceNumber).NotEmpty().WithMessage("Không được trống.");
+
+                        RuleFor(x => x.InvoiceDate).NotEmpty().WithMessage("Không được trống.");
+                    });
+                });
+            });
+
             When(x => x.VTypeID == "FIN_Input", () =>
             {
                 When(x => x.IsTypeUpdate != 2, () =>
@@ -16,17 +54,6 @@ namespace D69soft.Client.Validator.FIN
                     RuleFor(x => x.VDate).NotEmpty().WithMessage("Không được trống.");
 
                     RuleFor(x => x.VDesc).NotEmpty().WithMessage("Không được trống.");
-                });
-
-                When(x => x.VSubTypeID == "FIN_Input_Purchasing", () =>
-                {
-                    When(x => x.IsTypeUpdate != 2, () =>
-                    {
-                        When(x => !x.IsMultipleInvoice, () =>
-                        {
-                            RuleFor(x => x.VendorCode).NotEmpty().WithMessage("Không được trống.");
-                        });
-                    });
                 });
             });
 
@@ -38,21 +65,9 @@ namespace D69soft.Client.Validator.FIN
 
                     RuleFor(x => x.VDesc).NotEmpty().WithMessage("Không được trống.");
                 });
-
-                When(x => x.VSubTypeID == "FIN_Output_SalePOS", () =>
-                {
-                    When(x => x.IsTypeUpdate != 2, () =>
-                    {
-                        When(x => !x.IsMultipleInvoice, () =>
-                        {
-                            RuleFor(x => x.CustomerCode).NotEmpty().WithMessage("Không được trống.");
-                        });
-                    });
-                });
-
             });
 
-            When(x => x.VTypeID == "FIN_Transfer", () =>
+            When(x => x.VTypeID == "FIN_Trf", () =>
             {
                 When(x => x.IsTypeUpdate != 2, () =>
                 {
@@ -60,19 +75,8 @@ namespace D69soft.Client.Validator.FIN
 
                     RuleFor(x => x.VDesc).NotEmpty().WithMessage("Không được trống.");
                 });
-
-                When(x => x.VSubTypeID == "FIN_Transfer_Purchasing", () =>
-                {
-                    When(x => x.IsTypeUpdate != 2, () =>
-                    {
-                        When(x => !x.IsMultipleInvoice, () =>
-                        {
-                            RuleFor(x => x.VendorCode).NotEmpty().WithMessage("Không được trống.");
-                        });
-                    });
-                });
-
             });
+
 
             When(x => x.VTypeID == "FIN_InventoryCheck", () =>
             {

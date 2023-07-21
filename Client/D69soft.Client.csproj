@@ -31,6 +31,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Pages\EA\" />
+	  <Folder Include="Pages\POS\" />
 	  <Folder Include="Validator\POS\" />
 	</ItemGroup>
 

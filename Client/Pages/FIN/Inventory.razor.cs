@@ -51,7 +51,7 @@ namespace D69soft.Client.Pages.FIN
         //InventoryBookDetailVM
         List<InventoryBookDetailVM> inventoryBookDetailVMs;
 
-        private BlazoredTypeahead<StockVoucherDetailVM, StockVoucherDetailVM> txtSearchItems;
+        private BlazoredTypeahead<VoucherDetailVM, VoucherDetailVM> txtSearchItems;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {

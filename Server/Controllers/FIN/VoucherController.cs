@@ -34,97 +34,70 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
-        [HttpGet("GetVSubTypeVMs/{_FuncID}")]
-        public async Task<ActionResult<IEnumerable<VSubTypeVM>>> GetVSubTypeVMs(string _FuncID)
+        [HttpPost("GetVouchers")]
+        public async Task<ActionResult<List<VoucherVM>>> GetVouchers(FilterFinVM _filterFinVM)
         {
-            var sql = "select * from FIN.VSubType where VTypeID in (select VTypeID from FIN.VType where FuncID=@FuncID) ";
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == System.Data.ConnectionState.Closed)
-                    conn.Open();
-
-                var result = await conn.QueryAsync<VSubTypeVM>(sql, new { FuncID = _FuncID });
-                return Ok(result);
-            }
-        }
-
-        [HttpPost("GetStockVouchers")]
-        public async Task<ActionResult<List<StockVoucherVM>>> GetStockVouchers(FilterFinVM _filterFinVM)
-        {
-            var sql = "select sv.VNumber, sv.VDate, sv.VDesc, sv.VTypeID, sv.VSubTypeID, vType.VTypeDesc, vsType.VSubTypeDesc, ";
-            sql += "pEU.Eserial + ' - ' + pEU.LastName + ' ' + pEU.MiddleName + ' ' + pEU.FirstName as FullNameEU, pEC.Eserial + ' - ' + pEC.LastName + ' ' + pEC.MiddleName + ' ' + pEC.FirstName as FullNameEC, sv.TimeUpdate, sv.TimeCreated, ";
-            sql += "sv.VendorCode, sv.CustomerCode, sv.VActive, sv.IsMultipleInvoice, sv.Reference_VNumber, ref_vtype.FuncURL, ref_vtype.Reference_VSubTypeName, sv.Reference_StockCode, s.StockCode, s.StockName from FIN.StockVoucher sv ";
-            sql += "left join FIN.Stock s on s.StockCode = sv.StockCode ";
-            sql += "left join HR.Profile pEC on pEC.Eserial = sv.EserialCreated ";
-            sql += "left join HR.Profile pEU on pEU.Eserial = sv.EserialUpdate ";
-            sql += "join FIN.VType vType on vType.VTypeID = sv.VTypeID ";
-            sql += "join FIN.VSubType vsType on vsType.VSubTypeID = sv.VSubTypeID ";
-
-            sql += "left join ( ";
-            sql += "select f.FuncURL, vs.VSubTypeID as Reference_VSubTypeID, vs.VSubTypeDesc as Reference_VSubTypeName from FIN.VType v ";
-            sql += "join FIN.VSubType vs on vs.VTypeID = v.VTypeID ";
-            sql += "join SYSTEM.Func f on f.FuncID = v.FuncID ";
-            sql += ") ref_vtype on ref_vtype.Reference_VSubTypeID = sv.Reference_VSubTypeID ";
-
+            var sql = "select v.VNumber, v.VDate, v.VDesc, vType.VTypeID, vType.VTypeDesc, ";
+            sql += "v.VendorCode, v.CustomerCode, v.StockCode, v.ITypeCode, v.VActive, v.IsPayment, v.PaymentTypeCode, v.IsInventory, v.IsInvoice, v.InvoiceNumber, v.InvoiceDate ";
+            sql += "from FIN.Voucher v ";
+            sql += "join FIN.VType vType on vType.VTypeID = v.VTypeID ";
             sql += "where vType.FuncID=@FuncID ";
-            sql += "and format(sv.VDate,'MM/dd/yyyy')>=format(@StartDate,'MM/dd/yyyy') and format(sv.VDate,'MM/dd/yyyy')<=format(@EndDate,'MM/dd/yyyy') ";
-            sql += "and (sv.DivisionID=@DivisionID or coalesce(@DivisionID,'')='') ";
-            sql += "and (sv.VSubTypeID=@VSubTypeID or coalesce(@VSubTypeID,'')='') ";
-            sql += "and (sv.VActive=@searchActive or @searchActive=2) ";
-            sql += "and (sv.VNumber LIKE CONCAT('%',@VNumber,'%') or coalesce(@VNumber,'')='') ";
-            sql += "order by sv.TimeCreated desc, sv.VDate ";
+            sql += "and format(v.VDate,'MM/dd/yyyy')>=format(@StartDate,'MM/dd/yyyy') and format(v.VDate,'MM/dd/yyyy')<=format(@EndDate,'MM/dd/yyyy') ";
+            sql += "and (v.DivisionID=@DivisionID or coalesce(@DivisionID,'')='') ";
+            sql += "and (v.VTypeID=@VTypeID or coalesce(@VTypeID,'')='') ";
+            sql += "and (v.VActive=@searchActive or @searchActive=2) ";
+            sql += "and (v.VNumber LIKE CONCAT('%',@VNumber,'%') or coalesce(@VNumber,'')='') ";
+            sql += "order by v.TimeCreated desc, v.VDate ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<StockVoucherVM>(sql, _filterFinVM);
+                var result = await conn.QueryAsync<VoucherVM>(sql, _filterFinVM);
                 return result.ToList();
             }
         }
 
-        [HttpGet("GetStockVoucherDetails/{_VNumber}")]
-        public async Task<ActionResult<List<StockVoucherDetailVM>>> GetStockVoucherDetails(string _VNumber)
+        [HttpGet("GetVoucherDetails/{_VNumber}")]
+        public async Task<ActionResult<List<VoucherDetailVM>>> GetVoucherDetails(string _VNumber)
         {
-            var sql = "select SeqVD, i.ICode, i.IName, i.IPrice, i.VendorDefault, i.StockDefault, svd.Qty, iu.IUnitName, svd.Price, svd.ToStockCode, toStock.StockName as ToStockName, svd.FromStockCode, fromStock.StockName as FromStockName, svd.VDNote, ";
-            sql += "svd.VendorCode, v.VendorName, svd.InventoryCheck_StockCode, inventorycheckStock.StockName as InventoryCheck_StockName, svd.InventoryCheck_Qty, svd.InventoryCheck_ActualQty, svd.Request_ICode, svd.IsReference, ";
-            sql += "vat.VATCode, coalesce(vat.VATRate,0) as VATRate, vat.VATName ";
-            sql += "from FIN.StockVoucherDetail svd ";
-            sql += "join FIN.Items i on i.ICode = svd.ICode ";
+            var sql = "select SeqVD, i.ICode, i.IName, i.IPrice, i.VendorDefault, i.StockDefault, vd.VDQty, iu.IUnitName, vd.VDPrice, vd.ToStockCode, toStock.StockName as ToStockName, vd.FromStockCode, fromStock.StockName as FromStockName, vd.VDNote, ";
+            sql += "vd.InventoryCheck_StockCode, inventorycheckStock.StockName as InventoryCheck_StockName, vd.InventoryCheck_Qty, vd.InventoryCheck_ActualQty, vat.VATCode, coalesce(vat.VATRate,0) as VATRate, vat.VATName ";
+            sql += "from FIN.VoucherDetail vd ";
+            sql += "join FIN.Items i on i.ICode = vd.ICode ";
             sql += "join FIN.ItemsUnit iu on iu.IUnitCode = i.IUnitCode ";
-            sql += "left join FIN.VATDef vat on svd.VATCode = vat.VATCode ";
-            sql += "left join FIN.Stock fromStock on fromStock.StockCode = svd.FromStockCode ";
-            sql += "left join FIN.Stock toStock on toStock.StockCode = svd.ToStockCode ";
-            sql += "left join FIN.Vendor v on v.VendorCode = svd.VendorCode ";
-            sql += "left join FIN.Stock inventorycheckStock on inventorycheckStock.StockCode = svd.InventoryCheck_StockCode ";
-            sql += "where svd.VNumber = @VNumber order by SeqVD ";
+            sql += "left join FIN.VATDef vat on vd.VATCode = vat.VATCode ";
+            sql += "left join FIN.Stock fromStock on fromStock.StockCode = vd.FromStockCode ";
+            sql += "left join FIN.Stock toStock on toStock.StockCode = vd.ToStockCode ";
+            sql += "left join FIN.Stock inventorycheckStock on inventorycheckStock.StockCode = vd.InventoryCheck_StockCode ";
+            sql += "where vd.VNumber = @VNumber order by SeqVD ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<StockVoucherDetailVM>(sql, new { VNumber = _VNumber });
+                var result = await conn.QueryAsync<VoucherDetailVM>(sql, new { VNumber = _VNumber });
                 return result.ToList();
             }
         }
 
         [HttpPost("GetSearchItems")]
-        public async Task<ActionResult<IEnumerable<StockVoucherDetailVM>>> GetSearchItems(FilterFinVM _filterFinVM)
+        public async Task<ActionResult<IEnumerable<VoucherDetailVM>>> GetSearchItems(VoucherVM _voucherVM)
         {
-            var sql = "select top 5 i.ICode, i.IName, iu.IUnitName, i.IPrice as Price, ";
+            var sql = "select top 5 i.ICode, i.IName, iu.IUnitName, i.IPrice as VDPrice, ";
             sql += "s.StockCode as ToStockCode, s.StockName as ToStockName, ";
             sql += "s.StockCode as FromStockCode, s.StockName as FromStockName, v.VendorCode, v.VendorName from FIN.Items i ";
             sql += "join FIN.ItemsType it on it.ITypeCode = i.ITypeCode ";
             sql += "join FIN.ItemsUnit iu on iu.IUnitCode = i.IUnitCode ";
             sql += "left join FIN.Stock s on s.StockCode = i.StockDefault ";
             sql += "left join FIN.Vendor v on v.VendorCode = i.VendorDefault ";
-            sql += "where i.IActive=1 and it.IsInventory=1 and (i.ICode LIKE CONCAT('%',@searchText,'%') or i.IName LIKE CONCAT('%',@searchText,'%')) ";
+            sql += "where i.IActive=1 and i.ITypeCode=@ITypeCode and (i.ICode LIKE CONCAT('%',@valueSearchItems,'%') or i.IName LIKE CONCAT('%',@valueSearchItems,'%')) ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<StockVoucherDetailVM>(sql, _filterFinVM);
+                var result = await conn.QueryAsync<VoucherDetailVM>(sql, _voucherVM);
                 return Ok(result);
             }
         }
@@ -132,71 +105,70 @@ namespace D69soft.Server.Controllers.FIN
         [HttpPost("UpdateVoucher")]
         public async Task<ActionResult<string>> UpdateVoucher(ArrayList _arrayList)
         {
-            StockVoucherVM _stockVoucherVM = JsonConvert.DeserializeObject<StockVoucherVM>(_arrayList[0].ToString());
+            VoucherVM _voucherVM = JsonConvert.DeserializeObject<VoucherVM>(_arrayList[0].ToString());
 
-            IEnumerable<StockVoucherDetailVM> _stockVoucherDetailVMs = JsonConvert.DeserializeObject<IEnumerable<StockVoucherDetailVM>>(_arrayList[1].ToString());
+            IEnumerable<VoucherDetailVM> _voucherDetailVMs = JsonConvert.DeserializeObject<IEnumerable<VoucherDetailVM>>(_arrayList[1].ToString());
 
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                var sqlStockVoucherVM = String.Empty;
-                var sqlStockVoucherDetailVM = String.Empty;
+                var sqlVoucherVM = String.Empty;
+                var sqlVoucherDetailVM = String.Empty;
 
-                var VNumber = _stockVoucherVM.VNumber;
+                var VNumber = _voucherVM.VNumber;
 
-                if (_stockVoucherVM.IsTypeUpdate == 0)
+                if (_voucherVM.IsTypeUpdate == 0)
                 {
-                    //StockVoucherVM
-                    sqlStockVoucherVM = "Declare @VCode varchar(50) ";
-                    sqlStockVoucherVM += "select @VCode = VCode from FIN.VSubType where VSubTypeID=@VSubTypeID ";
-                    sqlStockVoucherVM += "Create table #tmpAuto_Code_ID (Code_ID varchar(50)) ";
-                    sqlStockVoucherVM += "Insert #tmpAuto_Code_ID ";
-                    sqlStockVoucherVM += "exec SYSTEM.AUTO_CODE_ID 'FIN.StockVoucher','VNumber',@VCode,'0000' ";
-                    sqlStockVoucherVM += "Insert into FIN.StockVoucher (DivisionID,VNumber,VDesc,VDate,VendorCode,CustomerCode,VTypeID,VSubTypeID,IsMultipleInvoice,VActive,EserialCreated,TimeCreated,Reference_VNumber,Reference_StockCode,Reference_VSubTypeID,StockCode) ";
-                    sqlStockVoucherVM += "select @DivisionID,CODE_ID,@VDesc,@VDate,@VendorCode,@CustomerCode,@VTypeID,@VSubTypeID,@IsMultipleInvoice,@VActive,@UserID,GETDATE(),@Reference_VNumber,@Reference_StockCode,@Reference_VSubTypeID,@StockCode from #tmpAuto_Code_ID ";
-                    sqlStockVoucherVM += "select CODE_ID from #tmpAuto_Code_ID ";
+                    //VoucherVM
+                    sqlVoucherVM += "Create table #tmpAuto_Code_ID (Code_ID varchar(50)) ";
+                    sqlVoucherVM += "Insert #tmpAuto_Code_ID ";
+                    sqlVoucherVM += "exec SYSTEM.AUTO_CODE_ID 'FIN.Voucher','VNumber',@VCode,'0000' ";
+                    sqlVoucherVM += "Insert into FIN.Voucher (DivisionID,VNumber,VDesc,VDate,VendorCode,CustomerCode,StockCode,ITypeCode,VActive,IsPayment,PaymentTypeCode,IsInventory,IsInvoice,InvoiceNumber,InvoiceDate,VTypeID,TimeCreated) ";
+                    sqlVoucherVM += "select @DivisionID,CODE_ID,@VDesc,@VDate,@VendorCode,@CustomerCode,@StockCode,@ITypeCode,@VActive,@IsPayment,@PaymentTypeCode,@IsInventory,@IsInvoice,@InvoiceNumber,@InvoiceDate,@VTypeID,GETDATE() from #tmpAuto_Code_ID ";
+                    sqlVoucherVM += "select CODE_ID from #tmpAuto_Code_ID ";
 
-                    VNumber = await conn.ExecuteScalarAsync<string>(sqlStockVoucherVM, _stockVoucherVM);
+                    VNumber = await conn.ExecuteScalarAsync<string>(sqlVoucherVM, _voucherVM);
 
-                    //StockVoucherDetailVM
-                    foreach (var _stockVoucherDetailVM in _stockVoucherDetailVMs)
+                    //VoucherDetailVM
+                    foreach (var _voucherDetailVM in _voucherDetailVMs)
                     {
-                        sqlStockVoucherDetailVM = "Insert into FIN.StockVoucherDetail(VNumber,ICode,Qty,Price,VATCode,FromStockCode,ToStockCode,VendorCode,CustomerCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty,Request_ICode,IsReference) ";
-                        sqlStockVoucherDetailVM += "Values('" + VNumber + "',@ICode,@Qty,@Price,@VATCode,@FromStockCode,@ToStockCode,@VendorCode,@CustomerCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty,@ICode,@IsReference) ";
-                        await conn.ExecuteAsync(sqlStockVoucherDetailVM, _stockVoucherDetailVM);
+                        sqlVoucherDetailVM = "Insert into FIN.VoucherDetail(VNumber,ICode,VDQty,VDPrice,VATCode,FromStockCode,ToStockCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty) ";
+                        sqlVoucherDetailVM += "Values('" + VNumber + "',@ICode,@VDQty,@VDPrice,@VATCode,@FromStockCode,@ToStockCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty) ";
+                        await conn.ExecuteAsync(sqlVoucherDetailVM, _voucherDetailVM);
                     }
                 }
 
-                if (_stockVoucherVM.IsTypeUpdate == 1)
+                if (_voucherVM.IsTypeUpdate == 1)
                 {
-                    //StockVoucherVM
-                    sqlStockVoucherVM = "Update FIN.StockVoucher set VTypeID=@VTypeID,VSubTypeID=@VSubTypeID,VDesc=@VDesc,VDate=@VDate,VendorCode=@VendorCode,CustomerCode=@CustomerCode,IsMultipleInvoice=@IsMultipleInvoice,StockCode=@StockCode,EserialUpdate=@UserID,TimeUpdate=GETDATE() ";
-                    sqlStockVoucherVM += "where VNumber=@VNumber ";
-                    sqlStockVoucherVM += "Delete from FIN.StockVoucherDetail where VNumber=@VNumber ";
-                    await conn.ExecuteAsync(sqlStockVoucherVM, _stockVoucherVM);
+                    //VoucherVM
+                    sqlVoucherVM = "Update FIN.Voucher set VDesc=@VDesc,VDate=@VDate,VendorCode=@VendorCode,CustomerCode=@CustomerCode,StockCode=@StockCode,ITypeCode=@ITypeCode,IsPayment=@IsPayment,PaymentTypeCode=@PaymentTypeCode,IsInventory=@IsInventory,IsInvoice=@IsInvoice,InvoiceNumber=@InvoiceNumber,InvoiceDate=@InvoiceDate ";
+                    sqlVoucherVM += "where VNumber=@VNumber ";
+                    sqlVoucherVM += "Delete from FIN.VoucherDetail where VNumber=@VNumber ";
+                    await conn.ExecuteAsync(sqlVoucherVM, _voucherVM);
 
-                    //StockVoucherDetailVM
-                    foreach (var _stockVoucherDetailVM in _stockVoucherDetailVMs)
+                    //VoucherDetailVM
+                    foreach (var _voucherDetailVM in _voucherDetailVMs)
                     {
-                        sqlStockVoucherDetailVM = "Insert into FIN.StockVoucherDetail(VNumber,ICode,Qty,Price,VATCode,FromStockCode,ToStockCode,VendorCode,CustomerCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty,Request_ICode,IsReference) ";
-                        sqlStockVoucherDetailVM += "Values('" + _stockVoucherVM.VNumber + "',@ICode,@Qty,@Price,@VATCode,@FromStockCode,@ToStockCode,@VendorCode,@CustomerCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty,@Request_ICode,@IsReference) ";
-                        await conn.ExecuteAsync(sqlStockVoucherDetailVM, _stockVoucherDetailVM);
+                        sqlVoucherDetailVM = "Insert into FIN.VoucherDetail(VNumber,ICode,VDQty,VDPrice,VATCode,FromStockCode,ToStockCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty) ";
+                        sqlVoucherDetailVM += "Values('" + _voucherVM.VNumber + "',@ICode,@VDQty,@VDPrice,@VATCode,@FromStockCode,@ToStockCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty) ";
+
+                        await conn.ExecuteAsync(sqlVoucherDetailVM, _voucherDetailVM);
                     }
                 }
 
-                if (_stockVoucherVM.IsTypeUpdate == 2)
+                if (_voucherVM.IsTypeUpdate == 2)
                 {
-                    sqlStockVoucherVM = "delete from FIN.StockVoucher where VNumber=@VNumber ";
-                    sqlStockVoucherVM += "delete from FIN.StockVoucherDetail where VNumber=@VNumber ";
-                    await conn.ExecuteAsync(sqlStockVoucherVM, _stockVoucherVM);
+                    sqlVoucherVM = "delete from FIN.Voucher where VNumber=@VNumber ";
+                    sqlVoucherVM += "delete from FIN.VoucherDetail where VNumber=@VNumber ";
+                    await conn.ExecuteAsync(sqlVoucherVM, _voucherVM);
                 }
 
-                if (_stockVoucherVM.IsTypeUpdate == 4)
+                if (_voucherVM.IsTypeUpdate == 4)
                 {
-                    sqlStockVoucherVM = "Update FIN.StockVoucher set VActive=@VActive,EserialUpdate=@UserID,TimeUpdate=GETDATE() where VNumber=@VNumber ";
-                    await conn.ExecuteAsync(sqlStockVoucherVM, _stockVoucherVM);
+                    sqlVoucherVM = "Update FIN.Voucher set VActive=@VActive where VNumber=@VNumber ";
+                    await conn.ExecuteAsync(sqlVoucherVM, _voucherVM);
                 }
 
                 return VNumber;

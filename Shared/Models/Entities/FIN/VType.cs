@@ -10,5 +10,6 @@ namespace D69soft.Shared.Models.Entities.FIN
     {
         public string VTypeID { get; set; }
         public string VTypeDesc { get; set; }
+        public string VCode { get; set; }
     }
 }

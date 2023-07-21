@@ -84,9 +84,9 @@ namespace D69soft.Client.Services.FIN
         }
 
         //Get RequestDetail to Stock
-        public async Task<List<StockVoucherDetailVM>> GetRequestDetailToStockVoucherDetail(string _RequestCode)
+        public async Task<List<VoucherDetailVM>> GetRequestDetailToStockVoucherDetail(string _RequestCode)
         {
-            return await _httpClient.GetFromJsonAsync<List<StockVoucherDetailVM>>($"api/Request/GetRequestDetailToStockVoucherDetail/{_RequestCode}");
+            return await _httpClient.GetFromJsonAsync<List<VoucherDetailVM>>($"api/Request/GetRequestDetailToStockVoucherDetail/{_RequestCode}");
         }
     }
 }

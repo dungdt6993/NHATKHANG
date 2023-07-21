@@ -18,31 +18,26 @@ namespace D69soft.Client.Services.FIN
             return await _httpClient.GetFromJsonAsync<IEnumerable<VTypeVM>>($"api/Voucher/GetVTypeVMs/{_FuncID}");
         }
 
-        public async Task<IEnumerable<VSubTypeVM>> GetVSubTypeVMs(string _FuncID)
+        public async Task<List<VoucherVM>> GetVouchers(FilterFinVM _filterFinVM)
         {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<VSubTypeVM>>($"api/Voucher/GetVSubTypeVMs/{_FuncID}");
+            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetVouchers", _filterFinVM);
+
+            return await response.Content.ReadFromJsonAsync<List<VoucherVM>>();
         }
 
-        public async Task<List<StockVoucherVM>> GetStockVouchers(FilterFinVM _filterFinVM)
+        public async Task<List<VoucherDetailVM>> GetVoucherDetails(string _VNumber)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetStockVouchers", _filterFinVM);
-
-            return await response.Content.ReadFromJsonAsync<List<StockVoucherVM>>();
+            return await _httpClient.GetFromJsonAsync<List<VoucherDetailVM>>($"api/Voucher/GetVoucherDetails/{_VNumber}");
         }
 
-        public async Task<List<StockVoucherDetailVM>> GetStockVoucherDetails(string _VNumber)
+        public async Task<IEnumerable<VoucherDetailVM>> GetSearchItems(VoucherVM _voucherVM)
         {
-            return await _httpClient.GetFromJsonAsync<List<StockVoucherDetailVM>>($"api/Voucher/GetStockVoucherDetails/{_VNumber}");
+            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetSearchItems", _voucherVM);
+
+            return await response.Content.ReadFromJsonAsync<IEnumerable<VoucherDetailVM>>();
         }
 
-        public async Task<IEnumerable<StockVoucherDetailVM>> GetSearchItems(FilterFinVM _filterFinVM)
-        {
-            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetSearchItems", _filterFinVM);
-
-            return await response.Content.ReadFromJsonAsync<IEnumerable<StockVoucherDetailVM>>();
-        }
-
-        public async Task<string> UpdateVoucher(StockVoucherVM _stockVoucherVM, IEnumerable<StockVoucherDetailVM> _stockVoucherDetailVMs)
+        public async Task<string> UpdateVoucher(VoucherVM _stockVoucherVM, IEnumerable<VoucherDetailVM> _stockVoucherDetailVMs)
         {
             ArrayList arrayList = new ArrayList();
             arrayList.Add(_stockVoucherVM);

@@ -262,7 +262,7 @@ namespace D69soft.Server.Controllers.FIN
             }
             if (_itemsVM.IsTypeUpdate == 2)
             {
-                sql = "if not exists (select * from FIN.StockVoucherDetail where ICode=@ICode) ";
+                sql = "if not exists (select * from FIN.VoucherDetail where ICode=@ICode) ";
                 sql += "begin ";
                 sql += "delete from FIN.Items where ICode=@ICode ";
                 sql += "end ";
@@ -357,7 +357,7 @@ namespace D69soft.Server.Controllers.FIN
             }
             if (_stockVM.IsTypeUpdate == 2)
             {
-                sql = "if not exists (select * from FIN.StockVoucherDetail where FromStockCode=@StockCode or ToStockCode=@StockCode) ";
+                sql = "if not exists (select * from FIN.VoucherDetail where FromStockCode=@StockCode or ToStockCode=@StockCode) ";
                 sql += "begin ";
                 sql += "delete from FIN.Stock where StockCode = @StockCode ";
                 sql += "end ";
@@ -397,13 +397,13 @@ namespace D69soft.Server.Controllers.FIN
             FilterFinVM _filterFinVM = JsonConvert.DeserializeObject<FilterFinVM>(_arrayList[0].ToString());
             InventoryVM _inventoryVM = JsonConvert.DeserializeObject<InventoryVM>(_arrayList[1].ToString());
 
-            var sql = "select sv.VDate, sv.VNumber, sv.VDesc, ";
-            sql += "case when svd.ToStockCode = @StockCode then svd.Qty else 0 end as QtyInput, ";
-            sql += "case when svd.FromStockCode = @StockCode then svd.Qty else 0 end as QtyOutput ";
-            sql += "from (select * from FIN.StockVoucher where VActive=1) sv ";
-            sql += "join FIN.StockVoucherDetail svd on svd.VNumber = sv.VNumber ";
-            sql += "where format(sv.VDate,'MM/dd/yyyy')>='" + _filterFinVM.StartDate.ToString("MM/dd/yyyy") + "' and format(sv.VDate,'MM/dd/yyyy')<='" + _filterFinVM.EndDate.ToString("MM/dd/yyyy") + "' and (svd.ToStockCode = @StockCode or svd.FromStockCode = @StockCode) and svd.ICode=@ICode ";
-            sql += "order by sv.VDate ";
+            var sql = "select v.VDate, v.VNumber, v.VDesc, ";
+            sql += "case when vd.ToStockCode = @StockCode then vd.VDQty else 0 end as QtyInput, ";
+            sql += "case when vd.FromStockCode = @StockCode then vd.VDQty else 0 end as QtyOutput ";
+            sql += "from (select * from FIN.Voucher where VActive=1) v ";
+            sql += "join FIN.VoucherDetail vd on vd.VNumber = v.VNumber ";
+            sql += "where format(v.VDate,'MM/dd/yyyy')>='" + _filterFinVM.StartDate.ToString("MM/dd/yyyy") + "' and format(v.VDate,'MM/dd/yyyy')<='" + _filterFinVM.EndDate.ToString("MM/dd/yyyy") + "' and (vd.ToStockCode = @StockCode or vd.FromStockCode = @StockCode) and vd.ICode=@ICode ";
+            sql += "order by v.VDate ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)
@@ -415,38 +415,21 @@ namespace D69soft.Server.Controllers.FIN
         }
 
         [HttpPost("GetInventoryCheck_Qty/{_VDate}")]
-        public async Task<ActionResult<float>> GetInventoryCheck_Qty(DateTimeOffset _VDate, StockVoucherDetailVM _stockVoucherDetailVM)
+        public async Task<ActionResult<float>> GetInventoryCheck_Qty(DateTimeOffset _VDate, VoucherDetailVM _voucherDetailVM)
         {
             var sql = String.Empty;
-            sql += "select sum(case when coalesce(ToStockCode,'') <> '' then Qty else 0 end) - sum(case when coalesce(FromStockCode,'') <> '' then Qty else 0 end) as Qty ";
-            sql += "from FIN.StockVoucherDetail svd ";
-            sql += "join (select * from FIN.StockVoucher where VActive=1) sv on sv.VNumber = svd.VNumber ";
-            sql += "where sv.VDate <= CAST('"+_VDate.ToString("MM/dd/yyyy")+ "' as datetime) and (ToStockCode = @FromStockCode or FromStockCode = @FromStockCode) and ICode=@ICode ";
+            sql += "select sum(case when coalesce(ToStockCode,'') <> '' then VDQty else 0 end) - sum(case when coalesce(FromStockCode,'') <> '' then VDQty else 0 end) as InventoryCheck_Qty ";
+            sql += "from FIN.VoucherDetail vd ";
+            sql += "join (select * from FIN.Voucher where VActive=1) v on v.VNumber = vd.VNumber ";
+            sql += "where v.VDate <= CAST('"+_VDate.ToString("MM/dd/yyyy")+ "' as datetime) and (ToStockCode = @InventoryCheck_StockCode or FromStockCode = @InventoryCheck_StockCode) and ICode=@ICode ";
             sql += "group by ICode ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.ExecuteScalarAsync<float>(sql, _stockVoucherDetailVM);
+                var result = await conn.ExecuteScalarAsync<float>(sql, _voucherDetailVM);
                 return result;
-            }
-        }
-
-        //SyncSmile
-        [HttpGet("SyncDataSmile")]
-        public async Task<ActionResult<bool>> SyncDataSmile()
-        {
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                DynamicParameters parm = new DynamicParameters();
-
-                await conn.ExecuteAsync("SYNC.SMILE_FIN", parm, commandType: CommandType.StoredProcedure);
-
-                return true;
             }
         }
 

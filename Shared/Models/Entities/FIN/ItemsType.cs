@@ -11,6 +11,5 @@ namespace D69soft.Shared.Models.Entities.FIN
         public string ITypeCode { get; set; }
         public string ITypeName { get; set; }
         public string ITypeDesc { get; set; }
-        public bool IsInventory { get; set; }
     }
 }
