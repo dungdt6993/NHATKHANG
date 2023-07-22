@@ -637,6 +637,21 @@
 
                 <div class="modal-footer justify-content-center">
 
+                    @if (voucherVM.IsTypeUpdate == 3)
+                    {
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-print"></i> In
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                @if (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory)
+                                {
+                                    <a class="dropdown-item" @onclick=@(() => PrintVoucher("Phieu_xuat_kho_ban_hang"))>Phiếu xuất kho bán hàng</a>
+                                }
+                            </div>
+                        </div>
+                    }
+
                     @if (voucherVM.VActive)
                     {
                         @if (FIN_Voucher_CancelActive)
@@ -648,18 +663,6 @@
                     {
                         @if (voucherVM.IsTypeUpdate == 3)
                         {
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-print"></i> In
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    @if (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory)
-                                    {
-                                        <a class="dropdown-item" @onclick=@(() => PrintVoucher("Phieu_xuat_kho_ban_hang"))>Phiếu xuất kho bán hàng</a>
-                                    }
-                                </div>
-                            </div>
-
                             @if (FIN_Voucher_Update)
                             {
                                 <button type="button" class="btn btn-sm btn-secondary" @onclick="(() => voucherVM.IsTypeUpdate=1)"><i class="fa-solid fa-pencil"></i> Sửa</button>

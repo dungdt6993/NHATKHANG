@@ -76,6 +76,9 @@ namespace D69soft.Client.Pages.FIN
         //VAT
         IEnumerable<VATDefVM> vatDefVMs;
 
+        //RPT
+        string ReportName = String.Empty;
+
         private BlazoredTypeahead<VoucherDetailVM, VoucherDetailVM> txtSearchItems;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -685,8 +688,6 @@ namespace D69soft.Client.Pages.FIN
 
             isLoading = false;
         }
-
-        string ReportName = String.Empty;
 
         protected async Task PrintVoucher(string _ReportName)
         {
