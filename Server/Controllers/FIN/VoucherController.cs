@@ -34,13 +34,28 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
+        [HttpGet("GetVSubTypeVMs/{_VTypeID}")]
+        public async Task<ActionResult<IEnumerable<VSubTypeVM>>> GetVSubTypeVMs(string _VTypeID)
+        {
+            var sql = "select * from FIN.VSubType where VTypeID=@VTypeID ";
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == System.Data.ConnectionState.Closed)
+                    conn.Open();
+
+                var result = await conn.QueryAsync<VSubTypeVM>(sql, new { VTypeID = _VTypeID });
+                return Ok(result);
+            }
+        }
+
         [HttpPost("GetVouchers")]
         public async Task<ActionResult<List<VoucherVM>>> GetVouchers(FilterFinVM _filterFinVM)
         {
-            var sql = "select v.VNumber, v.VDate, v.VDesc, vType.VTypeID, vType.VTypeDesc, ";
+            var sql = "select v.VNumber, v.VDate, v.VDesc, vType.VTypeID, vType.VTypeDesc, vSubType.VSubTypeID, ";
             sql += "v.VendorCode, v.CustomerCode, v.StockCode, v.ITypeCode, v.VActive, v.IsPayment, v.PaymentTypeCode, v.IsInventory, v.IsInvoice, v.InvoiceNumber, v.InvoiceDate ";
             sql += "from FIN.Voucher v ";
             sql += "join FIN.VType vType on vType.VTypeID = v.VTypeID ";
+            sql += "left join FIN.VSubType vSubType on vSubType.VSubTypeID = v.VSubTypeID ";
             sql += "where vType.FuncID=@FuncID ";
             sql += "and format(v.VDate,'MM/dd/yyyy')>=format(@StartDate,'MM/dd/yyyy') and format(v.VDate,'MM/dd/yyyy')<=format(@EndDate,'MM/dd/yyyy') ";
             sql += "and (v.DivisionID=@DivisionID or coalesce(@DivisionID,'')='') ";
@@ -64,8 +79,8 @@ namespace D69soft.Server.Controllers.FIN
             var sql = "select SeqVD, i.ICode, i.IName, i.IPrice, i.VendorDefault, i.StockDefault, vd.VDQty, iu.IUnitName, vd.VDPrice, vd.ToStockCode, toStock.StockName as ToStockName, vd.FromStockCode, fromStock.StockName as FromStockName, vd.VDNote, ";
             sql += "vd.InventoryCheck_StockCode, inventorycheckStock.StockName as InventoryCheck_StockName, vd.InventoryCheck_Qty, vd.InventoryCheck_ActualQty, vat.VATCode, coalesce(vat.VATRate,0) as VATRate, vat.VATName ";
             sql += "from FIN.VoucherDetail vd ";
-            sql += "join FIN.Items i on i.ICode = vd.ICode ";
-            sql += "join FIN.ItemsUnit iu on iu.IUnitCode = i.IUnitCode ";
+            sql += "left join FIN.Items i on i.ICode = vd.ICode ";
+            sql += "left join FIN.ItemsUnit iu on iu.IUnitCode = i.IUnitCode ";
             sql += "left join FIN.VATDef vat on vd.VATCode = vat.VATCode ";
             sql += "left join FIN.Stock fromStock on fromStock.StockCode = vd.FromStockCode ";
             sql += "left join FIN.Stock toStock on toStock.StockCode = vd.ToStockCode ";
@@ -125,8 +140,8 @@ namespace D69soft.Server.Controllers.FIN
                     sqlVoucherVM += "Create table #tmpAuto_Code_ID (Code_ID varchar(50)) ";
                     sqlVoucherVM += "Insert #tmpAuto_Code_ID ";
                     sqlVoucherVM += "exec SYSTEM.AUTO_CODE_ID 'FIN.Voucher','VNumber',@VCode,'0000' ";
-                    sqlVoucherVM += "Insert into FIN.Voucher (DivisionID,VNumber,VDesc,VDate,VendorCode,CustomerCode,StockCode,ITypeCode,VActive,IsPayment,PaymentTypeCode,IsInventory,IsInvoice,InvoiceNumber,InvoiceDate,VTypeID,TimeCreated) ";
-                    sqlVoucherVM += "select @DivisionID,CODE_ID,@VDesc,@VDate,@VendorCode,@CustomerCode,@StockCode,@ITypeCode,@VActive,@IsPayment,@PaymentTypeCode,@IsInventory,@IsInvoice,@InvoiceNumber,@InvoiceDate,@VTypeID,GETDATE() from #tmpAuto_Code_ID ";
+                    sqlVoucherVM += "Insert into FIN.Voucher (DivisionID,VNumber,VDesc,VDate,VendorCode,CustomerCode,StockCode,ITypeCode,VActive,IsPayment,PaymentTypeCode,IsInventory,IsInvoice,InvoiceNumber,InvoiceDate,VTypeID,VSubTypeID,TimeCreated) ";
+                    sqlVoucherVM += "select @DivisionID,CODE_ID,@VDesc,@VDate,@VendorCode,@CustomerCode,@StockCode,@ITypeCode,@VActive,@IsPayment,@PaymentTypeCode,@IsInventory,@IsInvoice,@InvoiceNumber,@InvoiceDate,@VTypeID,@VSubTypeID,GETDATE() from #tmpAuto_Code_ID ";
                     sqlVoucherVM += "select CODE_ID from #tmpAuto_Code_ID ";
 
                     VNumber = await conn.ExecuteScalarAsync<string>(sqlVoucherVM, _voucherVM);
@@ -143,7 +158,7 @@ namespace D69soft.Server.Controllers.FIN
                 if (_voucherVM.IsTypeUpdate == 1)
                 {
                     //VoucherVM
-                    sqlVoucherVM = "Update FIN.Voucher set VDesc=@VDesc,VDate=@VDate,VendorCode=@VendorCode,CustomerCode=@CustomerCode,StockCode=@StockCode,ITypeCode=@ITypeCode,IsPayment=@IsPayment,PaymentTypeCode=@PaymentTypeCode,IsInventory=@IsInventory,IsInvoice=@IsInvoice,InvoiceNumber=@InvoiceNumber,InvoiceDate=@InvoiceDate ";
+                    sqlVoucherVM = "Update FIN.Voucher set VDesc=@VDesc,VDate=@VDate,VendorCode=@VendorCode,CustomerCode=@CustomerCode,StockCode=@StockCode,ITypeCode=@ITypeCode,IsPayment=@IsPayment,PaymentTypeCode=@PaymentTypeCode,IsInventory=@IsInventory,IsInvoice=@IsInvoice,InvoiceNumber=@InvoiceNumber,InvoiceDate=@InvoiceDate, VSubTypeID=@VSubTypeID ";
                     sqlVoucherVM += "where VNumber=@VNumber ";
                     sqlVoucherVM += "Delete from FIN.VoucherDetail where VNumber=@VNumber ";
                     await conn.ExecuteAsync(sqlVoucherVM, _voucherVM);

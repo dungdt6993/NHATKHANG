@@ -65,7 +65,7 @@
 
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateVendor(formVendorVM, vendorVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateVendor(formVendorVM, vendorVM.IsTypeUpdate))><i class="fas fa-check"></i> Lưu</button>
                     @if (vendorVM.IsTypeUpdate == 1)
                     {
                         <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateVendor(formVendorVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>

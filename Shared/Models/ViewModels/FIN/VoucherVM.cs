@@ -4,7 +4,7 @@ using D69soft.Shared.Models.Entities.HR;
 
 namespace D69soft.Shared.Models.ViewModels.FIN
 {
-    public class VoucherVM : Division, VType, Voucher, Vendor, Customer, Stock, ItemsType, PaymentType
+    public class VoucherVM : Division, VType, VSubType, Voucher, Vendor, Customer, Stock, ItemsType, PaymentType
     {
         //Para
         public string UserID { get; set; }
@@ -23,6 +23,10 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string VTypeID { get; set; }
         public string VTypeDesc { get; set; }
         public string VCode { get; set; }
+        public string VSubTypeID { get; set; }
+        public string VSubTypeDesc { get; set; }
+        public int AccDebitDefault { get; set; }
+        public int AccCreditDefault { get; set; }
         public string VNumber { get; set; }
         public string VDesc { get; set; }
         public DateTimeOffset? VDate { get; set; }
@@ -55,6 +59,5 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public bool IsInventory { get; set; }
         public string PaymentTypeCode { get; set; }
         public string PaymentTypeName { get; set; }
-
     }
 }

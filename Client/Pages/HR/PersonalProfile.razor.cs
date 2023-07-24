@@ -7,7 +7,7 @@ using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Client.Extensions;
 
-namespace D69soft.Client.Pages.SYS
+namespace D69soft.Client.Pages.HR
 {
     partial class PersonalProfile
     {

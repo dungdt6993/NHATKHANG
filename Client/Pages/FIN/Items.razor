@@ -70,7 +70,7 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-check"></i> Lưu</button>
                     @if (itemsGroupVM.IsTypeUpdate == 1)
                     {
                         <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => itemsGroupVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
@@ -417,7 +417,7 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateItems(formItemsVM, itemsVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateItems(formItemsVM, itemsVM.IsTypeUpdate))><i class="fas fa-check"></i> Lưu</button>
                     @if (itemsVM.IsTypeUpdate == 1)
                     {
                         <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateItems(formItemsVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
@@ -478,7 +478,7 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-check"></i> Lưu</button>
                     @if (itemsUnitVM.IsTypeUpdate == 1)
                     {
                         <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => itemsUnitVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>

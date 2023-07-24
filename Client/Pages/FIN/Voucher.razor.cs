@@ -55,6 +55,7 @@ namespace D69soft.Client.Pages.FIN
 
         //VType
         IEnumerable<VTypeVM> filter_vTypeVMs;
+        IEnumerable<VSubTypeVM> vSubTypeVMs;
 
         //Voucher
         VoucherVM voucherVM = new();
@@ -174,6 +175,8 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
+            vSubTypeVMs = await voucherService.GetVSubTypeVMs(_vTypeID);
+
             vendorVMs = await purchasingService.GetVendorList();
 
             customerVMs = await customerService.GetCustomers();
@@ -187,10 +190,13 @@ namespace D69soft.Client.Pages.FIN
                 voucherVM = new();
                 voucherDetailVMs = new();
 
-                filterFinVM.ITypeCode = voucherVM.ITypeCode = "HH";
-
                 voucherVM.VCode = filter_vTypeVMs.Where(x => x.VTypeID == _vTypeID).Select(x => x.VCode).First();
-                voucherVM.PaymentTypeCode = "CASH";
+
+                if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Bank")
+                {
+                    filterFinVM.ITypeCode = voucherVM.ITypeCode = "HH";
+                    voucherVM.PaymentTypeCode = "CASH";
+                }
             }
 
             if (_IsTypeUpdate != 0)
@@ -240,6 +246,19 @@ namespace D69soft.Client.Pages.FIN
             }
         }
 
+        private string onchange_VSubTypeID
+        {
+            get { return voucherVM.VSubTypeID; }
+            set
+            {
+                voucherVM.VSubTypeID = value;
+
+                voucherDetailVMs = new();
+
+                voucherVM.VDesc = vSubTypeVMs.Where(x => x.VSubTypeID == voucherVM.VSubTypeID).Select(x => x.VSubTypeDesc).FirstOrDefault() + " ngày " + DateTime.Now.ToString("dd/MM/yyyy");
+            }
+        }
+
         private string onchange_ITypeCode
         {
             get { return voucherVM.ITypeCode; }
@@ -275,14 +294,8 @@ namespace D69soft.Client.Pages.FIN
             set
             {
                 voucherVM.VendorCode = value;
-                if (String.IsNullOrEmpty(value))
-                {
-                    voucherVM.VDesc = "Mua hàng";
-                }
-                else
-                {
-                    voucherVM.VDesc = "Mua hàng của " + vendorVMs.Where(x => x.VendorCode == voucherVM.VendorCode).Select(x => x.VendorName).First() + "";
-                }
+
+                voucherVM.VDesc = "Mua hàng của " + vendorVMs.Where(x => x.VendorCode == voucherVM.VendorCode).Select(x => x.VendorName).FirstOrDefault();
             }
         }
 
@@ -292,14 +305,8 @@ namespace D69soft.Client.Pages.FIN
             set
             {
                 voucherVM.CustomerCode = value;
-                if (String.IsNullOrEmpty(value))
-                {
-                    voucherVM.VDesc = "Bán hàng";
-                }
-                else
-                {
-                    voucherVM.VDesc = "Bán hàng cho " + customerVMs.Where(x => x.CustomerCode == voucherVM.CustomerCode).Select(x => x.CustomerName).First() + "";
-                }
+
+                voucherVM.VDesc = "Bán hàng cho " + customerVMs.Where(x => x.CustomerCode == voucherVM.CustomerCode).Select(x => x.CustomerName).FirstOrDefault() + "";
             }
         }
 
@@ -332,6 +339,17 @@ namespace D69soft.Client.Pages.FIN
 
                 await txtSearchItems.Focus();
             }
+
+            await js.InvokeAsync<object>("updateScrollToBottom");
+        }
+
+        private async Task CreateVoucherDetail()
+        {
+            VoucherDetailVM _voucherDetailVM = new();
+
+            _voucherDetailVM.SeqVD = voucherDetailVMs.Count == 0 ? 1 : voucherDetailVMs.Select(x => x.SeqVD).Max() + 1;
+
+            voucherDetailVMs.Add(_voucherDetailVM);
 
             await js.InvokeAsync<object>("updateScrollToBottom");
         }
@@ -514,7 +532,7 @@ namespace D69soft.Client.Pages.FIN
             {
                 if (voucherDetailVMs.Count == 0)
                 {
-                    await js.Swal_Message("Cảnh báo!", "Dữ liệu mặt hàng không được trống.", SweetAlertMessageType.warning);
+                    await js.Swal_Message("Cảnh báo!", "Nhập chi tiết không được trống.", SweetAlertMessageType.warning);
                     isLoading = false;
                     return;
                 }
@@ -611,6 +629,23 @@ namespace D69soft.Client.Pages.FIN
 
                     voucherDetailVMs.ToList().Where(x => x.InventoryCheck_ActualQty > x.InventoryCheck_Qty).ToList().ForEach(x => { x.ToStockCode = x.InventoryCheck_StockCode; x.VDQty = Math.Abs(x.InventoryCheck_ActualQty - x.InventoryCheck_Qty); });
                     voucherDetailVMs.ToList().Where(x => x.InventoryCheck_ActualQty < x.InventoryCheck_Qty).ToList().ForEach(x => { x.FromStockCode = x.InventoryCheck_StockCode; x.VDQty = Math.Abs(x.InventoryCheck_ActualQty - x.InventoryCheck_Qty); });
+                }
+
+                if (voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt" || voucherVM.VTypeID == "FIN_Bank_Credit" || voucherVM.VTypeID == "FIN_Bank_Debit")
+                {
+                    if (voucherDetailVMs.Where(x => String.IsNullOrEmpty(x.VDNote)).Count() > 0)
+                    {
+                        await js.Swal_Message("Cảnh báo!", "Diễn giải không được trống.", SweetAlertMessageType.warning);
+                        isLoading = false;
+                        return;
+                    }
+
+                    if (voucherDetailVMs.Where(x => x.VDPrice == 0).Count() > 0)
+                    {
+                        await js.Swal_Message("Cảnh báo!", "Số tiền không được trống.", SweetAlertMessageType.warning);
+                        isLoading = false;
+                        return;
+                    }
                 }
 
                 voucherVM.VNumber = await voucherService.UpdateVoucher(voucherVM, voucherDetailVMs);

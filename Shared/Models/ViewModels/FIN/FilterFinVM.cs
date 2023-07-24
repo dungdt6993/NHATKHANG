@@ -18,6 +18,8 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string searchText { get; set; }
         public int searchActive { get; set; }
 
+        public int TypeView { get; set; } = 0;
+
         //Request
         public bool isHandover { get; set; }
         public string RequestStatus { get; set; }

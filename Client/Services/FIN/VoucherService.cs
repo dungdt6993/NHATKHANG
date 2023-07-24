@@ -18,6 +18,11 @@ namespace D69soft.Client.Services.FIN
             return await _httpClient.GetFromJsonAsync<IEnumerable<VTypeVM>>($"api/Voucher/GetVTypeVMs/{_FuncID}");
         }
 
+        public async Task<IEnumerable<VSubTypeVM>> GetVSubTypeVMs(string _VTypeID)
+        {
+            return await _httpClient.GetFromJsonAsync<IEnumerable<VSubTypeVM>>($"api/Voucher/GetVSubTypeVMs/{_VTypeID}");
+        }
+
         public async Task<List<VoucherVM>> GetVouchers(FilterFinVM _filterFinVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetVouchers", _filterFinVM);

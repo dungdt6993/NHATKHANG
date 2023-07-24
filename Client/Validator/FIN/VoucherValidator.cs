@@ -88,6 +88,18 @@ namespace D69soft.Client.Validator.FIN
                 });
             });
 
+            When(x => x.VTypeID == "FIN_Cash_Payment" || x.VTypeID == "FIN_Cash_Receipt" || x.VTypeID == "FIN_Bank_Credit" || x.VTypeID == "FIN_Bank_Debit", () =>
+            {
+                When(x => x.IsTypeUpdate != 2, () =>
+                {
+                    RuleFor(x => x.VSubTypeID).NotEmpty().WithMessage("Không được trống.");
+
+                    RuleFor(x => x.VDate).NotEmpty().WithMessage("Không được trống.");
+
+                    RuleFor(x => x.VDesc).NotEmpty().WithMessage("Không được trống.");
+                });
+            });
+
         }
     }
 
