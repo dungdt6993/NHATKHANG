@@ -15,6 +15,8 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string ToStockName { get; set; }
         public string InventoryCheck_StockName { get; set; }
 
+        public decimal VDAmount { get; set; }
+
         public int IsUpdateItem { get; set; }
         public int IsUpdateFromStock { get; set; }
         public int IsUpdateToStock { get; set; }

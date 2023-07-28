@@ -245,7 +245,7 @@
                                     <h2 class="text-bold text-right">
                                         @if (voucherDetailVMs != null)
                                         {
-                                            @String.Format("{0:#,##0.##}",@voucherDetailVMs.Select(x=>x.VDPrice*(decimal)x.VDQty+x.VDPrice*(decimal)x.VDQty*(decimal)x.VATRate).Sum())
+                                            @String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDPrice*(decimal)x.VDQty+x.VDPrice*(decimal)x.VDQty*(decimal)x.VATRate).Sum())
                                         }
                                     </h2>
 
@@ -260,7 +260,7 @@
                                     <h2 class="text-bold text-right">
                                         @if (voucherDetailVMs != null)
                                         {
-                                            @String.Format("{0:#,##0.##}",@voucherDetailVMs.Select(x=>x.VDPrice).Sum())
+                                            @String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDPrice).Sum())
                                         }
                                     </h2>
 
@@ -319,11 +319,8 @@
                                                 Đơn giá
                                             </th>
                                             <th class="text-center" style="width: 110px;">Thành tiền</th>
-                                            @if (voucherVM.IsInvoice)
-                                            {
-                                                <th class="text-center" style="width: 110px;">% Thuế GTGT</th>
-                                                <th class="text-center" style="width: 110px;">Tiền thuế GTGT</th>
-                                            }
+                                            <th class="text-center" style="width: 110px;">% Thuế GTGT</th>
+                                            <th class="text-center" style="width: 110px;">Tiền thuế GTGT</th>
                                         }
 
                                         @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory))
@@ -470,47 +467,45 @@
                                                         <td class="text-center">
                                                             <input class="form-control form-control-sm" name="currency-mask" @bind="@_voucherDetailVM.VDPrice" onClick="this.select();" />
                                                         </td>
-                                                        <td class="text-right">@String.Format("{0:#,##0.##}", (_voucherDetailVM.VDPrice*(decimal)_voucherDetailVM.VDQty))</td>
 
-                                                        @if (voucherVM.IsInvoice)
+                                                        <td class="text-right">@String.Format("{0:#,##0.}", (_voucherDetailVM.VDPrice*(decimal)_voucherDetailVM.VDQty))</td>
+
+                                                        @if (_voucherDetailVM.IsUpdateVAT == 0)
                                                         {
-                                                            @if (_voucherDetailVM.IsUpdateVAT == 0)
-                                                            {
-                                                                <td class="text-center">
-                                                                    @if (String.IsNullOrEmpty(_voucherDetailVM.VATCode))
-                                                                    {
-                                                                        <a class="text-center" @onclick=@(() => _voucherDetailVM.IsUpdateVAT = 1)>-----Chọn-----</a>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <a @onclick=@(() => _voucherDetailVM.IsUpdateVAT = 1)>@_voucherDetailVM.VATName</a>
-                                                                    }
-                                                                </td>
-                                                            }
-                                                            else
-                                                            {
-                                                                <td>
-                                                                    <InputSelect class="selectpicker form-control form-control-sm"
+                                                            <td class="text-center">
+                                                                @if (String.IsNullOrEmpty(_voucherDetailVM.VATCode))
+                                                                {
+                                                                    <a class="text-center" @onclick=@(() => _voucherDetailVM.IsUpdateVAT = 1)>-----Chọn-----</a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a @onclick=@(() => _voucherDetailVM.IsUpdateVAT = 1)>@_voucherDetailVM.VATName</a>
+                                                                }
+                                                            </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td>
+                                                                <InputSelect class="selectpicker form-control form-control-sm"
                                                      data-style="btn-selectpicker"
                                                      data-container="body"
                                                      ValueExpression="@(()=>_voucherDetailVM.VATCode)"
                                                      Value="@_voucherDetailVM.VATCode"
                                                      ValueChanged="@((string value) =>onchange_VAT(value, _voucherDetailVM))">
 
-                                                                        <option value=@String.Empty>-----Chọn-----</option>
-                                                                        @if (vatDefVMs != null)
+                                                                    <option value=@String.Empty>-----Chọn-----</option>
+                                                                    @if (vatDefVMs != null)
+                                                                    {
+                                                                        @foreach (var _vatDefVM in vatDefVMs)
                                                                         {
-                                                                            @foreach (var _vatDefVM in vatDefVMs)
-                                                                            {
-                                                                                <option value="@_vatDefVM.VATCode">@_vatDefVM.VATName</option>
-                                                                            }
+                                                                            <option value="@_vatDefVM.VATCode">@_vatDefVM.VATName</option>
                                                                         }
-                                                                    </InputSelect>
-                                                                </td>
-                                                            }
-
-                                                            <td class="text-right">@String.Format("{0:#,##0.##}", (_voucherDetailVM.VDPrice*(decimal)_voucherDetailVM.VDQty*(decimal)_voucherDetailVM.VATRate))</td>
+                                                                    }
+                                                                </InputSelect>
+                                                            </td>
                                                         }
+
+                                                        <td class="text-right">@String.Format("{0:#,##0}", (_voucherDetailVM.VDPrice*(decimal)_voucherDetailVM.VDQty*(decimal)_voucherDetailVM.VATRate))</td>
                                                     }
 
                                                     @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory))
@@ -651,14 +646,11 @@
                                             {
                                                 <th class="text-center"></th>
 
-                                                <th class="text-right">@String.Format("{0:#,##0.##}",@voucherDetailVMs.Select(x=>x.VDPrice*(decimal)x.VDQty).Sum())</th>
+                                                <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDPrice*(decimal)x.VDQty).Sum())</th>
 
-                                                @if (voucherVM.IsInvoice)
-                                                {
-                                                    <th class="text-center"></th>
+                                                <th class="text-center"></th>
 
-                                                    <th class="text-right">@String.Format("{0:#,##0.##}",@voucherDetailVMs.Select(x=>x.VDPrice*(decimal)x.VDQty*(decimal)x.VATRate).Sum())</th>
-                                                }
+                                                <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDPrice*(decimal)x.VDQty*(decimal)x.VATRate).Sum())</th>
                                             }
                                             @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory))
                                             {
@@ -674,7 +666,7 @@
                                         {
                                             <th class="text-center">@voucherDetailVMs.Count()</th>
                                             <th></th>
-                                            <th class="text-right">@String.Format("{0:#,##0.##}",@voucherDetailVMs.Select(x=>x.VDPrice).Sum())</th>
+                                            <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDPrice).Sum())</th>
                                         }
                                         <th class="text-center"></th>
                                     </tr>
@@ -924,8 +916,8 @@
             <div class="card-header text-right">
 
                 <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa-solid fa-xl fa-plus"></i> Báo cáo
+                    <button type="button" class="btn btn-sm btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa-solid fa-chart-line"></i> Báo cáo
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" @onclick=@(() => filterFinVM.TypeView = 1)>Sổ quỹ tiền mặt</a>
@@ -959,7 +951,7 @@
 
                 @if (voucherVMs != null)
                 {
-                    @if(filterFinVM.TypeView == 0)
+                    @if (filterFinVM.TypeView == 0)
                     {
                         <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
                             <thead class="thead-light">
@@ -1000,7 +992,54 @@
                     }
                     else
                     {
-                        
+                        <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-center">Ngày chứng từ</th>
+                                    <th class="text-center">Phiếu thu</th>
+                                    <th class="text-center">Phiếu chi</th>
+                                    <th>Diễn giải</th>
+                                    <th class="text-right">Số thu</th>
+                                    <th class="text-right">Số chi</th>
+                                    <th class="text-right">Số tồn</th>
+                                    <th>Đối tượng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <th>Số dư đầu kỳ</th>
+                                    <td></td>
+                                    <td></td>
+                                    <th class="text-right"></th>
+                                    <td></td>
+                                </tr>
+                                <Virtualize Items="@voucherVMs" Context="voucherVM" OverscanCount="50">
+                                    <tr>
+                                        <td class="text-center">Ngày chứng từ</td>
+                                        <td class="text-center">Phiếu thu</td>
+                                        <td class="text-center">Phiếu chi</td>
+                                        <td>Diễn giải</td>
+                                        <td class="text-right">Số thu</td>
+                                        <td class="text-right">Số chi</td>
+                                        <td class="text-right">Số tồn</td>
+                                        <td></td>
+                                    </tr>
+                                </Virtualize>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <th>Số dư cuối kỳ</th>
+                                    <td></td>
+                                    <td></td>
+                                    <th class="text-right"></th>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     }
                 }
             </div>

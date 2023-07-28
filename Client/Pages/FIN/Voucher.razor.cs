@@ -152,6 +152,8 @@ namespace D69soft.Client.Pages.FIN
             voucherVM = new();
             voucherDetailVMs = new();
 
+            filterFinVM.TypeView = 0;
+
             voucherVMs = await voucherService.GetVouchers(filterFinVM);
 
             isLoading = false;
