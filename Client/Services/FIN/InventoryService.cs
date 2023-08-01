@@ -1,11 +1,6 @@
-﻿using D69soft.Shared.Models.ViewModels.DOC;
-using D69soft.Shared.Models.ViewModels.FIN;
-using D69soft.Shared.Models.ViewModels.HR;
-using D69soft.Shared.Models.ViewModels.SYSTEM;
+﻿using D69soft.Shared.Models.ViewModels.FIN;
 using System.Collections;
 using System.Net.Http.Json;
-using System.Reflection.Emit;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace D69soft.Client.Services.FIN
 {

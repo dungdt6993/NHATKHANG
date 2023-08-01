@@ -1,11 +1,7 @@
-﻿using D69soft.Shared.Models.ViewModels.DOC;
-using D69soft.Shared.Models.ViewModels.HR;
-using D69soft.Shared.Models.ViewModels.SYSTEM;
+﻿using D69soft.Shared.Models.ViewModels.HR;
 using Newtonsoft.Json;
 using System.Data;
 using System.Net.Http.Json;
-using static System.Runtime.CompilerServices.RuntimeHelpers;
-
 namespace D69soft.Client.Services.HR
 {
     public class PayrollService

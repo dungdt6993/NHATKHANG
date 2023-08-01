@@ -11,12 +11,6 @@ using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Shared.Utilities;
 using D69soft.Client.Extensions;
-using D69soft.Shared.Models.ViewModels.DOC;
-using D69soft.Shared.Models.Entities.HR;
-using System.Reflection.Metadata;
-using D69soft.Shared.Models.ViewModels.FIN;
-using D69soft.Client.Services.POS;
-using D69soft.Shared.Models.ViewModels.CRM;
 
 namespace D69soft.Client.Pages.HR
 {

@@ -13,8 +13,6 @@ using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extensions;
 using Microsoft.AspNetCore.Components.Forms;
-using D69soft.Shared.Models.ViewModels.CRM;
-using D69soft.Client.Services.CRM;
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -79,6 +77,13 @@ namespace D69soft.Client.Pages.FIN
 
         //RPT
         string ReportName = String.Empty;
+
+        //Inventory
+        InventoryVM inventoryVM = new();
+        List<InventoryVM> inventoryVMs;
+
+        //InventoryBookDetailVM
+        List<InventoryBookDetailVM> inventoryBookDetailVMs;
 
         private BlazoredTypeahead<VoucherDetailVM, VoucherDetailVM> txtSearchItems;
 
@@ -155,6 +160,8 @@ namespace D69soft.Client.Pages.FIN
             filterFinVM.TypeView = 0;
 
             voucherVMs = await voucherService.GetVouchers(filterFinVM);
+
+            inventoryVMs = await inventoryService.GetInventorys(filterFinVM);
 
             isLoading = false;
         }
@@ -333,7 +340,6 @@ namespace D69soft.Client.Pages.FIN
 
                 if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || voucherVM.VTypeID == "FIN_Sale")
                 {
-                    _voucherDetailVM.InventoryCheck_StockCode = _voucherDetailVM.FromStockCode;
                     await UpdateInventoryCheck_Qty(_voucherDetailVM);
                 }
 
@@ -411,9 +417,8 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            _voucherDetailVM.FromStockCode = value;
+            _voucherDetailVM.FromStockCode = _voucherDetailVM.InventoryCheck_StockCode = value;
 
-            _voucherDetailVM.InventoryCheck_StockCode = _voucherDetailVM.FromStockCode;
             await UpdateInventoryCheck_Qty(_voucherDetailVM);
 
             isLoading = false;
@@ -500,7 +505,7 @@ namespace D69soft.Client.Pages.FIN
                         {
                             voucherDetailVM.InventoryCheck_StockCode = voucherDetailVM.FromStockCode;
                         }
-                            await UpdateInventoryCheck_Qty(voucherDetailVM);
+                        await UpdateInventoryCheck_Qty(voucherDetailVM);
                     }
 
                     voucherDetailVMs.Add(voucherDetailVM);
@@ -694,19 +699,22 @@ namespace D69soft.Client.Pages.FIN
             {
                 if (_VActive)
                 {
-                    if (voucherVM.VTypeID == "FIN_Output" || voucherVM.VTypeID == "FIN_Transfer")
+                    if(voucherVM.IsInventory)
                     {
-                        foreach (var _voucherDetailVM in voucherDetailVMs)
+                        if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || voucherVM.VTypeID == "FIN_Sale")
                         {
-                            _voucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(voucherVM.VDate.Value, _voucherDetailVM);
-                        }
+                            foreach (var _voucherDetailVM in voucherDetailVMs)
+                            {
+                                _voucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(voucherVM.VDate.Value, _voucherDetailVM);
+                            }
 
-                        //if (stockVoucherDetailVMs.GroupBy(x => new { x.ICode, x.FromStockCode, x.InventoryCheck_Qty }).Select(x => new { InventoryCheck_Qty = x.Max(x => x.InventoryCheck_Qty), sumQty = x.Sum(x => x.Qty) }).Where(x => x.sumQty > x.InventoryCheck_Qty).Count() > 0)
-                        //{
-                        //    await js.Swal_Message("Cảnh báo!", "Số lượng xuất kho vượt quá số lượng tồn trong kho.", SweetAlertMessageType.warning);
-                        //    isLoading = false;
-                        //    return;
-                        //}
+                            if (voucherDetailVMs.GroupBy(x => new { x.ICode, x.FromStockCode, x.InventoryCheck_Qty }).Select(x => new { InventoryCheck_Qty = x.Max(x => x.InventoryCheck_Qty), sumQty = x.Sum(x => x.VDQty) }).Where(x => x.sumQty > x.InventoryCheck_Qty).Count() > 0)
+                            {
+                                await js.Swal_Message("Cảnh báo!", "Số lượng xuất kho vượt quá số lượng tồn trong kho.", SweetAlertMessageType.warning);
+                                isLoading = false;
+                                return;
+                            }
+                        }
                     }
                 }
 
@@ -738,7 +746,7 @@ namespace D69soft.Client.Pages.FIN
 
             foreach (var _voucherDetailVM in voucherDetailVMs)
             {
-                _voucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(voucherVM.VDate.Value, _voucherDetailVM);
+                await UpdateInventoryCheck_Qty(_voucherDetailVM);
             }
 
             isLoading = false;

@@ -1,9 +1,7 @@
 ﻿using Model.ViewModels.OP;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.OP;
-using D69soft.Shared.Models.ViewModels.DOC;
 using System.Net.Http.Json;
-using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Client.Services.OP
 {

@@ -9,8 +9,6 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using D69soft.Shared.Models.ViewModels.CRM;
-using D69soft.Client.Services.CRM;
 
 namespace D69soft.Client.Pages.FIN
 {

@@ -26,8 +26,8 @@
                     {
                         <div class="col-sm-2">
                             <select class="selectpicker form-control"
-                                data-style="btn-selectpicker" data-container="body"
-                                @bind="onchange_VSubTypeID">
+                                    data-style="btn-selectpicker" data-container="body"
+                            @bind="onchange_VSubTypeID">
                                 <option value=@String.Empty>-----Chọn-----</option>
                                 @foreach (var _vSubTypeVM in vSubTypeVMs)
                                 {
@@ -132,43 +132,59 @@
 
                                 @if (voucherVM.VTypeID == "FIN_Purchasing")
                                 {
-                                    <div class="form-group">
-                                        <label>Nhà cung cấp</label>
-                                        <select class="selectpicker form-control form-control-sm"
-                                            data-style="btn-selectpicker" data-container="body"
-                                            data-live-search="true" data-show-subtext="true"
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label>Nhà cung cấp</label>
+                                            <select class="selectpicker form-control form-control-sm"
+                                                    data-style="btn-selectpicker" data-container="body"
+                                                    data-live-search="true" data-show-subtext="true"
                                             @bind="onchange_VendorCode">
-                                            <option value=@String.Empty>-----Chọn-----</option>
-                                            @if (vendorVMs != null)
-                                            {
-                                                @foreach (var _vendorVM in vendorVMs)
+                                                <option value=@String.Empty>-----Chọn-----</option>
+                                                @if (vendorVMs != null)
                                                 {
-                                                    <option data-subtext="@_vendorVM.VendorCode" value="@_vendorVM.VendorCode">@_vendorVM.VendorName</option>
+                                                    @foreach (var _vendorVM in vendorVMs)
+                                                    {
+                                                        <option data-subtext="@_vendorVM.VendorCode" value="@_vendorVM.VendorCode">@_vendorVM.VendorName</option>
+                                                    }
                                                 }
-                                            }
-                                        </select>
-                                        <ValidationMessage For="@(() => voucherVM.VendorCode)" />
+                                            </select>
+                                            <ValidationMessage For="@(() => voucherVM.VendorCode)" />
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>Người giao hàng</label>
+                                            <div class="input-group">
+                                                <InputText class="form-control form-control-sm" @bind-Value="voucherVM.VContact" />
+                                            </div>
+                                        </div>
                                     </div>
                                 }
 
                                 @if (voucherVM.VTypeID == "FIN_Sale")
                                 {
-                                    <div class="form-group">
-                                        <label>Khách hàng</label>
-                                        <select class="selectpicker form-control form-control-sm"
-                                            data-style="btn-selectpicker" data-container="body"
-                                            data-live-search="true" data-show-subtext="true"
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label>Khách hàng</label>
+                                            <select class="selectpicker form-control form-control-sm"
+                                                    data-style="btn-selectpicker" data-container="body"
+                                                    data-live-search="true" data-show-subtext="true"
                                             @bind="onchange_CustomerCode">
-                                            <option value=@String.Empty>-----Chọn-----</option>
-                                            @if (customerVMs != null)
-                                            {
-                                                @foreach (var _customerVM in customerVMs)
+                                                <option value=@String.Empty>-----Chọn-----</option>
+                                                @if (customerVMs != null)
                                                 {
-                                                    <option data-subtext="@_customerVM.CustomerCode" value="@_customerVM.CustomerCode">@_customerVM.CustomerName</option>
+                                                    @foreach (var _customerVM in customerVMs)
+                                                    {
+                                                        <option data-subtext="@_customerVM.CustomerCode" value="@_customerVM.CustomerCode">@_customerVM.CustomerName</option>
+                                                    }
                                                 }
-                                            }
-                                        </select>
-                                        <ValidationMessage For="@(() => voucherVM.CustomerCode)" />
+                                            </select>
+                                            <ValidationMessage For="@(() => voucherVM.CustomerCode)" />
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>Người mua hàng</label>
+                                            <div class="input-group">
+                                                <InputText class="form-control form-control-sm" @bind-Value="voucherVM.VContact" />
+                                            </div>
+                                        </div>
                                     </div>
                                 }
 
@@ -200,7 +216,7 @@
                                         <div class="input-group">
                                             <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask"
                                                              Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))"
-                                                             @bind-StartDate="voucherVM.VDate" OnRangeSelect="OnRangeSelect_VDate"
+                                            @bind-StartDate="voucherVM.VDate" OnRangeSelect="OnRangeSelect_VDate"
                                                              onClick="this.select();" />
 
                                             <div class="input-group-append">
@@ -223,9 +239,9 @@
                                             <label>Ngày hóa đơn</label>
                                             <div class="input-group">
                                                 <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask"
-                                                             Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))"
-                                                             @bind-StartDate="voucherVM.InvoiceDate"
-                                                             onClick="this.select();" />
+                                                                 Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))"
+                                                @bind-StartDate="voucherVM.InvoiceDate"
+                                                                 onClick="this.select();" />
 
                                                 <div class="input-group-append">
                                                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
@@ -374,13 +390,13 @@
                                                         voucherDetailVM = new();
                                                         <td>
                                                             <BlazoredTypeahead SearchMethod="SearchItems"
-                                                           Value="voucherDetailVM"
-                                                           ValueChanged="@( (VoucherDetailVM i) => UpdateItem(i, _voucherDetailVM) )"
-                                                           ValueExpression="@( () => voucherDetailVM)"
-                                                           Debounce="500"
-                                                           MinimumLength="2"
-                                                           MaximumSuggestions="6"
-                                                           placeholder="Tìm kiếm theo mã hàng hoặc tên hàng...">
+                                                                               Value="voucherDetailVM"
+                                                                               ValueChanged="@( (VoucherDetailVM i) => UpdateItem(i, _voucherDetailVM) )"
+                                                                               ValueExpression="@( () => voucherDetailVM)"
+                                                                               Debounce="500"
+                                                                               MinimumLength="2"
+                                                                               MaximumSuggestions="6"
+                                                                               placeholder="Tìm kiếm theo mã hàng hoặc tên hàng...">
                                                                 <SelectedTemplate Context="_item">
                                                                     <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm theo mã hàng hoặc tên hàng...
                                                                 </SelectedTemplate>
@@ -415,11 +431,11 @@
                                                         {
                                                             <td>
                                                                 <InputSelect class="selectpicker form-control form-control-sm"
-                                                     data-style="btn-selectpicker" data-container="body"
-                                                     data-live-search="true" data-show-subtext="true"
-                                                     ValueExpression="@(()=>_voucherDetailVM.InventoryCheck_StockCode)"
-                                                     Value="@_voucherDetailVM.InventoryCheck_StockCode"
-                                                     ValueChanged="@((string value) =>onchange_InventoryCheck_StockCode(value, _voucherDetailVM))">
+                                                                             data-style="btn-selectpicker" data-container="body"
+                                                                             data-live-search="true" data-show-subtext="true"
+                                                                             ValueExpression="@(()=>_voucherDetailVM.InventoryCheck_StockCode)"
+                                                                             Value="@_voucherDetailVM.InventoryCheck_StockCode"
+                                                                             ValueChanged="@((string value) =>onchange_InventoryCheck_StockCode(value, _voucherDetailVM))">
                                                                     <option value=@String.Empty>-----Chọn kho-----</option>
                                                                     @if (stockVMs != null)
                                                                     {
@@ -487,11 +503,11 @@
                                                         {
                                                             <td>
                                                                 <InputSelect class="selectpicker form-control form-control-sm"
-                                                     data-style="btn-selectpicker"
-                                                     data-container="body"
-                                                     ValueExpression="@(()=>_voucherDetailVM.VATCode)"
-                                                     Value="@_voucherDetailVM.VATCode"
-                                                     ValueChanged="@((string value) =>onchange_VAT(value, _voucherDetailVM))">
+                                                                             data-style="btn-selectpicker"
+                                                                             data-container="body"
+                                                                             ValueExpression="@(()=>_voucherDetailVM.VATCode)"
+                                                                             Value="@_voucherDetailVM.VATCode"
+                                                                             ValueChanged="@((string value) =>onchange_VAT(value, _voucherDetailVM))">
 
                                                                     <option value=@String.Empty>-----Chọn-----</option>
                                                                     @if (vatDefVMs != null)
@@ -527,12 +543,12 @@
                                                         {
                                                             <td>
                                                                 <InputSelect class="selectpicker form-control form-control-sm"
-                                                     data-style="btn-selectpicker"
-                                                     data-container="body" data-live-search="true"
-                                                     data-show-subtext="true"
-                                                     ValueExpression="@(()=>_voucherDetailVM.FromStockCode)"
-                                                     Value="@_voucherDetailVM.FromStockCode"
-                                                     ValueChanged="@((string value) =>onchange_FromStockCode(value, _voucherDetailVM))">
+                                                                             data-style="btn-selectpicker"
+                                                                             data-container="body" data-live-search="true"
+                                                                             data-show-subtext="true"
+                                                                             ValueExpression="@(()=>_voucherDetailVM.FromStockCode)"
+                                                                             Value="@_voucherDetailVM.FromStockCode"
+                                                                             ValueChanged="@((string value) =>onchange_FromStockCode(value, _voucherDetailVM))">
 
                                                                     <option value=@String.Empty>-----Chọn-----</option>
                                                                     @if (stockVMs != null)
@@ -574,9 +590,9 @@
                                                         {
                                                             <td>
                                                                 <select class="selectpicker form-control form-control-sm"
-                                                data-style="btn-selectpicker" data-container="body"
-                                                data-live-search="true" data-show-subtext="true"
-                                                    @bind="_voucherDetailVM.ToStockCode">
+                                                                        data-style="btn-selectpicker" data-container="body"
+                                                                        data-live-search="true" data-show-subtext="true"
+                                                                @bind="_voucherDetailVM.ToStockCode">
                                                                     <option value=@String.Empty>-----Chọn-----</option>
                                                                     @if (stockVMs != null)
                                                                     {
@@ -688,14 +704,14 @@
 
                         <div class="col-sm-11">
                             <BlazoredTypeahead SearchMethod="SearchItems"
-                                           Value="voucherDetailVM"
-                                           ValueChanged="@( (VoucherDetailVM i) => SelectedItem(i) )"
-                                           ValueExpression="@( () => voucherDetailVM)"
-                                           Debounce="500"
-                                           MinimumLength="2"
-                                           MaximumSuggestions="6"
-                                           placeholder="Tìm kiếm theo mã hàng hoặc tên hàng..."
-                                           @ref="txtSearchItems">
+                                               Value="voucherDetailVM"
+                                               ValueChanged="@( (VoucherDetailVM i) => SelectedItem(i) )"
+                                               ValueExpression="@( () => voucherDetailVM)"
+                                               Debounce="500"
+                                               MinimumLength="2"
+                                               MaximumSuggestions="6"
+                                               placeholder="Tìm kiếm theo mã hàng hoặc tên hàng..."
+                            @ref="txtSearchItems">
                                 <SelectedTemplate Context="_item">
                                     <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm theo mã hàng hoặc tên hàng...
                                 </SelectedTemplate>
@@ -724,7 +740,8 @@
                             <div class="dropdown-menu dropdown-menu-right">
                                 @if (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory)
                                 {
-                                    <a class="dropdown-item" @onclick=@(() => PrintVoucher("Phieu_xuat_kho_ban_hang"))>Phiếu xuất kho bán hàng</a>
+                                    <a class="dropdown-item" @onclick=@(() => PrintVoucher("FIN_Phieu_xuat_kho_ban_hang"))>Phiếu xuất kho bán hàng</a>
+                                    <a class="dropdown-item" @onclick=@(() => PrintVoucher("FIN_Bien_ban_ban_giao_kiem_bao_hanh"))>Biên bản bàn giao kiêm bảo hành</a>
                                 }
                             </div>
                         </div>
@@ -920,7 +937,7 @@
                         <i class="fa-solid fa-chart-line"></i> Báo cáo
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" @onclick=@(() => filterFinVM.TypeView = 1)>Sổ quỹ tiền mặt</a>
+                        <a class="dropdown-item" @onclick=@(() => filterFinVM.TypeView = 1)>Báo cáo tổng hợp</a>
                     </div>
                 </div>
 
@@ -958,6 +975,7 @@
                                 <tr>
                                     <th class="text-center">Ngày chứng từ</th>
                                     <th class="text-center">Số chứng từ</th>
+                                    <th class="text-center">Số hóa đơn</th>
                                     @if (filterFinVM.FuncID == "FIN_Cash" || filterFinVM.FuncID == "FIN_Bank")
                                     {
                                         <th>Lý do</th>
@@ -966,6 +984,7 @@
                                     {
                                         <th>Diễn giải</th>
                                     }
+                                    <th class="text-center">Tình trạng thanh toán</th>
                                     <th>Loại chứng từ</th>
                                 </tr>
                             </thead>
@@ -979,7 +998,9 @@
                                             @(voucherVM.VDate.HasValue ? voucherVM.VDate.Value.ToString("dd/MM/yyyy") : "")
                                         </td>
                                         <td class="text-center">@voucherVM.VNumber</td>
+                                        <td class="text-center">@voucherVM.InvoiceNumber</td>
                                         <td>@voucherVM.VDesc</td>
+                                        <td class="text-center">@voucherVM.IsPayment</td>
                                         <td>@voucherVM.VTypeDesc</td>
                                     </tr>
                                 </Virtualize>
@@ -992,54 +1013,95 @@
                     }
                     else
                     {
-                        <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th class="text-center">Ngày chứng từ</th>
-                                    <th class="text-center">Phiếu thu</th>
-                                    <th class="text-center">Phiếu chi</th>
-                                    <th>Diễn giải</th>
-                                    <th class="text-right">Số thu</th>
-                                    <th class="text-right">Số chi</th>
-                                    <th class="text-right">Số tồn</th>
-                                    <th>Đối tượng</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <th>Số dư đầu kỳ</th>
-                                    <td></td>
-                                    <td></td>
-                                    <th class="text-right"></th>
-                                    <td></td>
-                                </tr>
-                                <Virtualize Items="@voucherVMs" Context="voucherVM" OverscanCount="50">
+                        @if (inventoryVMs != null)
+                        {
+                            <table class="table table-sm table-bordered table-head-fixed table-hove table-hover tblFontSizeMin">
+                                <thead class="thead-light">
                                     <tr>
-                                        <td class="text-center">Ngày chứng từ</td>
-                                        <td class="text-center">Phiếu thu</td>
-                                        <td class="text-center">Phiếu chi</td>
-                                        <td>Diễn giải</td>
-                                        <td class="text-right">Số thu</td>
-                                        <td class="text-right">Số chi</td>
-                                        <td class="text-right">Số tồn</td>
-                                        <td></td>
+                                        <th class="text-center">Hình ảnh</th>
+                                        <th>Tên kho</th>
+                                        <th class="text-center">Mã hàng</th>
+                                        <th>Tên hàng</th>
+                                        <th class="text-center">ĐVT</th>
+                                        <th class="text-center">Đầu kỳ</th>
+                                        <th class="text-center">Nhập kho</th>
+                                        <th class="text-center">Xuất kho</th>
+                                        <th class="text-center">Cuối kỳ</th>
                                     </tr>
-                                </Virtualize>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <th>Số dư cuối kỳ</th>
-                                    <td></td>
-                                    <td></td>
-                                    <th class="text-right"></th>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <Virtualize Items="@inventoryVMs" Context="_inventoryVM" OverscanCount="50">
+                                        <tr>
+                                            <td class="text-center">
+                                                <img alt="Ảnh" class="table-profile-avatar" src="@_inventoryVM.IURLPicture1">
+                                            </td>
+                                            <td>@_inventoryVM.StockCode - @_inventoryVM.StockName</td>
+                                            <td class="text-center">@_inventoryVM.ICode</td>
+                                            <td>@_inventoryVM.IName</td>
+                                            <td class="text-center">@_inventoryVM.IUnitName</td>
+                                            <td class="text-center">@_inventoryVM.QtyOpen</td>
+                                            <td class="text-center">@_inventoryVM.QtyInput</td>
+                                            <td class="text-center">@_inventoryVM.QtyOutput</td>
+                                            <td class="text-center">@_inventoryVM.QtyEnd</td>
+                                        </tr>
+                                    </Virtualize>
+                                </tbody>
+                            </table>
+
+                            if (inventoryVMs.Count() <= 0)
+                            {
+                                <img class="img-no-result" src="images/_default/no-results.png" />
+                            }
+                        }
+
+                        @*<table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                <thead class="thead-light">
+                <tr>
+                <th class="text-center">Ngày chứng từ</th>
+                <th class="text-center">Phiếu thu</th>
+                <th class="text-center">Phiếu chi</th>
+                <th>Diễn giải</th>
+                <th class="text-right">Số thu</th>
+                <th class="text-right">Số chi</th>
+                <th class="text-right">Số tồn</th>
+                <th>Đối tượng</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <th>Số dư đầu kỳ</th>
+                <td></td>
+                <td></td>
+                <th class="text-right"></th>
+                <td></td>
+                </tr>
+                <Virtualize Items="@voucherVMs" Context="voucherVM" OverscanCount="50">
+                <tr>
+                <td class="text-center">Ngày chứng từ</td>
+                <td class="text-center">Phiếu thu</td>
+                <td class="text-center">Phiếu chi</td>
+                <td>Diễn giải</td>
+                <td class="text-right">Số thu</td>
+                <td class="text-right">Số chi</td>
+                <td class="text-right">Số tồn</td>
+                <td></td>
+                </tr>
+                </Virtualize>
+                <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <th>Số dư cuối kỳ</th>
+                <td></td>
+                <td></td>
+                <th class="text-right"></th>
+                <td></td>
+                </tr>
+                </tbody>
+                </table>*@
                     }
                 }
             </div>

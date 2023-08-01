@@ -1,6 +1,4 @@
-﻿using D69soft.Shared.Models.ViewModels.DOC;
-using D69soft.Shared.Models.ViewModels.HR;
-using D69soft.Shared.Models.ViewModels.SYSTEM;
+﻿using D69soft.Shared.Models.ViewModels.HR;
 using System.Net.Http.Json;
 
 namespace D69soft.Client.Services.HR

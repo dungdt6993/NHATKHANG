@@ -1,5 +1,4 @@
-﻿using D69soft.Shared.Models.Entities.CRM;
-using D69soft.Shared.Models.Entities.FIN;
+﻿using D69soft.Shared.Models.Entities.FIN;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,5 +1,4 @@
-﻿using D69soft.Shared.Models.Entities.CRM;
-using D69soft.Shared.Models.Entities.FIN;
+﻿using D69soft.Shared.Models.Entities.FIN;
 using D69soft.Shared.Models.Entities.HR;
 
 namespace D69soft.Shared.Models.ViewModels.FIN
@@ -30,6 +29,7 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string VNumber { get; set; }
         public string VDesc { get; set; }
         public DateTimeOffset? VDate { get; set; }
+        public string VContact { get; set; }
         public bool VActive { get; set; }
         public bool IsPayment { get; set; }
         public bool IsInvoice { get; set; }

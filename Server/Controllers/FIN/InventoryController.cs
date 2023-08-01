@@ -386,7 +386,7 @@ namespace D69soft.Server.Controllers.FIN
                 parm.Add("@StockCode", _filterFinVM.StockCode);
                 parm.Add("@ICode", _filterFinVM.ICode);
 
-                var result = await conn.QueryAsync<InventoryVM>("FIN.FIN_Inventory_view", parm, commandType: CommandType.StoredProcedure);
+                var result = await conn.QueryAsync<InventoryVM>("FIN.GetInventorys", parm, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }

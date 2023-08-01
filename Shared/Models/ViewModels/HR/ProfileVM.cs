@@ -1,6 +1,5 @@
 ﻿using System;
 using D69soft.Shared.Models.Entities.HR;
-using D69soft.Shared.Models.Entities.KPI;
 using D69soft.Shared.Models.Entities.SYSTEM;
 
 namespace D69soft.Shared.Models.ViewModels.HR

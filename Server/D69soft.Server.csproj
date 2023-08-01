@@ -7,6 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DataProtection\Upload\POS\**" />
+    <Content Remove="DataProtection\Upload\POS\**" />
+    <EmbeddedResource Remove="DataProtection\Upload\POS\**" />
+    <None Remove="DataProtection\Upload\POS\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="DataProtection\Reports\Phieu_xuat_kho_ban_hang.cs" />
+    <Compile Remove="DataProtection\Reports\Phieu_xuat_kho_ban_hang.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="DataProtection\Reports\Phieu_xuat_kho_ban_hang.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="DataProtection\Reports\Bang_cham_cong.repx" />
     <None Remove="DataProtection\Reports\Bang_ke_ban_hang_NCC.repx" />
     <None Remove="DataProtection\Reports\Phieu_xuat_chuyen_kho_noi_bo.repx" />
@@ -15,16 +31,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="DataProtection\Reports\Bang_cham_cong.repx" />
-    <EmbeddedResource Include="DataProtection\Reports\Bang_ke_ban_hang_NCC.repx" />
-    <EmbeddedResource Include="DataProtection\Reports\Phieu_xuat_chuyen_kho_noi_bo.repx" />
-    <EmbeddedResource Include="DataProtection\Reports\Phieu_xuat_kho_ban_hang.repx" />
     <EmbeddedResource Include="PredefinedReports\CustomNewReport.vsrepx" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.143" />
-    <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="22.2.4" />
+    <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="23.1.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.7" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
@@ -39,10 +51,9 @@
 
   <ItemGroup>
     <Folder Include="DataProtection\Export\" />
-    <Folder Include="DataProtection\Upload\DOC\" />
+    <Folder Include="DataProtection\Reports\" />
     <Folder Include="DataProtection\Upload\FIN\Images\Items\" />
     <Folder Include="DataProtection\Upload\HR\Images\Profile\" />
-    <Folder Include="DataProtection\Upload\POS\Images\Items\" />
     <Folder Include="Hubs\" />
   </ItemGroup>
 
@@ -64,12 +75,6 @@
     </Compile>
     <Compile Update="DataProtection\Reports\Phieu_xuat_chuyen_kho_noi_bo.Designer.cs">
       <DependentUpon>Phieu_xuat_chuyen_kho_noi_bo.repx</DependentUpon>
-    </Compile>
-    <Compile Update="DataProtection\Reports\Phieu_xuat_kho_ban_hang.cs">
-      <DependentUpon>Phieu_xuat_kho_ban_hang.repx</DependentUpon>
-    </Compile>
-    <Compile Update="DataProtection\Reports\Phieu_xuat_kho_ban_hang.Designer.cs">
-      <DependentUpon>Phieu_xuat_kho_ban_hang.repx</DependentUpon>
     </Compile>
     <Compile Update="PredefinedReports\CustomNewReport.cs">
       <DependentUpon>CustomNewReport.vsrepx</DependentUpon>

@@ -1,11 +1,6 @@
-﻿using D69soft.Client.Services.CRM;
-using D69soft.Client.Services.CRUISES;
-using D69soft.Client.Services.DOC;
-using D69soft.Client.Services.FIN;
+﻿using D69soft.Client.Services.FIN;
 using D69soft.Client.Services.HR;
-using D69soft.Client.Services.KPI;
 using D69soft.Client.Services.OP;
-using D69soft.Client.Services.POS;
 using D69soft.Server.Services;
 using D69soft.Server.Services.HR;
 

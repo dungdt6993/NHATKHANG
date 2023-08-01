@@ -55,6 +55,7 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string VNumber { get; set; }
         public string VDesc { get; set; }
         public DateTimeOffset? VDate { get; set; }
+        public string VContact { get; set; }
         public bool VActive { get; set; }
         public bool IsPayment { get; set; }
         public bool IsInvoice { get; set; }
