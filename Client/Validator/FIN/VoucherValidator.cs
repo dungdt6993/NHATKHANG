@@ -40,7 +40,7 @@ namespace D69soft.Client.Validator.FIN
 
                     When(x => x.IsInvoice, () =>
                     {
-                        RuleFor(x => x.InvoiceNumber).NotEmpty().WithMessage("Không được trống.");
+                        RuleFor(x => x.InvoiceNumber).NotEmpty().WithMessage("Phải khác 0.");
 
                         RuleFor(x => x.InvoiceDate).NotEmpty().WithMessage("Không được trống.");
                     });

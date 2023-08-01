@@ -141,7 +141,7 @@ namespace D69soft.Server.Controllers.FIN
                     sqlVoucherVM += "Insert #tmpAuto_Code_ID ";
                     sqlVoucherVM += "exec SYSTEM.AUTO_CODE_ID 'FIN.Voucher','VNumber',@VCode,'0000' ";
                     sqlVoucherVM += "Insert into FIN.Voucher (DivisionID,VNumber,VDesc,VDate,VendorCode,CustomerCode,StockCode,VContact,ITypeCode,VActive,IsPayment,PaymentTypeCode,IsInventory,IsInvoice,InvoiceNumber,InvoiceDate,VTypeID,VSubTypeID,TimeCreated) ";
-                    sqlVoucherVM += "select @DivisionID,CODE_ID,@VDesc,@VDate,@VendorCode,@CustomerCode,@StockCode,@ITypeCode,@VContact,@VActive,@IsPayment,@PaymentTypeCode,@IsInventory,@IsInvoice,@InvoiceNumber,@InvoiceDate,@VTypeID,@VSubTypeID,GETDATE() from #tmpAuto_Code_ID ";
+                    sqlVoucherVM += "select @DivisionID,CODE_ID,@VDesc,@VDate,@VendorCode,@CustomerCode,@StockCode,@VContact,@ITypeCode,@VActive,@IsPayment,@PaymentTypeCode,@IsInventory,@IsInvoice,@InvoiceNumber,@InvoiceDate,@VTypeID,@VSubTypeID,GETDATE() from #tmpAuto_Code_ID ";
                     sqlVoucherVM += "select CODE_ID from #tmpAuto_Code_ID ";
 
                     VNumber = await conn.ExecuteScalarAsync<string>(sqlVoucherVM, _voucherVM);
