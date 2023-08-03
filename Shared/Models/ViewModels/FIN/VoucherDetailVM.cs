@@ -13,8 +13,8 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string FromStockName { get; set; }
         public string ToStockName { get; set; }
         public string InventoryCheck_StockName { get; set; }
-
         public decimal VDAmount { get; set; }
+        public decimal VDDiscountPercent { get; set; }
 
         public int IsUpdateItem { get; set; }
         public int IsUpdateFromStock { get; set; }
@@ -30,6 +30,7 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string VNumber { get; set; }
         public float VDQty { get; set; }
         public decimal VDPrice { get; set; }
+        public decimal VDDiscountPrice { get; set; }
         public string FromStockCode { get; set; }
         public string ToStockCode { get; set; }
         public string VDNote { get; set; }

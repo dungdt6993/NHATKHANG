@@ -13,6 +13,8 @@ using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extensions;
 using Microsoft.AspNetCore.Components.Forms;
+using D69soft.Client.Services.OP;
+using System;
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -362,26 +364,63 @@ namespace D69soft.Client.Pages.FIN
             await js.InvokeAsync<object>("updateScrollToBottom");
         }
 
-        private void UpdateItem(VoucherDetailVM result, VoucherDetailVM _voucherDetailVM)
+        private void onchange_VDQty(ChangeEventArgs e, VoucherDetailVM _voucherDetailVM)
         {
-            if (result != null)
+            _voucherDetailVM.VDQty = float.Parse(e.Value.ToString());
+
+            if (_voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty != 0)
             {
-                _voucherDetailVM.IsUpdateItem = 0;
-                _voucherDetailVM.ICode = result.ICode;
-                _voucherDetailVM.IName = result.IName;
-                _voucherDetailVM.IUnitName = result.IUnitName;
-                _voucherDetailVM.VDPrice = result.VDPrice;
-                _voucherDetailVM.FromStockCode = String.Empty;
-                _voucherDetailVM.FromStockName = String.Empty;
-                _voucherDetailVM.ToStockCode = String.Empty;
-                _voucherDetailVM.ToStockName = String.Empty;
-                _voucherDetailVM.VATCode = String.Empty;
-                _voucherDetailVM.VATRate = 0;
+                _voucherDetailVM.VDDiscountPrice = _voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty / 100;
             }
-            else
+
+            StateHasChanged();
+        }
+
+        private void onchange_VDPrice(ChangeEventArgs e, VoucherDetailVM _voucherDetailVM)
+        {
+            _voucherDetailVM.VDPrice = decimal.Parse(e.Value.ToString());
+
+            if (_voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty != 0)
             {
-                _voucherDetailVM.IsUpdateItem = 0;
+                _voucherDetailVM.VDDiscountPrice = _voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty / 100;
             }
+
+            StateHasChanged();
+        }
+
+        private async void onchange_VDDiscountPrice(ChangeEventArgs e, VoucherDetailVM _voucherDetailVM)
+        {
+            _voucherDetailVM.VDDiscountPrice = decimal.Parse(e.Value.ToString());
+
+            if(_voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty != 0)
+            {
+                _voucherDetailVM.VDDiscountPercent = _voucherDetailVM.VDDiscountPrice / _voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty * 100;
+            }
+
+            StateHasChanged();
+        }
+
+        private async void onchange_VDDiscountPercent(ChangeEventArgs e, VoucherDetailVM _voucherDetailVM)
+        {
+            _voucherDetailVM.VDDiscountPercent = decimal.Parse(e.Value.ToString());
+
+            if (_voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty != 0)
+            {
+                _voucherDetailVM.VDDiscountPrice = _voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty / 100;
+            }
+
+            StateHasChanged();
+        }
+
+        private async void onchange_VAT(string value, VoucherDetailVM _voucherDetailVM)
+        {
+            isLoading = true;
+
+            _voucherDetailVM.VATCode = value;
+
+            _voucherDetailVM.VATRate = vatDefVMs.Where(x => x.VATCode == _voucherDetailVM.VATCode).Select(x => x.VATRate).FirstOrDefault();
+
+            isLoading = false;
 
             StateHasChanged();
         }
@@ -440,15 +479,26 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
-        private async void onchange_VAT(string value, VoucherDetailVM _voucherDetailVM)
+        private void UpdateItem(VoucherDetailVM result, VoucherDetailVM _voucherDetailVM)
         {
-            isLoading = true;
-
-            _voucherDetailVM.VATCode = value;
-
-            _voucherDetailVM.VATRate = vatDefVMs.Where(x => x.VATCode == _voucherDetailVM.VATCode).Select(x => x.VATRate).FirstOrDefault();
-
-            isLoading = false;
+            if (result != null)
+            {
+                _voucherDetailVM.IsUpdateItem = 0;
+                _voucherDetailVM.ICode = result.ICode;
+                _voucherDetailVM.IName = result.IName;
+                _voucherDetailVM.IUnitName = result.IUnitName;
+                _voucherDetailVM.VDPrice = result.VDPrice;
+                _voucherDetailVM.FromStockCode = String.Empty;
+                _voucherDetailVM.FromStockName = String.Empty;
+                _voucherDetailVM.ToStockCode = String.Empty;
+                _voucherDetailVM.ToStockName = String.Empty;
+                _voucherDetailVM.VATCode = String.Empty;
+                _voucherDetailVM.VATRate = 0;
+            }
+            else
+            {
+                _voucherDetailVM.IsUpdateItem = 0;
+            }
 
             StateHasChanged();
         }

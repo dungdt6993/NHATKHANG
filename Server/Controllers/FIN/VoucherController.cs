@@ -76,7 +76,8 @@ namespace D69soft.Server.Controllers.FIN
         [HttpGet("GetVoucherDetails/{_VNumber}")]
         public async Task<ActionResult<List<VoucherDetailVM>>> GetVoucherDetails(string _VNumber)
         {
-            var sql = "select SeqVD, i.ICode, i.IName, i.IPrice, i.VendorDefault, i.StockDefault, vd.VDQty, iu.IUnitName, vd.VDPrice, vd.ToStockCode, toStock.StockName as ToStockName, vd.FromStockCode, fromStock.StockName as FromStockName, vd.VDNote, ";
+            var sql = "select SeqVD, i.ICode, i.IName, i.IPrice, i.VendorDefault, i.StockDefault, vd.VDQty, iu.IUnitName, vd.VDPrice, case when VDPrice*VDQty <> 0 then VDDiscountPrice/VDPrice*VDQty*100 else 0 end as VDDiscountPercent, vd.VDDiscountPrice,";
+            sql +="vd.ToStockCode, toStock.StockName as ToStockName, vd.FromStockCode, fromStock.StockName as FromStockName, vd.VDNote, ";
             sql += "vd.InventoryCheck_StockCode, inventorycheckStock.StockName as InventoryCheck_StockName, vd.InventoryCheck_Qty, vd.InventoryCheck_ActualQty, vat.VATCode, coalesce(vat.VATRate,0) as VATRate, vat.VATName ";
             sql += "from FIN.VoucherDetail vd ";
             sql += "left join FIN.Items i on i.ICode = vd.ICode ";
@@ -149,8 +150,8 @@ namespace D69soft.Server.Controllers.FIN
                     //VoucherDetailVM
                     foreach (var _voucherDetailVM in _voucherDetailVMs)
                     {
-                        sqlVoucherDetailVM = "Insert into FIN.VoucherDetail(VNumber,ICode,VDQty,VDPrice,VATCode,FromStockCode,ToStockCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty) ";
-                        sqlVoucherDetailVM += "Values('" + VNumber + "',@ICode,@VDQty,@VDPrice,@VATCode,@FromStockCode,@ToStockCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty) ";
+                        sqlVoucherDetailVM = "Insert into FIN.VoucherDetail(VNumber,ICode,VDQty,VDPrice,VDDiscountPrice,VATCode,FromStockCode,ToStockCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty) ";
+                        sqlVoucherDetailVM += "Values('" + VNumber + "',@ICode,@VDQty,@VDPrice,@VDDiscountPrice,@VATCode,@FromStockCode,@ToStockCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty) ";
                         await conn.ExecuteAsync(sqlVoucherDetailVM, _voucherDetailVM);
                     }
                 }
@@ -158,7 +159,7 @@ namespace D69soft.Server.Controllers.FIN
                 if (_voucherVM.IsTypeUpdate == 1)
                 {
                     //VoucherVM
-                    sqlVoucherVM = "Update FIN.Voucher set VDesc=@VDesc,VDate=@VDate,VendorCode=@VendorCode,CustomerCode=@CustomerCode,StockCode=@StockCode,VContact=@VContact,ITypeCode=@ITypeCode,IsPayment=@IsPayment,PaymentTypeCode=@PaymentTypeCode,IsInventory=@IsInventory,IsInvoice=@IsInvoice,InvoiceNumber=@InvoiceNumber,InvoiceDate=@InvoiceDate, VSubTypeID=@VSubTypeID ";
+                    sqlVoucherVM = "Update FIN.Voucher set VDesc=@VDesc,VDate=@VDate,VendorCode=@VendorCode,CustomerCode=@CustomerCode,StockCode=@StockCode,VContact=@VContact,ITypeCode=@ITypeCode,IsPayment=@IsPayment,PaymentTypeCode=@PaymentTypeCode,IsInventory=@IsInventory,IsInvoice=@IsInvoice,InvoiceNumber=@InvoiceNumber,InvoiceDate=@InvoiceDate,VSubTypeID=@VSubTypeID ";
                     sqlVoucherVM += "where VNumber=@VNumber ";
                     sqlVoucherVM += "Delete from FIN.VoucherDetail where VNumber=@VNumber ";
                     await conn.ExecuteAsync(sqlVoucherVM, _voucherVM);
@@ -166,8 +167,8 @@ namespace D69soft.Server.Controllers.FIN
                     //VoucherDetailVM
                     foreach (var _voucherDetailVM in _voucherDetailVMs)
                     {
-                        sqlVoucherDetailVM = "Insert into FIN.VoucherDetail(VNumber,ICode,VDQty,VDPrice,VATCode,FromStockCode,ToStockCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty) ";
-                        sqlVoucherDetailVM += "Values('" + _voucherVM.VNumber + "',@ICode,@VDQty,@VDPrice,@VATCode,@FromStockCode,@ToStockCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty) ";
+                        sqlVoucherDetailVM = "Insert into FIN.VoucherDetail(VNumber,ICode,VDQty,VDPrice,VDDiscountPrice,VATCode,FromStockCode,ToStockCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty) ";
+                        sqlVoucherDetailVM += "Values('" + _voucherVM.VNumber + "',@ICode,@VDQty,@VDPrice,@VDDiscountPrice,@VATCode,@FromStockCode,@ToStockCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty) ";
 
                         await conn.ExecuteAsync(sqlVoucherDetailVM, _voucherDetailVM);
                     }

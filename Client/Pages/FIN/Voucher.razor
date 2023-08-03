@@ -251,8 +251,8 @@
                                         </div>
                                     </div>
                                 }
-
                             </div>
+
                             @if (voucherVM.VTypeID == "FIN_Purchasing" || voucherVM.VTypeID == "FIN_Sale")
                             {
                                 <div class="col-sm-2" style="padding-left: 10px;">
@@ -261,14 +261,14 @@
                                     <h2 class="text-bold text-right">
                                         @if (voucherDetailVMs != null)
                                         {
-                                            @String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDPrice*(decimal)x.VDQty+x.VDPrice*(decimal)x.VDQty*(decimal)x.VATRate).Sum())
+                                            @String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDPrice*(decimal)x.VDQty-x.VDDiscountPrice+(x.VDPrice*(decimal)x.VDQty-x.VDDiscountPrice)*(decimal)x.VATRate).Sum())
                                         }
                                     </h2>
 
                                 </div>
                             }
 
-                            @if (voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt" || voucherVM.VTypeID == "FIN_Bank_Credit" || voucherVM.VTypeID == "FIN_Bank_Debit")
+                            @if (voucherVM.VTypeID == "FIN_Bank_Credit" || voucherVM.VTypeID == "FIN_Bank_Debit" || voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt")
                             {
                                 <div class="col-sm-2" style="padding-left: 10px;">
 
@@ -287,7 +287,7 @@
 
                     </div>
 
-                    @if (!String.IsNullOrEmpty(voucherVM.VSubTypeID))
+                    @if (voucherVM.VTypeID == "FIN_Bank_Credit" || voucherVM.VTypeID == "FIN_Bank_Debit" || voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt")
                     {
                         <div class="modal-body @(voucherVM.IsTypeUpdate==3?"noClick":"")" style="background-color: #f4f6f9;">
                             <a class="btn btn-sm btn-success" @onclick=@(() => CreateVoucherDetail())><i class="fas fa-plus"></i> Thêm dòng chi tiết</a>
@@ -335,6 +335,8 @@
                                                 Đơn giá
                                             </th>
                                             <th class="text-center" style="width: 110px;">Thành tiền</th>
+                                            <th class="text-center" style="width: 110px;">% Chiết khấu</th>
+                                            <th class="text-center" style="width: 110px;">Tiền chiết khấu</th>
                                             <th class="text-center" style="width: 110px;">% Thuế GTGT</th>
                                             <th class="text-center" style="width: 110px;">Tiền thuế GTGT</th>
                                         }
@@ -474,17 +476,25 @@
                                                     @if (voucherVM.VTypeID != "FIN_InventoryCheck")
                                                     {
                                                         <td class="text-center">
-                                                            <input class="form-control form-control-sm text-center" @bind="@_voucherDetailVM.VDQty" onClick="this.select();" />
+                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDQty(e, _voucherDetailVM))" value="@_voucherDetailVM.VDQty" onClick="this.select();" />
                                                         </td>
                                                     }
 
                                                     @if (voucherVM.VTypeID == "FIN_Purchasing" || voucherVM.VTypeID == "FIN_Sale")
                                                     {
                                                         <td class="text-center">
-                                                            <input class="form-control form-control-sm" name="currency-mask" @bind="@_voucherDetailVM.VDPrice" onClick="this.select();" />
+                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDPrice(e, _voucherDetailVM))" value="@_voucherDetailVM.VDPrice" onClick="this.select();" />
                                                         </td>
 
                                                         <td class="text-right">@String.Format("{0:#,##0.}", (_voucherDetailVM.VDPrice*(decimal)_voucherDetailVM.VDQty))</td>
+
+                                                        <td class="text-center">
+                                                            <input class="form-control form-control-sm" @onchange="@((ChangeEventArgs e) => onchange_VDDiscountPercent(e, _voucherDetailVM))" value="@_voucherDetailVM.VDDiscountPercent" onClick="this.select();" />
+                                                        </td>
+
+                                                        <td class="text-center">
+                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDDiscountPrice(e, _voucherDetailVM))" value="@_voucherDetailVM.VDDiscountPrice" onClick="this.select();" />
+                                                        </td>
 
                                                         @if (_voucherDetailVM.IsUpdateVAT == 0)
                                                         {
@@ -521,7 +531,7 @@
                                                             </td>
                                                         }
 
-                                                        <td class="text-right">@String.Format("{0:#,##0}", (_voucherDetailVM.VDPrice*(decimal)_voucherDetailVM.VDQty*(decimal)_voucherDetailVM.VATRate))</td>
+                                                        <td class="text-right">@String.Format("{0:#,##0}", ((_voucherDetailVM.VDPrice*(decimal)_voucherDetailVM.VDQty-_voucherDetailVM.VDDiscountPrice)*(decimal)_voucherDetailVM.VATRate))</td>
                                                     }
 
                                                     @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory))
@@ -666,7 +676,11 @@
 
                                                 <th class="text-center"></th>
 
-                                                <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDPrice*(decimal)x.VDQty*(decimal)x.VATRate).Sum())</th>
+                                                <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDDiscountPrice).Sum())</th>
+
+                                                <th class="text-center"></th>
+
+                                                <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>(x.VDPrice*(decimal)x.VDQty-x.VDDiscountPrice)*(decimal)x.VATRate).Sum())</th>
                                             }
                                             @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory))
                                             {
@@ -740,6 +754,7 @@
                             <div class="dropdown-menu dropdown-menu-right">
                                 @if (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory)
                                 {
+                                    <a class="dropdown-item" @onclick=@(() => PrintVoucher("FIN_Bao_gia"))>Báo giá</a>
                                     <a class="dropdown-item" @onclick=@(() => PrintVoucher("FIN_Phieu_xuat_kho_ban_hang"))>Phiếu xuất kho bán hàng</a>
                                     <a class="dropdown-item" @onclick=@(() => PrintVoucher("FIN_Bien_ban_ban_giao_kiem_bao_hanh"))>Biên bản bàn giao kiêm bảo hành</a>
                                 }
