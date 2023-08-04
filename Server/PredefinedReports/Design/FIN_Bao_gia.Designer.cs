@@ -231,7 +231,7 @@
             this.tableCell3.StylePriority.UseTextAlignment = false;
             this.tableCell3.Text = "tableCell3";
             this.tableCell3.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
-            this.tableCell3.TextFormatString = "{0:#,#0.00}";
+            this.tableCell3.TextFormatString = "{0:C2}";
             this.tableCell3.Weight = 0.54167126118288111D;
             // 
             // tableCell8
@@ -978,7 +978,6 @@
             // 
             this.VNumber.Description = "VNumber";
             this.VNumber.Name = "VNumber";
-            this.VNumber.Visible = false;
             // 
             // FIN_Bao_gia
             // 
@@ -1000,6 +999,8 @@
             this.Margins = new DevExpress.Drawing.DXMargins(9F, 9.448819F, 9.448819F, 9.448819F);
             this.PageHeight = 1056;
             this.PageWidth = 816;
+            this.ParameterPanelLayoutItems.AddRange(new DevExpress.XtraReports.Parameters.ParameterPanelLayoutItem[] {
+            new DevExpress.XtraReports.Parameters.ParameterLayoutItem(this.VNumber, DevExpress.XtraReports.Parameters.Orientation.Horizontal)});
             this.Parameters.AddRange(new DevExpress.XtraReports.Parameters.Parameter[] {
             this.VNumber});
             this.ReportUnit = DevExpress.XtraReports.UI.ReportUnit.Pixels;

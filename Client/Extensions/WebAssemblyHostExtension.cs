@@ -16,7 +16,7 @@ namespace D69soft.Client.Extensions
             if (cultureFromLS != null)
                 culture = new CultureInfo(cultureFromLS);
             else
-                culture = new CultureInfo("en-US");
+                culture = new CultureInfo("vi-VN");
 
             CultureInfo.DefaultThreadCurrentCulture = culture;
             CultureInfo.DefaultThreadCurrentUICulture = culture;

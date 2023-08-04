@@ -101,6 +101,7 @@ namespace D69soft.Client.Pages.FIN
             await js.InvokeAsync<object>("maskDate");
             await js.InvokeAsync<object>("maskDateTime");
             await js.InvokeAsync<object>("maskCurrency");
+            await js.InvokeAsync<object>("maskPercent");
 
             await js.InvokeAsync<object>("keyPressNextInput");
         }

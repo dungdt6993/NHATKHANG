@@ -261,7 +261,7 @@
                                     <h2 class="text-bold text-right">
                                         @if (voucherDetailVMs != null)
                                         {
-                                            @String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDPrice*(decimal)x.VDQty-x.VDDiscountPrice+(x.VDPrice*(decimal)x.VDQty-x.VDDiscountPrice)*(decimal)x.VATRate).Sum())
+                                            @String.Format("{0:#,##0}",voucherDetailVMs.Select(x=>x.VDPrice*(decimal)x.VDQty-x.VDDiscountPrice+(x.VDPrice*(decimal)x.VDQty-x.VDDiscountPrice)*(decimal)x.VATRate).Sum())
                                         }
                                     </h2>
 
@@ -486,10 +486,10 @@
                                                             <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDPrice(e, _voucherDetailVM))" value="@_voucherDetailVM.VDPrice" onClick="this.select();" />
                                                         </td>
 
-                                                        <td class="text-right">@String.Format("{0:#,##0.}", (_voucherDetailVM.VDPrice*(decimal)_voucherDetailVM.VDQty))</td>
+                                                        <td class="text-right">@String.Format("{0:#,##0}", (_voucherDetailVM.VDPrice*(decimal)_voucherDetailVM.VDQty))</td>
 
                                                         <td class="text-center">
-                                                            <input class="form-control form-control-sm" @onchange="@((ChangeEventArgs e) => onchange_VDDiscountPercent(e, _voucherDetailVM))" value="@_voucherDetailVM.VDDiscountPercent" onClick="this.select();" />
+                                                            <input class="form-control form-control-sm" name="percent-mask" @onchange="@((ChangeEventArgs e) => onchange_VDDiscountPercent(e, _voucherDetailVM))" value="@_voucherDetailVM.VDDiscountPercent" onClick="this.select();" />
                                                         </td>
 
                                                         <td class="text-center">
