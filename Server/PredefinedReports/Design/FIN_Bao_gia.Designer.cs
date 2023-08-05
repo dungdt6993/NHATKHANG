@@ -231,7 +231,7 @@
             this.tableCell3.StylePriority.UseTextAlignment = false;
             this.tableCell3.Text = "tableCell3";
             this.tableCell3.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
-            this.tableCell3.TextFormatString = "{0:#,#0.00}";
+            this.tableCell3.TextFormatString = "{0:C2}";
             this.tableCell3.Weight = 0.54167126118288111D;
             // 
             // tableCell8
