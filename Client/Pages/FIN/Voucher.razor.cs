@@ -87,6 +87,9 @@ namespace D69soft.Client.Pages.FIN
         //InventoryBookDetailVM
         List<InventoryBookDetailVM> inventoryBookDetailVMs;
 
+        //Cash
+        List<VoucherDetailVM> cashBooks;
+
         private BlazoredTypeahead<VoucherDetailVM, VoucherDetailVM> txtSearchItems;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -163,8 +166,6 @@ namespace D69soft.Client.Pages.FIN
             filterFinVM.TypeView = 0;
 
             voucherVMs = await voucherService.GetVouchers(filterFinVM);
-
-            inventoryVMs = await inventoryService.GetInventorys(filterFinVM);
 
             isLoading = false;
         }
@@ -806,6 +807,24 @@ namespace D69soft.Client.Pages.FIN
         private async Task UpdateInventoryCheck_Qty(VoucherDetailVM _voucherDetailVM)
         {
             _voucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(voucherVM.VDate.Value, _voucherDetailVM);
+        }
+
+        //RPT
+        protected async Task ViewRPT(string _ReportName)
+        {
+            filterFinVM.TypeView = 1;
+
+            ReportName = _ReportName;
+
+            if (_ReportName == "FIN_So_chi_tiet_quy_tien_mat")
+            {
+                cashBooks = await voucherService.GetCashBooks(filterFinVM);
+            }
+
+            if (_ReportName == "FIN_Tong_hop_ton_kho")
+            {
+                inventoryVMs = await inventoryService.GetInventorys(filterFinVM);
+            }
         }
 
     }

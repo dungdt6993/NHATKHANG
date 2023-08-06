@@ -16,6 +16,15 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public decimal VDAmount { get; set; }
         public decimal VDDiscountPercent { get; set; }
 
+        //Rpt
+        public DateTime VDate { get; set; }
+        public string VNumberInput { get; set; }
+        public string VNumberOutput { get; set; }
+        public decimal VDPriceOpen { get; set; }
+        public decimal VDPriceInput { get; set; }
+        public decimal VDPriceOutput { get; set; }
+        public decimal VDPriceEnd { get; set; }
+
         public int IsUpdateItem { get; set; }
         public int IsUpdateFromStock { get; set; }
         public int IsUpdateToStock { get; set; }
