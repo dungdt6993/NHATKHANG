@@ -86,7 +86,7 @@
                                                data-style="btn-selectpicker form-control form-control-border border-width-2"
                                                data-container="body"
                                                data-live-search="true"
-                                               @bind-Value="rptVM.RptGrpID">
+                            @bind-Value="rptVM.RptGrpID">
                                 @if (rptgrps != null)
                                 {
                                     @foreach (var rptgrp in rptgrps)
@@ -114,7 +114,7 @@
                                                data-style="btn-selectpicker form-control form-control-border border-width-2"
                                                data-container="body"
                                                data-live-search="true"
-                                               @bind-Value="rptVM.RptUrl">
+                            @bind-Value="rptVM.RptUrl">
                                 @if (rptUrls != null)
                                 {
                                     @for (int i = 0; i < rptUrls.Length; i++)
@@ -309,7 +309,7 @@
                             <DxDocumentViewerTabPanelSettings Width="340" />
                             <DxWasmDocumentViewerRequestOptions InvokeAction="DXXRDV"></DxWasmDocumentViewerRequestOptions>
                             <DxDocumentViewerCallbacks BeforeRender="ReportingViewerCustomization.onBeforeRender"
-                                               CustomizeParameterEditors="ReportingViewerCustomization.onCustomizeParameterEditors" />
+                                                       CustomizeParameterEditors="ReportingViewerCustomization.onCustomizeParameterEditors" />
                         </DxWasmDocumentViewer>
                     }
                 }

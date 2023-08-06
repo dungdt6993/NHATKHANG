@@ -3,13 +3,13 @@
 
 <LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 
-    <DxWasmDocumentViewer ReportName="@ReportName" Height="calc(100vh - 0px)" Width="100%">
-        <DxDocumentViewerExportSettings ShowPrintNotificationDialog="false" />
-        <DxDocumentViewerTabPanelSettings Width="340" />
-        <DxWasmDocumentViewerRequestOptions InvokeAction="DXXRDV"></DxWasmDocumentViewerRequestOptions>
-        <DxDocumentViewerCallbacks BeforeRender="ReportingViewerCustomization.onBeforeRender"
-                            CustomizeParameterEditors="ReportingViewerCustomization.onCustomizeParameterEditors" />
-    </DxWasmDocumentViewer>
+<DxWasmDocumentViewer ReportName="@ReportName" Height="calc(100vh - 0px)" Width="100%">
+    <DxDocumentViewerExportSettings ShowPrintNotificationDialog="false" />
+    <DxDocumentViewerTabPanelSettings Width="340" />
+    <DxWasmDocumentViewerRequestOptions InvokeAction="DXXRDV"></DxWasmDocumentViewerRequestOptions>
+    <DxDocumentViewerCallbacks BeforeRender="ReportingViewerCustomization.onBeforeRender"
+                               CustomizeParameterEditors="ReportingViewerCustomization.onCustomizeParameterEditors" />
+</DxWasmDocumentViewer>
 
 @code {
 
