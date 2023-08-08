@@ -16,6 +16,7 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public float QtyEnd { get; set; }
 
         public string VNumber { get; set; }
+        public string VReference { get; set; }
         public string VDesc { get; set; }
         public DateTimeOffset? VDate { get; set; }
         public string VContact { get; set; }

@@ -37,6 +37,7 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public int Day { get; set; }
         public int SeqVD { get; set; }
         public string VNumber { get; set; }
+        public string VDDesc { get; set; }
         public float VDQty { get; set; }
         public decimal VDPrice { get; set; }
         public decimal VDDiscountPrice { get; set; }

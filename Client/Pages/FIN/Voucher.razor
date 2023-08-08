@@ -630,7 +630,7 @@
                                                 {
                                                     <td class="text-center">@rowNum</td>
                                                     <td>
-                                                        <input class="form-control form-control-sm" @bind="@_voucherDetailVM.VDNote" />
+                                                        <input class="form-control form-control-sm" @bind="@_voucherDetailVM.VDDesc" />
                                                     </td>
                                                     <td class="text-center">
                                                         <input class="form-control form-control-sm" name="currency-mask" @bind="@_voucherDetailVM.VDPrice" onClick="this.select();" />
@@ -752,7 +752,7 @@
                                 <i class="fas fa-print"></i> In
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
-                                @if (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory)
+                                @if (voucherVM.VTypeID == "FIN_Sale")
                                 {
                                     <a class="dropdown-item" @onclick=@(() => PrintVoucher("FIN_Bao_gia"))>Báo giá</a>
                                     <a class="dropdown-item" @onclick=@(() => PrintVoucher("FIN_Phieu_xuat_kho_ban_hang"))>Phiếu xuất kho bán hàng</a>
@@ -1170,7 +1170,7 @@
                                             <td class="text-center">@cashBook.VDate.ToString("dd/MM/yyyy")</td>
                                             <td class="text-center">@cashBook.VNumberInput</td>
                                             <td class="text-center">@cashBook.VNumberOutput</td>
-                                            <td>@cashBook.VDNote</td>
+                                            <td>@cashBook.VDDesc</td>
                                             <td class="text-right">@String.Format("{0:#,##}",@cashBook.VDPriceInput)</td>
                                             <td class="text-right">@String.Format("{0:#,##}",@cashBook.VDPriceOutput)</td>
                                             <td class="text-right">@String.Format("{0:#,##}",VDPriceBalance)</td>

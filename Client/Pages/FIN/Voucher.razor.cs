@@ -394,7 +394,7 @@ namespace D69soft.Client.Pages.FIN
         {
             _voucherDetailVM.VDDiscountPrice = decimal.Parse(e.Value.ToString());
 
-            if(_voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty != 0)
+            if (_voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty != 0)
             {
                 _voucherDetailVM.VDDiscountPercent = _voucherDetailVM.VDDiscountPrice / _voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty * 100;
             }
@@ -751,7 +751,7 @@ namespace D69soft.Client.Pages.FIN
             {
                 if (_VActive)
                 {
-                    if(voucherVM.IsInventory)
+                    if (voucherVM.IsInventory)
                     {
                         if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || voucherVM.VTypeID == "FIN_Sale")
                         {
@@ -767,6 +767,66 @@ namespace D69soft.Client.Pages.FIN
                                 return;
                             }
                         }
+                    }
+
+                    if (voucherVM.IsPayment)
+                    {
+                        VoucherVM _voucherVM = new();
+                        VoucherDetailVM _voucherDetailVM = new();
+                        List<VoucherDetailVM> _voucherDetailVMs = new();
+
+                        _voucherVM.IsTypeUpdate = 0;
+
+                        _voucherVM.UserID = UserID;
+
+                        _voucherVM.DivisionID = filterFinVM.DivisionID;
+
+                        _voucherVM.VReference = voucherVM.VNumber;
+
+                        _voucherVM.VActive = true;
+
+                        _voucherVM.VDate = voucherVM.VDate;
+
+                        if (voucherVM.VTypeID == "FIN_Purchasing")
+                        {
+                            _voucherVM.VCode = "PC";
+                            _voucherVM.VDesc = "Trả tiền " + voucherVM.VDesc;
+                            if (voucherVM.PaymentTypeCode == "CASH")
+                            {
+                                _voucherVM.VTypeID = "FIN_Cash_Payment";
+                                _voucherVM.VSubTypeID = "FIN_Cash_Payment_Vendor";
+                            }
+
+                            if (voucherVM.PaymentTypeCode == "BANK")
+                            {
+                                _voucherVM.VTypeID = "FIN_Bank_Debit";
+                                _voucherVM.VSubTypeID = "FIN_Bank_Debit_Vendor";
+                            }
+                        }
+
+                        if (voucherVM.VTypeID == "FIN_Sale")
+                        {
+                            _voucherVM.VCode = "PT";
+                            _voucherVM.VDesc = "Thu tiền " + voucherVM.VDesc;
+                            if (voucherVM.PaymentTypeCode == "CASH")
+                            {
+                                _voucherVM.VTypeID = "FIN_Cash_Receipt";
+                                _voucherVM.VSubTypeID = "FIN_Cash_Receipt_Customer";
+                            }
+
+                            if (voucherVM.PaymentTypeCode == "BANK")
+                            {
+                                _voucherVM.VTypeID = "FIN_Bank_Credit";
+                                _voucherVM.VSubTypeID = "FIN_Bank_Credit_Customer";
+                            }
+                        }
+
+                        _voucherDetailVM.VDDesc = _voucherVM.VDesc;
+                        _voucherDetailVM.VDPrice = voucherDetailVMs.Select(x => x.VDPrice * (decimal)x.VDQty - x.VDDiscountPrice + (x.VDPrice * (decimal)x.VDQty - x.VDDiscountPrice) * (decimal)x.VATRate).Sum();
+
+                        _voucherDetailVMs.Add(_voucherDetailVM);
+
+                        await voucherService.UpdateVoucher(_voucherVM, _voucherDetailVMs);
                     }
                 }
 

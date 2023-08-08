@@ -9,6 +9,7 @@ namespace D69soft.Shared.Models.Entities.FIN
     interface Voucher
     {
         public string VNumber { get; set; }
+        public string VReference { get; set; }
         public string VDesc { get; set; }
         public DateTimeOffset? VDate { get; set; }
         public string VContact { get; set; }
