@@ -692,7 +692,7 @@ namespace D69soft.Client.Pages.FIN
 
                 if (voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt" || voucherVM.VTypeID == "FIN_Bank_Credit" || voucherVM.VTypeID == "FIN_Bank_Debit")
                 {
-                    if (voucherDetailVMs.Where(x => String.IsNullOrEmpty(x.VDNote)).Count() > 0)
+                    if (voucherDetailVMs.Where(x => String.IsNullOrEmpty(x.VDDesc)).Count() > 0)
                     {
                         await js.Swal_Message("Cảnh báo!", "Diễn giải không được trống.", SweetAlertMessageType.warning);
                         isLoading = false;
