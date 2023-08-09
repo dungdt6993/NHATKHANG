@@ -869,6 +869,75 @@ namespace D69soft.Client.Pages.FIN
             _voucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(voucherVM.VDate.Value, _voucherDetailVM);
         }
 
+        //Lập phiếu thu tiền bán hàng
+        private async Task InitializeModalUpdate_VoucherReference(string _vTypeID, int _IsTypeUpdate)
+        {
+            isLoading = true;
+
+            vSubTypeVMs = await voucherService.GetVSubTypeVMs(_vTypeID);
+
+            vendorVMs = await purchasingService.GetVendorList();
+
+            customerVMs = await customerService.GetCustomers();
+
+            stockVMs = await inventoryService.GetStockList();
+
+            vatDefVMs = await voucherService.GetVATDefs();
+
+            if (_IsTypeUpdate == 0)
+            {
+                voucherVM = new();
+                voucherDetailVMs = new();
+
+                voucherVM.VCode = filter_vTypeVMs.Where(x => x.VTypeID == _vTypeID).Select(x => x.VCode).First();
+
+                if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Bank")
+                {
+                    filterFinVM.ITypeCode = voucherVM.ITypeCode = "HH";
+                    voucherVM.PaymentTypeCode = "CASH";
+                }
+            }
+
+            if (_IsTypeUpdate != 0)
+            {
+                voucherDetailVMs = await voucherService.GetVoucherDetails(voucherVM.VNumber);
+            }
+
+            if (_IsTypeUpdate == 0 || _IsTypeUpdate == 5)
+            {
+                voucherVM.VDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+                voucherVM.VActive = false;
+            }
+
+            if (_IsTypeUpdate == 5)
+            {
+                foreach (var _voucherDetailVM in voucherDetailVMs)
+                {
+                    _voucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(voucherVM.VDate.Value, _voucherDetailVM);
+                }
+
+                voucherDetailVMs.ForEach(e => e.VDPrice = e.IPrice);
+
+                voucherDetailVMs.ForEach(e => { e.FromStockCode = e.StockDefault; e.FromStockName = stockVMs.Where(x => x.StockCode == e.StockDefault).Select(x => x.StockName).FirstOrDefault(); });
+
+                voucherDetailVMs.ForEach(e => { e.ToStockCode = e.StockDefault; e.ToStockName = stockVMs.Where(x => x.StockCode == e.StockDefault).Select(x => x.StockName).FirstOrDefault(); });
+            }
+
+            voucherVM.UserID = UserID;
+
+            voucherVM.VTypeID = _vTypeID;
+
+            voucherVM.DivisionID = filterFinVM.DivisionID;
+            voucherVM.IsTypeUpdate = _IsTypeUpdate;
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_Voucher");
+
+            await js.InvokeAsync<object>("bootrap_select_refresh");
+
+            isLoading = false;
+        }
+
+
         //RPT
         protected async Task ViewRPT(string _ReportName)
         {
