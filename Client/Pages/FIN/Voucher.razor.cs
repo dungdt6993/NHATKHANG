@@ -878,15 +878,29 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
+            if(_vTypeID == "FIN_Cash_Receipt")
+            {
+                filterFinVM.FuncID = "FIN_Cash";
+
+                filter_vTypeVMs = await voucherService.GetVTypeVMs("FIN_Cash");
+            }
+
+            if (_vTypeID == "FIN_Bank_Credit")
+            {
+                filterFinVM.FuncID = "FIN_Bank";
+
+                filter_vTypeVMs = await voucherService.GetVTypeVMs("FIN_Bank");
+            }
+
             vSubTypeVMs = await voucherService.GetVSubTypeVMs(_vTypeID);
 
-            VoucherVM _voucherVM = new();
-            List<VoucherDetailVM> _voucherDetailVMs = new();
-
-            _voucherVM = voucherVM;
-            _voucherDetailVMs = voucherDetailVMs;
+            var _VNumber = voucherVM.VNumber;
+            var _VDDesc = voucherVM.VDesc;
+            var _sumPrice = (await voucherService.GetVoucherDetails(voucherVM.VNumber)).Select(x => x.VDPrice * (decimal)x.VDQty - x.VDDiscountPrice + (x.VDPrice * (decimal)x.VDQty - x.VDDiscountPrice) * (decimal)x.VATRate).Sum();
 
             voucherVM = new();
+
+            voucherDetailVM = new();
             voucherDetailVMs = new();
 
             voucherVM.VTypeID = _vTypeID;
@@ -898,17 +912,27 @@ namespace D69soft.Client.Pages.FIN
 
             voucherVM.DivisionID = filterFinVM.DivisionID;
 
-            voucherVM.VCode = "PT";
-            voucherVM.VDesc = "Thu tiền " + _voucherVM.VDesc;
+            if (_vTypeID == "FIN_Cash_Receipt")
+            {
+                voucherVM.VCode = "PT";
+            }
+
+            if (_vTypeID == "FIN_Bank_Credit")
+            {
+                voucherVM.VCode = "GBC";
+            }
+
+            voucherVM.VDesc = "Thu tiền " + _VDDesc;
 
             voucherVM.VDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
 
-            voucherVM.VReference = _voucherVM.VNumber;
+            voucherVM.VReference = _VNumber;
 
-            voucherVM.VActive = true;
+            voucherVM.VActive = false;
 
+            voucherDetailVM.SeqVD = 1;
             voucherDetailVM.VDDesc = voucherVM.VDesc;
-            voucherDetailVM.VDPrice = _voucherDetailVMs.Select(x => x.VDPrice * (decimal)x.VDQty - x.VDDiscountPrice + (x.VDPrice * (decimal)x.VDQty - x.VDDiscountPrice) * (decimal)x.VATRate).Sum();
+            voucherDetailVM.VDPrice = _sumPrice;
 
             voucherDetailVMs.Add(voucherDetailVM);
 
@@ -936,6 +960,5 @@ namespace D69soft.Client.Pages.FIN
                 inventoryVMs = await inventoryService.GetInventorys(filterFinVM);
             }
         }
-
     }
 }
