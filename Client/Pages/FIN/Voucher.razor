@@ -788,7 +788,10 @@
 
                             @if (voucherVM.IsTypeUpdate == 1)
                             {
-                                <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateVoucher(formVoucherVM, 2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                                if (String.IsNullOrEmpty(voucherVM.VReference))
+                                {
+                                    <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateVoucher(formVoucherVM, 2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                                }
                             }
                         }
                     }

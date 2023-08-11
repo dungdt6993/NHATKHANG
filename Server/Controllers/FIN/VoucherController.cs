@@ -51,7 +51,7 @@ namespace D69soft.Server.Controllers.FIN
         [HttpPost("GetVouchers")]
         public async Task<ActionResult<List<VoucherVM>>> GetVouchers(FilterFinVM _filterFinVM)
         {
-            var sql = "select v.VNumber, v.VDate, v.VDesc, vType.VTypeID, vType.VTypeDesc, vSubType.VSubTypeID, ";
+            var sql = "select v.VNumber, v.VReference, v.VDate, v.VDesc, vType.VTypeID, vType.VTypeDesc, vSubType.VSubTypeID, ";
             sql += "v.VendorCode, v.CustomerCode, v.StockCode, v.VContact, v.ITypeCode, v.VActive, v.IsPayment, v.PaymentTypeCode, v.IsInventory, v.IsInvoice, v.InvoiceNumber, v.InvoiceDate ";
             sql += "from FIN.Voucher v ";
             sql += "join FIN.VType vType on vType.VTypeID = v.VTypeID ";
