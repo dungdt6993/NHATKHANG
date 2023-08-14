@@ -392,11 +392,11 @@ namespace D69soft.Client.Pages.FIN
 
         private async void onchange_VDDiscountPrice(ChangeEventArgs e, VoucherDetailVM _voucherDetailVM)
         {
-            _voucherDetailVM.VDDiscountPrice = decimal.Parse(e.Value.ToString());
+            _voucherDetailVM.VDDiscountPrice = Math.Round(decimal.Parse(e.Value.ToString()),0);
 
             if (_voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty != 0)
             {
-                _voucherDetailVM.VDDiscountPercent = _voucherDetailVM.VDDiscountPrice / _voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty * 100;
+                _voucherDetailVM.VDDiscountPercent = Math.Round(_voucherDetailVM.VDDiscountPrice / _voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty * 100,2);
             }
 
             StateHasChanged();
@@ -404,11 +404,11 @@ namespace D69soft.Client.Pages.FIN
 
         private async void onchange_VDDiscountPercent(ChangeEventArgs e, VoucherDetailVM _voucherDetailVM)
         {
-            _voucherDetailVM.VDDiscountPercent = decimal.Parse(e.Value.ToString());
+            _voucherDetailVM.VDDiscountPercent = Math.Round(decimal.Parse(e.Value.ToString()),2);
 
             if (_voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty != 0)
             {
-                _voucherDetailVM.VDDiscountPrice = _voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty / 100;
+                _voucherDetailVM.VDDiscountPrice = Math.Round(_voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty / 100,0);
             }
 
             StateHasChanged();

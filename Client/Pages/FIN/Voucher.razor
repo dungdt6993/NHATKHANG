@@ -531,7 +531,7 @@
                                                             </td>
                                                         }
 
-                                                        <td class="text-right">@String.Format("{0:#,##0}", ((_voucherDetailVM.VDPrice*(decimal)_voucherDetailVM.VDQty-_voucherDetailVM.VDDiscountPrice)*(decimal)_voucherDetailVM.VATRate))</td>
+                                                        <td class="text-right">@String.Format("{0:#,##0}", ((Math.Round(_voucherDetailVM.VDPrice*(decimal)_voucherDetailVM.VDQty,0)-_voucherDetailVM.VDDiscountPrice)*(decimal)_voucherDetailVM.VATRate))</td>
                                                     }
 
                                                     @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory))
@@ -672,7 +672,7 @@
                                             {
                                                 <th class="text-center"></th>
 
-                                                <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDPrice*(decimal)x.VDQty).Sum())</th>
+                                                <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>Math.Round(x.VDPrice*(decimal)x.VDQty,0)).Sum())</th>
 
                                                 <th class="text-center"></th>
 
@@ -680,7 +680,7 @@
 
                                                 <th class="text-center"></th>
 
-                                                <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>(x.VDPrice*(decimal)x.VDQty-x.VDDiscountPrice)*(decimal)x.VATRate).Sum())</th>
+                                                <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>Math.Round((Math.Round(x.VDPrice*(decimal)x.VDQty,0)-x.VDDiscountPrice)*(decimal)x.VATRate)).Sum())</th>
                                             }
                                             @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory))
                                             {
