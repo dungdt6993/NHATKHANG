@@ -231,7 +231,7 @@ namespace D69soft.Server.Controllers.FIN
                 {
                     sql = "Create table #tmpAuto_Code_ID (Code_ID varchar(50)) ";
                     sql += "Insert #tmpAuto_Code_ID ";
-                    sql += "exec SYSTEM.AUTO_CODE_ID 'FIN.Items','ICode','VT','0000' ";
+                    sql += "exec SYSTEM.AUTO_CODE_ID 'FIN.Items','ICode',@ITypeCode,'0000' ";
                     sql += "Insert into FIN.Items (ICode,IName,IUnitCode,ITypeCode,IClsCode,IGrpCode,StockDefault,VendorDefault,IActive) ";
                     sql += "select Code_ID, @IName,@IUnitCode,@ITypeCode,@IClsCode,@IGrpCode,@StockDefault,@VendorDefault,@IActive from #tmpAuto_Code_ID ";
 

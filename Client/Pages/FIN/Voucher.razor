@@ -1070,6 +1070,7 @@
                                 <tr>
                                     <th class="text-center">Ngày chứng từ</th>
                                     <th class="text-center">Số chứng từ</th>
+                                    <th class="text-center">Chứng từ gốc</th>
                                     @if (filterFinVM.FuncID == "FIN_Purchasing" || filterFinVM.FuncID == "FIN_Sale")
                                     {
                                         <th class="text-center">Số hóa đơn</th>
@@ -1099,6 +1100,7 @@
                                             @(voucherVM.VDate.HasValue ? voucherVM.VDate.Value.ToString("dd/MM/yyyy") : "")
                                         </td>
                                         <td class="text-center">@voucherVM.VNumber</td>
+                                        <td class="text-center">@voucherVM.VReference</td>
                                         @if (filterFinVM.FuncID == "FIN_Purchasing" || filterFinVM.FuncID == "FIN_Sale")
                                         {
                                             <td class="text-center">@voucherVM.InvoiceNumber</td>
