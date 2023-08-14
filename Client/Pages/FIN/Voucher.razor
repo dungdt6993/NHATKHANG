@@ -766,7 +766,7 @@
                     {
                         @if (FIN_Voucher_CancelActive)
                         {
-                            @if (!String.IsNullOrEmpty(voucherVM.VReference))
+                            @if (String.IsNullOrEmpty(voucherVM.VReference))
                             {
                                 <button type="button" class="btn btn-sm btn-danger" @onclick="(() => ActiveVoucher(4,false))"><i class="fa-solid fa-file-circle-xmark"></i> Bỏ ghi sổ</button>
                             }
