@@ -815,9 +815,6 @@ namespace D69soft.Client.Pages.FIN
 
                         _voucherVM.DivisionID = filterFinVM.DivisionID;
 
-                        _voucherVM.VCode = "PT";
-                        _voucherVM.VDesc = "Thu tiền " + voucherVM.VDesc;
-
                         _voucherVM.VDate = voucherVM.VDate;
 
                         _voucherVM.VReference = voucherVM.VNumber;

@@ -62,7 +62,7 @@ namespace D69soft.Server.Controllers.FIN
             sql += "and (v.VTypeID=@VTypeID or coalesce(@VTypeID,'')='') ";
             sql += "and (v.VActive=@searchActive or @searchActive=2) ";
             sql += "and (v.VNumber LIKE CONCAT('%',@VNumber,'%') or coalesce(@VNumber,'')='') ";
-            sql += "order by v.TimeCreated desc, v.VDate ";
+            sql += "order by v.VDate desc, v.TimeCreated desc ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)
@@ -184,6 +184,11 @@ namespace D69soft.Server.Controllers.FIN
                 if (_voucherVM.IsTypeUpdate == 4)
                 {
                     sqlVoucherVM = "Update FIN.Voucher set VActive=@VActive where VNumber=@VNumber ";
+                    if(!_voucherVM.VActive)
+                    {
+                        sqlVoucherVM += "delete FIN.VoucherDetail where VNumber in (select VNumber from FIN.Voucher where VReference=@VNumber) ";
+                        sqlVoucherVM += "delete FIN.Voucher where VReference=@VNumber ";
+                    }
                     await conn.ExecuteAsync(sqlVoucherVM, _voucherVM);
                 }
 
