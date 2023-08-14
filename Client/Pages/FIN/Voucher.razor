@@ -766,7 +766,10 @@
                     {
                         @if (FIN_Voucher_CancelActive)
                         {
-                            <button type="button" class="btn btn-sm btn-danger" @onclick="(() => ActiveVoucher(4,false))"><i class="fa-solid fa-file-circle-xmark"></i> Bỏ ghi sổ</button>
+                            @if (!String.IsNullOrEmpty(voucherVM.VReference))
+                            {
+                                <button type="button" class="btn btn-sm btn-danger" @onclick="(() => ActiveVoucher(4,false))"><i class="fa-solid fa-file-circle-xmark"></i> Bỏ ghi sổ</button>
+                            }
                         }
                     }
                     else
@@ -776,10 +779,8 @@
                             @if (FIN_Voucher_Update)
                             {
                                 <button type="button" class="btn btn-sm btn-secondary" @onclick="(() => voucherVM.IsTypeUpdate=1)"><i class="fa-solid fa-pencil"></i> Sửa</button>
-                                @if (!String.IsNullOrEmpty(voucherVM.VNumber))
-                                {
-                                    <button type="button" class="btn btn-sm btn-success" @onclick="(() => ActiveVoucher(4,true))"><i class="fa-solid fa-file-pen"></i> Ghi sổ</button>
-                                }
+
+                                <button type="button" class="btn btn-sm btn-success" @onclick="(() => ActiveVoucher(4,true))"><i class="fa-solid fa-file-pen"></i> Ghi sổ</button>
                             }
                         }
                         else
@@ -788,10 +789,7 @@
 
                             @if (voucherVM.IsTypeUpdate == 1)
                             {
-                                if (String.IsNullOrEmpty(voucherVM.VReference))
-                                {
-                                    <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateVoucher(formVoucherVM, 2))><i class="fas fa-trash-alt"></i> Xóa</button>
-                                }
+                                <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateVoucher(formVoucherVM, 2))><i class="fas fa-trash-alt"></i> Xóa</button>
                             }
                         }
                     }
