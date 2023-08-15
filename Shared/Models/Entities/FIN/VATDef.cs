@@ -9,7 +9,7 @@ namespace D69soft.Shared.Models.Entities.FIN
     interface VATDef
     {
         public string VATCode { get; set; }
-        public float VATRate { get; set; }
+        public decimal VATRate { get; set; }
         public string VATName { get; set; }
     }
 }

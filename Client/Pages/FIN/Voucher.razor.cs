@@ -13,8 +13,6 @@ using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extensions;
 using Microsoft.AspNetCore.Components.Forms;
-using D69soft.Client.Services.OP;
-using System;
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -138,8 +136,6 @@ namespace D69soft.Client.Pages.FIN
             filterFinVM.StartDate = DateTime.Now;
             filterFinVM.EndDate = DateTime.Now;
 
-            filter_vTypeVMs = await voucherService.GetVTypeVMs(filterFinVM.FuncID);
-
             await GetVouchers();
 
             isLoadingScreen = false;
@@ -159,6 +155,9 @@ namespace D69soft.Client.Pages.FIN
         private async Task GetVouchers()
         {
             isLoading = true;
+
+            filterFinVM.FuncID = _FuncID;
+            filter_vTypeVMs = await voucherService.GetVTypeVMs(filterFinVM.FuncID);
 
             voucherVM = new();
             voucherDetailVMs = new();
@@ -368,59 +367,65 @@ namespace D69soft.Client.Pages.FIN
 
         private void onchange_VDQty(ChangeEventArgs e, VoucherDetailVM _voucherDetailVM)
         {
-            _voucherDetailVM.VDQty = float.Parse(e.Value.ToString());
+            _voucherDetailVM.VDQty = Math.Round(decimal.Parse(e.Value.ToString()), 2);
 
-            if (_voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty != 0)
-            {
-                _voucherDetailVM.VDDiscountPrice = _voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty / 100;
-            }
+            _voucherDetailVM.VDAmount = Math.Round(_voucherDetailVM.VDPrice * _voucherDetailVM.VDQty);
+
+            _voucherDetailVM.VDDiscountAmount = Math.Round(_voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDAmount / 100);
+
+            _voucherDetailVM.VDDiscountPercent = _voucherDetailVM.VDDiscountAmount != 0 ? Math.Round(_voucherDetailVM.VDDiscountAmount / _voucherDetailVM.VDAmount * 100, 2) : 0;
+
+            _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate);
 
             StateHasChanged();
         }
 
         private void onchange_VDPrice(ChangeEventArgs e, VoucherDetailVM _voucherDetailVM)
         {
-            _voucherDetailVM.VDPrice = decimal.Parse(e.Value.ToString());
+            _voucherDetailVM.VDPrice = Math.Round(decimal.Parse(e.Value.ToString()), 2);
 
-            if (_voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty != 0)
-            {
-                _voucherDetailVM.VDDiscountPrice = _voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty / 100;
-            }
+            _voucherDetailVM.VDAmount = Math.Round(_voucherDetailVM.VDPrice * _voucherDetailVM.VDQty);
+
+            _voucherDetailVM.VDDiscountAmount = Math.Round(_voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDAmount / 100);
+
+            _voucherDetailVM.VDDiscountPercent = _voucherDetailVM.VDDiscountAmount != 0 ? Math.Round(_voucherDetailVM.VDDiscountAmount / _voucherDetailVM.VDAmount * 100, 2) : 0;
+
+            _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate);
 
             StateHasChanged();
         }
 
-        private async void onchange_VDDiscountPrice(ChangeEventArgs e, VoucherDetailVM _voucherDetailVM)
+        private void onchange_VDDiscountPercent(ChangeEventArgs e, VoucherDetailVM _voucherDetailVM)
         {
-            _voucherDetailVM.VDDiscountPrice = Math.Round(decimal.Parse(e.Value.ToString()),0);
+            _voucherDetailVM.VDDiscountPercent = Math.Round(decimal.Parse(e.Value.ToString()), 2);
 
-            if (_voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty != 0)
-            {
-                _voucherDetailVM.VDDiscountPercent = Math.Round(_voucherDetailVM.VDDiscountPrice / _voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty * 100,2);
-            }
+            _voucherDetailVM.VDDiscountAmount = Math.Round(_voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDAmount / 100);
+
+            _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate);
 
             StateHasChanged();
         }
 
-        private async void onchange_VDDiscountPercent(ChangeEventArgs e, VoucherDetailVM _voucherDetailVM)
+        private void onchange_VDDiscountAmount(ChangeEventArgs e, VoucherDetailVM _voucherDetailVM)
         {
-            _voucherDetailVM.VDDiscountPercent = Math.Round(decimal.Parse(e.Value.ToString()),2);
+            _voucherDetailVM.VDDiscountAmount = Math.Round(decimal.Parse(e.Value.ToString()));
 
-            if (_voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty != 0)
-            {
-                _voucherDetailVM.VDDiscountPrice = Math.Round(_voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDPrice * (decimal)_voucherDetailVM.VDQty / 100,0);
-            }
+            _voucherDetailVM.VDDiscountPercent = _voucherDetailVM.VDDiscountAmount != 0 ? Math.Round(_voucherDetailVM.VDDiscountAmount / _voucherDetailVM.VDAmount * 100, 2) : 0;
+
+            _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate);
 
             StateHasChanged();
         }
 
-        private async void onchange_VAT(string value, VoucherDetailVM _voucherDetailVM)
+        private void onchange_VAT(string value, VoucherDetailVM _voucherDetailVM)
         {
             isLoading = true;
 
             _voucherDetailVM.VATCode = value;
 
             _voucherDetailVM.VATRate = vatDefVMs.Where(x => x.VATCode == _voucherDetailVM.VATCode).Select(x => x.VATRate).FirstOrDefault();
+
+            _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate);
 
             isLoading = false;
 
@@ -542,11 +547,11 @@ namespace D69soft.Client.Pages.FIN
 
                     if (voucherVM.VTypeID == "FIN_InventoryCheck")
                     {
-                        voucherDetailVM.InventoryCheck_ActualQty = float.Parse(itemSplit[1].Trim());
+                        voucherDetailVM.InventoryCheck_ActualQty = decimal.Parse(itemSplit[1].Trim());
                     }
                     else
                     {
-                        voucherDetailVM.VDQty = float.Parse(itemSplit[1].Trim());
+                        voucherDetailVM.VDQty = decimal.Parse(itemSplit[1].Trim());
                     }
 
                     voucherDetailVM.SeqVD = voucherDetailVMs.Count == 0 ? 1 : voucherDetailVMs.Select(x => x.SeqVD).Max() + 1;
@@ -821,9 +826,8 @@ namespace D69soft.Client.Pages.FIN
 
                         _voucherVM.VActive = true;
 
-                      
                         _voucherDetailVM.VDDesc = _voucherVM.VDesc;
-                        _voucherDetailVM.VDPrice = voucherDetailVMs.Select(x => x.VDPrice * (decimal)x.VDQty - x.VDDiscountPrice + (x.VDPrice * (decimal)x.VDQty - x.VDDiscountPrice) * (decimal)x.VATRate).Sum();
+                        _voucherDetailVM.VDPrice = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
 
                         _voucherDetailVMs.Add(_voucherDetailVM);
 
@@ -875,7 +879,9 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            if(_vTypeID == "FIN_Cash_Receipt")
+            var old_FuncID = filterFinVM.FuncID;
+
+            if (_vTypeID == "FIN_Cash_Receipt")
             {
                 filterFinVM.FuncID = "FIN_Cash";
 
@@ -893,7 +899,7 @@ namespace D69soft.Client.Pages.FIN
 
             var _VNumber = voucherVM.VNumber;
             var _VDDesc = voucherVM.VDesc;
-            var _sumPrice = (await voucherService.GetVoucherDetails(voucherVM.VNumber)).Select(x => x.VDPrice * (decimal)x.VDQty - x.VDDiscountPrice + (x.VDPrice * (decimal)x.VDQty - x.VDDiscountPrice) * (decimal)x.VATRate).Sum();
+            var _sumPrice = (await voucherService.GetVoucherDetails(voucherVM.VNumber)).Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
 
             voucherVM = new();
 

@@ -261,7 +261,7 @@
                                     <h2 class="text-bold text-right">
                                         @if (voucherDetailVMs != null)
                                         {
-                                            @String.Format("{0:#,##0}",voucherDetailVMs.Select(x=>x.VDPrice*(decimal)x.VDQty-x.VDDiscountPrice+(x.VDPrice*(decimal)x.VDQty-x.VDDiscountPrice)*(decimal)x.VATRate).Sum())
+                                            @String.Format("{0:#,##0}",voucherDetailVMs.Select(x=>x.VDAmount-x.VDDiscountAmount+x.VATAmount).Sum())
                                         }
                                     </h2>
 
@@ -486,14 +486,14 @@
                                                             <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDPrice(e, _voucherDetailVM))" value="@_voucherDetailVM.VDPrice" onClick="this.select();" />
                                                         </td>
 
-                                                        <td class="text-right">@String.Format("{0:#,##0}", (_voucherDetailVM.VDPrice*(decimal)_voucherDetailVM.VDQty))</td>
+                                                        <td class="text-right">@String.Format("{0:#,##0}", _voucherDetailVM.VDAmount)</td>
 
                                                         <td class="text-center">
-                                                            <input class="form-control form-control-sm" name="percent-mask" @onchange="@((ChangeEventArgs e) => onchange_VDDiscountPercent(e, _voucherDetailVM))" value="@_voucherDetailVM.VDDiscountPercent" onClick="this.select();" />
+                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDDiscountPercent(e, _voucherDetailVM))" value="@_voucherDetailVM.VDDiscountPercent" onClick="this.select();" />
                                                         </td>
 
                                                         <td class="text-center">
-                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDDiscountPrice(e, _voucherDetailVM))" value="@_voucherDetailVM.VDDiscountPrice" onClick="this.select();" />
+                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDDiscountAmount(e, _voucherDetailVM))" value="@_voucherDetailVM.VDDiscountAmount" onClick="this.select();" />
                                                         </td>
 
                                                         @if (_voucherDetailVM.IsUpdateVAT == 0)
@@ -531,7 +531,7 @@
                                                             </td>
                                                         }
 
-                                                        <td class="text-right">@String.Format("{0:#,##0}", ((Math.Round(_voucherDetailVM.VDPrice*(decimal)_voucherDetailVM.VDQty,0)-_voucherDetailVM.VDDiscountPrice)*(decimal)_voucherDetailVM.VATRate))</td>
+                                                        <td class="text-right">@String.Format("{0:#,##0}", _voucherDetailVM.VATAmount)</td>
                                                     }
 
                                                     @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory))
@@ -672,15 +672,15 @@
                                             {
                                                 <th class="text-center"></th>
 
-                                                <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>Math.Round(x.VDPrice*(decimal)x.VDQty,0)).Sum())</th>
+                                                <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDAmount).Sum())</th>
 
                                                 <th class="text-center"></th>
 
-                                                <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDDiscountPrice).Sum())</th>
+                                                <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDDiscountAmount).Sum())</th>
 
                                                 <th class="text-center"></th>
 
-                                                <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>Math.Round((Math.Round(x.VDPrice*(decimal)x.VDQty,0)-x.VDDiscountPrice)*(decimal)x.VATRate)).Sum())</th>
+                                                <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VATAmount).Sum())</th>
                                             }
                                             @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory))
                                             {

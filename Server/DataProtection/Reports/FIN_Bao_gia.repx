@@ -44,7 +44,7 @@
                 </Item5>
                 <Item6 Ref="24" ControlType="XRTableCell" Name="tableCell8" Weight="0.600988931857071" TextFormatString="{0:#,#0}" Multiline="true" Text="tableCell8" TextAlignment="MiddleRight" Dpi="96" Padding="2,2,0,0,96">
                   <ExpressionBindings>
-                    <Item1 Ref="25" EventName="BeforePrint" PropertyName="Text" Expression="[VDPrice]*[VDQty]" />
+                    <Item1 Ref="25" EventName="BeforePrint" PropertyName="Text" Expression="[VDAmount]" />
                   </ExpressionBindings>
                   <StylePriority Ref="26" UsePadding="false" UseTextAlignment="false" />
                 </Item6>
@@ -56,7 +56,7 @@
                 </Item7>
                 <Item8 Ref="30" ControlType="XRTableCell" Name="tableCell13" Weight="0.43002394567856861" TextFormatString="{0:#,#0}" Multiline="true" Text="tableCell13" TextAlignment="MiddleRight" Dpi="96" Padding="2,2,0,0,96">
                   <ExpressionBindings>
-                    <Item1 Ref="31" EventName="BeforePrint" PropertyName="Text" Expression="([VDPrice]*[VDQty]-[VDDiscountPrice])*[VATRate]" />
+                    <Item1 Ref="31" EventName="BeforePrint" PropertyName="Text" Expression="[VATAmount]" />
                   </ExpressionBindings>
                   <StylePriority Ref="32" UsePadding="false" UseTextAlignment="false" />
                 </Item8>
@@ -82,7 +82,7 @@
                 <Item2 Ref="42" ControlType="XRTableCell" Name="xrTableCell22" Weight="0.41378287827890586" TextFormatString="{0:#,#0}" Multiline="true" TextAlignment="MiddleRight" Dpi="96" Font="Times New Roman, 9.75pt, style=Bold" Padding="2,2,0,0,96" Borders="None">
                   <Summary Ref="43" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="44" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([VDPrice]*[VDQty])" />
+                    <Item1 Ref="44" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([VDAmount])" />
                   </ExpressionBindings>
                   <StylePriority Ref="45" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
                 </Item2>
@@ -96,7 +96,7 @@
                 <Item2 Ref="49" ControlType="XRTableCell" Name="xrTableCell18" Weight="0.41378203199521568" TextFormatString="{0:#,#0}" Multiline="true" Text="xrTableCell18" TextAlignment="MiddleRight" Dpi="96" Font="Times New Roman, 9.75pt, style=Bold" Padding="2,2,0,0,96" Borders="None">
                   <Summary Ref="50" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="51" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([VDDiscountPrice])" />
+                    <Item1 Ref="51" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([VDDiscountAmount])" />
                   </ExpressionBindings>
                   <StylePriority Ref="52" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
                 </Item2>
@@ -110,7 +110,7 @@
                 <Item2 Ref="56" ControlType="XRTableCell" Name="tableCell12" Weight="0.41378102078619006" TextFormatString="{0:#,#0}" Multiline="true" TextAlignment="MiddleRight" Dpi="96" Font="Times New Roman, 9.75pt, style=Bold" Padding="2,2,0,0,96" Borders="None">
                   <Summary Ref="57" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="58" EventName="BeforePrint" PropertyName="Text" Expression="sumSum(([VDPrice]*[VDQty]-[VDDiscountPrice])*[VATRate])" />
+                    <Item1 Ref="58" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([VATAmount])" />
                   </ExpressionBindings>
                   <StylePriority Ref="59" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
                 </Item2>
@@ -133,7 +133,7 @@
                 <Item4 Ref="68" ControlType="XRTableCell" Name="tableCell14" Weight="0.4137802727913889" TextFormatString="{0:#,#0}" Multiline="true" TextAlignment="MiddleRight" Dpi="96" Font="Times New Roman, 11pt, style=Bold" Padding="2,2,0,0,96" Borders="None">
                   <Summary Ref="69" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="70" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([VDPrice]*[VDQty]-[VDDiscountPrice]+([VDPrice]*[VDQty]-[VDDiscountPrice])*[VATRate])" />
+                    <Item1 Ref="70" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([VDAmount]-[VDDiscountAmount]+[VATAmount])" />
                   </ExpressionBindings>
                   <StylePriority Ref="71" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
                 </Item4>
@@ -252,6 +252,6 @@
     <Item1 Ref="129" LayoutItemType="Parameter" Parameter="#Ref-3" />
   </ParameterPanelLayoutItems>
   <ComponentStorage>
-    <Item1 Ref="0" ObjectType="DevExpress.DataAccess.Sql.SqlDataSource,DevExpress.DataAccess.v23.1" Name="sqlDataSource1" Base64="PFNxbERhdGFTb3VyY2UgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxDb25uZWN0aW9uIE5hbWU9IkQ2OXNvZnREQiIgRnJvbUFwcENvbmZpZz0idHJ1ZSIgLz48UXVlcnkgVHlwZT0iU3RvcmVkUHJvY1F1ZXJ5IiBOYW1lPSJSUFRfUGhpZXVfdGh1X2NoaV9tdWFfYmFuX25oYXBfeHVhdCI+PFBhcmFtZXRlciBOYW1lPSJAVk51bWJlciIgVHlwZT0iRGV2RXhwcmVzcy5EYXRhQWNjZXNzLkV4cHJlc3Npb24iPihTeXN0ZW0uU3RyaW5nKSg/Vk51bWJlcik8L1BhcmFtZXRlcj48UHJvY05hbWU+UlBULkZJTl9QaGlldV90aHVfY2hpX211YV9iYW5fbmhhcF94dWF0PC9Qcm9jTmFtZT48L1F1ZXJ5PjxSZXN1bHRTY2hlbWE+PERhdGFTZXQgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxWaWV3IE5hbWU9IlJQVF9QaGlldV90aHVfY2hpX211YV9iYW5fbmhhcF94dWF0Ij48RmllbGQgTmFtZT0iRGl2aXNpb25JRCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvbk5hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGl2aXNpb25BZGRyZXNzIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uVGVsIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uSG90bGluZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvblRheENvZGUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVk51bWJlciIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJWRGF0ZSIgVHlwZT0iRGF0ZVRpbWUiIC8+PEZpZWxkIE5hbWU9IlZEZXNjIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlZUeXBlSUQiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVlR5cGVEZXNjIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlZlbmRvckNvZGUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVmVuZG9yTmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJWQWN0aXZlIiBUeXBlPSJCeXRlIiAvPjxGaWVsZCBOYW1lPSJTZXFWRCIgVHlwZT0iSW50MzIiIC8+PEZpZWxkIE5hbWU9IklDb2RlIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IklOYW1lIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlZEUXR5IiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJJVW5pdE5hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVkRQcmljZSIgVHlwZT0iRG91YmxlIiAvPjxGaWVsZCBOYW1lPSJWRERpc2NvdW50UHJpY2UiIFR5cGU9IkRvdWJsZSIgLz48RmllbGQgTmFtZT0iVG9TdG9ja0NvZGUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVG9TdG9ja05hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRnJvbVN0b2NrQ29kZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJGcm9tU3RvY2tOYW1lIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlZETm90ZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJDdXN0b21lck5hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iQ3VzdG9tZXJBZGRyZXNzIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkN1c3RvbWVyVGF4Q29kZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJDdXN0b21lclRlbCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJWQ29udGFjdCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJWQVROYW1lIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlZBVFJhdGUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkFtb3VudFRleHQiIFR5cGU9IlN0cmluZyIgLz48L1ZpZXc+PC9EYXRhU2V0PjwvUmVzdWx0U2NoZW1hPjxDb25uZWN0aW9uT3B0aW9ucyBDbG9zZUNvbm5lY3Rpb249InRydWUiIC8+PC9TcWxEYXRhU291cmNlPg==" />
+    <Item1 Ref="0" ObjectType="DevExpress.DataAccess.Sql.SqlDataSource,DevExpress.DataAccess.v23.1" Name="sqlDataSource1" Base64="PFNxbERhdGFTb3VyY2UgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxDb25uZWN0aW9uIE5hbWU9IkQ2OXNvZnREQiIgRnJvbUFwcENvbmZpZz0idHJ1ZSIgLz48UXVlcnkgVHlwZT0iU3RvcmVkUHJvY1F1ZXJ5IiBOYW1lPSJSUFRfUGhpZXVfdGh1X2NoaV9tdWFfYmFuX25oYXBfeHVhdCI+PFBhcmFtZXRlciBOYW1lPSJAVk51bWJlciIgVHlwZT0iRGV2RXhwcmVzcy5EYXRhQWNjZXNzLkV4cHJlc3Npb24iPihTeXN0ZW0uU3RyaW5nKSg/Vk51bWJlcik8L1BhcmFtZXRlcj48UHJvY05hbWU+UlBULkZJTl9QaGlldV90aHVfY2hpX211YV9iYW5fbmhhcF94dWF0PC9Qcm9jTmFtZT48L1F1ZXJ5PjxSZXN1bHRTY2hlbWE+PERhdGFTZXQgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxWaWV3IE5hbWU9IlJQVF9QaGlldV90aHVfY2hpX211YV9iYW5fbmhhcF94dWF0Ij48RmllbGQgTmFtZT0iRGl2aXNpb25JRCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvbk5hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGl2aXNpb25BZGRyZXNzIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uVGVsIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uSG90bGluZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvblRheENvZGUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVk51bWJlciIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJWRGF0ZSIgVHlwZT0iRGF0ZVRpbWUiIC8+PEZpZWxkIE5hbWU9IlZEZXNjIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlZUeXBlSUQiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVlR5cGVEZXNjIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlZlbmRvckNvZGUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVmVuZG9yTmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJWQWN0aXZlIiBUeXBlPSJCeXRlIiAvPjxGaWVsZCBOYW1lPSJTZXFWRCIgVHlwZT0iSW50MzIiIC8+PEZpZWxkIE5hbWU9IklDb2RlIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IklOYW1lIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlZEUXR5IiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJJVW5pdE5hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVkRQcmljZSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVkRBbW91bnQiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlZERGlzY291bnRBbW91bnQiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRvU3RvY2tDb2RlIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlRvU3RvY2tOYW1lIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkZyb21TdG9ja0NvZGUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRnJvbVN0b2NrTmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJWRE5vdGUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iQ3VzdG9tZXJOYW1lIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkN1c3RvbWVyQWRkcmVzcyIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJDdXN0b21lclRheENvZGUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iQ3VzdG9tZXJUZWwiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVkNvbnRhY3QiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVkFUTmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJWQVRSYXRlIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJWQVRBbW91bnQiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkFtb3VudFRleHQiIFR5cGU9IlN0cmluZyIgLz48L1ZpZXc+PC9EYXRhU2V0PjwvUmVzdWx0U2NoZW1hPjxDb25uZWN0aW9uT3B0aW9ucyBDbG9zZUNvbm5lY3Rpb249InRydWUiIC8+PC9TcWxEYXRhU291cmNlPg==" />
   </ComponentStorage>
 </XtraReportsLayoutSerializer>
