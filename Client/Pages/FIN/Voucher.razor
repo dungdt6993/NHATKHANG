@@ -215,7 +215,6 @@
                                         }
                                         <div class="input-group">
                                             <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask"
-                                                             Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))"
                                             @bind-StartDate="voucherVM.VDate" OnRangeSelect="OnRangeSelect_VDate"
                                                              onClick="this.select();" />
 
@@ -239,7 +238,6 @@
                                             <label>Ngày hóa đơn</label>
                                             <div class="input-group">
                                                 <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask"
-                                                                 Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))"
                                                 @bind-StartDate="voucherVM.InvoiceDate"
                                                                  onClick="this.select();" />
 
@@ -849,9 +847,17 @@
     <section class="content-header">
         <div class="row">
 
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="form-group">
-                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true" data-container="body" @bind="filterFinVM.DivisionID">
+                    <InputSelect class="selectpicker form-control form-control-sm"
+                                 data-style="btn-selectpicker"
+                                 data-live-search="true"
+                                 data-container="body"
+                                 ValueExpression="@(()=>filterFinVM.DivisionID)"
+                                 Value="@filterFinVM.DivisionID"
+                                 ValueChanged="@((string value) =>onchange_DivisionID(value))">
+
+
                         @if (filter_divisionVMs != null)
                         {
                             @foreach (var _filter_divisionVM in filter_divisionVMs)
@@ -859,13 +865,18 @@
                                 <option data-subtext="@_filter_divisionVM.DivisionID" value="@_filter_divisionVM.DivisionID">@_filter_divisionVM.DivisionName</option>
                             }
                         }
-                    </select>
+                    </InputSelect>
                 </div>
             </div>
 
             <div class="col-sm-3">
                 <div class="form-group">
-                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" @bind="filterFinVM.VTypeID">
+                    <InputSelect class="selectpicker form-control form-control-sm"
+                                 data-style="btn-selectpicker"
+                                 data-container="body"
+                                 ValueExpression="@(()=>filterFinVM.VTypeID)"
+                                 Value="@filterFinVM.VTypeID"
+                                 ValueChanged="@((string value) =>onchange_VTypeID(value))">
                         <option value=@String.Empty>-----Loại chứng từ-----</option>
                         @if (filter_vTypeVMs != null)
                         {
@@ -874,30 +885,20 @@
                                 <option value="@_filter_vTypeVM.VTypeID">@_filter_vTypeVM.VTypeDesc</option>
                             }
                         }
-                    </select>
+                    </InputSelect>
                 </div>
             </div>
 
-            <div class="col-sm-2">
+            <div class="col-sm-3">
                 <div class="form-group">
-                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" @bind="filterFinVM.searchActive">
-                        <option value=2>-----Trạng thái ghi sổ-----</option>
-                        <option value=1>Đã ghi sổ</option>
-                        <option value=0>Chưa ghi sổ</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="col-sm-2">
-                <div class="form-group">
-                    <DateRangePicker Ranges="DateRanges" Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))" ApplyLabel="Thực hiện" CancelLabel="Hủy" CustomRangeLabel="Chọn ngày" OnRangeSelect="OnRangeSelect">
+                    <DateRangePicker Ranges="DateRanges" ApplyLabel="Thực hiện" CancelLabel="Hủy" CustomRangeLabel="Chọn ngày" OnRangeSelect="OnRangeSelect">
                         <PickerTemplate Context="c">
                             <div id="@c.Id" @onclick="c.Toggle" class="form-control form-control-sm" style="cursor: pointer;">
                                 <i class="fa-solid fa-calendar-days"></i>&nbsp;
                                 <span>
                                     @if (c.TStartDate == null && c.TEndDate == null)
                                     {
-                                        <span>Ngày hôm nay</span>
+                                        <span>Tháng này</span>
                                     }
                                     else if (c.TStartDate != null && c.TEndDate == null)
                                     {

@@ -60,7 +60,6 @@ namespace D69soft.Server.Controllers.FIN
             sql += "and format(v.VDate,'MM/dd/yyyy')>=format(@StartDate,'MM/dd/yyyy') and format(v.VDate,'MM/dd/yyyy')<=format(@EndDate,'MM/dd/yyyy') ";
             sql += "and (v.DivisionID=@DivisionID or coalesce(@DivisionID,'')='') ";
             sql += "and (v.VTypeID=@VTypeID or coalesce(@VTypeID,'')='') ";
-            sql += "and (v.VActive=@searchActive or @searchActive=2) ";
             sql += "and (v.VNumber LIKE CONCAT('%',@VNumber,'%') or coalesce(@VNumber,'')='') ";
             sql += "order by v.VDate desc, v.VTimeActive desc ";
             using (var conn = new SqlConnection(_connConfig.Value))

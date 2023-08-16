@@ -133,8 +133,8 @@ namespace D69soft.Client.Pages.FIN
 
             filterFinVM.searchActive = 2;
 
-            filterFinVM.StartDate = DateTime.Now;
-            filterFinVM.EndDate = DateTime.Now;
+            filterFinVM.StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            filterFinVM.EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1).AddTicks(-1);
 
             await GetVouchers();
 
@@ -146,10 +146,38 @@ namespace D69soft.Client.Pages.FIN
             await OnInitializedAsync();
         }
 
-        public void OnRangeSelect(DateRange _range)
+        private async void onchange_DivisionID(string value)
+        {
+            isLoading = true;
+
+            filterFinVM.DivisionID = value;
+
+            await GetVouchers();
+
+            isLoading = false;
+
+            StateHasChanged();
+        }
+
+        private async void onchange_VTypeID(string value)
+        {
+            isLoading = true;
+
+            filterFinVM.VTypeID = value;
+
+            await GetVouchers();
+
+            isLoading = false;
+
+            StateHasChanged();
+        }
+
+        public async Task OnRangeSelect(DateRange _range)
         {
             filterFinVM.StartDate = _range.Start;
             filterFinVM.EndDate = _range.End;
+
+            await GetVouchers();
         }
 
         private async Task GetVouchers()
