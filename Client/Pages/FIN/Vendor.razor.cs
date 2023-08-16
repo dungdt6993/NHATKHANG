@@ -1,19 +1,14 @@
-﻿using BlazorDateRangePicker;
-using Blazored.Typeahead;
-using D69soft.Client.Extensions;
+﻿using D69soft.Client.Extensions;
 using D69soft.Client.Services.FIN;
 using D69soft.Client.Services.HR;
 using D69soft.Client.Services;
 using D69soft.Shared.Models.ViewModels.FIN;
-using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
-using D69soft.Shared.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using System.Text.RegularExpressions;
-using D69soft.Shared.Models.Entities.HR;
+
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -27,22 +22,12 @@ namespace D69soft.Client.Pages.FIN
         [Inject] OrganizationalChartService organizationalChartService { get; set; }
         [Inject] PurchasingService purchasingService { get; set; }
 
-
-
-
         bool isLoading;
         bool isLoadingScreen = true;
 
         protected string UserID;
 
         LogVM logVM = new();
-
-        //Filter
-        FilterFinVM filterFinVM = new();
-        FilterHrVM filterHrVM = new();
-
-        //Division
-        IEnumerable<DivisionVM> filter_divisionVMs;
 
         //Vendor
         VendorVM vendorVM = new();
@@ -56,13 +41,11 @@ namespace D69soft.Client.Pages.FIN
             }
             await js.InvokeAsync<object>("bootrap_select_refresh");
             await js.InvokeAsync<object>("tooltip");
-
-            await js.InvokeAsync<object>("maskDate");
         }
 
         protected override async Task OnInitializedAsync()
         {
-            filterHrVM.UserID = UserID = (await authenticationStateTask).User.GetUserId();
+            UserID = (await authenticationStateTask).User.GetUserId();
 
             if (await sysService.CheckAccessFunc(UserID, "FIN_Vendor"))
             {
@@ -75,9 +58,6 @@ namespace D69soft.Client.Pages.FIN
             {
                 navigationManager.NavigateTo("/");
             }
-
-            filter_divisionVMs = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterFinVM.DivisionID = filter_divisionVMs.Count() > 0 ? filter_divisionVMs.ElementAt(0).DivisionID : string.Empty;
 
             await GetVendors();
 

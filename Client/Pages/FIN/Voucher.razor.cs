@@ -129,7 +129,7 @@ namespace D69soft.Client.Pages.FIN
             FIN_Voucher_CancelActive = await sysService.CheckAccessSubFunc(UserID, $"{filterFinVM.FuncID}_CancelActive");
 
             filter_divisionVMs = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterFinVM.DivisionID = filter_divisionVMs.Count() > 0 ? filter_divisionVMs.ElementAt(0).DivisionID : string.Empty;
+            filterFinVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
 
             filterFinVM.searchActive = 2;
 
@@ -738,6 +738,16 @@ namespace D69soft.Client.Pages.FIN
                     }
                 }
 
+                if (voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt" || voucherVM.VTypeID == "FIN_Bank_Credit" || voucherVM.VTypeID == "FIN_Bank_Debit")
+                {
+                    voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDPrice).Sum();
+                }
+
+                if (voucherVM.VTypeID == "FIN_Purchasing" || voucherVM.VTypeID == "FIN_Sale")
+                {
+                    voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
+                }
+
                 voucherVM.VNumber = await voucherService.UpdateVoucher(voucherVM, voucherDetailVMs);
 
                 voucherVM.IsTypeUpdate = 3;
@@ -858,6 +868,11 @@ namespace D69soft.Client.Pages.FIN
                         _voucherDetailVMs.Add(_voucherDetailVM);
 
                         await voucherService.UpdateVoucher(_voucherVM, _voucherDetailVMs);
+
+                        _voucherVM.IsTypeUpdate = 4;
+                        _voucherVM.VActive = true;
+                        await voucherService.UpdateVoucher(_voucherVM, _voucherDetailVMs);
+
                     }
                 }
 

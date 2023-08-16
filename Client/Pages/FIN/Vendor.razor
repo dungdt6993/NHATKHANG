@@ -80,33 +80,6 @@
     </div>
 </div>
 
-<EditForm Model="@filterFinVM">
-    <section class="content-header">
-        <div class="row">
-
-            <div class="col-md-2">
-                <div class="form-group">
-                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true" data-container="body" @bind="filterFinVM.DivisionID">
-                        @if (filter_divisionVMs != null)
-                        {
-                            @foreach (var _filter_divisionVM in filter_divisionVMs)
-                            {
-                                <option data-subtext="@_filter_divisionVM.DivisionID" value="@_filter_divisionVM.DivisionID">@_filter_divisionVM.DivisionName</option>
-                            }
-                        }
-                    </select>
-                </div>
-            </div>
-
-            <div class="col-md-1">
-                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetVendors())">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
-        </div>
-    </section>
-</EditForm>
-
 <section class="content">
     <div class="container-fluid">
         <div class="card card-warning card-outline">
