@@ -300,6 +300,9 @@ namespace D69soft.Client.Pages.FIN
 
             if (_IsTypeUpdate == 0)
             {
+                itemsVM = new();
+                quantitativeItemsVMs = new();
+
                 itemsVM.IURLPicture1 = "/images/_default/no-image.png";
                 itemsVM.IClsCode = filterFinVM.IClsCode;
                 itemsVM.IGrpCode = filterFinVM.IGrpCode;

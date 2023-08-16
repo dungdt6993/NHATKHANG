@@ -307,7 +307,9 @@ namespace D69soft.Client.Pages.FIN
             {
                 voucherVM.VendorCode = value;
 
-                voucherVM.VDesc = "Mua hàng của " + vendorVMs.Where(x => x.VendorCode == voucherVM.VendorCode).Select(x => x.VendorName).FirstOrDefault();
+                var _ITypeCode = voucherVM.ITypeCode == "HH" ? "hàng" : "dịch vụ";
+
+                voucherVM.VDesc = $"Mua {_ITypeCode} của " + vendorVMs.Where(x => x.VendorCode == voucherVM.VendorCode).Select(x => x.VendorName).FirstOrDefault();
             }
         }
 
@@ -318,7 +320,9 @@ namespace D69soft.Client.Pages.FIN
             {
                 voucherVM.CustomerCode = value;
 
-                voucherVM.VDesc = "Bán hàng cho " + customerVMs.Where(x => x.CustomerCode == voucherVM.CustomerCode).Select(x => x.CustomerName).FirstOrDefault() + "";
+                var _ITypeCode = voucherVM.ITypeCode == "HH" ? "hàng" : "dịch vụ";
+
+                voucherVM.VDesc = $"Bán {_ITypeCode} cho " + customerVMs.Where(x => x.CustomerCode == voucherVM.CustomerCode).Select(x => x.CustomerName).FirstOrDefault() + "";
             }
         }
 
@@ -367,52 +371,46 @@ namespace D69soft.Client.Pages.FIN
 
         private void onchange_VDQty(ChangeEventArgs e, VoucherDetailVM _voucherDetailVM)
         {
-            _voucherDetailVM.VDQty = Math.Round(decimal.Parse(e.Value.ToString()), 2);
+            _voucherDetailVM.VDQty = Math.Round(decimal.Parse(e.Value.ToString()), 2, MidpointRounding.AwayFromZero);
 
-            _voucherDetailVM.VDAmount = Math.Round(_voucherDetailVM.VDPrice * _voucherDetailVM.VDQty);
+            _voucherDetailVM.VDAmount = Math.Round(_voucherDetailVM.VDPrice * _voucherDetailVM.VDQty, MidpointRounding.AwayFromZero);
 
-            _voucherDetailVM.VDDiscountAmount = Math.Round(_voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDAmount / 100);
+            _voucherDetailVM.VDDiscountAmount = Math.Round(_voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDAmount / 100, MidpointRounding.AwayFromZero);
 
-            _voucherDetailVM.VDDiscountPercent = _voucherDetailVM.VDDiscountAmount != 0 ? Math.Round(_voucherDetailVM.VDDiscountAmount / _voucherDetailVM.VDAmount * 100, 2) : 0;
-
-            _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate);
+            _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
 
             StateHasChanged();
         }
 
         private void onchange_VDPrice(ChangeEventArgs e, VoucherDetailVM _voucherDetailVM)
         {
-            _voucherDetailVM.VDPrice = Math.Round(decimal.Parse(e.Value.ToString()), 2);
+            _voucherDetailVM.VDPrice = Math.Round(decimal.Parse(e.Value.ToString()), 2, MidpointRounding.AwayFromZero);
 
-            _voucherDetailVM.VDAmount = Math.Round(_voucherDetailVM.VDPrice * _voucherDetailVM.VDQty);
+            _voucherDetailVM.VDAmount = Math.Round(_voucherDetailVM.VDPrice * _voucherDetailVM.VDQty, MidpointRounding.AwayFromZero);
 
-            _voucherDetailVM.VDDiscountAmount = Math.Round(_voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDAmount / 100);
+            _voucherDetailVM.VDDiscountAmount = Math.Round(_voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDAmount / 100, MidpointRounding.AwayFromZero);
 
-            _voucherDetailVM.VDDiscountPercent = _voucherDetailVM.VDDiscountAmount != 0 ? Math.Round(_voucherDetailVM.VDDiscountAmount / _voucherDetailVM.VDAmount * 100, 2) : 0;
-
-            _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate);
+            _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
 
             StateHasChanged();
         }
 
         private void onchange_VDDiscountPercent(ChangeEventArgs e, VoucherDetailVM _voucherDetailVM)
         {
-            _voucherDetailVM.VDDiscountPercent = Math.Round(decimal.Parse(e.Value.ToString()), 2);
+            _voucherDetailVM.VDDiscountPercent = Math.Round(decimal.Parse(e.Value.ToString()), 2, MidpointRounding.AwayFromZero);
 
-            _voucherDetailVM.VDDiscountAmount = Math.Round(_voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDAmount / 100);
+            _voucherDetailVM.VDDiscountAmount = Math.Round(_voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDAmount / 100, MidpointRounding.AwayFromZero);
 
-            _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate);
+            _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
 
             StateHasChanged();
         }
 
         private void onchange_VDDiscountAmount(ChangeEventArgs e, VoucherDetailVM _voucherDetailVM)
         {
-            _voucherDetailVM.VDDiscountAmount = Math.Round(decimal.Parse(e.Value.ToString()));
+            _voucherDetailVM.VDDiscountAmount = Math.Round(decimal.Parse(e.Value.ToString()), MidpointRounding.AwayFromZero);
 
-            _voucherDetailVM.VDDiscountPercent = _voucherDetailVM.VDDiscountAmount != 0 ? Math.Round(_voucherDetailVM.VDDiscountAmount / _voucherDetailVM.VDAmount * 100, 2) : 0;
-
-            _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate);
+            _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
 
             StateHasChanged();
         }
@@ -425,7 +423,7 @@ namespace D69soft.Client.Pages.FIN
 
             _voucherDetailVM.VATRate = vatDefVMs.Where(x => x.VATCode == _voucherDetailVM.VATCode).Select(x => x.VATRate).FirstOrDefault();
 
-            _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate);
+            _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
 
             isLoading = false;
 
