@@ -82,9 +82,6 @@ namespace D69soft.Client.Pages.FIN
         InventoryVM inventoryVM = new();
         List<InventoryVM> inventoryVMs;
 
-        //InventoryBookDetailVM
-        List<InventoryBookDetailVM> inventoryBookDetailVMs;
-
         //Cash
         List<VoucherDetailVM> cashBooks;
 
@@ -922,19 +919,19 @@ namespace D69soft.Client.Pages.FIN
             _voucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(voucherVM.VDate.Value, _voucherDetailVM);
         }
 
-        //Lập phiếu thu tiền bán hàng
+        //Lập phiếu thu tiền/trả tiền
         private async Task InitializeModalUpdate_VoucherReference(string _vTypeID, string _vSubTypeID)
         {
             isLoading = true;
 
-            if (_vTypeID == "FIN_Cash_Receipt")
+            if (_vTypeID == "FIN_Cash_Receipt" || _vTypeID == "FIN_Cash_Payment")
             {
                 filterFinVM.FuncID = "FIN_Cash";
 
                 filter_vTypeVMs = await voucherService.GetVTypeVMs("FIN_Cash");
             }
 
-            if (_vTypeID == "FIN_Bank_Credit")
+            if (_vTypeID == "FIN_Bank_Credit" || _vTypeID == "FIN_Bank_Debit")
             {
                 filterFinVM.FuncID = "FIN_Bank";
 
@@ -942,6 +939,8 @@ namespace D69soft.Client.Pages.FIN
             }
 
             vSubTypeVMs = await voucherService.GetVSubTypeVMs(_vTypeID);
+
+            vSubTypeVMs = vSubTypeVMs.Where(x=>x.VSubTypeID==_vSubTypeID);
 
             var _VNumber = voucherVM.VNumber;
             var _VDDesc = voucherVM.VDesc;
@@ -964,14 +963,26 @@ namespace D69soft.Client.Pages.FIN
             if (_vTypeID == "FIN_Cash_Receipt")
             {
                 voucherVM.VCode = "PT";
+                voucherVM.VDesc = "Thu tiền " + _VDDesc;
             }
 
             if (_vTypeID == "FIN_Bank_Credit")
             {
                 voucherVM.VCode = "GBC";
+                voucherVM.VDesc = "Thu tiền " + _VDDesc;
             }
 
-            voucherVM.VDesc = "Thu tiền " + _VDDesc;
+            if (_vTypeID == "FIN_Cash_Payment")
+            {
+                voucherVM.VCode = "PC";
+                voucherVM.VDesc = "Trả tiền " + _VDDesc;
+            }
+
+            if (_vTypeID == "FIN_Bank_Debit")
+            {
+                voucherVM.VCode = "GBN";
+                voucherVM.VDesc = "Trả tiền " + _VDDesc;
+            }
 
             voucherVM.VDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
 
@@ -981,7 +992,10 @@ namespace D69soft.Client.Pages.FIN
 
             voucherDetailVM.SeqVD = 1;
             voucherDetailVM.VDDesc = voucherVM.VDesc;
+
             voucherDetailVM.VDPrice = _sumPrice;
+
+            voucherVM.PaymentAmount = _sumPrice;
 
             voucherDetailVMs.Add(voucherDetailVM);
 

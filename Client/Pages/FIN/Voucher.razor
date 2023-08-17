@@ -631,7 +631,7 @@
                                                         <input class="form-control form-control-sm" @bind="@_voucherDetailVM.VDDesc" />
                                                     </td>
                                                     <td class="text-center">
-                                                        <input class="form-control form-control-sm" name="currency-mask" @bind="@_voucherDetailVM.VDPrice" onClick="this.select();" />
+                                                        <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDPrice(e, _voucherDetailVM))" value="@_voucherDetailVM.VDPrice" onClick="this.select();" />
                                                     </td>
                                                 }
                                                 <td class="text-center">
@@ -979,6 +979,22 @@
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <a class="dropdown-item" @onclick=@(() => InitializeModalUpdate_VoucherReference("FIN_Cash_Receipt","FIN_Cash_Receipt_Customer"))>Tiền mặt</a>
                                     <a class="dropdown-item" @onclick=@(() => InitializeModalUpdate_VoucherReference("FIN_Bank_Credit","FIN_Bank_Credit_Customer"))>Chuyển khoản</a>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                    @if (filterFinVM.FuncID == "FIN_Purchasing")
+                    {
+                        @if (voucherVM.VActive && voucherVM.PaymentAmount < voucherVM.TotalAmount)
+                        {
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa-solid fa-file-invoice-dollar"></i> Lập phiếu chi
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" @onclick=@(() => InitializeModalUpdate_VoucherReference("FIN_Cash_Payment","FIN_Cash_Payment_Vendor"))>Tiền mặt</a>
+                                    <a class="dropdown-item" @onclick=@(() => InitializeModalUpdate_VoucherReference("FIN_Bank_Debit","FIN_Bank_Debit_Vendor"))>Chuyển khoản</a>
                                 </div>
                             </div>
                         }
