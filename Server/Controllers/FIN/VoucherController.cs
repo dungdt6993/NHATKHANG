@@ -6,6 +6,7 @@ using D69soft.Shared.Models.ViewModels.FIN;
 using Newtonsoft.Json;
 using System.Collections;
 using System.Data;
+using D69soft.Client.Pages.FIN;
 
 namespace D69soft.Server.Controllers.FIN
 {
@@ -140,8 +141,8 @@ namespace D69soft.Server.Controllers.FIN
                     sqlVoucherVM += "Create table #tmpAuto_Code_ID (Code_ID varchar(50)) ";
                     sqlVoucherVM += "Insert #tmpAuto_Code_ID ";
                     sqlVoucherVM += "exec SYSTEM.AUTO_CODE_ID 'FIN.Voucher','VNumber',@VCode,'0000' ";
-                    sqlVoucherVM += "Insert into FIN.Voucher (DivisionID,VNumber,VReference,VDesc,VDate,VendorCode,CustomerCode,StockCode,VContact,ITypeCode,VActive,IsPayment,PaymentTypeCode,TotalAmount,IsInventory,IsInvoice,InvoiceNumber,InvoiceDate,VTypeID,VSubTypeID,TimeCreated) ";
-                    sqlVoucherVM += "select @DivisionID,CODE_ID,@VReference,@VDesc,@VDate,@VendorCode,@CustomerCode,@StockCode,@VContact,@ITypeCode,@VActive,@IsPayment,@PaymentTypeCode,@TotalAmount,@IsInventory,@IsInvoice,@InvoiceNumber,@InvoiceDate,@VTypeID,@VSubTypeID,GETDATE() from #tmpAuto_Code_ID ";
+                    sqlVoucherVM += "Insert into FIN.Voucher (DivisionID,VNumber,VReference,VDesc,VDate,VendorCode,CustomerCode,StockCode,VContact,ITypeCode,VActive,VTimeActive,IsPayment,PaymentTypeCode,TotalAmount,IsInventory,IsInvoice,InvoiceNumber,InvoiceDate,VTypeID,VSubTypeID,TimeCreated) ";
+                    sqlVoucherVM += "select @DivisionID,CODE_ID,@VReference,@VDesc,@VDate,@VendorCode,@CustomerCode,@StockCode,@VContact,@ITypeCode,@VActive,GETDATE(),@IsPayment,@PaymentTypeCode,@TotalAmount,@IsInventory,@IsInvoice,@InvoiceNumber,@InvoiceDate,@VTypeID,@VSubTypeID,GETDATE() from #tmpAuto_Code_ID ";
                     sqlVoucherVM += "select CODE_ID from #tmpAuto_Code_ID ";
 
                     VNumber = await conn.ExecuteScalarAsync<string>(sqlVoucherVM, _voucherVM);
@@ -152,6 +153,15 @@ namespace D69soft.Server.Controllers.FIN
                         sqlVoucherDetailVM = "Insert into FIN.VoucherDetail(VNumber,VDDesc,ICode,VDQty,VDPrice,VDAmount,VDDiscountPercent,VDDiscountAmount,VATCode,VATAmount,FromStockCode,ToStockCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty) ";
                         sqlVoucherDetailVM += "Values('" + VNumber + "',@VDDesc,@ICode,@VDQty,@VDPrice,@VDAmount,@VDDiscountPercent,@VDDiscountAmount,@VATCode,@VATAmount,@FromStockCode,@ToStockCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty) ";
                         await conn.ExecuteAsync(sqlVoucherDetailVM, _voucherDetailVM);
+                    }
+
+                    if (_voucherVM.VTypeID == "FIN_Cash_Payment" || _voucherVM.VTypeID == "FIN_Cash_Receipt" || _voucherVM.VTypeID == "FIN_Bank_Credit" || _voucherVM.VTypeID == "FIN_Bank_Debit")
+                    {
+                        if (!String.IsNullOrEmpty(_voucherVM.VReference))
+                        {
+                            sqlVoucherVM = $"Update FIN.Voucher set PaymentAmount = coalesce(PaymentAmount,0) + {_voucherVM.TotalAmount} where VNumber=@VReference ";
+                            await conn.ExecuteAsync(sqlVoucherVM, _voucherVM);
+                        }
                     }
                 }
 
@@ -187,11 +197,12 @@ namespace D69soft.Server.Controllers.FIN
 
                     if(_voucherVM.VActive)
                     {
-                        sqlVoucherVM = "Update FIN.Voucher set PaymentAmount = TotalAmount where VNumber=@VNumber and IsPayment=1 ";
+                        sqlVoucherVM += "Update FIN.Voucher set PaymentAmount = TotalAmount where VNumber=@VNumber and IsPayment=1 ";
                     }
-
-                    if(!_voucherVM.VActive)
+                    else
                     {
+                        sqlVoucherVM += "Update FIN.Voucher set PaymentAmount = 0 where VNumber=@VNumber ";
+
                         sqlVoucherVM += "delete FIN.VoucherDetail where VNumber in (select VNumber from FIN.Voucher where VReference=@VNumber) ";
                         sqlVoucherVM += "delete FIN.Voucher where VReference=@VNumber ";
                     }

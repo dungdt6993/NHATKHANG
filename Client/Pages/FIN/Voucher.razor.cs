@@ -414,6 +414,14 @@ namespace D69soft.Client.Pages.FIN
         {
             _voucherDetailVM.VDPrice = Math.Round(decimal.Parse(e.Value.ToString()), 2, MidpointRounding.AwayFromZero);
 
+            if (voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt" || voucherVM.VTypeID == "FIN_Bank_Credit" || voucherVM.VTypeID == "FIN_Bank_Debit")
+            {
+                if (!String.IsNullOrEmpty(voucherVM.VReference))
+                {
+                    _voucherDetailVM.VDPrice = _voucherDetailVM.VDPrice > voucherVM.PaymentAmount ? voucherVM.PaymentAmount : _voucherDetailVM.VDPrice;
+                }
+            }
+
             _voucherDetailVM.VDAmount = Math.Round(_voucherDetailVM.VDPrice * _voucherDetailVM.VDQty, MidpointRounding.AwayFromZero);
 
             _voucherDetailVM.VDDiscountAmount = Math.Round(_voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDAmount / 100, MidpointRounding.AwayFromZero);
@@ -741,6 +749,10 @@ namespace D69soft.Client.Pages.FIN
                 if (voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt" || voucherVM.VTypeID == "FIN_Bank_Credit" || voucherVM.VTypeID == "FIN_Bank_Debit")
                 {
                     voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDPrice).Sum();
+                    if(!String.IsNullOrEmpty(voucherVM.VReference))
+                    {
+                        voucherVM.VActive = true;
+                    }
                 }
 
                 if (voucherVM.VTypeID == "FIN_Purchasing" || voucherVM.VTypeID == "FIN_Sale")
@@ -868,11 +880,6 @@ namespace D69soft.Client.Pages.FIN
                         _voucherDetailVMs.Add(_voucherDetailVM);
 
                         await voucherService.UpdateVoucher(_voucherVM, _voucherDetailVMs);
-
-                        _voucherVM.IsTypeUpdate = 4;
-                        _voucherVM.VActive = true;
-                        await voucherService.UpdateVoucher(_voucherVM, _voucherDetailVMs);
-
                     }
                 }
 
@@ -920,8 +927,6 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            var old_FuncID = filterFinVM.FuncID;
-
             if (_vTypeID == "FIN_Cash_Receipt")
             {
                 filterFinVM.FuncID = "FIN_Cash";
@@ -940,7 +945,7 @@ namespace D69soft.Client.Pages.FIN
 
             var _VNumber = voucherVM.VNumber;
             var _VDDesc = voucherVM.VDesc;
-            var _sumPrice = (await voucherService.GetVoucherDetails(voucherVM.VNumber)).Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
+            var _sumPrice = voucherVM.TotalAmount - voucherVM.PaymentAmount;
 
             voucherVM = new();
 

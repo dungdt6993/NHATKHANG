@@ -970,7 +970,7 @@
                 {
                     @if (filterFinVM.FuncID == "FIN_Sale")
                     {
-                        @if (!voucherVM.IsPayment)
+                        @if (voucherVM.VActive && voucherVM.PaymentAmount < voucherVM.TotalAmount)
                         {
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
