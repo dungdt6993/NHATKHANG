@@ -627,7 +627,7 @@ namespace D69soft.Client.Pages.FIN
             {
                 if (voucherDetailVMs.Count == 0)
                 {
-                    await js.Swal_Message("Cảnh báo!", "Nhập chi tiết không được trống.", SweetAlertMessageType.warning);
+                    await js.Swal_Message("Cảnh báo!", "Chi tiết hàng hóa, dịch vụ không được trống.", SweetAlertMessageType.warning);
                     isLoading = false;
                     return;
                 }

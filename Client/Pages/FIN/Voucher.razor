@@ -1106,8 +1106,8 @@
                                     }
                                     @if (filterFinVM.FuncID == "FIN_Purchasing" || filterFinVM.FuncID == "FIN_Sale")
                                     {
-                                        <th class="text-center">Tổng tiền</th>
                                         <th class="text-center">Tổng tiền thanh toán</th>
+                                        <th class="text-center">Đã thanh toán</th>
                                         <th class="text-center">Tình trạng thanh toán</th>
                                     }
                                     <th>Loại chứng từ</th>
@@ -1131,12 +1131,12 @@
                                         <td>@voucherVM.VDesc</td>
                                         @if (filterFinVM.FuncID == "FIN_Cash" || filterFinVM.FuncID == "FIN_Bank")
                                         {
-                                            <td class="text-right">@String.Format("{0:#,##}",@voucherVM.TotalAmount)</td>
+                                            <td class="text-right">@String.Format("{0:#,##0}",@voucherVM.TotalAmount)</td>
                                         }
                                         @if (filterFinVM.FuncID == "FIN_Purchasing" || filterFinVM.FuncID == "FIN_Sale")
                                         {
-                                            <td class="text-right">@String.Format("{0:#,##}",@voucherVM.TotalAmount)</td>
-                                            <td class="text-right">@String.Format("{0:#,##}",@voucherVM.PaymentAmount)</td>
+                                            <td class="text-right">@String.Format("{0:#,##0}",@voucherVM.TotalAmount)</td>
+                                            <td class="text-right">@String.Format("{0:#,##0}",@voucherVM.PaymentAmount)</td>
 
                                             @if (voucherVM.PaymentAmount == voucherVM.TotalAmount)
                                             {
@@ -1146,7 +1146,7 @@
                                             {
                                                 <td class="text-center"><span class="badge badge-warning">Thanh toán một phần</span></td>
                                             }
-                                            @if (voucherVM.PaymentAmount == 0)
+                                            @if (voucherVM.TotalAmount != 0 && voucherVM.PaymentAmount == 0)
                                             {
                                                 <td class="text-center"><span class="badge badge-danger">Chưa thanh toán</span></td>
                                             }
