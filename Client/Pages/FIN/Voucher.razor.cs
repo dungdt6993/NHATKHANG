@@ -317,13 +317,19 @@ namespace D69soft.Client.Pages.FIN
                 //Hóa đơn
                 if (!voucherVM.IsInvoice)
                 {
-                    voucherDetailVMs.ToList().ForEach(x => { x.VATCode = String.Empty; x.VATRate = 0; });
-
                     voucherVM.InvoiceNumber = 0;
                     voucherVM.InvoiceDate = null;
-                }
 
-                //voucherDetailVMs.ForEach(e => { e.VDAmount = e.});
+                    voucherDetailVMs.ForEach(e => { e.VATCode = String.Empty; e.VATRate = 0; });
+
+                    voucherDetailVMs.Where(x=>x.VDQty != 0).ToList().ForEach(e => { e.VDPrice = Math.Round(((e.VDAmount-e.VDDiscountAmount+e.VATAmount) / ((1 + e.VATRate) * (1 - e.VDDiscountPercent / 100))) / e.VDQty, 2, MidpointRounding.AwayFromZero); });
+
+                    voucherDetailVMs.ToList().ForEach(e => { e.VDAmount = Math.Round(e.VDPrice * e.VDQty, MidpointRounding.AwayFromZero); });
+
+                    voucherDetailVMs.ToList().ForEach(e => { e.VDDiscountAmount = Math.Round(e.VDDiscountPercent * e.VDAmount / 100, MidpointRounding.AwayFromZero); });
+
+                    voucherDetailVMs.ForEach(e => { e.VATAmount = 0; });
+                }
             }
         }
 
@@ -464,7 +470,7 @@ namespace D69soft.Client.Pages.FIN
 
             if(_voucherDetailVM.VDQty != 0)
             {
-                _voucherDetailVM.VDPrice = Math.Round((_VDTotalAmount + _voucherDetailVM.VDDiscountAmount) / (_voucherDetailVM.VDQty + _voucherDetailVM.VDQty*_voucherDetailVM.VATRate),2, MidpointRounding.AwayFromZero);
+                _voucherDetailVM.VDPrice = Math.Round((_VDTotalAmount/((1+_voucherDetailVM.VATRate)*(1-_voucherDetailVM.VDDiscountPercent/100)))/_voucherDetailVM.VDQty,2, MidpointRounding.AwayFromZero);
             }
 
             _voucherDetailVM.VDAmount = Math.Round(_voucherDetailVM.VDPrice * _voucherDetailVM.VDQty, MidpointRounding.AwayFromZero);

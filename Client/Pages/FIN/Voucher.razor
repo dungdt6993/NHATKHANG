@@ -335,11 +335,8 @@
                                             <th class="text-center" style="width: 110px;">Thành tiền</th>
                                             <th class="text-center" style="width: 110px;">% Chiết khấu</th>
                                             <th class="text-center" style="width: 110px;">Tiền chiết khấu</th>
-                                            @if (voucherVM.IsInvoice)
-                                            {
-                                                <th class="text-center" style="width: 110px;">% Thuế GTGT</th>
-                                                <th class="text-center" style="width: 110px;">Tiền thuế GTGT</th>
-                                            }
+                                            <th class="text-center" style="width: 110px;">% Thuế GTGT</th>
+                                            <th class="text-center" style="width: 110px;">Tiền thuế GTGT</th>
                                         }
 
                                         @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory))
@@ -670,7 +667,7 @@
 
                                             @if (voucherVM.VTypeID != "FIN_InventoryCheck")
                                             {
-                                                <th class="text-center">@voucherDetailVMs.Select(x=>x.VDQty).Sum()</th>
+                                                <th class="text-right">@voucherDetailVMs.Select(x=>x.VDQty).Sum()</th>
                                             }
                                             @if (voucherVM.VTypeID == "FIN_Purchasing" || voucherVM.VTypeID == "FIN_Sale")
                                             {
@@ -682,12 +679,9 @@
 
                                                 <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDDiscountAmount).Sum())</th>
 
-                                                @if (voucherVM.IsInvoice)
-                                                {
-                                                    <th class="text-center"></th>
+                                                <th class="text-center"></th>
 
-                                                    <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VATAmount).Sum())</th>
-                                                }
+                                                <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VATAmount).Sum())</th>
                                             }
                                             @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory))
                                             {
@@ -717,37 +711,40 @@
 
                 @if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Bank")
                 {
-                    <div class="modal-footer justify-content-center @(voucherVM.IsTypeUpdate==3?"noClick":"")">
+                    @if (!voucherVM.IsInvoice)
+                    {
+                        <div class="modal-footer justify-content-center @(voucherVM.IsTypeUpdate==3?"noClick":"")">
 
-                        @{
-                            voucherDetailVM = null;
-                        }
+                            @{
+                                voucherDetailVM = null;
+                            }
 
-                        <div class="col-sm-11">
-                            <BlazoredTypeahead SearchMethod="SearchItems"
-                                               Value="voucherDetailVM"
-                                               ValueChanged="@( (VoucherDetailVM i) => SelectedItem(i) )"
-                                               ValueExpression="@( () => voucherDetailVM)"
-                                               Debounce="500"
-                                               MinimumLength="2"
-                                               MaximumSuggestions="6"
-                                               placeholder="Tìm kiếm theo mã hàng hoặc tên hàng..."
-                            @ref="txtSearchItems">
-                                <SelectedTemplate Context="_item">
-                                    <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm theo mã hàng hoặc tên hàng...
-                                </SelectedTemplate>
-                                <ResultTemplate Context="_item">
-                                    <i class="fa-solid fa-barcode"></i> @_item.ICode <i class="fa-solid fa-box"></i> @_item.IName
-                                </ResultTemplate>
-                                <NotFoundTemplate Context="_item">
-                                    <i class="fa-solid fa-file-circle-xmark text-danger"></i> Không có dữ liệu
-                                </NotFoundTemplate>
-                            </BlazoredTypeahead>
+                            <div class="col-sm-11">
+                                <BlazoredTypeahead SearchMethod="SearchItems"
+                                                   Value="voucherDetailVM"
+                                                   ValueChanged="@( (VoucherDetailVM i) => SelectedItem(i) )"
+                                                   ValueExpression="@( () => voucherDetailVM)"
+                                                   Debounce="500"
+                                                   MinimumLength="2"
+                                                   MaximumSuggestions="6"
+                                                   placeholder="Tìm kiếm theo mã hàng hoặc tên hàng..."
+                                @ref="txtSearchItems">
+                                    <SelectedTemplate Context="_item">
+                                        <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm theo mã hàng hoặc tên hàng...
+                                    </SelectedTemplate>
+                                    <ResultTemplate Context="_item">
+                                        <i class="fa-solid fa-barcode"></i> @_item.ICode <i class="fa-solid fa-box"></i> @_item.IName
+                                    </ResultTemplate>
+                                    <NotFoundTemplate Context="_item">
+                                        <i class="fa-solid fa-file-circle-xmark text-danger"></i> Không có dữ liệu
+                                    </NotFoundTemplate>
+                                </BlazoredTypeahead>
+                            </div>
+
+                            <a class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="Thêm dữ liệu từ Excel" @onclick="(() => InitializeModalUpdate_PostExcel())"><i class="fa-solid fa-file-excel"></i></a>
+
                         </div>
-
-                        <a class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="Thêm dữ liệu từ Excel" @onclick="(() => InitializeModalUpdate_PostExcel())"><i class="fa-solid fa-file-excel"></i></a>
-
-                    </div>
+                    }
                 }
 
                 <div class="modal-footer justify-content-center">
@@ -1135,6 +1132,26 @@
                                         <td class="text-center">@voucherVM.VReference</td>
                                         @if (filterFinVM.FuncID == "FIN_Purchasing" || filterFinVM.FuncID == "FIN_Sale")
                                         {
+                                            @if (voucherVM.IsInvoice)
+                                            {
+                                                <td class="text-center"><span class="badge badge-warning">Không lập hóa đơn</span></td>
+                                            }
+                                            else
+                                            {
+                                                @if(voucherVM.InvoiceNumber != 0) {
+                                                    @if (filterFinVM.FuncID == "FIN_Purchasing")
+                                                    {
+                                                        <td class="text-center"><span class="badge badge-success">Đã nhận hóa đơn</span></td>
+                                                    }
+                                                    @if (filterFinVM.FuncID == "FIN_Sale")
+                                                    {
+                                                        <td class="text-center"><span class="badge badge-success">Đã xuất hóa đơn</span></td>
+                                                    }
+                                                }
+                                                else {
+                                                    <td class="text-center"><span class="badge badge-danger">Chưa nhận hóa đơn</span></td>
+                                                }
+                                            }
                                             <td class="text-center">@voucherVM.InvoiceNumber</td>
                                         }
                                         <td>@voucherVM.VDesc</td>
