@@ -156,7 +156,7 @@
           <Rows>
             <Item1 Ref="79" ControlType="XRTableRow" Name="xrTableRow4" Weight="1" Dpi="254">
               <Cells>
-                <Item1 Ref="80" ControlType="XRTableCell" Name="xrTableCell14" Weight="3.6266804562069175" Multiline="true" Text="Hai bên gồm có:" TextAlignment="MiddleLeft" Dpi="254" Font="Times New Roman, 9.75pt" Padding="5,5,0,0,254" Borders="None">
+                <Item1 Ref="80" ControlType="XRTableCell" Name="xrTableCell14" Weight="3.6266804562069175" Multiline="true" Text="Diễn giải: [VDesc]" TextAlignment="MiddleLeft" Dpi="254" Font="Times New Roman, 9.75pt" Padding="5,5,0,0,254" Borders="None">
                   <StylePriority Ref="81" UseFont="false" UsePadding="false" UseBorders="false" UseTextAlignment="false" />
                 </Item1>
               </Cells>

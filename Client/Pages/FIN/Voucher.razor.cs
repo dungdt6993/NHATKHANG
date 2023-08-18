@@ -322,6 +322,8 @@ namespace D69soft.Client.Pages.FIN
                     voucherVM.InvoiceNumber = 0;
                     voucherVM.InvoiceDate = null;
                 }
+
+                //voucherDetailVMs.ForEach(e => { e.VDAmount = e.});
             }
         }
 
@@ -362,6 +364,8 @@ namespace D69soft.Client.Pages.FIN
             if (_voucherDetailVM != null)
             {
                 _voucherDetailVM.SeqVD = voucherDetailVMs.Count == 0 ? 1 : voucherDetailVMs.Select(x => x.SeqVD).Max() + 1;
+
+                _voucherDetailVM.VDQty = 1;
 
                 //Hóa đơn
                 if (!voucherVM.IsInvoice)
@@ -452,9 +456,20 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
+            var _VDTotalAmount = _voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount + _voucherDetailVM.VATAmount;
+
             _voucherDetailVM.VATCode = value;
 
             _voucherDetailVM.VATRate = vatDefVMs.Where(x => x.VATCode == _voucherDetailVM.VATCode).Select(x => x.VATRate).FirstOrDefault();
+
+            if(_voucherDetailVM.VDQty != 0)
+            {
+                _voucherDetailVM.VDPrice = Math.Round((_VDTotalAmount + _voucherDetailVM.VDDiscountAmount) / (_voucherDetailVM.VDQty + _voucherDetailVM.VDQty*_voucherDetailVM.VATRate),2, MidpointRounding.AwayFromZero);
+            }
+
+            _voucherDetailVM.VDAmount = Math.Round(_voucherDetailVM.VDPrice * _voucherDetailVM.VDQty, MidpointRounding.AwayFromZero);
+
+            _voucherDetailVM.VDDiscountAmount = Math.Round(_voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDAmount / 100, MidpointRounding.AwayFromZero);
 
             _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
 
