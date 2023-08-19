@@ -40,7 +40,7 @@
 
                     @if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Bank")
                     {
-                        <div class="col-sm-2 @(voucherVM.IsTypeUpdate==3?"noClick":"")">
+                        <div class="col-sm-2 @(voucherVM.IsTypeUpdate==3 || voucherVM.IsTypeUpdate==6?"noClick":"")">
                             <select class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" @bind="onchange_ITypeCode">
                                 <option value="HH">Hàng hóa</option>
                                 <option value="DV">Dịch vụ</option>
@@ -60,7 +60,7 @@
                         @if (voucherVM.VTypeID == "FIN_Purchasing" || voucherVM.VTypeID == "FIN_Sale")
                         {
                             <div class="row" style="padding-bottom: 10px">
-                                <div class="col-12 col-sm-2">
+                                <div class="col-12 col-sm-2 @(voucherVM.IsTypeUpdate==6?"noClick":"")">
 
                                     <div class="form-group clearfix">
                                         <div class="icheck-danger d-inline">
@@ -84,7 +84,7 @@
 
                                 @if (voucherVM.IsPayment)
                                 {
-                                    <div class="col-12 col-sm-2">
+                                    <div class="col-12 col-sm-2 @(voucherVM.IsTypeUpdate==6?"noClick":"")">
                                         <select class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" @bind="voucherVM.PaymentTypeCode">
                                             <option value="CASH">Tiền mặt</option>
                                             <option value="BANK">Chuyển khoản</option>
@@ -96,7 +96,7 @@
                                     <div class="form-group clearfix">
                                         @if (voucherVM.ITypeCode == "HH")
                                         {
-                                            <div class="icheck-success d-inline">
+                                            <div class="icheck-success d-inline @(voucherVM.IsTypeUpdate==6?"noClick":"")">
                                                 <input type="checkbox" id="IsInventory" @bind="voucherVM.IsInventory" />
                                                 @if (voucherVM.VTypeID == "FIN_Purchasing")
                                                 {
@@ -128,7 +128,7 @@
                         }
 
                         <div class="row">
-                            <div class="col-sm-7" style="padding-right: 10px; border-right: 1px solid #e9ecef;">
+                            <div class="col-sm-7 @(voucherVM.IsTypeUpdate==6?"noClick":"")" style="padding-right: 10px; border-right: 1px solid #e9ecef;">
 
                                 @if (voucherVM.VTypeID == "FIN_Purchasing")
                                 {
@@ -203,7 +203,7 @@
                             </div>
                             <div class="col-sm-3" style="padding-left: 10px;">
 
-                                <div class="form-row">
+                                <div class="form-row @(voucherVM.IsTypeUpdate==6?"noClick":"")">
                                     <div class="form-group col-md-6">
                                         @if (voucherVM.VTypeID == "FIN_InventoryCheck")
                                         {
@@ -257,10 +257,7 @@
 
                                     <h5 class="text-right">Tổng tiền thanh toán</h5><br />
                                     <h2 class="text-bold text-right">
-                                        @if (voucherDetailVMs != null)
-                                        {
-                                            @String.Format("{0:#,##0}",voucherDetailVMs.Select(x=>x.VDAmount-x.VDDiscountAmount+x.VATAmount).Sum())
-                                        }
+                                        @String.Format("{0:#,##0}",voucherVM.TotalAmount)
                                     </h2>
 
                                 </div>
@@ -274,7 +271,7 @@
                                     <h2 class="text-bold text-right">
                                         @if (voucherDetailVMs != null)
                                         {
-                                            @String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDPrice).Sum())
+                                            @String.Format("{0:#,##0}",voucherVM.TotalAmount)
                                         }
                                     </h2>
 
@@ -335,8 +332,11 @@
                                             <th class="text-center" style="width: 110px;">Thành tiền</th>
                                             <th class="text-center" style="width: 110px;">% Chiết khấu</th>
                                             <th class="text-center" style="width: 110px;">Tiền chiết khấu</th>
-                                            <th class="text-center" style="width: 110px;">% Thuế GTGT</th>
-                                            <th class="text-center" style="width: 110px;">Tiền thuế GTGT</th>
+                                            @if (voucherVM.IsInvoice)
+                                            {
+                                                <th class="text-center" style="width: 110px;">% Thuế GTGT</th>
+                                                <th class="text-center" style="width: 110px;">Tiền thuế GTGT</th>
+                                            }
                                         }
 
                                         @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory))
@@ -383,7 +383,7 @@
 
                                                     @if (_voucherDetailVM.IsUpdateItem == 0)
                                                     {
-                                                        <td><a @onclick=@(() => _voucherDetailVM.IsUpdateItem = 1)>@_voucherDetailVM.ICode - @_voucherDetailVM.IName</a></td>
+                                                        <td><a @onclick=@(() => _voucherDetailVM.IsUpdateItem = voucherVM.IsInvoice?0:1)>@_voucherDetailVM.ICode - @_voucherDetailVM.IName</a></td>
                                                     }
                                                     else
                                                     {
@@ -474,24 +474,24 @@
                                                     @if (voucherVM.VTypeID != "FIN_InventoryCheck")
                                                     {
                                                         <td class="text-center">
-                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDQty(e, _voucherDetailVM))" value="@_voucherDetailVM.VDQty" onClick="this.select();" />
+                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDQty(e, _voucherDetailVM))" value="@_voucherDetailVM.VDQty" onClick="this.select();" readonly="@voucherVM.IsInvoice" />
                                                         </td>
                                                     }
 
                                                     @if (voucherVM.VTypeID == "FIN_Purchasing" || voucherVM.VTypeID == "FIN_Sale")
                                                     {
                                                         <td class="text-center">
-                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDPrice(e, _voucherDetailVM))" value="@_voucherDetailVM.VDPrice" onClick="this.select();" />
+                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDPrice(e, _voucherDetailVM))" value="@_voucherDetailVM.VDPrice" onClick="this.select();" readonly="@voucherVM.IsInvoice" />
                                                         </td>
 
                                                         <td class="text-right">@String.Format("{0:#,##0}", _voucherDetailVM.VDAmount)</td>
 
                                                         <td class="text-center">
-                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDDiscountPercent(e, _voucherDetailVM))" value="@_voucherDetailVM.VDDiscountPercent" onClick="this.select();" />
+                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDDiscountPercent(e, _voucherDetailVM))" value="@_voucherDetailVM.VDDiscountPercent" onClick="this.select();" readonly="@voucherVM.IsInvoice" />
                                                         </td>
 
                                                         <td class="text-center">
-                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDDiscountAmount(e, _voucherDetailVM))" value="@_voucherDetailVM.VDDiscountAmount" onClick="this.select();" />
+                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDDiscountAmount(e, _voucherDetailVM))" value="@_voucherDetailVM.VDDiscountAmount" onClick="this.select();" readonly="@voucherVM.IsInvoice" />
                                                         </td>
 
                                                         @if (voucherVM.IsInvoice)
@@ -542,11 +542,11 @@
                                                             <td>
                                                                 @if (String.IsNullOrEmpty(_voucherDetailVM.FromStockCode))
                                                                 {
-                                                                    <a class="text-center" @onclick=@(() => _voucherDetailVM.IsUpdateFromStock = 1)>-----Chọn-----</a>
+                                                                    <a class="text-center" @onclick=@(() => _voucherDetailVM.IsUpdateFromStock = voucherVM.IsInvoice?0:1)>-----Chọn-----</a>
                                                                 }
                                                                 else
                                                                 {
-                                                                    <a @onclick=@(() => _voucherDetailVM.IsUpdateFromStock = 1)>@_voucherDetailVM.FromStockCode - @_voucherDetailVM.FromStockName</a>
+                                                                    <a @onclick=@(() => _voucherDetailVM.IsUpdateFromStock = voucherVM.IsInvoice?0:1)>@_voucherDetailVM.FromStockCode - @_voucherDetailVM.FromStockName</a>
                                                                 }
                                                             </td>
                                                         }
@@ -589,11 +589,11 @@
                                                             <td>
                                                                 @if (String.IsNullOrEmpty(_voucherDetailVM.ToStockCode))
                                                                 {
-                                                                    <a class="text-center" @onclick=@(() => _voucherDetailVM.IsUpdateToStock = 1)>-----Chọn-----</a>
+                                                                    <a class="text-center" @onclick=@(() => _voucherDetailVM.IsUpdateToStock = voucherVM.IsInvoice?0:1)>-----Chọn-----</a>
                                                                 }
                                                                 else
                                                                 {
-                                                                    <a @onclick=@(() => _voucherDetailVM.IsUpdateToStock = 1)>@_voucherDetailVM.ToStockCode - @_voucherDetailVM.ToStockName</a>
+                                                                    <a @onclick=@(() => _voucherDetailVM.IsUpdateToStock = voucherVM.IsInvoice?0:1)>@_voucherDetailVM.ToStockCode - @_voucherDetailVM.ToStockName</a>
                                                                 }
                                                             </td>
                                                         }
@@ -624,7 +624,7 @@
                                                     }
 
                                                     <td>
-                                                        <input class="form-control form-control-sm" @bind="@_voucherDetailVM.VDNote" />
+                                                        <input class="form-control form-control-sm" @bind="@_voucherDetailVM.VDNote" readonly="@voucherVM.IsInvoice" />
                                                     </td>
                                                 }
                                                 else
@@ -679,9 +679,12 @@
 
                                                 <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDDiscountAmount).Sum())</th>
 
-                                                <th class="text-center"></th>
+                                                @if (voucherVM.IsInvoice)
+                                                {
+                                                    <th class="text-center"></th>
 
-                                                <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VATAmount).Sum())</th>
+                                                    <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VATAmount).Sum())</th>
+                                                }
                                             }
                                             @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory))
                                             {
@@ -711,7 +714,7 @@
 
                 @if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Bank")
                 {
-                    @if (!voucherVM.IsInvoice)
+                    @if (voucherVM.IsTypeUpdate == 0 || voucherVM.IsTypeUpdate == 1)
                     {
                         <div class="modal-footer justify-content-center @(voucherVM.IsTypeUpdate==3?"noClick":"")">
 
@@ -758,7 +761,10 @@
                             <div class="dropdown-menu dropdown-menu-right">
                                 @if (voucherVM.VTypeID == "FIN_Sale")
                                 {
-                                    <a class="dropdown-item" @onclick=@(() => PrintVoucher("FIN_Bao_gia"))>Báo giá</a>
+                                    @if (!voucherVM.IsInvoice)
+                                    {
+                                        <a class="dropdown-item" @onclick=@(() => PrintVoucher("FIN_Bao_gia"))>Báo giá</a>
+                                    }
                                     <a class="dropdown-item" @onclick=@(() => PrintVoucher("FIN_Phieu_xuat_kho_ban_hang"))>Phiếu xuất kho bán hàng</a>
                                     <a class="dropdown-item" @onclick=@(() => PrintVoucher("FIN_Bien_ban_ban_giao_kiem_bao_hanh"))>Biên bản bàn giao kiêm bảo hành</a>
                                 }
@@ -766,34 +772,41 @@
                         </div>
                     }
 
-                    @if (voucherVM.VActive)
+                    @if (voucherVM.IsTypeUpdate == 6)
                     {
-                        @if (FIN_Voucher_CancelActive)
-                        {
-                            @if (String.IsNullOrEmpty(voucherVM.VReference))
-                            {
-                                <button type="button" class="btn btn-sm btn-danger" @onclick="(() => ActiveVoucher(4,false))"><i class="fa-solid fa-file-circle-xmark"></i> Bỏ ghi sổ</button>
-                            }
-                        }
+                        <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateVoucher(formVoucherVM, voucherVM.IsTypeUpdate))><i class="fas fa-check"></i> Cập nhật hóa đơn</button>
                     }
                     else
                     {
-                        @if (voucherVM.IsTypeUpdate == 3)
+                        @if (voucherVM.VActive)
                         {
-                            @if (FIN_Voucher_Update)
+                            @if (FIN_Voucher_CancelActive)
                             {
-                                <button type="button" class="btn btn-sm btn-secondary" @onclick="(() => voucherVM.IsTypeUpdate=1)"><i class="fa-solid fa-pencil"></i> Sửa</button>
-
-                                <button type="button" class="btn btn-sm btn-success" @onclick="(() => ActiveVoucher(4,true))"><i class="fa-solid fa-file-pen"></i> Ghi sổ</button>
+                                @if (String.IsNullOrEmpty(voucherVM.VReference))
+                                {
+                                    <button type="button" class="btn btn-sm btn-danger" @onclick="(() => ActiveVoucher(4,false))"><i class="fa-solid fa-file-circle-xmark"></i> Bỏ ghi sổ</button>
+                                }
                             }
                         }
                         else
                         {
-                            <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateVoucher(formVoucherVM, voucherVM.IsTypeUpdate))><i class="fas fa-check"></i> Lưu</button>
-
-                            @if (voucherVM.IsTypeUpdate == 1)
+                            @if (voucherVM.IsTypeUpdate == 3)
                             {
-                                <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateVoucher(formVoucherVM, 2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                                @if (FIN_Voucher_Update)
+                                {
+                                    <button type="button" class="btn btn-sm btn-secondary" @onclick="(() => voucherVM.IsTypeUpdate=1)"><i class="fa-solid fa-pencil"></i> Sửa</button>
+
+                                    <button type="button" class="btn btn-sm btn-success" @onclick="(() => ActiveVoucher(4,true))"><i class="fa-solid fa-file-pen"></i> Ghi sổ</button>
+                                }
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateVoucher(formVoucherVM, voucherVM.IsTypeUpdate))><i class="fas fa-check"></i> Lưu</button>
+
+                                @if (voucherVM.IsTypeUpdate == 1)
+                                {
+                                    <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateVoucher(formVoucherVM, 2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                                }
                             }
                         }
                     }
@@ -974,6 +987,21 @@
 
                 @if (!String.IsNullOrEmpty(voucherVM.VNumber))
                 {
+                    @if (filterFinVM.FuncID == "FIN_Purchasing" || filterFinVM.FuncID == "FIN_Sale")
+                    {
+                        @if (voucherVM.VActive)
+                        {
+                            @if (voucherVM.IsInvoice)
+                            {
+                                <button type="button" class="btn btn-sm btn-success" @onclick=@(() => InitializeModalUpdate_Voucher(voucherVM.VTypeID,6))><i class="fa-solid fa-file-invoice"></i> Cập nhật hóa đơn</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-sm btn-success" @onclick=@(() => InitializeModalUpdate_Voucher(voucherVM.VTypeID,6))><i class="fa-solid fa-file-invoice"></i> Lập hóa đơn</button>
+                            }
+                        }
+                    }
+
                     @if (filterFinVM.FuncID == "FIN_Sale")
                     {
                         @if (voucherVM.VActive && voucherVM.PaymentAmount < voucherVM.TotalAmount)
@@ -1096,7 +1124,7 @@
                                     <th class="text-center">Chứng từ gốc</th>
                                     @if (filterFinVM.FuncID == "FIN_Purchasing" || filterFinVM.FuncID == "FIN_Sale")
                                     {
-                                        <th class="text-center">Số hóa đơn</th>
+                                        <th class="text-center">Hóa đơn</th>
                                     }
                                     @if (filterFinVM.FuncID == "FIN_Cash" || filterFinVM.FuncID == "FIN_Bank")
                                     {
@@ -1134,11 +1162,8 @@
                                         {
                                             @if (voucherVM.IsInvoice)
                                             {
-                                                <td class="text-center"><span class="badge badge-warning">Không lập hóa đơn</span></td>
-                                            }
-                                            else
-                                            {
-                                                @if(voucherVM.InvoiceNumber != 0) {
+                                                @if (voucherVM.InvoiceNumber != 0)
+                                                {
                                                     @if (filterFinVM.FuncID == "FIN_Purchasing")
                                                     {
                                                         <td class="text-center"><span class="badge badge-success">Đã nhận hóa đơn</span></td>
@@ -1148,11 +1173,15 @@
                                                         <td class="text-center"><span class="badge badge-success">Đã xuất hóa đơn</span></td>
                                                     }
                                                 }
-                                                else {
+                                                else
+                                                {
                                                     <td class="text-center"><span class="badge badge-danger">Chưa nhận hóa đơn</span></td>
                                                 }
                                             }
-                                            <td class="text-center">@voucherVM.InvoiceNumber</td>
+                                            else
+                                            {
+                                                <td class="text-center"><span class="badge badge-warning">Không hóa đơn</span></td>
+                                            }
                                         }
                                         <td>@voucherVM.VDesc</td>
                                         @if (filterFinVM.FuncID == "FIN_Cash" || filterFinVM.FuncID == "FIN_Bank")

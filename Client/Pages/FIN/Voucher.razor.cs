@@ -261,6 +261,11 @@ namespace D69soft.Client.Pages.FIN
                 voucherDetailVMs.ForEach(e => { e.ToStockCode = e.StockDefault; e.ToStockName = stockVMs.Where(x => x.StockCode == e.StockDefault).Select(x => x.StockName).FirstOrDefault(); });
             }
 
+            if(_IsTypeUpdate == 6)
+            {
+                voucherVM.IsInvoice = true;
+            }
+
             voucherVM.UserID = UserID;
 
             voucherVM.VTypeID = _vTypeID;
@@ -398,6 +403,7 @@ namespace D69soft.Client.Pages.FIN
             VoucherDetailVM _voucherDetailVM = new();
 
             _voucherDetailVM.SeqVD = voucherDetailVMs.Count == 0 ? 1 : voucherDetailVMs.Select(x => x.SeqVD).Max() + 1;
+            _voucherDetailVM.VDQty = 1;
 
             voucherDetailVMs.Add(_voucherDetailVM);
 
@@ -413,6 +419,8 @@ namespace D69soft.Client.Pages.FIN
             _voucherDetailVM.VDDiscountAmount = Math.Round(_voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDAmount / 100, MidpointRounding.AwayFromZero);
 
             _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
+
+            voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
 
             StateHasChanged();
         }
@@ -435,6 +443,8 @@ namespace D69soft.Client.Pages.FIN
 
             _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
 
+            voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
+
             StateHasChanged();
         }
 
@@ -446,6 +456,8 @@ namespace D69soft.Client.Pages.FIN
 
             _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
 
+            voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
+
             StateHasChanged();
         }
 
@@ -453,7 +465,11 @@ namespace D69soft.Client.Pages.FIN
         {
             _voucherDetailVM.VDDiscountAmount = Math.Round(decimal.Parse(e.Value.ToString()), MidpointRounding.AwayFromZero);
 
+            _voucherDetailVM.VDDiscountPercent = _voucherDetailVM.VDDiscountAmount != 0? Math.Round(_voucherDetailVM.VDDiscountAmount * 100/_voucherDetailVM.VDAmount,2, MidpointRounding.AwayFromZero):0;
+
             _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
+
+            voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
 
             StateHasChanged();
         }
@@ -478,6 +494,8 @@ namespace D69soft.Client.Pages.FIN
             _voucherDetailVM.VDDiscountAmount = Math.Round(_voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDAmount / 100, MidpointRounding.AwayFromZero);
 
             _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
+
+            voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
 
             isLoading = false;
 
@@ -644,6 +662,8 @@ namespace D69soft.Client.Pages.FIN
 
             voucherVM.IsTypeUpdate = voucherVM.IsTypeUpdate == 5 ? 0 : voucherVM.IsTypeUpdate;
 
+            voucherVM.IsTypeUpdate = voucherVM.IsTypeUpdate == 6 ? 1 : voucherVM.IsTypeUpdate;
+
             if (voucherVM.IsTypeUpdate != 2)
             {
                 if (voucherDetailVMs.Count == 0)
@@ -766,16 +786,10 @@ namespace D69soft.Client.Pages.FIN
 
                 if (voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt" || voucherVM.VTypeID == "FIN_Bank_Credit" || voucherVM.VTypeID == "FIN_Bank_Debit")
                 {
-                    voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDPrice).Sum();
                     if(!String.IsNullOrEmpty(voucherVM.VReference))
                     {
                         voucherVM.VActive = true;
                     }
-                }
-
-                if (voucherVM.VTypeID == "FIN_Purchasing" || voucherVM.VTypeID == "FIN_Sale")
-                {
-                    voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
                 }
 
                 voucherVM.VNumber = await voucherService.UpdateVoucher(voucherVM, voucherDetailVMs);
@@ -888,12 +902,16 @@ namespace D69soft.Client.Pages.FIN
 
                         _voucherVM.VDate = voucherVM.VDate;
 
+                        _voucherVM.TotalAmount = voucherVM.TotalAmount;
+
                         _voucherVM.VReference = voucherVM.VNumber;
 
                         _voucherVM.VActive = true;
 
                         _voucherDetailVM.VDDesc = _voucherVM.VDesc;
-                        _voucherDetailVM.VDPrice = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
+                        _voucherDetailVM.VDQty = 1;
+                        _voucherDetailVM.VDPrice = voucherVM.TotalAmount;
+                        _voucherDetailVM.VDAmount = voucherVM.TotalAmount;
 
                         _voucherDetailVMs.Add(_voucherDetailVM);
 
