@@ -383,7 +383,7 @@
 
                                                     @if (_voucherDetailVM.IsUpdateItem == 0)
                                                     {
-                                                        <td><a @onclick=@(() => _voucherDetailVM.IsUpdateItem = voucherVM.IsInvoice?0:1)>@_voucherDetailVM.ICode - @_voucherDetailVM.IName</a></td>
+                                                        <td><a @onclick=@(() => _voucherDetailVM.IsUpdateItem = voucherVM.IsTypeUpdate==6?0:1)>@_voucherDetailVM.ICode - @_voucherDetailVM.IName</a></td>
                                                     }
                                                     else
                                                     {
@@ -474,24 +474,24 @@
                                                     @if (voucherVM.VTypeID != "FIN_InventoryCheck")
                                                     {
                                                         <td class="text-center">
-                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDQty(e, _voucherDetailVM))" value="@_voucherDetailVM.VDQty" onClick="this.select();" readonly="@voucherVM.IsInvoice" />
+                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDQty(e, _voucherDetailVM))" value="@_voucherDetailVM.VDQty" onClick="this.select();" readonly="@(voucherVM.IsTypeUpdate==6?true:false)" />
                                                         </td>
                                                     }
 
                                                     @if (voucherVM.VTypeID == "FIN_Purchasing" || voucherVM.VTypeID == "FIN_Sale")
                                                     {
                                                         <td class="text-center">
-                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDPrice(e, _voucherDetailVM))" value="@_voucherDetailVM.VDPrice" onClick="this.select();" readonly="@voucherVM.IsInvoice" />
+                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDPrice(e, _voucherDetailVM))" value="@_voucherDetailVM.VDPrice" onClick="this.select();" readonly="@(voucherVM.IsTypeUpdate==6?true:false)" />
                                                         </td>
 
                                                         <td class="text-right">@String.Format("{0:#,##0}", _voucherDetailVM.VDAmount)</td>
 
                                                         <td class="text-center">
-                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDDiscountPercent(e, _voucherDetailVM))" value="@_voucherDetailVM.VDDiscountPercent" onClick="this.select();" readonly="@voucherVM.IsInvoice" />
+                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDDiscountPercent(e, _voucherDetailVM))" value="@_voucherDetailVM.VDDiscountPercent" onClick="this.select();" readonly="@(voucherVM.IsTypeUpdate==6?true:false)" />
                                                         </td>
 
                                                         <td class="text-center">
-                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDDiscountAmount(e, _voucherDetailVM))" value="@_voucherDetailVM.VDDiscountAmount" onClick="this.select();" readonly="@voucherVM.IsInvoice" />
+                                                            <input class="form-control form-control-sm" name="currency-mask" @onchange="@((ChangeEventArgs e) => onchange_VDDiscountAmount(e, _voucherDetailVM))" value="@_voucherDetailVM.VDDiscountAmount" onClick="this.select();" readonly="@(voucherVM.IsTypeUpdate==6?true:false)" />
                                                         </td>
 
                                                         @if (voucherVM.IsInvoice)
@@ -542,11 +542,11 @@
                                                             <td>
                                                                 @if (String.IsNullOrEmpty(_voucherDetailVM.FromStockCode))
                                                                 {
-                                                                    <a class="text-center" @onclick=@(() => _voucherDetailVM.IsUpdateFromStock = voucherVM.IsInvoice?0:1)>-----Chọn-----</a>
+                                                                    <a class="text-center" @onclick=@(() => _voucherDetailVM.IsUpdateFromStock = voucherVM.IsTypeUpdate==6?0:1)>-----Chọn-----</a>
                                                                 }
                                                                 else
                                                                 {
-                                                                    <a @onclick=@(() => _voucherDetailVM.IsUpdateFromStock = voucherVM.IsInvoice?0:1)>@_voucherDetailVM.FromStockCode - @_voucherDetailVM.FromStockName</a>
+                                                                    <a @onclick=@(() => _voucherDetailVM.IsUpdateFromStock = voucherVM.IsTypeUpdate==6?0:1)>@_voucherDetailVM.FromStockCode - @_voucherDetailVM.FromStockName</a>
                                                                 }
                                                             </td>
                                                         }
@@ -589,11 +589,11 @@
                                                             <td>
                                                                 @if (String.IsNullOrEmpty(_voucherDetailVM.ToStockCode))
                                                                 {
-                                                                    <a class="text-center" @onclick=@(() => _voucherDetailVM.IsUpdateToStock = voucherVM.IsInvoice?0:1)>-----Chọn-----</a>
+                                                                    <a class="text-center" @onclick=@(() => _voucherDetailVM.IsUpdateToStock = voucherVM.IsTypeUpdate==6?0:1)>-----Chọn-----</a>
                                                                 }
                                                                 else
                                                                 {
-                                                                    <a @onclick=@(() => _voucherDetailVM.IsUpdateToStock = voucherVM.IsInvoice?0:1)>@_voucherDetailVM.ToStockCode - @_voucherDetailVM.ToStockName</a>
+                                                                    <a @onclick=@(() => _voucherDetailVM.IsUpdateToStock = voucherVM.IsTypeUpdate==6?0:1)>@_voucherDetailVM.ToStockCode - @_voucherDetailVM.ToStockName</a>
                                                                 }
                                                             </td>
                                                         }
@@ -624,7 +624,7 @@
                                                     }
 
                                                     <td>
-                                                        <input class="form-control form-control-sm" @bind="@_voucherDetailVM.VDNote" readonly="@voucherVM.IsInvoice" />
+                                                        <input class="form-control form-control-sm" @bind="@_voucherDetailVM.VDNote" readonly="@(voucherVM.IsTypeUpdate==6?true:false)" />
                                                     </td>
                                                 }
                                                 else

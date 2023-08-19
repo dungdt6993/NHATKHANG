@@ -385,12 +385,12 @@ namespace D69soft.Client.Pages.FIN
                     _voucherDetailVM.VATRate = 0;
                 }
 
-                if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || voucherVM.VTypeID == "FIN_Sale")
+                if (voucherVM.VTypeID == "FIN_Output" || voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_InventoryCheck" || voucherVM.VTypeID == "FIN_Sale")
                 {
                     await UpdateInventoryCheck_Qty(_voucherDetailVM);
                 }
 
-                voucherDetailVMs.Add(_voucherDetailVM);
+                voucherDetailVMs.Add(_voucherDetailVM); 
 
                 await txtSearchItems.Focus();
             }

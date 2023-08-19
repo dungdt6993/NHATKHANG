@@ -102,7 +102,7 @@ namespace D69soft.Server.Controllers.FIN
         {
             var sql = "select top 5 i.ICode, i.IName, iu.IUnitName, i.IPrice as VDPrice, ";
             sql += "s.StockCode as ToStockCode, s.StockName as ToStockName, ";
-            sql += "s.StockCode as FromStockCode, s.StockName as FromStockName, s.StockCode as InventoryCheck_StockCode, v.VendorCode, v.VendorName from FIN.Items i ";
+            sql += "s.StockCode as FromStockCode, s.StockName as FromStockName, s.StockCode as InventoryCheck_StockCode, s.StockName as InventoryCheck_StockName, v.VendorCode, v.VendorName from FIN.Items i ";
             sql += "join FIN.ItemsType it on it.ITypeCode = i.ITypeCode ";
             sql += "join FIN.ItemsUnit iu on iu.IUnitCode = i.IUnitCode ";
             sql += "left join FIN.Stock s on s.StockCode = i.StockDefault ";
