@@ -80,7 +80,7 @@ namespace D69soft.Client.Pages.HR
             filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
 
             division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterHrVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
+            filterHrVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
 
             filterHrVM.SectionID = string.Empty;
             section_filter_list = await organizationalChartService.GetSectionList();

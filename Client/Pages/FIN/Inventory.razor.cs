@@ -83,7 +83,7 @@ namespace D69soft.Client.Pages.FIN
             filterHrVM.UserID = UserID;
 
             divisionVMs = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterFinVM.DivisionID = divisionVMs.Count() > 0 ? divisionVMs.ElementAt(0).DivisionID : string.Empty;
+            filterFinVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
 
             filterFinVM.StartDate = DateTime.Now;
             filterFinVM.EndDate = DateTime.Now;

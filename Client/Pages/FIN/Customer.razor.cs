@@ -69,7 +69,7 @@ namespace D69soft.Client.Pages.FIN
             }
 
             filter_divisionVMs = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterFinVM.DivisionID = filter_divisionVMs.Count() > 0 ? filter_divisionVMs.ElementAt(0).DivisionID : string.Empty;
+            filterFinVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
 
             await GetCustomers();
 

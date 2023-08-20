@@ -89,7 +89,7 @@ namespace D69soft.Client.Pages.OP
             filterHrVM.dDate = DateTime.Now;
 
             division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterHrVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
+            filterHrVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
 
             filterHrVM.ShiftID = string.Empty;
             shiftVMs = await dutyRosterService.GetShiftList();

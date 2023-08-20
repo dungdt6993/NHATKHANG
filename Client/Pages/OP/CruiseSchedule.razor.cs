@@ -80,7 +80,7 @@ namespace D69soft.Client.Pages.OP
             filterHrVM.Month = DateTime.Now.Month;
 
             division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterHrVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
+            filterHrVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
 
             cruiseScheduleVMs = await opService.GetCruiseSchedules(filterHrVM);
             cruiseStatusVMs = await opService.GetCruiseStatus();
