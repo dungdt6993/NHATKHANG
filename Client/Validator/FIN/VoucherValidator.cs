@@ -18,12 +18,12 @@ namespace D69soft.Client.Validator.FIN
                     RuleFor(x => x.VDesc).NotEmpty().WithMessage("Không được trống.");
 
                     RuleFor(x => x.VendorCode).NotEmpty().WithMessage("Không được trống.");
+                });
 
-                    When(x => x.IsInvoice, () =>
-                    {
-                        RuleFor(x => x.InvoiceNumber).NotEmpty().WithMessage("Không được trống.");
-                        RuleFor(x => x.InvoiceDate).NotEmpty().WithMessage("Không được trống.");
-                    });
+                When(x => x.IsTypeUpdate == 6 && x.IsInvoice, () =>
+                {
+                    RuleFor(x => x.InvoiceNumber).NotEmpty().WithMessage("Không được trống.");
+                    RuleFor(x => x.InvoiceDate).NotEmpty().WithMessage("Không được trống.");
                 });
             });
 
@@ -36,12 +36,12 @@ namespace D69soft.Client.Validator.FIN
                     RuleFor(x => x.VDesc).NotEmpty().WithMessage("Không được trống.");
 
                     RuleFor(x => x.CustomerCode).NotEmpty().WithMessage("Không được trống.");
+                });
 
-                    When(x => x.IsInvoice, () =>
-                    {
-                        RuleFor(x => x.InvoiceNumber).NotEmpty().WithMessage("Không được trống.");
-                        RuleFor(x => x.InvoiceDate).NotEmpty().WithMessage("Không được trống.");
-                    });
+                When(x => x.IsTypeUpdate == 6 && x.IsInvoice, () =>
+                {
+                    RuleFor(x => x.InvoiceNumber).NotEmpty().WithMessage("Không được trống.");
+                    RuleFor(x => x.InvoiceDate).NotEmpty().WithMessage("Không được trống.");
                 });
             });
 
