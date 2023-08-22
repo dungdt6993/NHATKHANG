@@ -1,88 +1,88 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="DataProtection\Upload\POS\**" />
-    <Content Remove="DataProtection\Upload\POS\**" />
-    <EmbeddedResource Remove="DataProtection\Upload\POS\**" />
-    <None Remove="DataProtection\Upload\POS\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="DataProtection\Upload\POS\**" />
+		<Content Remove="DataProtection\Upload\POS\**" />
+		<EmbeddedResource Remove="DataProtection\Upload\POS\**" />
+		<None Remove="DataProtection\Upload\POS\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="DataProtection\Reports\Phieu_xuat_kho_ban_hang.cs" />
-    <Compile Remove="DataProtection\Reports\Phieu_xuat_kho_ban_hang.Designer.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="DataProtection\Reports\Phieu_xuat_kho_ban_hang.cs" />
+		<Compile Remove="DataProtection\Reports\Phieu_xuat_kho_ban_hang.Designer.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Remove="DataProtection\Reports\Phieu_xuat_kho_ban_hang.resx" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Remove="DataProtection\Reports\Phieu_xuat_kho_ban_hang.resx" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Remove="DataProtection\Reports\Bang_cham_cong.repx" />
-    <None Remove="DataProtection\Reports\Bang_ke_ban_hang_NCC.repx" />
-    <None Remove="DataProtection\Reports\Phieu_xuat_chuyen_kho_noi_bo.repx" />
-    <None Remove="DataProtection\Reports\Phieu_xuat_kho_ban_hang.repx" />
-    <None Remove="PredefinedReports\CustomNewReport.vsrepx" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="DataProtection\Reports\Bang_cham_cong.repx" />
+		<None Remove="DataProtection\Reports\Bang_ke_ban_hang_NCC.repx" />
+		<None Remove="DataProtection\Reports\Phieu_xuat_chuyen_kho_noi_bo.repx" />
+		<None Remove="DataProtection\Reports\Phieu_xuat_kho_ban_hang.repx" />
+		<None Remove="PredefinedReports\CustomNewReport.vsrepx" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="PredefinedReports\CustomNewReport.vsrepx" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="PredefinedReports\CustomNewReport.vsrepx" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.143" />
-    <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="23.1.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.9" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Dapper" Version="2.0.143" />
+		<PackageReference Include="DevExpress.AspNetCore.Reporting" Version="23.1.4" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.9" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.9" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Client\D69soft.Client.csproj" />
-    <ProjectReference Include="..\Shared\D69soft.Shared.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Client\D69soft.Client.csproj" />
+		<ProjectReference Include="..\Shared\D69soft.Shared.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DataProtection\Export\" />
-    <Folder Include="DataProtection\Reports\" />
-    <Folder Include="DataProtection\Upload\FIN\Images\Items\" />
-    <Folder Include="DataProtection\Upload\HR\Images\Profile\" />
-    <Folder Include="Hubs\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="DataProtection\Export\" />
+		<Folder Include="DataProtection\Reports\" />
+		<Folder Include="DataProtection\Upload\FIN\Images\Items\" />
+		<Folder Include="DataProtection\Upload\HR\Images\Profile\" />
+		<Folder Include="Hubs\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="DataProtection\Reports\Bang_cham_cong.cs">
-      <DependentUpon>Bang_cham_cong.repx</DependentUpon>
-    </Compile>
-    <Compile Update="DataProtection\Reports\Bang_cham_cong.Designer.cs">
-      <DependentUpon>Bang_cham_cong.repx</DependentUpon>
-    </Compile>
-    <Compile Update="DataProtection\Reports\Bang_ke_ban_hang_NCC.cs">
-      <DependentUpon>Bang_ke_ban_hang_NCC.repx</DependentUpon>
-    </Compile>
-    <Compile Update="DataProtection\Reports\Bang_ke_ban_hang_NCC.Designer.cs">
-      <DependentUpon>Bang_ke_ban_hang_NCC.repx</DependentUpon>
-    </Compile>
-    <Compile Update="DataProtection\Reports\Phieu_xuat_chuyen_kho_noi_bo.cs">
-      <DependentUpon>Phieu_xuat_chuyen_kho_noi_bo.repx</DependentUpon>
-    </Compile>
-    <Compile Update="DataProtection\Reports\Phieu_xuat_chuyen_kho_noi_bo.Designer.cs">
-      <DependentUpon>Phieu_xuat_chuyen_kho_noi_bo.repx</DependentUpon>
-    </Compile>
-    <Compile Update="PredefinedReports\CustomNewReport.cs">
-      <DependentUpon>CustomNewReport.vsrepx</DependentUpon>
-    </Compile>
-    <Compile Update="PredefinedReports\CustomNewReport.Designer.cs">
-      <DependentUpon>CustomNewReport.vsrepx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Update="DataProtection\Reports\Bang_cham_cong.cs">
+			<DependentUpon>Bang_cham_cong.repx</DependentUpon>
+		</Compile>
+		<Compile Update="DataProtection\Reports\Bang_cham_cong.Designer.cs">
+			<DependentUpon>Bang_cham_cong.repx</DependentUpon>
+		</Compile>
+		<Compile Update="DataProtection\Reports\Bang_ke_ban_hang_NCC.cs">
+			<DependentUpon>Bang_ke_ban_hang_NCC.repx</DependentUpon>
+		</Compile>
+		<Compile Update="DataProtection\Reports\Bang_ke_ban_hang_NCC.Designer.cs">
+			<DependentUpon>Bang_ke_ban_hang_NCC.repx</DependentUpon>
+		</Compile>
+		<Compile Update="DataProtection\Reports\Phieu_xuat_chuyen_kho_noi_bo.cs">
+			<DependentUpon>Phieu_xuat_chuyen_kho_noi_bo.repx</DependentUpon>
+		</Compile>
+		<Compile Update="DataProtection\Reports\Phieu_xuat_chuyen_kho_noi_bo.Designer.cs">
+			<DependentUpon>Phieu_xuat_chuyen_kho_noi_bo.repx</DependentUpon>
+		</Compile>
+		<Compile Update="PredefinedReports\CustomNewReport.cs">
+			<DependentUpon>CustomNewReport.vsrepx</DependentUpon>
+		</Compile>
+		<Compile Update="PredefinedReports\CustomNewReport.Designer.cs">
+			<DependentUpon>CustomNewReport.vsrepx</DependentUpon>
+		</Compile>
+	</ItemGroup>
 
 
 </Project>

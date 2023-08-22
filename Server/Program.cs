@@ -6,10 +6,12 @@ using DevExpress.AspNetCore.Reporting;
 using DevExpress.XtraCharts;
 using DevExpress.XtraReports.Web.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
+using System.Globalization;
 using System.Text;
 
 namespace D69soft
@@ -76,6 +78,14 @@ namespace D69soft
             });
 
             var app = builder.Build();
+
+            var supportedCultures = new[] { new CultureInfo("vi-VN") };
+            var localizationOptions = new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("vi-VN"),
+                SupportedCultures = supportedCultures,
+            };
+            app.UseRequestLocalization(localizationOptions);
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
