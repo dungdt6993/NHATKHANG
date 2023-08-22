@@ -1175,7 +1175,14 @@
                                                 }
                                                 else
                                                 {
-                                                    <td class="text-center"><span class="badge badge-danger">Chưa nhận hóa đơn</span></td>
+                                                    @if (filterFinVM.FuncID == "FIN_Purchasing")
+                                                    {
+                                                        <td class="text-center"><span class="badge badge-danger">Chưa nhận hóa đơn</span></td>
+                                                    }
+                                                    @if (filterFinVM.FuncID == "FIN_Sale")
+                                                    {
+                                                        <td class="text-center"><span class="badge badge-danger">Chưa xuất hóa đơn</span></td>
+                                                    }
                                                 }
                                             }
                                             else
