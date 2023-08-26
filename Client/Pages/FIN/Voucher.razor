@@ -284,9 +284,12 @@
 
                     @if (voucherVM.VTypeID == "FIN_Bank_Credit" || voucherVM.VTypeID == "FIN_Bank_Debit" || voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt")
                     {
-                        <div class="modal-body @(voucherVM.IsTypeUpdate==3?"noClick":"")" style="background-color: #f4f6f9;">
-                            <a class="btn btn-sm btn-success" @onclick=@(() => CreateVoucherDetail())><i class="fas fa-plus"></i> Thêm dòng chi tiết</a>
-                        </div>
+                        @if (String.IsNullOrEmpty(voucherVM.VReference))
+                        {
+                            <div class="modal-body @(voucherVM.IsTypeUpdate==3?"noClick":"")" style="background-color: #f4f6f9;">
+                                <a class="btn btn-sm btn-success" @onclick=@(() => CreateVoucherDetail())><i class="fas fa-plus"></i> Thêm dòng chi tiết</a>
+                            </div>
+                        }
                     }
 
                     <div class="modal-body p-0 @(voucherVM.IsTypeUpdate==3?"noClick":"")">
