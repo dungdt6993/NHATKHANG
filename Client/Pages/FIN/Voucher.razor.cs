@@ -484,16 +484,16 @@ namespace D69soft.Client.Pages.FIN
 
             _voucherDetailVM.VATRate = vatDefVMs.Where(x => x.VATCode == _voucherDetailVM.VATCode).Select(x => x.VATRate).FirstOrDefault();
 
-            _voucherDetailVM.VDAmount = Math.Round(_VDTotalAmount / ((1 + _voucherDetailVM.VATRate) * (1 - _voucherDetailVM.VDDiscountPercent / 100)), MidpointRounding.AwayFromZero);
+            _voucherDetailVM.VDAmount = Math.Round(_VDTotalAmount / ((1 + _voucherDetailVM.VATRate)*(1 - _voucherDetailVM.VDDiscountPercent / 100)), MidpointRounding.AwayFromZero);
 
             if (_voucherDetailVM.VDQty != 0)
             {
                 _voucherDetailVM.VDPrice = Math.Round(_voucherDetailVM.VDAmount / _voucherDetailVM.VDQty,2, MidpointRounding.AwayFromZero);
             }
 
-            _voucherDetailVM.VDDiscountAmount = Math.Round(_voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDAmount / 100, MidpointRounding.AwayFromZero);
+            _voucherDetailVM.VDDiscountAmount = Math.Round(_voucherDetailVM.VDAmount * _voucherDetailVM.VDDiscountPercent / 100, MidpointRounding.AwayFromZero);
 
-            _voucherDetailVM.VATAmount = _VDTotalAmount - _voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount;
+            _voucherDetailVM.VATAmount = _VDTotalAmount - _voucherDetailVM.VDAmount + _voucherDetailVM.VDDiscountAmount;
 
             voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
 
