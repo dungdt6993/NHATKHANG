@@ -102,11 +102,10 @@ namespace D69soft.Server.Controllers.FIN
         {
             var sql = "select top 5 i.ICode, i.IName, iu.IUnitName, i.IPrice as VDPrice, ";
             sql += "s.StockCode as ToStockCode, s.StockName as ToStockName, ";
-            sql += "s.StockCode as FromStockCode, s.StockName as FromStockName, s.StockCode as InventoryCheck_StockCode, s.StockName as InventoryCheck_StockName, v.VendorCode, v.VendorName from FIN.Items i ";
+            sql += "s.StockCode as FromStockCode, s.StockName as FromStockName, s.StockCode as InventoryCheck_StockCode, s.StockName as InventoryCheck_StockName from FIN.Items i ";
             sql += "join FIN.ItemsType it on it.ITypeCode = i.ITypeCode ";
             sql += "join FIN.ItemsUnit iu on iu.IUnitCode = i.IUnitCode ";
             sql += "left join FIN.Stock s on s.StockCode = i.StockDefault ";
-            sql += "left join FIN.Vendor v on v.VendorCode = i.VendorDefault ";
             sql += "where i.IActive=1 and i.ITypeCode=@ITypeCode and (i.ICode LIKE CONCAT('%',@valueSearchItems,'%') or i.IName LIKE CONCAT('%',@valueSearchItems,'%')) ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
