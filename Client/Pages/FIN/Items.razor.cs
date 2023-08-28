@@ -20,6 +20,7 @@ namespace D69soft.Client.Pages.FIN
         [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
         [Inject] SysService sysService { get; set; }
+        [Inject] VoucherService voucherService { get; set; }
         [Inject] PurchasingService purchasingService { get; set; }
         [Inject] InventoryService inventoryService { get; set; }
 
@@ -51,6 +52,9 @@ namespace D69soft.Client.Pages.FIN
         //Unit
         ItemsUnitVM itemsUnitVM = new();
         IEnumerable<ItemsUnitVM> itemsUnitVMs;
+
+        //VAT
+        IEnumerable<VATDefVM> vatDefVMs;
 
         //Stock
         IEnumerable<StockVM> stockVMs;
@@ -99,6 +103,8 @@ namespace D69soft.Client.Pages.FIN
             itemsClassVMs = await inventoryService.GetItemsClassList();
 
             itemsGroupVMs = await inventoryService.GetItemsGroupList();
+
+            vatDefVMs = await voucherService.GetVATDefs();
 
             filterFinVM.IActive = true;
 

@@ -57,9 +57,11 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public decimal ICost { get; set; }
         public decimal IPrice { get; set; }
         public string IURLPicture1 { get; set; }
+        public string VATDefault { get; set; }
         public string StockDefault { get; set; }
         public string VendorDefault { get; set; }
         public bool IActive { get; set; }
+        public bool IsSale { get; set; }
         public string CustomerCode { get; set; }
         public string CustomerName { get; set; }
         public string CustomerTaxCode { get; set; }

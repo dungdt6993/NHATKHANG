@@ -53,7 +53,7 @@
                             <InputSelect class="selectpicker form-control form-control-sm"
                                          data-style="btn-selectpicker" data-container="body"
                                          data-live-search="true" data-show-subtext="true"
-                                         @bind-Value="itemsGroupVM.IClsCode">
+                            @bind-Value="itemsGroupVM.IClsCode">
                                 <option value=@String.Empty>-----Tất cả-----</option>
                                 @if (itemsClassVMs != null)
                                 {
@@ -156,7 +156,7 @@
                                                     <InputSelect class="selectpicker form-control form-control-sm"
                                                                  data-style="btn-selectpicker" data-container="body"
                                                                  data-live-search="true" data-show-subtext="true"
-                                                                 @bind-Value="itemsVM.ITypeCode">
+                                                    @bind-Value="itemsVM.ITypeCode">
                                                         <option value=@String.Empty>-----Tất cả-----</option>
                                                         @if (itemsTypeVMs != null)
                                                         {
@@ -176,7 +176,7 @@
                                                     <InputSelect class="selectpicker form-control form-control-sm"
                                                                  data-style="btn-selectpicker" data-container="body"
                                                                  data-live-search="true" data-show-subtext="true"
-                                                                 @bind-Value="onchange_IClsCode">
+                                                    @bind-Value="onchange_IClsCode">
                                                         <option value=@String.Empty>-----Tất cả-----</option>
                                                         @if (itemsClassVMs != null)
                                                         {
@@ -196,7 +196,7 @@
                                                     <InputSelect class="selectpicker form-control form-control-sm"
                                                                  data-style="btn-selectpicker" data-container="body"
                                                                  data-live-search="true" data-show-subtext="true"
-                                                                 @bind-Value="itemsVM.IGrpCode">
+                                                    @bind-Value="itemsVM.IGrpCode">
                                                         <option value=@String.Empty>-----Tất cả-----</option>
                                                         @if (itemsGroupVMs != null)
                                                         {
@@ -237,7 +237,7 @@
                                                         <InputSelect class="selectpicker form-control form-control-sm"
                                                                      data-style="btn-selectpicker" data-container="body"
                                                                      data-live-search="true" data-show-subtext="true"
-                                                                     @bind-Value="itemsVM.IUnitCode">
+                                                        @bind-Value="itemsVM.IUnitCode">
                                                             <option value=@String.Empty>-----Tất cả-----</option>
                                                             @if (itemsUnitVMs != null)
                                                             {
@@ -288,14 +288,34 @@
                                                 </div>
                                             </div>
 
-                                            @*                                            <div class="form-group row clearfix" style="padding-top: 18px;">
-                                            <div class="icheck-success d-inline">
-                                            <input type="checkbox" id="checkboxPrimary1">
-                                            <label for="checkboxPrimary1">
-                                            Hiển thị màn hình bán hàng
-                                            </label>
+                                            <div class="form-group row">
+                                                <label class="col-sm-4 col-form-label">Thuế suất GTGT</label>
+                                                <div class="col-sm-8">
+                                                    <InputSelect class="selectpicker form-control form-control-sm"
+                                                                 data-style="btn-selectpicker"
+                                                                 data-container="body"
+                                                                 @bind-Value="itemsVM.VATDefault">
+
+                                                        <option value=@String.Empty>-----Chọn-----</option>
+                                                        @if (vatDefVMs != null)
+                                                        {
+                                                            @foreach (var _vatDefVM in vatDefVMs)
+                                                            {
+                                                                <option value="@_vatDefVM.VATCode">@_vatDefVM.VATName</option>
+                                                            }
+                                                        }
+                                                    </InputSelect>
+                                                </div>
                                             </div>
-                                            </div>*@
+
+                                            <div class="form-group row clearfix" style="padding-top: 18px;">
+                                                <div class="icheck-success d-inline">
+                                                    <input type="checkbox" id="ckIsSale" @bind="itemsVM.IsSale">
+                                                    <label for="ckIsSale">
+                                                        Hiển thị bán hàng
+                                                    </label>
+                                                </div>
+                                            </div>
 
                                             <div class="form-group clearfix">
                                                 <div class="icheck-success d-inline">
@@ -328,7 +348,7 @@
                                                     <select class="selectpicker form-control form-control-sm"
                                                             data-style="btn-selectpicker" data-container="body"
                                                             data-live-search="true" data-show-subtext="true"
-                                                            @bind="itemsVM.StockDefault">
+                                                    @bind="itemsVM.StockDefault">
                                                         <option value=@String.Empty>-----Tất cả-----</option>
                                                         @if (stockVMs != null)
                                                         {
@@ -350,7 +370,7 @@
                                                     <select class="selectpicker form-control form-control-sm"
                                                             data-style="btn-selectpicker" data-container="body"
                                                             data-live-search="true" data-show-subtext="true"
-                                                            @bind="itemsVM.VendorDefault">
+                                                    @bind="itemsVM.VendorDefault">
                                                         <option value=@String.Empty>-----Tất cả-----</option>
                                                         @if (vendorVMs != null)
                                                         {
@@ -414,13 +434,13 @@
                                         </table>
 
                                         <BlazoredTypeahead SearchMethod="SearchItems"
-                                                       Value="qi_itemsVM"
-                                                       ValueChanged="@( (ItemsVM i) => SelectedItem(i) )"
-                                                       ValueExpression="@( () => qi_itemsVM)"
-                                                       Debounce="500"
-                                                       MinimumLength="2"
-                                                       MaximumSuggestions="6"
-                                                       placeholder="Tìm kiếm theo mã hoặc tên...">
+                                                           Value="qi_itemsVM"
+                                                           ValueChanged="@( (ItemsVM i) => SelectedItem(i) )"
+                                                           ValueExpression="@( () => qi_itemsVM)"
+                                                           Debounce="500"
+                                                           MinimumLength="2"
+                                                           MaximumSuggestions="6"
+                                                           placeholder="Tìm kiếm theo mã hoặc tên...">
                                             <SelectedTemplate Context="_item">
                                                 <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm để thêm thành phần...
                                             </SelectedTemplate>
