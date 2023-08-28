@@ -8,6 +8,8 @@ using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extensions;
+using D69soft.Shared.Models.ViewModels.HR;
+using Newtonsoft.Json.Linq;
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -45,7 +47,6 @@ namespace D69soft.Client.Pages.FIN
         //Items
         ItemsVM itemsVM = new();
         List<ItemsVM> itemsVMs;
-        List<ItemsVM> search_itemsVMs;
 
         //Unit
         ItemsUnitVM itemsUnitVM = new();
@@ -112,8 +113,7 @@ namespace D69soft.Client.Pages.FIN
 
             itemsVM = new();
 
-            filterFinVM.searchText = String.Empty;
-            search_itemsVMs = itemsVMs = await inventoryService.GetItemsList(filterFinVM);
+            itemsVMs = await inventoryService.GetItemsList(filterFinVM);
 
             isLoading = false;
         }
@@ -130,45 +130,6 @@ namespace D69soft.Client.Pages.FIN
                 return string.Empty;
             }
             return "selected";
-        }
-
-        private void SortTable(string columnName)
-        {
-            if (columnName != activeSortColumn)
-            {
-                search_itemsVMs = search_itemsVMs.OrderBy(x => x.GetType().GetProperty(columnName).GetValue(x, null)).ToList();
-                isSortedAscending = true;
-                activeSortColumn = columnName;
-            }
-            else
-            {
-                if (isSortedAscending)
-                {
-                    search_itemsVMs = search_itemsVMs.OrderByDescending(x => x.GetType().GetProperty(columnName).GetValue(x, null)).ToList();
-                }
-                else
-                {
-                    search_itemsVMs = search_itemsVMs.OrderBy(x => x.GetType().GetProperty(columnName).GetValue(x, null)).ToList();
-                }
-                isSortedAscending = !isSortedAscending;
-            }
-        }
-
-        private string SetSortIcon(string columnName)
-        {
-            if (activeSortColumn != columnName)
-            {
-                return string.Empty;
-            }
-
-            if (isSortedAscending)
-            {
-                return "fa-sort-up";
-            }
-            else
-            {
-                return "fa-sort-down";
-            }
         }
 
         private async void onchange_filter_IClsCode(string value)
@@ -205,14 +166,13 @@ namespace D69soft.Client.Pages.FIN
             StateHasChanged();
         }
 
-        private string onchange_SearchItems
+        protected async void FilterItems(ChangeEventArgs args)
         {
-            get { return filterFinVM.searchText; }
-            set
-            {
-                filterFinVM.searchText = value;
-                search_itemsVMs = itemsVMs.Where(x => x.ICode.ToUpper().Contains(filterFinVM.searchText.ToUpper()) || x.IName.ToUpper().Contains(filterFinVM.searchText.ToUpper())).ToList();
-            }
+            filterFinVM.searchText = args.Value.ToString();
+
+            await GetItems();
+
+            StateHasChanged();
         }
 
         private async Task onchange_filter_IActive(ChangeEventArgs args)

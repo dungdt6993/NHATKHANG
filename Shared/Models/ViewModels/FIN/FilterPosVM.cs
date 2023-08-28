@@ -34,6 +34,7 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string ICode { get; set; } = string.Empty;
         public string IBarCode { get; set; }
         public string IName { get; set; }
+        public decimal ICost { get; set; }
         public decimal IPrice { get; set; }
         public string IURLPicture1 { get; set; }
         public string StockDefault { get; set; }

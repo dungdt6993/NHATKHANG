@@ -378,6 +378,8 @@ namespace D69soft.Client.Pages.FIN
 
                 _voucherDetailVM.VDQty = 1;
 
+                _voucherDetailVM.VDAmount = _voucherDetailVM.VDPrice;
+
                 //Hóa đơn
                 if (!voucherVM.IsInvoice)
                 {

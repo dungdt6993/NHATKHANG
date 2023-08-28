@@ -229,6 +229,7 @@
                                         </div>
 
                                         <div class="col-12 col-sm-5">
+
                                             <div class="form-group row">
                                                 <label class="col-sm-4 col-form-label">Đơn vị tính</label>
                                                 <div class="col-sm-8">
@@ -259,6 +260,30 @@
                                                             </div>
                                                         }
                                                         <ValidationMessage For="@(() => itemsVM.IUnitCode)" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-4 col-form-label">Giá mua</label>
+                                                <div class="col-sm-8">
+                                                    <div class="input-group input-group-sm">
+                                                        <input class="form-control form-control-sm" name="currency-mask" @bind="itemsVM.ICost" onClick="this.select();" />
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text">đ</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-4 col-form-label">Giá bán</label>
+                                                <div class="col-sm-8">
+                                                    <div class="input-group input-group-sm">
+                                                        <input class="form-control form-control-sm" name="currency-mask" @bind="itemsVM.IPrice" onClick="this.select();" />
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text">đ</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -573,7 +598,7 @@
                         </div>
                         <div class="card-body">
 
-                            <input type="search" @bind="onchange_SearchItems" @bind:event="oninput" class="form-control form-control-sm form-control-border border-width-2" placeholder="Theo mã hoặc tên hàng..." />
+                            <input type="search" class="form-control form-control-sm form-control-border border-width-2" placeholder="Theo mã hoặc tên hàng..." @onchange="FilterItems" />
 
                         </div>
                     </div>
@@ -617,27 +642,26 @@
                         </div>
 
                         <div class="card-body table-responsive p-0" style="height: calc(100vh - 181px);">
-                            @if (search_itemsVMs != null)
+                            @if (itemsVMs != null)
                             {
                                 <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
                                     <thead>
                                         <tr>
                                             <th class="text-center">Hình ảnh</th>
                                             <th class="text-center">Mã hàng hóa</th>
-                                            <th class="sort-th" @onclick=@(()=>SortTable("IName"))>
-                                                Tên hàng
-                                                <span class="fa-solid @(SetSortIcon("IName"))"></span>
-                                            </th>
+                                            <th>Tên hàng</th>
                                             <th>Loại hàng</th>
                                             <th>Lớp hàng</th>
                                             <th>Nhóm hàng</th>
                                             <th>Đơn vị tính</th>
+                                            <th>Giá mua</th>
+                                            <th>Giá bán</th>
 
                                             <th class="text-center">Trạng thái</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <Virtualize Items="@search_itemsVMs" Context="_itemVM" OverscanCount="50">
+                                        <Virtualize Items="@itemsVMs" Context="_itemVM" OverscanCount="50">
                                             <tr class="@(SetSelected(_itemVM))" @onclick="() => onclick_Selected(_itemVM)">
                                                 <td class="text-center">
                                                     <img class="table-picture" src="@_itemVM.IURLPicture1">
@@ -648,6 +672,8 @@
                                                 <td>@_itemVM.IClsName</td>
                                                 <td>@_itemVM.IGrpName</td>
                                                 <td>@_itemVM.IUnitName</td>
+                                                <td class="text-right">@String.Format("{0:#,##0.##}", _itemVM.ICost)</td>
+                                                <td class="text-right">@String.Format("{0:#,##0.##}", _itemVM.IPrice)</td>
                                                 <td class="text-center">
                                                     @if (_itemVM.IActive)
                                                     {
@@ -664,7 +690,7 @@
 
                                 </table>
 
-                                if (search_itemsVMs.Count() <= 0)
+                                if (itemsVMs.Count() <= 0)
                                 {
                                     <img class="img-no-result" src="images/_default/no-results.png" />
                                 }
@@ -673,10 +699,10 @@
 
                         </div>
                         <!-- /.card-body -->
-                        @if (search_itemsVMs != null)
+                        @if (itemsVMs != null)
                         {
                             <div class="card-footer text-muted">
-                                Tổng số: <b>@search_itemsVMs.Count()</b> bản ghi
+                                Tổng số: <b>@itemsVMs.Count()</b> bản ghi
                             </div>
                         }
                         <!-- /.card-footer -->

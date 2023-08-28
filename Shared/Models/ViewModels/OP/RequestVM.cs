@@ -52,6 +52,7 @@ namespace D69soft.Shared.Models.ViewModels.OP
         public string ICode { get; set; }
         public string IBarCode { get; set; }
         public string IName { get; set; }
+        public decimal ICost { get; set; }
         public decimal IPrice { get; set; }
         public string IURLPicture1 { get; set; }
         public string StockDefault { get; set; }
