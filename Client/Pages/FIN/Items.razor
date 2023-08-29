@@ -676,6 +676,7 @@
                                             <th>Đơn vị tính</th>
                                             <th>Giá mua</th>
                                             <th>Giá bán</th>
+                                            <th class="text-center">Thuế GTGT</th>
 
                                             <th class="text-center">Trạng thái</th>
                                         </tr>
@@ -694,6 +695,7 @@
                                                 <td>@_itemVM.IUnitName</td>
                                                 <td class="text-right">@String.Format("{0:#,##0.##}", _itemVM.ICost)</td>
                                                 <td class="text-right">@String.Format("{0:#,##0.##}", _itemVM.IPrice)</td>
+                                                <td class="text-center">@_itemVM.VATName</td>
                                                 <td class="text-center">
                                                     @if (_itemVM.IActive)
                                                     {

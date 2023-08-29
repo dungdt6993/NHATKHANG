@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace D69soft.Shared.Models.ViewModels.FIN
 {
-    public class ItemsVM : Items, ItemsClass, ItemsGroup, ItemsUnit, ItemsType
+    public class ItemsVM : Items, ItemsClass, ItemsGroup, ItemsUnit, ItemsType, VATDef
     {
         //Para
         public int IsTypeUpdate { get; set; }
@@ -43,5 +43,8 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string ITypeName { get; set; }
         public string ITypeDesc { get; set; }
         public bool IsInventory { get; set; }
+        public string VATCode { get; set; }
+        public decimal VATRate { get; set; }
+        public string VATName { get; set; }
     }
 }

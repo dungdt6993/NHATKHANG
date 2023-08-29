@@ -171,6 +171,7 @@ namespace D69soft.Server.Controllers.FIN
             sql += "join FIN.ItemsType it on it.ITypeCode = i.ITypeCode ";
             sql += "left join FIN.ItemsClass ic on ic.IClsCode = i.IClsCode ";
             sql += "left join FIN.ItemsGroup ig on ig.IGrpCode = i.IGrpCode ";
+            sql += "left join FIN.VATDef vat on vat.VATCode = i.VATDefault ";
             sql += "where IActive=@IActive ";
             sql += "and (i.IClsCode=@IClsCode or coalesce(@IClsCode,'') = '') ";
             sql += "and (i.IGrpCode=@IGrpCode or coalesce(@IGrpCode,'') = '') ";
