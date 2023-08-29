@@ -288,26 +288,6 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Thuế suất GTGT</label>
-                                                <div class="col-sm-8">
-                                                    <InputSelect class="selectpicker form-control form-control-sm"
-                                                                 data-style="btn-selectpicker"
-                                                                 data-container="body"
-                                                                 @bind-Value="itemsVM.VATDefault">
-
-                                                        <option value=@String.Empty>-----Chọn-----</option>
-                                                        @if (vatDefVMs != null)
-                                                        {
-                                                            @foreach (var _vatDefVM in vatDefVMs)
-                                                            {
-                                                                <option value="@_vatDefVM.VATCode">@_vatDefVM.VATName</option>
-                                                            }
-                                                        }
-                                                    </InputSelect>
-                                                </div>
-                                            </div>
-
                                             <div class="form-group row clearfix" style="padding-top: 18px;">
                                                 <div class="icheck-success d-inline">
                                                     <input type="checkbox" id="ckIsSale" @bind="itemsVM.IsSale">
@@ -339,53 +319,64 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="custom-tabs-default" role="tabpanel" aria-labelledby="custom-tabs-default">
-                                    <div class="row">
-                                        <div class="col-12 col-sm-5">
 
-                                            <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label">Kho</label>
-                                                <div class="col-sm-10">
-                                                    <select class="selectpicker form-control form-control-sm"
-                                                            data-style="btn-selectpicker" data-container="body"
-                                                            data-live-search="true" data-show-subtext="true"
-                                                    @bind="itemsVM.StockDefault">
-                                                        <option value=@String.Empty>-----Tất cả-----</option>
-                                                        @if (stockVMs != null)
-                                                        {
-                                                            @foreach (var _stockVM in stockVMs)
-                                                            {
-                                                                <option data-subtext="@_stockVM.StockCode" value="@_stockVM.StockCode">@_stockVM.StockName</option>
-                                                            }
-                                                        }
-                                                    </select>
-                                                </div>
-                                            </div>
-
+                                    <div class="form-row">
+                                        <div class="form-group col-md-5">
+                                            <label>Kho:</label>
+                                            <select class="selectpicker form-control form-control-sm"
+                                                    data-style="btn-selectpicker" data-container="body"
+                                                    data-live-search="true" data-show-subtext="true"
+                                            @bind="itemsVM.StockDefault">
+                                                <option value=@String.Empty>-----Tất cả-----</option>
+                                                @if (stockVMs != null)
+                                                {
+                                                    @foreach (var _stockVM in stockVMs)
+                                                    {
+                                                        <option data-subtext="@_stockVM.StockCode" value="@_stockVM.StockCode">@_stockVM.StockName</option>
+                                                    }
+                                                }
+                                            </select>
                                         </div>
-                                        <div class="col-12 col-sm-7">
-
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Nhà cung cấp</label>
-                                                <div class="col-sm-9">
-                                                    <select class="selectpicker form-control form-control-sm"
-                                                            data-style="btn-selectpicker" data-container="body"
-                                                            data-live-search="true" data-show-subtext="true"
-                                                    @bind="itemsVM.VendorDefault">
-                                                        <option value=@String.Empty>-----Tất cả-----</option>
-                                                        @if (vendorVMs != null)
-                                                        {
-                                                            @foreach (var _vendorVM in vendorVMs)
-                                                            {
-                                                                <option data-subtext="@_vendorVM.VendorCode" value="@_vendorVM.VendorCode">@_vendorVM.VendorName</option>
-                                                            }
-                                                        }
-                                                    </select>
-                                                </div>
-                                            </div>
-
+                                        <div class="form-group col-md-7">
+                                            <label>Nhà cung cấp:</label>
+                                            <select class="selectpicker form-control form-control-sm"
+                                                    data-style="btn-selectpicker" data-container="body"
+                                                    data-live-search="true" data-show-subtext="true"
+                                            @bind="itemsVM.VendorDefault">
+                                                <option value=@String.Empty>-----Tất cả-----</option>
+                                                @if (vendorVMs != null)
+                                                {
+                                                    @foreach (var _vendorVM in vendorVMs)
+                                                    {
+                                                        <option data-subtext="@_vendorVM.VendorCode" value="@_vendorVM.VendorCode">@_vendorVM.VendorName</option>
+                                                    }
+                                                }
+                                            </select>
                                         </div>
-
                                     </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col-md-5">
+                                            <label>Thuế suất GTGT:</label>
+                                            <InputSelect class="selectpicker form-control form-control-sm"
+                                                         data-style="btn-selectpicker"
+                                                         data-container="body"
+                                            @bind-Value="itemsVM.VATDefault">
+
+                                                <option value=@String.Empty>-----Chọn-----</option>
+                                                @if (vatDefVMs != null)
+                                                {
+                                                    @foreach (var _vatDefVM in vatDefVMs)
+                                                    {
+                                                        <option value="@_vatDefVM.VATCode">@_vatDefVM.VATName</option>
+                                                    }
+                                                }
+                                            </InputSelect>
+                                        </div>
+                                        <div class="form-group col-md-7">
+                                        </div>
+                                    </div>
+
                                 </div>
 
                                 @if (itemsVM.ITypeCode == "TP")
