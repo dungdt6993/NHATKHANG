@@ -17,8 +17,7 @@ namespace D69soft.Shared.Models.ViewModels.FIN
 
         public float PriceOpen { get; set; }
         public float PriceInput { get; set; }
-        public float PriceOutput { get; set; }
-        public float PriceEnd { get; set; }
+        public float PriceInventory { get; set; }
 
         public int SeqVD { get; set; }
         public string VNumber { get; set; }

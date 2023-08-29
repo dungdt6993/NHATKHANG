@@ -1241,14 +1241,11 @@
                                         <th class="text-center">Mã hàng</th>
                                         <th>Tên hàng</th>
                                         <th class="text-center">ĐVT</th>
-                                        <th class="text-center">SL tồn đầu kỳ</th>
-                                        <th class="text-center">Giá trị tồn đầu kỳ</th>
+                                        <th class="text-center">SL đầu kỳ</th>
                                         <th class="text-center">SL nhập</th>
-                                        <th class="text-center">Giá trị nhập</th>
                                         <th class="text-center">SL xuất</th>
-                                        <th class="text-center">Giá trị xuất</th>
-                                        <th class="text-center">SL tồn cuối kỳ</th>
-                                        <th class="text-center">Giá trị tồn cuối kỳ</th>
+                                        <th class="text-center">SL tồn</th>
+                                        <th class="text-center">Giá trị tồn</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1262,13 +1259,10 @@
                                             <td>@_inventoryVM.IName</td>
                                             <td class="text-center">@_inventoryVM.IUnitName</td>
                                             <td class="text-center">@_inventoryVM.QtyOpen</td>
-                                            <td class="text-right">@String.Format("{0:#,##}",_inventoryVM.PriceOpen)</td>
                                             <td class="text-center">@_inventoryVM.QtyInput</td>
-                                            <td class="text-right">@String.Format("{0:#,##}",_inventoryVM.PriceInput)</td>
                                             <td class="text-center">@_inventoryVM.QtyOutput</td>
-                                            <td class="text-right">@String.Format("{0:#,##}",_inventoryVM.PriceOutput)</td>
                                             <td class="text-center">@_inventoryVM.QtyEnd</td>
-                                            <td class="text-right">@String.Format("{0:#,##}",_inventoryVM.PriceEnd)</td>
+                                            <td class="text-right">@String.Format("{0:#,##}",_inventoryVM.PriceInventory)</td>
                                         </tr>
                                     </Virtualize>
                                 </tbody>
