@@ -865,16 +865,17 @@ namespace D69soft.Client.Pages.FIN
 
                         if (voucherVM.VTypeID == "FIN_Purchasing")
                         {
-                            _voucherVM.VCode = "PC";
                             _voucherVM.VDesc = "Trả tiền " + voucherVM.VDesc;
                             if (voucherVM.PaymentTypeCode == "CASH")
                             {
+                                _voucherVM.VCode = "PC";
                                 _voucherVM.VTypeID = "FIN_Cash_Payment";
                                 _voucherVM.VSubTypeID = "FIN_Cash_Payment_Vendor";
                             }
 
                             if (voucherVM.PaymentTypeCode == "BANK")
                             {
+                                _voucherVM.VCode = "GBN";
                                 _voucherVM.VTypeID = "FIN_Bank_Debit";
                                 _voucherVM.VSubTypeID = "FIN_Bank_Debit_Vendor";
                             }
@@ -882,16 +883,17 @@ namespace D69soft.Client.Pages.FIN
 
                         if (voucherVM.VTypeID == "FIN_Sale")
                         {
-                            _voucherVM.VCode = "PT";
                             _voucherVM.VDesc = "Thu tiền " + voucherVM.VDesc;
                             if (voucherVM.PaymentTypeCode == "CASH")
                             {
+                                _voucherVM.VCode = "PT";
                                 _voucherVM.VTypeID = "FIN_Cash_Receipt";
                                 _voucherVM.VSubTypeID = "FIN_Cash_Receipt_Customer";
                             }
 
                             if (voucherVM.PaymentTypeCode == "BANK")
                             {
+                                _voucherVM.VCode = "GBC";
                                 _voucherVM.VTypeID = "FIN_Bank_Credit";
                                 _voucherVM.VSubTypeID = "FIN_Bank_Credit_Customer";
                             }
@@ -1037,7 +1039,7 @@ namespace D69soft.Client.Pages.FIN
 
             voucherDetailVM.VDPrice = _sumPrice;
 
-            voucherVM.PaymentAmount = _sumPrice;
+            voucherVM.TotalAmount = voucherVM.PaymentAmount = _sumPrice;
 
             voucherDetailVMs.Add(voucherDetailVM);
 
