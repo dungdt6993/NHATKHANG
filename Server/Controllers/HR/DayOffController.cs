@@ -199,11 +199,10 @@ namespace D69soft.Server.Controllers.HR
 
                         var solarString = s.solarYear + "-" + s.solarMonth + "-" + s.solarDay;
 
-                        sqlUpdateLunarToSolar += "Update HR.PublicHolidayTransfer set PHDate = '" + solarString + "' where PHDateLunar = '" + lunar.PHDateLunar + "' ";
+                        sqlUpdateLunarToSolar += "Update HR.PublicHolidayTransfer set PHDate = '" + solarString + "' where PHDateLunar = '" + lunar.PHDateLunar.ToString("yyyy-MM-dd") + "' ";
                     }
                     await conn.ExecuteAsync(sqlUpdateLunarToSolar);
                 }
-
             }
             return true;
         }
