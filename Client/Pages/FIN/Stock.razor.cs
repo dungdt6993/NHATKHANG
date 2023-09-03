@@ -99,6 +99,12 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
+            if (_IsTypeUpdate == 0)
+            {
+                stockVM = new();
+                stockVM.StockActive = true;
+            }
+
             stockVM.IsTypeUpdate = _IsTypeUpdate;
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_Stock");

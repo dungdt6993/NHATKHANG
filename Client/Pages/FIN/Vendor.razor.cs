@@ -93,6 +93,11 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
+            if (_IsTypeUpdate == 0)
+            {
+                vendorVM = new();
+            }
+
             vendorVM.IsTypeUpdate = _IsTypeUpdate;
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_Vendor");

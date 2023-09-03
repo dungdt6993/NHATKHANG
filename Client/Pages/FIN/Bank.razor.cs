@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Models.Entities.FIN;
 
 
 namespace D69soft.Client.Pages.FIN
@@ -92,6 +93,12 @@ namespace D69soft.Client.Pages.FIN
         private async Task InitializeModalUpdate_Bank(int _IsTypeUpdate)
         {
             isLoading = true;
+
+            if (_IsTypeUpdate == 0)
+            {
+                bankVM = new();
+                bankVM.BankActive = true;
+            }
 
             bankVM.IsTypeUpdate = _IsTypeUpdate;
 

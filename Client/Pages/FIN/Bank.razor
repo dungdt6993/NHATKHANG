@@ -1,4 +1,4 @@
-﻿@page "/FIN/FIN_Bank"
+﻿@page "/FIN/Bank"
 @using D69soft.Client.Pages.SYS
 @using D69soft.Shared.Models.ViewModels.FIN;
 
@@ -99,7 +99,7 @@
                                 <th class="text-center">Logo</th>
                                 <th>Tên viết tắt</th>
                                 <th>Tên đầy đủ</th>
-                                <th>Tên nước ngoài</th>
+                                <th>Tên tiếng Anh</th>
                                 <th>Trạng thái</th>
                             </tr>
                         </thead>
@@ -110,7 +110,16 @@
                                     <td>@_bankVM.BankShortName</td>
                                     <td>@_bankVM.BankFullName</td>
                                     <td>@_bankVM.BankNameEng</td>
-                                    <td>@_bankVM.BankActive</td>
+                                    <td class="text-center">
+                                        @if (_bankVM.BankActive)
+                                        {
+                                            <i class="fas fa-check text-success"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-times"></i>
+                                        }
+                                    </td>
                                 </tr>
                             </Virtualize>
                         </tbody>
