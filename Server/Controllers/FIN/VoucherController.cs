@@ -155,7 +155,7 @@ namespace D69soft.Server.Controllers.FIN
                         await conn.ExecuteAsync(sqlVoucherDetailVM, _voucherDetailVM);
                     }
 
-                    if (_voucherVM.VTypeID == "FIN_Cash_Payment" || _voucherVM.VTypeID == "FIN_Cash_Receipt" || _voucherVM.VTypeID == "FIN_Bank_Credit" || _voucherVM.VTypeID == "FIN_Bank_Debit")
+                    if (_voucherVM.VTypeID == "FIN_Cash_Payment" || _voucherVM.VTypeID == "FIN_Cash_Receipt" || _voucherVM.VTypeID == "FIN_Deposits_Credit" || _voucherVM.VTypeID == "FIN_Deposits_Debit")
                     {
                         if (!String.IsNullOrEmpty(_voucherVM.VReference))
                         {

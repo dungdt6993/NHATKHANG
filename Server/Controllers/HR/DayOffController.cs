@@ -307,7 +307,7 @@ namespace D69soft.Server.Controllers.HR
             }
         }
 
-        [HttpGet("UpdatePublicHoliday")]
+        [HttpPost("UpdatePublicHoliday")]
         public async Task<ActionResult<bool>> UpdatePublicHoliday(PublicHolidayDefVM _publicHolidayDefVM)
         {
             var sql = "";
@@ -317,11 +317,11 @@ namespace D69soft.Server.Controllers.HR
             }
             if (_publicHolidayDefVM.IsTypeUpdate == 1)
             {
-                sql += "Update HR.PublicHolidayDef set PHName = @PHName, PHDay = @PHDay, isLunar=@isLunar where PHDefID = @PHDefID ";
+                sql += "Update HR.PublicHolidayDef set PHName = @PHName, PHDay = @PHDay, isLunar = @isLunar where PHDefID = @PHDefID ";
             }
             if (_publicHolidayDefVM.IsTypeUpdate == 2)
             {
-                sql += "delete from HR.PublicHolidayDef where PHDefID=@PHDefID ";
+                sql += "delete from HR.PublicHolidayDef where PHDefID = @PHDefID ";
             }
             using (var conn = new SqlConnection(_connConfig.Value))
             {

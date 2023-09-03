@@ -1,4 +1,5 @@
 ﻿using D69soft.Client.Services.HR;
+using D69soft.Shared.Models.Entities.HR;
 using D69soft.Shared.Models.ViewModels.HR;
 using FluentValidation;
 
@@ -8,20 +9,19 @@ namespace D69soft.Client.Validator.HR
     {
         public DayOffValidator()
         {
-
             When(x => x.dayOffType == "AL" && x.ALAddBalance != 0, () =>
             {
-                RuleFor(x => x.ALNoteAddBalance).NotEmpty().WithMessage("Lý do không được trống.");
+                RuleFor(x => x.ALNoteAddBalance).NotEmpty().WithMessage("Không được trống.");
             });
 
             When(x => x.dayOffType == "DO" && x.CLDOAddBalance != 0, () =>
             {
-                RuleFor(x => x.CLDONoteAddBalance).NotEmpty().WithMessage("Lý do không được trống.");
+                RuleFor(x => x.CLDONoteAddBalance).NotEmpty().WithMessage("Không được trống.");
             });
 
             When(x => x.dayOffType == "PH" && x.CLPHAddBalance != 0, () =>
             {
-                RuleFor(x => x.CLPHNoteAddBalance).NotEmpty().WithMessage("Lý do không được trống.");
+                RuleFor(x => x.CLPHNoteAddBalance).NotEmpty().WithMessage("Không được trống.");
             });
 
         }
@@ -33,13 +33,20 @@ namespace D69soft.Client.Validator.HR
         {
             When(x => x.IsTypeUpdate != 2, () =>
             {
-                RuleFor(x => x.PHName).NotEmpty().WithMessage("Tên ngày lễ tết không được trống.");
+                RuleFor(x => x.PHName).NotEmpty().WithMessage("Không được trống.");
 
-                RuleFor(x => x.PHMonth).NotEmpty().WithMessage("Tháng không được trống.");
+                RuleFor(x => x.PHMonth).NotEmpty().WithMessage("Không được trống.");
 
-                RuleFor(x => x.PHDay).NotEmpty().WithMessage("Ngày không được trống.")
-                .Must((x, PHDay) => _dayOffService.ContainsPublicHoliday(x.PHDay, x.PHMonth, x.isLunar).Result).When(x=>x.IsTypeUpdate==0).WithMessage("Ngày lễ tết đã tồn tại.");
-
+                //RuleFor(x => x.PHDay).NotEmpty().WithMessage("Không được trống.")
+                //    .MustAsync(async (PHDay, cancellation) =>
+                //    {
+                //        bool result = true;
+                //        if (PHDay != 0)
+                //        {
+                //            result = await _dayOffService.ContainsPublicHoliday(PHDay, PHMonth, _isLunar);
+                //        }
+                //        return result;
+                //    }).When(x => x.IsTypeUpdate == 0).WithMessage("Đã tồn tại.");
             });
         }
     }

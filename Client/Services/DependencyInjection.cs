@@ -34,6 +34,7 @@ namespace D69soft.Client.Services
             services.AddTransient<KPIService>();
 
             //FIN
+            services.AddTransient<MoneyService>();
             services.AddTransient<PurchasingService>();
             services.AddTransient<InventoryService>();
             services.AddTransient<VoucherService>();

@@ -38,7 +38,7 @@
                         </div>
                     }
 
-                    @if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Bank")
+                    @if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Deposits")
                     {
                         <div class="col-sm-2 @(voucherVM.IsTypeUpdate==3 || voucherVM.IsTypeUpdate==6?"noClick":"")">
                             <select class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" @bind="onchange_ITypeCode">
@@ -189,7 +189,7 @@
                                 }
 
                                 <div class="form-group">
-                                    @if (filterFinVM.FuncID == "FIN_Cash" || filterFinVM.FuncID == "FIN_Bank")
+                                    @if (filterFinVM.FuncID == "FIN_Cash" || filterFinVM.FuncID == "FIN_Deposits")
                                     {
                                         <label>Lý do</label>
                                     }
@@ -263,7 +263,7 @@
                                 </div>
                             }
 
-                            @if (voucherVM.VTypeID == "FIN_Bank_Credit" || voucherVM.VTypeID == "FIN_Bank_Debit" || voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt")
+                            @if (voucherVM.VTypeID == "FIN_Deposits_Credit" || voucherVM.VTypeID == "FIN_Deposits_Debit" || voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt")
                             {
                                 <div class="col-sm-2" style="padding-left: 10px;">
 
@@ -282,7 +282,7 @@
 
                     </div>
 
-                    @if (voucherVM.VTypeID == "FIN_Bank_Credit" || voucherVM.VTypeID == "FIN_Bank_Debit" || voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt")
+                    @if (voucherVM.VTypeID == "FIN_Deposits_Credit" || voucherVM.VTypeID == "FIN_Deposits_Debit" || voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt")
                     {
                         @if (String.IsNullOrEmpty(voucherVM.VReference))
                         {
@@ -298,7 +298,7 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th class="text-center" style="width: 50px;">STT</th>
-                                    @if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Bank")
+                                    @if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Deposits")
                                     {
                                         <th>Tên hàng</th>
 
@@ -380,7 +380,7 @@
                                         foreach (var _voucherDetailVM in voucherDetailVMs)
                                         {
                                             <tr>
-                                                @if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Bank")
+                                                @if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Deposits")
                                                 {
                                                     <td class="text-center">@rowNum</td>
 
@@ -652,7 +652,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        @if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Bank")
+                                        @if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Deposits")
                                         {
                                             <th class="text-center">@voucherDetailVMs.Count()</th>
                                             <th></th>
@@ -715,7 +715,7 @@
 
                 </div>
 
-                @if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Bank")
+                @if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Deposits")
                 {
                     @if (voucherVM.IsTypeUpdate == 0 || voucherVM.IsTypeUpdate == 1)
                     {
@@ -1015,7 +1015,7 @@
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <a class="dropdown-item" @onclick=@(() => InitializeModalUpdate_VoucherReference("FIN_Cash_Receipt","FIN_Cash_Receipt_Customer"))>Tiền mặt</a>
-                                    <a class="dropdown-item" @onclick=@(() => InitializeModalUpdate_VoucherReference("FIN_Bank_Credit","FIN_Bank_Credit_Customer"))>Chuyển khoản</a>
+                                    <a class="dropdown-item" @onclick=@(() => InitializeModalUpdate_VoucherReference("FIN_Deposits_Credit","FIN_Deposits_Credit_Customer"))>Chuyển khoản</a>
                                 </div>
                             </div>
                         }
@@ -1031,7 +1031,7 @@
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <a class="dropdown-item" @onclick=@(() => InitializeModalUpdate_VoucherReference("FIN_Cash_Payment","FIN_Cash_Payment_Vendor"))>Tiền mặt</a>
-                                    <a class="dropdown-item" @onclick=@(() => InitializeModalUpdate_VoucherReference("FIN_Bank_Debit","FIN_Bank_Debit_Vendor"))>Chuyển khoản</a>
+                                    <a class="dropdown-item" @onclick=@(() => InitializeModalUpdate_VoucherReference("FIN_Deposits_Debit","FIN_Deposits_Debit_Vendor"))>Chuyển khoản</a>
                                 </div>
                             </div>
                         }
@@ -1129,7 +1129,7 @@
                                     {
                                         <th class="text-center">Hóa đơn</th>
                                     }
-                                    @if (filterFinVM.FuncID == "FIN_Cash" || filterFinVM.FuncID == "FIN_Bank")
+                                    @if (filterFinVM.FuncID == "FIN_Cash" || filterFinVM.FuncID == "FIN_Deposits")
                                     {
                                         <th>Lý do</th>
                                     }
@@ -1137,7 +1137,7 @@
                                     {
                                         <th>Diễn giải</th>
                                     }
-                                    @if (filterFinVM.FuncID == "FIN_Cash" || filterFinVM.FuncID == "FIN_Bank")
+                                    @if (filterFinVM.FuncID == "FIN_Cash" || filterFinVM.FuncID == "FIN_Deposits")
                                     {
                                         <th class="text-center">Số tiền</th>
                                     }
@@ -1194,7 +1194,7 @@
                                             }
                                         }
                                         <td>@voucherVM.VDesc</td>
-                                        @if (filterFinVM.FuncID == "FIN_Cash" || filterFinVM.FuncID == "FIN_Bank")
+                                        @if (filterFinVM.FuncID == "FIN_Cash" || filterFinVM.FuncID == "FIN_Deposits")
                                         {
                                             <td class="text-right">@String.Format("{0:#,##0}",@voucherVM.TotalAmount)</td>
                                         }

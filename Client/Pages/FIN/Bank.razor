@@ -1,0 +1,136 @@
+﻿@page "/FIN/FIN_Bank"
+@using D69soft.Client.Pages.SYS
+@using D69soft.Shared.Models.ViewModels.FIN;
+
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
+<Loading isLoading="@isLoading"></Loading>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Bank">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <EditForm Model="bankVM" Context="_formBankVM">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>NGÂN HÀNG</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="GetBanks">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label>Swift Code</label>
+                            @if (bankVM.IsTypeUpdate == 0)
+                            {
+                                <InputText class="form-control form-control-sm" @bind-Value="bankVM.SwiftCode" />
+                                <ValidationMessage For="@(() => bankVM.SwiftCode)" />
+                            }
+                            else
+                            {
+                                <input type="text" readonly class="form-control form-control-sm" value="@bankVM.SwiftCode" />
+                            }
+                        </div>
+                        <div class="form-group col-md-9">
+                            <label>Tên viết tắt</label>
+                            <InputText class="form-control form-control-sm" @bind-Value="@bankVM.BankShortName" />
+                            <ValidationMessage For="@(() => bankVM.BankShortName)" />
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tên đầy đủ</label>
+                        <InputText class="form-control form-control-sm" @bind-Value="@bankVM.BankFullName" />
+                        <ValidationMessage For="@(() => bankVM.BankFullName)" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tên tiếng Anh</label>
+                        <InputText class="form-control form-control-sm" @bind-Value="@bankVM.BankNameEng" />
+                    </div>
+
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateBank(_formBankVM, bankVM.IsTypeUpdate))><i class="fas fa-check"></i> Lưu</button>
+                    @if (bankVM.IsTypeUpdate == 1)
+                    {
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateBank(_formBankVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                    }
+                </div>
+
+            </EditForm>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-warning card-outline">
+
+            <div class="card-header text-right">
+
+                @if (!String.IsNullOrEmpty(bankVM.SwiftCode))
+                {
+                    <button type="button" class="btn btn-sm btn-info" @onclick=@(() => InitializeModalUpdate_Bank(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
+                }
+
+                <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Bank(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm mới</button>
+
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0" style="height: calc(100vh - 233px);">
+
+                @if (bankVMs != null)
+                {
+                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="text-center">Logo</th>
+                                <th>Tên viết tắt</th>
+                                <th>Tên đầy đủ</th>
+                                <th>Tên nước ngoài</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <Virtualize Items="@bankVMs" Context="_bankVM" OverscanCount="50">
+                                <tr class="@(SetSelected(_bankVM))" @onclick="() => onclick_Selected(_bankVM)">
+                                    <td class="text-center">@_bankVM.BankLogo</td>
+                                    <td>@_bankVM.BankShortName</td>
+                                    <td>@_bankVM.BankFullName</td>
+                                    <td>@_bankVM.BankNameEng</td>
+                                    <td>@_bankVM.BankActive</td>
+                                </tr>
+                            </Virtualize>
+                        </tbody>
+                    </table>
+                    if (bankVMs.Count() <= 0)
+                    {
+                        <img class="img-no-result" src="images/_default/no-results.png" />
+                    }
+                }
+
+            </div>
+            <!-- /.card-body -->
+            @if (bankVMs != null)
+            {
+                <div class="card-footer text-muted">
+                    Tổng số: <b>@bankVMs.Count()</b> bản ghi
+                </div>
+            }
+            <!-- /.card-footer -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
