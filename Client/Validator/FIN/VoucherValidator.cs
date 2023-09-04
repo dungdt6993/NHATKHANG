@@ -86,7 +86,7 @@ namespace D69soft.Client.Validator.FIN
                 });
             });
 
-            When(x => x.VTypeID == "FIN_Cash_Payment" || x.VTypeID == "FIN_Cash_Receipt" || x.VTypeID == "FIN_Deposits_Credit" || x.VTypeID == "FIN_Deposits_Debit", () =>
+            When(x => x.VTypeID == "FIN_Cash_Payment" || x.VTypeID == "FIN_Cash_Receipt" || x.VTypeID == "FIN_Deposit_Credit" || x.VTypeID == "FIN_Deposit_Debit", () =>
             {
                 When(x => x.IsTypeUpdate != 2, () =>
                 {
@@ -95,6 +95,14 @@ namespace D69soft.Client.Validator.FIN
                     RuleFor(x => x.VDate).NotEmpty().WithMessage("Không được trống.");
 
                     RuleFor(x => x.VDesc).NotEmpty().WithMessage("Không được trống.");
+                });
+            });
+
+            When(x => x.PaymentTypeCode == "BANK" || x.VTypeID == "FIN_Deposit_Credit" || x.VTypeID == "FIN_Deposit_Debit", () =>
+            {
+                When(x => x.IsTypeUpdate != 2, () =>
+                {
+                    RuleFor(x => x.BankAccountID).NotEmpty().WithMessage("Không được trống.");
                 });
             });
 

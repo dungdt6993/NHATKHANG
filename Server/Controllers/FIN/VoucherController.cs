@@ -53,7 +53,7 @@ namespace D69soft.Server.Controllers.FIN
         public async Task<ActionResult<List<VoucherVM>>> GetVouchers(FilterFinVM _filterFinVM)
         {
             var sql = "select v.VNumber, v.VReference, v.VDate, v.VDesc, vType.VTypeID, vType.VTypeDesc, vSubType.VSubTypeID, ";
-            sql += "v.VendorCode, v.CustomerCode, v.StockCode, v.VContact, v.ITypeCode, v.VActive, v.IsPayment, v.PaymentTypeCode, v.TotalAmount, v.PaymentAmount, v.IsInventory, v.IsInvoice, v.InvoiceNumber, v.InvoiceDate ";
+            sql += "v.VendorCode, v.CustomerCode, v.StockCode, v.BankAccountID, v.VContact, v.ITypeCode, v.VActive, v.IsPayment, v.PaymentTypeCode, v.TotalAmount, v.PaymentAmount, v.IsInventory, v.IsInvoice, v.InvoiceNumber, v.InvoiceDate ";
             sql += "from FIN.Voucher v ";
             sql += "join FIN.VType vType on vType.VTypeID = v.VTypeID ";
             sql += "left join FIN.VSubType vSubType on vSubType.VSubTypeID = v.VSubTypeID ";
@@ -141,8 +141,8 @@ namespace D69soft.Server.Controllers.FIN
                     sqlVoucherVM += "Create table #tmpAuto_Code_ID (Code_ID varchar(50)) ";
                     sqlVoucherVM += "Insert #tmpAuto_Code_ID ";
                     sqlVoucherVM += "exec SYSTEM.AUTO_CODE_ID 'FIN.Voucher','VNumber',@VCode,'0000' ";
-                    sqlVoucherVM += "Insert into FIN.Voucher (DivisionID,VNumber,VReference,VDesc,VDate,VendorCode,CustomerCode,StockCode,VContact,ITypeCode,VActive,VTimeActive,IsPayment,PaymentTypeCode,TotalAmount,IsInventory,IsInvoice,InvoiceNumber,InvoiceDate,VTypeID,VSubTypeID,TimeCreated) ";
-                    sqlVoucherVM += "select @DivisionID,CODE_ID,@VReference,@VDesc,@VDate,@VendorCode,@CustomerCode,@StockCode,@VContact,@ITypeCode,@VActive,GETDATE(),@IsPayment,@PaymentTypeCode,@TotalAmount,@IsInventory,@IsInvoice,@InvoiceNumber,@InvoiceDate,@VTypeID,@VSubTypeID,GETDATE() from #tmpAuto_Code_ID ";
+                    sqlVoucherVM += "Insert into FIN.Voucher (DivisionID,VNumber,VReference,VDesc,VDate,VendorCode,CustomerCode,StockCode,BankAccountID,VContact,ITypeCode,VActive,VTimeActive,IsPayment,PaymentTypeCode,TotalAmount,IsInventory,IsInvoice,InvoiceNumber,InvoiceDate,VTypeID,VSubTypeID,TimeCreated) ";
+                    sqlVoucherVM += "select @DivisionID,CODE_ID,@VReference,@VDesc,@VDate,@VendorCode,@CustomerCode,@StockCode,@BankAccountID,@VContact,@ITypeCode,@VActive,GETDATE(),@IsPayment,@PaymentTypeCode,@TotalAmount,@IsInventory,@IsInvoice,@InvoiceNumber,@InvoiceDate,@VTypeID,@VSubTypeID,GETDATE() from #tmpAuto_Code_ID ";
                     sqlVoucherVM += "select CODE_ID from #tmpAuto_Code_ID ";
 
                     VNumber = await conn.ExecuteScalarAsync<string>(sqlVoucherVM, _voucherVM);
@@ -155,7 +155,7 @@ namespace D69soft.Server.Controllers.FIN
                         await conn.ExecuteAsync(sqlVoucherDetailVM, _voucherDetailVM);
                     }
 
-                    if (_voucherVM.VTypeID == "FIN_Cash_Payment" || _voucherVM.VTypeID == "FIN_Cash_Receipt" || _voucherVM.VTypeID == "FIN_Deposits_Credit" || _voucherVM.VTypeID == "FIN_Deposits_Debit")
+                    if (_voucherVM.VTypeID == "FIN_Cash_Payment" || _voucherVM.VTypeID == "FIN_Cash_Receipt" || _voucherVM.VTypeID == "FIN_Deposit_Credit" || _voucherVM.VTypeID == "FIN_Deposit_Debit")
                     {
                         if (!String.IsNullOrEmpty(_voucherVM.VReference))
                         {
@@ -168,7 +168,7 @@ namespace D69soft.Server.Controllers.FIN
                 if (_voucherVM.IsTypeUpdate == 1)
                 {
                     //VoucherVM
-                    sqlVoucherVM = "Update FIN.Voucher set VDesc=@VDesc,VDate=@VDate,VendorCode=@VendorCode,CustomerCode=@CustomerCode,StockCode=@StockCode,VContact=@VContact,ITypeCode=@ITypeCode,IsPayment=@IsPayment,PaymentTypeCode=@PaymentTypeCode,TotalAmount=@TotalAmount,PaymentAmount=@PaymentAmount, ";
+                    sqlVoucherVM = "Update FIN.Voucher set VDesc=@VDesc,VDate=@VDate,VendorCode=@VendorCode,CustomerCode=@CustomerCode,StockCode=@StockCode,BankAccountID=@BankAccountID,VContact=@VContact,ITypeCode=@ITypeCode,IsPayment=@IsPayment,PaymentTypeCode=@PaymentTypeCode,TotalAmount=@TotalAmount,PaymentAmount=@PaymentAmount, ";
                     sqlVoucherVM += "IsInventory=@IsInventory,IsInvoice=@IsInvoice,InvoiceNumber=@InvoiceNumber,InvoiceDate=@InvoiceDate,VSubTypeID=@VSubTypeID ";
                     sqlVoucherVM += "where VNumber=@VNumber ";
                     sqlVoucherVM += "Delete from FIN.VoucherDetail where VNumber=@VNumber ";

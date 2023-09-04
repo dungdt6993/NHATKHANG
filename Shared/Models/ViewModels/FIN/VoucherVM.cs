@@ -3,7 +3,7 @@ using D69soft.Shared.Models.Entities.HR;
 
 namespace D69soft.Shared.Models.ViewModels.FIN
 {
-    public class VoucherVM : Division, VType, VSubType, Voucher, Vendor, Customer, Stock, ItemsType, PaymentType
+    public class VoucherVM : Division, VType, VSubType, Voucher, Vendor, Customer, Stock, ItemsType, PaymentType, BankAccount
     {
         //Para
         public string UserID { get; set; }
@@ -62,5 +62,8 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public bool IsInventory { get; set; }
         public string PaymentTypeCode { get; set; }
         public string PaymentTypeName { get; set; }
+        public int BankAccountID { get; set; }
+        public string BankAccount { get; set; }
+        public string AccountHolder { get; set; }
     }
 }

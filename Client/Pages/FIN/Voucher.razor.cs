@@ -28,6 +28,7 @@ namespace D69soft.Client.Pages.FIN
         [Inject] PurchasingService purchasingService { get; set; }
         [Inject] InventoryService inventoryService { get; set; }
         [Inject] CustomerService customerService { get; set; }
+        [Inject] MoneyService moneyService { get; set; }
 
         bool isLoading;
         bool isLoadingScreen = true;
@@ -71,6 +72,9 @@ namespace D69soft.Client.Pages.FIN
 
         //Stock
         IEnumerable<StockVM> stockVMs;
+
+        //BankAccount
+        List<BankAccountVM> bankAccountVMs;
 
         //VAT
         IEnumerable<VATDefVM> vatDefVMs;
@@ -220,6 +224,8 @@ namespace D69soft.Client.Pages.FIN
 
             stockVMs = await inventoryService.GetStockList();
 
+            bankAccountVMs = (await moneyService.GetBankAccountList()).ToList();
+
             vatDefVMs = await voucherService.GetVATDefs();
 
             if (_IsTypeUpdate == 0)
@@ -229,7 +235,7 @@ namespace D69soft.Client.Pages.FIN
 
                 voucherVM.VCode = filter_vTypeVMs.Where(x => x.VTypeID == _vTypeID).Select(x => x.VCode).First();
 
-                if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Deposits")
+                if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Deposit")
                 {
                     filterFinVM.ITypeCode = voucherVM.ITypeCode = "HH";
                     voucherVM.PaymentTypeCode = "CASH";
@@ -432,7 +438,7 @@ namespace D69soft.Client.Pages.FIN
         {
             _voucherDetailVM.VDPrice = Math.Round(decimal.Parse(e.Value.ToString()), 2, MidpointRounding.AwayFromZero);
 
-            if (voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt" || voucherVM.VTypeID == "FIN_Deposits_Credit" || voucherVM.VTypeID == "FIN_Deposits_Debit")
+            if (voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt" || voucherVM.VTypeID == "FIN_Deposit_Credit" || voucherVM.VTypeID == "FIN_Deposit_Debit")
             {
                 if (!String.IsNullOrEmpty(voucherVM.VReference))
                 {
@@ -770,7 +776,7 @@ namespace D69soft.Client.Pages.FIN
                     voucherDetailVMs.ToList().Where(x => x.InventoryCheck_ActualQty < x.InventoryCheck_Qty).ToList().ForEach(x => { x.FromStockCode = x.InventoryCheck_StockCode; x.VDQty = Math.Abs(x.InventoryCheck_ActualQty - x.InventoryCheck_Qty); });
                 }
 
-                if (voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt" || voucherVM.VTypeID == "FIN_Deposits_Credit" || voucherVM.VTypeID == "FIN_Deposits_Debit")
+                if (voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt" || voucherVM.VTypeID == "FIN_Deposit_Credit" || voucherVM.VTypeID == "FIN_Deposit_Debit")
                 {
                     if (voucherDetailVMs.Where(x => String.IsNullOrEmpty(x.VDDesc)).Count() > 0)
                     {
@@ -787,7 +793,7 @@ namespace D69soft.Client.Pages.FIN
                     }
                 }
 
-                if (voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt" || voucherVM.VTypeID == "FIN_Deposits_Credit" || voucherVM.VTypeID == "FIN_Deposits_Debit")
+                if (voucherVM.VTypeID == "FIN_Cash_Payment" || voucherVM.VTypeID == "FIN_Cash_Receipt" || voucherVM.VTypeID == "FIN_Deposit_Credit" || voucherVM.VTypeID == "FIN_Deposit_Debit")
                 {
                     if(!String.IsNullOrEmpty(voucherVM.VReference))
                     {
@@ -876,8 +882,8 @@ namespace D69soft.Client.Pages.FIN
                             if (voucherVM.PaymentTypeCode == "BANK")
                             {
                                 _voucherVM.VCode = "GBN";
-                                _voucherVM.VTypeID = "FIN_Deposits_Debit";
-                                _voucherVM.VSubTypeID = "FIN_Deposits_Debit_Vendor";
+                                _voucherVM.VTypeID = "FIN_Deposit_Debit";
+                                _voucherVM.VSubTypeID = "FIN_Deposit_Debit_Vendor";
                             }
                         }
 
@@ -894,8 +900,8 @@ namespace D69soft.Client.Pages.FIN
                             if (voucherVM.PaymentTypeCode == "BANK")
                             {
                                 _voucherVM.VCode = "GBC";
-                                _voucherVM.VTypeID = "FIN_Deposits_Credit";
-                                _voucherVM.VSubTypeID = "FIN_Deposits_Credit_Customer";
+                                _voucherVM.VTypeID = "FIN_Deposit_Credit";
+                                _voucherVM.VSubTypeID = "FIN_Deposit_Credit_Customer";
                             }
                         }
 
@@ -975,11 +981,11 @@ namespace D69soft.Client.Pages.FIN
                 filter_vTypeVMs = await voucherService.GetVTypeVMs("FIN_Cash");
             }
 
-            if (_vTypeID == "FIN_Deposits_Credit" || _vTypeID == "FIN_Deposits_Debit")
+            if (_vTypeID == "FIN_Deposit_Credit" || _vTypeID == "FIN_Deposit_Debit")
             {
-                filterFinVM.FuncID = "FIN_Deposits";
+                filterFinVM.FuncID = "FIN_Deposit";
 
-                filter_vTypeVMs = await voucherService.GetVTypeVMs("FIN_Deposits");
+                filter_vTypeVMs = await voucherService.GetVTypeVMs("FIN_Deposit");
             }
 
             vSubTypeVMs = await voucherService.GetVSubTypeVMs(_vTypeID);
@@ -1010,7 +1016,7 @@ namespace D69soft.Client.Pages.FIN
                 voucherVM.VDesc = "Thu tiền " + _VDDesc;
             }
 
-            if (_vTypeID == "FIN_Deposits_Credit")
+            if (_vTypeID == "FIN_Deposit_Credit")
             {
                 voucherVM.VCode = "GBC";
                 voucherVM.VDesc = "Thu tiền " + _VDDesc;
@@ -1022,7 +1028,7 @@ namespace D69soft.Client.Pages.FIN
                 voucherVM.VDesc = "Trả tiền " + _VDDesc;
             }
 
-            if (_vTypeID == "FIN_Deposits_Debit")
+            if (_vTypeID == "FIN_Deposit_Debit")
             {
                 voucherVM.VCode = "GBN";
                 voucherVM.VDesc = "Trả tiền " + _VDDesc;

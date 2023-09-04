@@ -7,7 +7,7 @@ namespace D69soft.Client.Validator.FIN
 {
     public class BankValidator : AbstractValidator<BankVM>
     {
-        public MoneyValidator(MoneyService _moneyService)
+        public BankValidator(MoneyService _moneyService)
         {
             RuleFor(x => x.BankShortName).NotEmpty().WithMessage("Không được trống.");
             RuleFor(x => x.BankFullName).NotEmpty().WithMessage("Không được trống.");
