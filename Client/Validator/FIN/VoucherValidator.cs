@@ -1,4 +1,5 @@
-﻿using D69soft.Client.Services.FIN;
+﻿using D69soft.Client.Pages.FIN;
+using D69soft.Client.Services.FIN;
 using D69soft.Server.Services.HR;
 using D69soft.Shared.Models.ViewModels.FIN;
 using FluentValidation;
@@ -98,7 +99,7 @@ namespace D69soft.Client.Validator.FIN
                 });
             });
 
-            When(x => x.PaymentTypeCode == "BANK" || x.VTypeID == "FIN_Deposit_Credit" || x.VTypeID == "FIN_Deposit_Debit", () =>
+            When(x => x.PaymentTypeCode == "BANK" || x.VTypeID == "FIN_Deposit_Credit" || x.VTypeID == "FIN_Deposit_Debit" || x.VSubTypeID == "FIN_Cash_Receipt_Bank", () =>
             {
                 When(x => x.IsTypeUpdate != 2, () =>
                 {

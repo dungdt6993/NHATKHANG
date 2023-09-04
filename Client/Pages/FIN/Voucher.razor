@@ -188,9 +188,13 @@
                                     </div>
                                 }
 
-                                @if (voucherVM.PaymentTypeCode == "BANK" || voucherVM.VTypeID == "FIN_Deposit_Credit" || voucherVM.VTypeID == "FIN_Deposit_Debit")
+                                @if (voucherVM.PaymentTypeCode == "BANK" || voucherVM.VTypeID == "FIN_Deposit_Credit" || voucherVM.VTypeID == "FIN_Deposit_Debit" || voucherVM.VSubTypeID == "FIN_Cash_Receipt_Bank")
                                 {
                                     <div class="form-group">
+                                        @if (voucherVM.VSubTypeID == "FIN_Cash_Receipt_Bank")
+                                        {
+                                            <label>Từ tài khoản</label>
+                                        }
                                         @if (voucherVM.VTypeID == "FIN_Purchasing" || voucherVM.VTypeID == "FIN_Deposit_Debit")
                                         {
                                             <label>Tài khoản chi</label>
@@ -200,8 +204,8 @@
                                             <label>Tài khoản nhận</label>
                                         }
                                         <select class="selectpicker form-control form-control-sm"
-                                                     data-style="btn-selectpicker" data-container="body"
-                                                     data-live-search="true" data-show-subtext="true"
+                                                data-style="btn-selectpicker" data-container="body"
+                                                data-live-search="true" data-show-subtext="true"
                                         @bind="voucherVM.BankAccountID">
                                             <option value=0>-----Chọn-----</option>
                                             @if (bankAccountVMs != null)
