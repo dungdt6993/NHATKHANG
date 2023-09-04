@@ -1012,6 +1012,12 @@
                         <i class="fa-solid fa-chart-line"></i> Báo cáo
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
+
+                        @if (filterFinVM.FuncID == "FIN_Bank")
+                        {
+                            <a class="dropdown-item" @onclick=@(() => ViewRPT("FIN_So_chi_tiet_quy_tien_mat"))>Sổ chi tiết quỹ tiền mặt</a>
+                        }
+
                         @if (filterFinVM.FuncID == "FIN_Cash")
                         {
                             <a class="dropdown-item" @onclick=@(() => ViewRPT("FIN_So_chi_tiet_quy_tien_mat"))>Sổ chi tiết quỹ tiền mặt</a>
