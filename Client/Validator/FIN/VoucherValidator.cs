@@ -99,7 +99,7 @@ namespace D69soft.Client.Validator.FIN
                 });
             });
 
-            When(x => x.PaymentTypeCode == "BANK" || x.VTypeID == "FIN_Deposit_Credit" || x.VTypeID == "FIN_Deposit_Debit" || x.VSubTypeID == "FIN_Cash_Receipt_Bank", () =>
+            When(x => x.PaymentTypeCode == "BANK" || x.VTypeID == "FIN_Deposit_Credit" || x.VTypeID == "FIN_Deposit_Debit" || x.VSubTypeID == "FIN_Cash_Receipt_Bank" || x.VSubTypeID == "FIN_Cash_Payment_Bank", () =>
             {
                 When(x => x.IsTypeUpdate != 2, () =>
                 {

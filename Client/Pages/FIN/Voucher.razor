@@ -188,12 +188,16 @@
                                     </div>
                                 }
 
-                                @if (voucherVM.PaymentTypeCode == "BANK" || voucherVM.VTypeID == "FIN_Deposit_Credit" || voucherVM.VTypeID == "FIN_Deposit_Debit" || voucherVM.VSubTypeID == "FIN_Cash_Receipt_Bank")
+                                @if (voucherVM.PaymentTypeCode == "BANK" || voucherVM.VTypeID == "FIN_Deposit_Credit" || voucherVM.VTypeID == "FIN_Deposit_Debit" || voucherVM.VSubTypeID == "FIN_Cash_Receipt_Bank" || voucherVM.VSubTypeID == "FIN_Cash_Payment_Bank")
                                 {
                                     <div class="form-group">
                                         @if (voucherVM.VSubTypeID == "FIN_Cash_Receipt_Bank")
                                         {
                                             <label>Từ tài khoản</label>
+                                        }
+                                        @if (voucherVM.VSubTypeID == "FIN_Cash_Payment_Bank")
+                                        {
+                                            <label>Nộp vào tài khoản</label>
                                         }
                                         @if (voucherVM.VTypeID == "FIN_Purchasing" || voucherVM.VTypeID == "FIN_Deposit_Debit")
                                         {
