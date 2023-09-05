@@ -60,9 +60,9 @@ namespace D69soft.Client.Services.FIN
         }
 
         //RPT
-        public async Task<List<VoucherDetailVM>> GetCashBooks(FilterFinVM _filterFinVM)
+        public async Task<List<VoucherDetailVM>> GetMoneyBooks(FilterFinVM _filterFinVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetCashBooks", _filterFinVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetMoneyBooks", _filterFinVM);
 
             return await response.Content.ReadFromJsonAsync<List<VoucherDetailVM>>();
         }

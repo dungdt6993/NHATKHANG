@@ -1068,9 +1068,9 @@ namespace D69soft.Client.Pages.FIN
 
             ReportName = _ReportName;
 
-            if (_ReportName == "FIN_So_quy_tien_mat")
+            if (_ReportName == "FIN_So_quy_tien")
             {
-                moneyBooks = await voucherService.GetCashBooks(filterFinVM);
+                moneyBooks = await voucherService.GetMoneyBooks(filterFinVM);
             }
 
             if (_ReportName == "FIN_Tong_hop_ton_kho")

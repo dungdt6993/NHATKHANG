@@ -229,8 +229,8 @@ namespace D69soft.Server.Controllers.FIN
         }
 
         //RPT
-        [HttpPost("GetCashBooks")]
-        public async Task<ActionResult<List<VoucherDetailVM>>> GetCashBooks(FilterFinVM _filterFinVM)
+        [HttpPost("GetMoneyBooks")]
+        public async Task<ActionResult<List<VoucherDetailVM>>> GetMoneyBooks(FilterFinVM _filterFinVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -241,8 +241,9 @@ namespace D69soft.Server.Controllers.FIN
                 parm.Add("@DivisionID", _filterFinVM.DivisionID);
                 parm.Add("@StartDate", _filterFinVM.StartDate);
                 parm.Add("@EndDate", _filterFinVM.EndDate);
+                parm.Add("@MoneyType", _filterFinVM.FuncID);
 
-                var result = await conn.QueryAsync<VoucherDetailVM>("FIN.GetCashBooks", parm, commandType: CommandType.StoredProcedure);
+                var result = await conn.QueryAsync<VoucherDetailVM>("FIN.GetMoneyBooks", parm, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }

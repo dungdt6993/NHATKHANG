@@ -1012,14 +1012,14 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
 
-                        @if (filterFinVM.FuncID == "FIN_Bank")
+                        @if (filterFinVM.FuncID == "FIN_Deposit")
                         {
-                            <a class="dropdown-item" @onclick=@(() => ViewRPT("FIN_So_quy_tien_gui"))>Sổ chi tiết quỹ tiền mặt</a>
+                            <a class="dropdown-item" @onclick=@(() => ViewRPT("FIN_So_quy_tien"))>Sổ tiền gửi ngân hàng</a>
                         }
 
                         @if (filterFinVM.FuncID == "FIN_Cash")
                         {
-                            <a class="dropdown-item" @onclick=@(() => ViewRPT("FIN_So_quy_tien_mat"))>Sổ chi tiết quỹ tiền mặt</a>
+                            <a class="dropdown-item" @onclick=@(() => ViewRPT("FIN_So_quy_tien"))>Sổ quỹ tiền mặt</a>
                         }
 
                         @if (filterFinVM.FuncID == "FIN_Purchasing" || filterFinVM.FuncID == "FIN_Sale" || filterFinVM.FuncID == "FIN_Inventory")
@@ -1102,9 +1102,17 @@
             @if (filterFinVM.TypeView == 1)
             {
                 <div class="card-header text-center">
-                    @if (ReportName == "FIN_So_quy_tien_mat")
+                    @if (ReportName == "FIN_So_quy_tien")
                     {
-                        <h5><b>SỔ CHI TIẾT QUỸ TIỀN MẶT</b></h5>
+                        @if (filterFinVM.FuncID == "FIN_Cash")
+                        {
+                          <h5><b>SỔ QUỸ TIỀN MẶT</b></h5>
+                        }
+
+                        @if (filterFinVM.FuncID == "FIN_Deposit")
+                        {
+                          <h5><b>SỔ TIỀN GỬI NGÂN HÀNG</b></h5>
+                        }
                     }
                     @if (ReportName == "FIN_Tong_hop_ton_kho")
                     {
@@ -1122,33 +1130,33 @@
                         }
                     </i>
 
-                    @if (ReportName == "FIN_So_quy_tien_gui" || ReportName == "FIN_So_quy_tien_mat")
+                    @if (ReportName == "FIN_So_quy_tien")
                     {
-                        @if (cashBooks != null)
+                        @if (moneyBooks != null)
                         {
                             <div class="row">
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label>Dư đầu kỳ</label>
-                                        <h3>@String.Format("{0:#,##0}",@cashBooks.Select(x => x.VDPriceOpen).FirstOrDefault())</h3>
+                                        <h3>@String.Format("{0:#,##0}",@moneyBooks.Select(x => x.VDPriceOpen).FirstOrDefault())</h3>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label>Tổng thu</label>
-                                        <h3 class="text-success">@String.Format("{0:#,##0}",@cashBooks.Select(x => x.VDPriceInput).Sum())</h3>
+                                        <h3 class="text-success">@String.Format("{0:#,##0}",@moneyBooks.Select(x => x.VDPriceInput).Sum())</h3>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label>Tổng chi</label>
-                                        <h3 class="text-danger">@String.Format("{0:#,##0}",@cashBooks.Select(x => x.VDPriceOutput).Sum())</h3>
+                                        <h3 class="text-danger">@String.Format("{0:#,##0}",@moneyBooks.Select(x => x.VDPriceOutput).Sum())</h3>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label>Dư cuối kỳ</label>
-                                        <h3>@String.Format("{0:#,##0}",@cashBooks.Select(x => x.VDPriceEnd).FirstOrDefault())</h3>
+                                        <h3>@String.Format("{0:#,##0}",@moneyBooks.Select(x => x.VDPriceEnd).FirstOrDefault())</h3>
                                     </div>
                                 </div>
                             </div>
@@ -1320,11 +1328,11 @@
                         }
                     }
 
-                    @if (ReportName == "FIN_So_chi_tiet_quy_tien_mat")
+                    @if (ReportName == "FIN_quy_tien")
                     {
-                        @if (cashBooks != null)
+                        @if (moneyBooks != null)
                         {
-                            var VDPriceBalance = @cashBooks.Select(x => x.VDPriceOpen).FirstOrDefault();
+                            var VDPriceBalance = @moneyBooks.Select(x => x.VDPriceOpen).FirstOrDefault();
 
                             <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
                                 <thead class="thead-light">
@@ -1350,7 +1358,7 @@
                                         <th class="text-right">@String.Format("{0:#,##0}",@VDPriceBalance)</th>
                                         <td></td>
                                     </tr>
-                                    <Virtualize Items="@cashBooks" Context="cashBook" OverscanCount="50">
+                                    <Virtualize Items="@moneyBooks" Context="cashBook" OverscanCount="50">
                                         @{
                                             VDPriceBalance = VDPriceBalance + cashBook.VDPriceInput - cashBook.VDPriceOutput;
                                         }
@@ -1372,13 +1380,13 @@
                                         <th>Số dư cuối kỳ</th>
                                         <td></td>
                                         <td></td>
-                                        <th class="text-right">@String.Format("{0:#,##0}",@cashBooks.Select(x => x.VDPriceEnd).FirstOrDefault())</th>
+                                        <th class="text-right">@String.Format("{0:#,##0}",@moneyBooks.Select(x => x.VDPriceEnd).FirstOrDefault())</th>
                                         <td></td>
                                     </tr>
                                 </tbody>
                             </table>
 
-                            if (cashBooks.Count() <= 0)
+                            if (moneyBooks.Count() <= 0)
                             {
                                 <img class="img-no-result" src="images/_default/no-results.png" />
                             }
