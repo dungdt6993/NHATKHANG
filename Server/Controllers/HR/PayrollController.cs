@@ -344,10 +344,10 @@ namespace D69soft.Server.Controllers.HR
                         sqlNotCalcByShift += "Insert into HR.MonthlyIncome (Eserial, Period, TrnCode, TrnSubCode, Amount, IsPIT, RatePIT, isPaySlip) ";
                         sqlNotCalcByShift += "select mss.Eserial, mss.Period, sd.TrnCode, sd.TrnSubCode,ABS(coalesce(" + _ckSalaryTypeIsNotCalcByShift + "Active,0))*stc.Rate, stc.isPIT, stc.RatePIT, stc.isPaySlip ";
                         sqlNotCalcByShift += "from (select * from HR.MonthlySalaryStaff where Period=" + _filterHrVM.Period + ") mss ";
-                        sqlNotCalcByShift += "join HR.EmployeeTransaction et on et.Eserial = mo.Eserial ";
+                        sqlNotCalcByShift += "join HR.EmployeeTransaction et on et.Eserial = mss.Eserial ";
                         sqlNotCalcByShift += "join (select * from HR.SalaryDef where SalaryType = '" + _ckSalaryTypeIsNotCalcByShift + "') sd on et.TrnCode = sd.TrnCode and et.TrnSubCode = sd.TrnSubCode  ";
                         sqlNotCalcByShift += "join HR.SalaryTransactionCode stc on stc.TrnCode = sd.TrnCode and stc.TrnSubCode = sd.TrnSubCode ";
-                        sqlNotCalcByShift += "where mo.Period=" + _filterHrVM.Period + " and mo.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterHrVM.DivisionID + "') and coalesce(WDDefault,0) > 0 and coalesce(sam.IsPayByMonth,0) = 1 ";
+                        sqlNotCalcByShift += "where mss.Period=" + _filterHrVM.Period + " and mss.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join (select * from HR.JobHistory where CurrentJobID = 1 and DivisionID='" + _filterHrVM.DivisionID + "') jh on jh.Eserial = et.Eserial) and coalesce(WDDefault,0) > 0 and coalesce(mss.IsPayByMonth,0) = 1 ";
                     }
                     await conn.ExecuteAsync(sqlNotCalcByShift);
                 }
@@ -377,7 +377,7 @@ namespace D69soft.Server.Controllers.HR
                 parmJob.Add("@DivsID", _filterHrVM.DivisionID);
                 await conn.ExecuteAsync("HR.Payroll_calcPIT", parmJob, commandType: CommandType.StoredProcedure);
 
-                var sqlEndLog = "Update HR.LockSalary set isSalCalc=1, EserialSalCalc = '" + _filterHrVM.UserID + "', TimeSalCalc = GETDATE(), StatusSalCalc=1 where Period=" + _filterHrVM.Period + " and DivisionID='" + _filterHrVM.DivisionID + "' ";;
+                var sqlEndLog = "Update HR.LockSalary set isSalCalc=1, EserialSalCalc = '" + _filterHrVM.UserID + "', TimeSalCalc = GETDATE(), StatusSalCalc=1 where Period=" + _filterHrVM.Period + " and DivisionID='" + _filterHrVM.DivisionID + "' "; ;
                 await conn.ExecuteAsync(sqlEndLog);
             }
             return true;
@@ -429,15 +429,15 @@ namespace D69soft.Server.Controllers.HR
         [HttpPost("GetPayrollList")]
         public async Task<ActionResult<string>> GetPayrollList(FilterHrVM _filterHrVM)
         {
-            return JsonConvert.SerializeObject(ExecuteStoredProcPrmsToDataTable("HR.Payroll_viewPayrollDetail", 
+            return JsonConvert.SerializeObject(ExecuteStoredProcPrmsToDataTable("HR.Payroll_viewPayrollDetail",
                 "@Y", _filterHrVM.Year,
                 "@M", _filterHrVM.Month,
-                "@DivsID", _filterHrVM.DivisionID, 
-                "@SectionID", _filterHrVM.SectionID, 
-                "@DeptID", _filterHrVM.DepartmentID, 
-                "@arrPos", _filterHrVM.PositionGroupID, 
-                "@Eserial", _filterHrVM.Eserial, 
-                "@PayByBank", 0, 
+                "@DivsID", _filterHrVM.DivisionID,
+                "@SectionID", _filterHrVM.SectionID,
+                "@DeptID", _filterHrVM.DepartmentID,
+                "@arrPos", _filterHrVM.PositionGroupID,
+                "@Eserial", _filterHrVM.Eserial,
+                "@PayByBank", 0,
                 "@PayByCash", 0));
         }
 
@@ -573,7 +573,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("UpdateSalTrnCode")]
-        public async Task<ActionResult<bool>> UpdateSalTrnCode(SalaryTransactionCodeVM _salaryTransactionCodeVM)
+        public async Task<ActionResult<int>> UpdateSalTrnCode(SalaryTransactionCodeVM _salaryTransactionCodeVM)
         {
             var sql = "BEGIN TRANSACTION ";
             if (_salaryTransactionCodeVM.IsTypeUpdate == 0)
@@ -597,8 +597,8 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                await conn.ExecuteAsync(sql, _salaryTransactionCodeVM);
-                return true;
+
+                return await conn.ExecuteAsync(sql, _salaryTransactionCodeVM);
             }
         }
 

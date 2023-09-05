@@ -915,7 +915,6 @@
                                  Value="@filterFinVM.DivisionID"
                                  ValueChanged="@((string value) =>onchange_DivisionID(value))">
 
-
                         @if (filter_divisionVMs != null)
                         {
                             @foreach (var _filter_divisionVM in filter_divisionVMs)
@@ -1015,18 +1014,19 @@
 
                         @if (filterFinVM.FuncID == "FIN_Bank")
                         {
-                            <a class="dropdown-item" @onclick=@(() => ViewRPT("FIN_So_chi_tiet_quy_tien_mat"))>Sổ chi tiết quỹ tiền mặt</a>
+                            <a class="dropdown-item" @onclick=@(() => ViewRPT("FIN_So_quy_tien_gui"))>Sổ chi tiết quỹ tiền mặt</a>
                         }
 
                         @if (filterFinVM.FuncID == "FIN_Cash")
                         {
-                            <a class="dropdown-item" @onclick=@(() => ViewRPT("FIN_So_chi_tiet_quy_tien_mat"))>Sổ chi tiết quỹ tiền mặt</a>
+                            <a class="dropdown-item" @onclick=@(() => ViewRPT("FIN_So_quy_tien_mat"))>Sổ chi tiết quỹ tiền mặt</a>
                         }
 
                         @if (filterFinVM.FuncID == "FIN_Purchasing" || filterFinVM.FuncID == "FIN_Sale" || filterFinVM.FuncID == "FIN_Inventory")
                         {
                             <a class="dropdown-item" @onclick=@(() => ViewRPT("FIN_Tong_hop_ton_kho"))>Tổng hợp tồn kho</a>
                         }
+
                     </div>
                 </div>
 
@@ -1102,7 +1102,7 @@
             @if (filterFinVM.TypeView == 1)
             {
                 <div class="card-header text-center">
-                    @if (ReportName == "FIN_So_chi_tiet_quy_tien_mat")
+                    @if (ReportName == "FIN_So_quy_tien_mat")
                     {
                         <h5><b>SỔ CHI TIẾT QUỸ TIỀN MẶT</b></h5>
                     }
@@ -1122,34 +1122,37 @@
                         }
                     </i>
 
-                    @if (cashBooks != null)
+                    @if (ReportName == "FIN_So_quy_tien_gui" || ReportName == "FIN_So_quy_tien_mat")
                     {
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label>Dư đầu kỳ</label>
-                                    <h3>@String.Format("{0:#,##0}",@cashBooks.Select(x => x.VDPriceOpen).FirstOrDefault())</h3>
+                        @if (cashBooks != null)
+                        {
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label>Dư đầu kỳ</label>
+                                        <h3>@String.Format("{0:#,##0}",@cashBooks.Select(x => x.VDPriceOpen).FirstOrDefault())</h3>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label>Tổng thu</label>
+                                        <h3 class="text-success">@String.Format("{0:#,##0}",@cashBooks.Select(x => x.VDPriceInput).Sum())</h3>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label>Tổng chi</label>
+                                        <h3 class="text-danger">@String.Format("{0:#,##0}",@cashBooks.Select(x => x.VDPriceOutput).Sum())</h3>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label>Dư cuối kỳ</label>
+                                        <h3>@String.Format("{0:#,##0}",@cashBooks.Select(x => x.VDPriceEnd).FirstOrDefault())</h3>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label>Tổng thu</label>
-                                    <h3 class="text-success">@String.Format("{0:#,##0}",@cashBooks.Select(x => x.VDPriceInput).Sum())</h3>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label>Tổng chi</label>
-                                    <h3 class="text-danger">@String.Format("{0:#,##0}",@cashBooks.Select(x => x.VDPriceOutput).Sum())</h3>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label>Dư cuối kỳ</label>
-                                    <h3>@String.Format("{0:#,##0}",@cashBooks.Select(x => x.VDPriceEnd).FirstOrDefault())</h3>
-                                </div>
-                            </div>
-                        </div>
+                        }
                     }
 
                 </div>

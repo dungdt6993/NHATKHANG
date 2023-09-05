@@ -87,7 +87,7 @@ namespace D69soft.Client.Pages.FIN
         List<InventoryVM> inventoryVMs;
 
         //Cash
-        List<VoucherDetailVM> cashBooks;
+        List<VoucherDetailVM> moneyBooks;
 
         private BlazoredTypeahead<VoucherDetailVM, VoucherDetailVM> txtSearchItems;
 
@@ -1068,9 +1068,9 @@ namespace D69soft.Client.Pages.FIN
 
             ReportName = _ReportName;
 
-            if (_ReportName == "FIN_So_chi_tiet_quy_tien_mat")
+            if (_ReportName == "FIN_So_quy_tien_mat")
             {
-                cashBooks = await voucherService.GetCashBooks(filterFinVM);
+                moneyBooks = await voucherService.GetCashBooks(filterFinVM);
             }
 
             if (_ReportName == "FIN_Tong_hop_ton_kho")
