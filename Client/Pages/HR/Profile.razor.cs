@@ -149,7 +149,8 @@ namespace D69soft.Client.Pages.HR
 
             filterHrVM.Year = DateTime.Now.Year;
 
-            await GetProfileList();
+            //Bien dong nhan su
+            dtEmplChange = await profileService.dtEmplChange(filterHrVM);
 
             isLoadingScreen = false;
         }
@@ -168,7 +169,14 @@ namespace D69soft.Client.Pages.HR
             filterHrVM.PositionGroupID = string.Empty;
             filterHrVM.arrPositionID = new string[] { };
 
-            await GetProfileList();
+            //Bien dong nhan su
+            dtEmplChange = await profileService.dtEmplChange(filterHrVM);
+
+            //Load profiles
+            profileVMs = new();
+
+            await virtualizeProfileList.RefreshDataAsync();
+            StateHasChanged();
 
             isLoading = false;
 
@@ -184,7 +192,11 @@ namespace D69soft.Client.Pages.HR
             filterHrVM.PositionGroupID = string.Empty;
             filterHrVM.arrPositionID = new string[] { };
 
-            await GetProfileList();
+            //Load profiles
+            profileVMs = new();
+
+            await virtualizeProfileList.RefreshDataAsync();
+            StateHasChanged();
 
             isLoading = false;
 
@@ -197,7 +209,11 @@ namespace D69soft.Client.Pages.HR
 
             filterHrVM.SectionID = value;
 
-            await GetProfileList();
+            //Load profiles
+            profileVMs = new();
+
+            await virtualizeProfileList.RefreshDataAsync();
+            StateHasChanged();
 
             isLoading = false;
 
@@ -212,7 +228,11 @@ namespace D69soft.Client.Pages.HR
 
             filterHrVM.PositionGroupID = string.Join(",", value);
 
-            await GetProfileList();
+            //Load profiles
+            profileVMs = new();
+
+            await virtualizeProfileList.RefreshDataAsync();
+            StateHasChanged();
 
             isLoading = false;
         }
@@ -223,7 +243,11 @@ namespace D69soft.Client.Pages.HR
 
             filterHrVM.TypeProfile = int.Parse(args.Value.ToString());
 
-            await GetProfileList();
+            //Load profiles
+            profileVMs = new();
+
+            await virtualizeProfileList.RefreshDataAsync();
+            StateHasChanged();
 
             isLoading = false;
         }

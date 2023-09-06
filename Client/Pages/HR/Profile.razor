@@ -1848,9 +1848,9 @@
                 </div>
             </div>
 
-            <div class="col-sm-7 col-md-7">
+            <div class="col-sm-6 col-md-6">
                 <div class="form-group">
-                    <InputText type="search" class="form-control form-control-sm form-control-border" placeholder="Tìm kiếm nhân viên..." @bind-Value:get="filterHrVM.searchValues" @bind-Value:set="SearchProfile" />
+                    <InputText type="search" class="form-control form-control-sm form-control-border" placeholder="Tìm kiếm theo mã hoặc tên nhân viên..." @bind-Value:get="filterHrVM.searchValues" @bind-Value:set="SearchProfile" />
                 </div>
             </div>
 
@@ -1887,6 +1887,12 @@
             <div class="col-sm-1 col-md-1">
                 <button class="btn btn-outline-dark btn-sm @(filterHrVM.typeView==1?"active":"")" @onclick=@(() => filterHrVM.typeView = 1)><i class="fa-solid fa-list"></i></button>
                 <button class="btn btn-outline-dark btn-sm @(filterHrVM.typeView==2?"active":"")" @onclick=@(() => filterHrVM.typeView = 2)><i class="fa-solid fa-grip"></i></button>
+            </div>
+
+            <div class="col-md-1">
+                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetProfileList())">
+                    <i class="fas fa-search"></i>
+                </button>
             </div>
 
         </div>

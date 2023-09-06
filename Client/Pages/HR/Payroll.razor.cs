@@ -464,8 +464,6 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            salaryDefVMs.ToList().ForEach(salaryDefVM => salaryDefVM.isNoShowBtnUpdate = true);
-
             _salaryDefVM.isUpdate = true;
 
             salaryDefVM = _salaryDefVM;
@@ -487,12 +485,6 @@ namespace D69soft.Client.Pages.HR
 
             if (salaryDefVM.isSave)
             {
-                if(salaryDefVM.isCalcByShift)
-                {
-                    salaryDefVM.TrnCode = 0;
-                    salaryDefVM.TrnSubCode = 0;
-                }
-
                 await payrollService.UpdateSalaryDef(salaryDefVM);
                 salaryDefVMs = await payrollService.GetSalaryDefList();
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);

@@ -67,8 +67,7 @@
                                                 </td>
 
                                                 <td class="text-center">
-                                                    @if (!_salaryDefVM.isCalcByShift)
-                                                    {
+
                                                         <div class="form-group">
                                                             <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
                                                          ValueExpression="@(()=>_salaryDefVM.TrnCode)"
@@ -103,13 +102,12 @@
                                                             <ValidationMessage For="@(() => salaryDefVM.TrnSubCode)" />
 
                                                         </div>
-                                                    }
 
                                                 </td>
 
                                                 <td class="text-center">
-                                                    <button class="btn btn-success btn-xs" @onclick="(() => salaryDefVM.isSave = true)"><i class="fa-solid fa-circle-check"></i></button>
-                                                    <button class="btn btn-danger btn-xs" @onclick="(() => salaryDefVM.isUpdate = false)"><i class="fa-solid fa-ban"></i></button>
+                                                    <button class="btn btn-success btn-xs" @onclick="(() => _salaryDefVM.isSave = true)"><i class="fa-solid fa-circle-check"></i></button>
+                                                    <button class="btn btn-danger btn-xs" @onclick="(() => _salaryDefVM.isUpdate = false)"><i class="fa-solid fa-ban"></i></button>
                                                 </td>
                                             </tr>
                                         }
@@ -158,7 +156,7 @@
                                                 </td>
 
                                                 <td class="text-center">
-                                                    @if (!_salaryDefVM.isNoShowBtnUpdate)
+                                                    @if (!_salaryDefVM.isUpdate)
                                                     {
                                                         <button class="btn btn-default btn-xs" @onclick="(() => ClickUpdateSalaryDef(_salaryDefVM))"><i class="fa-solid fa-pen"></i></button>
                                                     }
