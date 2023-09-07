@@ -58,11 +58,7 @@ namespace D69soft.Client.Validator.HR
 
             RuleFor(x => x.WorkTypeID).NotEmpty().WithMessage("Loại công việc không được trống.");
 
-            RuleFor(x => x.BankCode).NotEmpty().When(x => (x.BankAccount ?? "") != string.Empty).WithMessage("Mã ngân hàng không được trống.");
-
-            RuleFor(x => x.BankName).NotEmpty().When(x => (x.BankAccount ?? "") != string.Empty).WithMessage("Tên ngân hàng không được trống.");
-
-            RuleFor(x => x.BankAccount).NotEmpty().When(x => x.SalaryByBank == 1).WithMessage("Hình thức trả lương chuyển khoản nên TK ngân hàng không được trống.");
+            RuleFor(x => x.BankCode).NotEmpty().When(x => !String.IsNullOrEmpty(x.BankAccount)).WithMessage("Ngân hàng không được trống.");
 
 
             RuleFor(x => x.BeginSalaryDate).NotEmpty().WithMessage("Ngày tính lương không được trống.").When(x => x.TotalSalary > 0);

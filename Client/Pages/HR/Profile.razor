@@ -353,7 +353,7 @@
                                                 <td style="width:33%">
 
                                                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                                                 @bind-Value="profileVM.DepartmentID">
+                                                    @bind-Value="profileVM.DepartmentID">
                                                         <option value=@string.Empty>-----Chọn-----</option>
                                                         @if (department_filter_list != null)
                                                         {
@@ -482,9 +482,21 @@
                                             <tr>
                                                 <th style="width:10%">Ngân hàng:</th>
                                                 <td style="width:20%"><InputText class="form-control form-control-sm" placeholder="Số tài khoản" @bind-Value="profileVM.BankAccount" /></td>
-                                                <td style="width:12%"><InputText class="form-control form-control-sm" placeholder="Mã" @bind-Value="profileVM.BankCode" /></td>
-                                                <td style="width:33%"><InputText class="form-control form-control-sm" placeholder="Tên" @bind-Value="profileVM.BankName" /></td>
-                                                <td style="width:25%"><InputText class="form-control form-control-sm" placeholder="Chi nhánh" @bind-Value="profileVM.BankBranch" /></td>
+                                                <td style="width:70%">
+                                                    <InputSelect class="selectpicker form-control form-control-sm"
+                                                                 data-style="btn-selectpicker" data-container="body"
+                                                                 data-live-search="true" data-show-subtext="true"
+                                                    @bind-Value="profileVM.BankCode">
+                                                        <option value=@String.Empty>-----Chọn-----</option>
+                                                        @if (bankVMs != null)
+                                                        {
+                                                            @foreach (var _bankVM in bankVMs)
+                                                            {
+                                                                <option data-subtext="@_bankVM.BankShortName" value="@_bankVM.SwiftCode">@_bankVM.BankFullName</option>
+                                                            }
+                                                        }
+                                                    </InputSelect>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -1228,10 +1240,10 @@
                             <label class="col-sm-3 col-form-label">Nhóm</label>
                             <div class="col-sm-9">
                                 <InputSelect class="selectpicker form-control form-control-sm"
-                                         data-style="btn-selectpicker"
-                                         data-container="body"
-                                         data-show-subtext="true"
-                                         @bind-Value="contractTypeVM.ContractTypeGroupID">
+                                             data-style="btn-selectpicker"
+                                             data-container="body"
+                                             data-show-subtext="true"
+                                @bind-Value="contractTypeVM.ContractTypeGroupID">
                                     <option value=@string.Empty>-----Nhóm HĐ-----</option>
                                     @if (contractTypeGroupVMs != null)
                                     {
@@ -1616,7 +1628,7 @@
                             <label class="col-sm-2 col-form-label">Quan hệ</label>
                             <div class="col-sm-5">
                                 <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker form-control" data-container="body"
-                                               @bind-Value="profileRelationshipVM.RelationshipID">
+                                @bind-Value="profileRelationshipVM.RelationshipID">
                                     @if (relationshipVMs != null)
                                     {
                                         @foreach (var _relationshipVM in relationshipVMs)

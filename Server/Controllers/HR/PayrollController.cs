@@ -329,8 +329,6 @@ namespace D69soft.Server.Controllers.HR
                     await conn.ExecuteAsync(sqlCalcByShift);
                 }
 
-
-
                 //Tinh luong ko theo ngay cong
                 string sqlSalaryTypeIsNotCalcByShift = "select SalaryType from HR.SalaryDef where coalesce(isCalcByShift,0) = 0";
                 var _salaryTypeIsNotCalcByShifts = await conn.QueryAsync<string>(sqlSalaryTypeIsNotCalcByShift);

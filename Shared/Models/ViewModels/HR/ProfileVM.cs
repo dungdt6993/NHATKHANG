@@ -86,8 +86,6 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public string SocialInsNumber { get; set; }
         public string HealthInsNumber { get; set; }
         public string BankCode { get; set; }
-        public string BankName { get; set; }
-        public string BankBranch { get; set; }
         public string EmailCompany { get; set; }
         public DateTime? JobStartDate { get; set; }
         public DateTime? StartContractDate { get; set; }

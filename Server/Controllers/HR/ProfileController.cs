@@ -47,7 +47,6 @@ namespace D69soft.Server.Controllers.HR
         }
 
         //Profile
-
         [HttpPost("dtEmplChange")]
         public async Task<ActionResult<string>> dtEmplChange(FilterHrVM _filterHrVM)
         {
@@ -212,8 +211,6 @@ namespace D69soft.Server.Controllers.HR
                 parm.Add("@jobstartdate", _profileVM.JobStartDate);
                 parm.Add("@bankaccount", _profileVM.BankAccount);
                 parm.Add("@bankcode", _profileVM.BankCode);
-                parm.Add("@bankname", _profileVM.BankName);
-                parm.Add("@bankbranch", _profileVM.BankBranch);
                 parm.Add("@timeattcode", _profileVM.TimeAttCode);
                 parm.Add("@socialins", _profileVM.SocialInsNumber);
                 parm.Add("@healthins", _profileVM.HealthInsNumber);

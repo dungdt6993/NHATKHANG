@@ -30,9 +30,6 @@ namespace D69soft.Shared.Models.Entities.HR
 
         public string BankCode { get; set; }
 
-        public string BankName { get; set; }
-
-        public string BankBranch { get; set; }
         public string EmailCompany { get; set; }
     }
 }

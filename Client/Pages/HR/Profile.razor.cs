@@ -11,6 +11,8 @@ using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Shared.Utilities;
 using D69soft.Client.Extensions;
+using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Client.Services.FIN;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -24,6 +26,7 @@ namespace D69soft.Client.Pages.HR
         [Inject] AuthService authService { get; set; }
         [Inject] ProfileService profileService { get; set; }
         [Inject] OrganizationalChartService organizationalChartService { get; set; }
+        [Inject] MoneyService moneyService { get; set; }
 
         bool isLoading;
         bool isLoadingScreen = true;
@@ -79,6 +82,9 @@ namespace D69soft.Client.Pages.HR
         IEnumerable<PermissionUserVM> permissionUserVMs;
         List<ProfileVM> profileHistorys;
         List<SalaryDefVM> salaryDefVMs;
+
+        //Bank
+        List<BankVM> bankVMs;
 
         //KPI
         IEnumerable<ProfileVM> empls;
@@ -149,8 +155,7 @@ namespace D69soft.Client.Pages.HR
 
             filterHrVM.Year = DateTime.Now.Year;
 
-            //Bien dong nhan su
-            dtEmplChange = await profileService.dtEmplChange(filterHrVM);
+            await GetProfileList();
 
             isLoadingScreen = false;
         }
@@ -169,14 +174,7 @@ namespace D69soft.Client.Pages.HR
             filterHrVM.PositionGroupID = string.Empty;
             filterHrVM.arrPositionID = new string[] { };
 
-            //Bien dong nhan su
-            dtEmplChange = await profileService.dtEmplChange(filterHrVM);
-
-            //Load profiles
-            profileVMs = new();
-
-            await virtualizeProfileList.RefreshDataAsync();
-            StateHasChanged();
+            await GetProfileList();
 
             isLoading = false;
 
@@ -792,6 +790,8 @@ namespace D69soft.Client.Pages.HR
 
             contractTypeVMs = await profileService.GetContractTypeList();
             workTypeVMs = await profileService.GetWorkTypeList();
+
+            bankVMs = (await moneyService.GetBankList()).ToList();
 
             permissionUserVMs = await authService.GetPermissionUser(UserID);
 
