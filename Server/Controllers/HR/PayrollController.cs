@@ -304,11 +304,11 @@ namespace D69soft.Server.Controllers.HR
                 string sqlClearMonthlyIncome = "Delete from HR.MonthlyIncome where Period = " + _filterHrVM.Period + " and Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterHrVM.DivisionID + "') ";
                 await conn.ExecuteAsync(sqlClearMonthlyIncome);
 
-                //*******************Tính thu nhập theo công theo khoản tiền trên Profile*********************/
+                //*******************Tính thu nhập theo công theo lương Profile*********************/
 
                 //Tinh luong theo thang
-                //Tinh luong theo ngay cong
-                string sqlSalaryTypeIsCalcByShift = "select SalaryType from HR.SalaryDef where coalesce(isCalcByShift,0) = 1";
+                //Tinh luong theo ngay cong cap nhat tài khoan giao dich 100
+                string sqlSalaryTypeIsCalcByShift = "select SalaryType from HR.SalaryDef where coalesce(isCalcByShift,0) = 1 and TrnCode = 0 ";
                 var _salaryTypeIsCalcByShifts = await conn.QueryAsync<string>(sqlSalaryTypeIsCalcByShift);
                 if (_salaryTypeIsCalcByShifts.ToList().Count > 0)
                 {
@@ -329,8 +329,8 @@ namespace D69soft.Server.Controllers.HR
                     await conn.ExecuteAsync(sqlCalcByShift);
                 }
 
-                //Tinh luong ko theo ngay cong
-                string sqlSalaryTypeIsNotCalcByShift = "select SalaryType from HR.SalaryDef where coalesce(isCalcByShift,0) = 0";
+                //Tinh luong theo ngay cong cap nhat tai khoan giao dich khac 100
+                string sqlSalaryTypeIsNotCalcByShift = "select SalaryType from HR.SalaryDef where coalesce(isCalcByShift,0) = 1 and TrnCode <> 0";
                 var _salaryTypeIsNotCalcByShifts = await conn.QueryAsync<string>(sqlSalaryTypeIsNotCalcByShift);
                 if (_salaryTypeIsNotCalcByShifts.ToList().Count > 0)
                 {
@@ -349,7 +349,6 @@ namespace D69soft.Server.Controllers.HR
                     }
                     await conn.ExecuteAsync(sqlNotCalcByShift);
                 }
-
 
                 //Tinh bao hiem
                 parmJob.Add("@Y", _filterHrVM.Year);

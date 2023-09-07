@@ -28,8 +28,7 @@
                                     <th class="text-center">Mã lương</th>
                                     <th>Diễn giải</th>
                                     <th class="text-center">Đóng BHXH</th>
-                                    <th class="text-center">Tính theo công</th>
-                                    <th class="text-center">Cập nhật vào TK giao dịch</th>
+                                    <th class="text-center">Tài khoản lương</th>
                                     <th class="text-center"></th>
                                 </tr>
                             </thead>
@@ -57,52 +56,37 @@
                                                 </td>
 
                                                 <td class="text-center">
-                                                    <div class="form-group clearfix">
-                                                        <div class="icheck-success d-inline">
-                                                            <input type="checkbox" id="isCalcByShift" @bind="salaryDefVM.isCalcByShift">
-                                                            <label for="isCalcByShift">
-                                                            </label>
-                                                        </div>
+                                                    <div class="form-group">
+                                                        <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                                                     ValueExpression="@(()=>_salaryDefVM.TrnCode)"
+                                                                     Value="@_salaryDefVM.TrnCode"
+                                                                     ValueChanged="@((int value) => onchange_trncode(value))">
+                                                            <option value=0>-----Nhóm giao dịch-----</option>
+                                                            @if (trngrp_list != null)
+                                                            {
+                                                                @foreach (var _trngrp in trngrp_list)
+                                                                {
+                                                                    <option data-subtext="@_trngrp.TrnGroupName" value="@_trngrp.TrnGroupCode">@_trngrp.TrnGroupCode</option>
+                                                                }
+                                                            }
+                                                        </InputSelect>
+                                                        <ValidationMessage For="@(() => salaryDefVM.TrnCode)" />
+
+                                                        <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
+                                                                     ValueExpression="@(()=>_salaryDefVM.TrnSubCode)"
+                                                                     Value="@_salaryDefVM.TrnSubCode"
+                                                                     ValueChanged="@((int value) => onchange_trnsubcode(value))">
+                                                            <option value=0>-----Giao dịch-----</option>
+                                                            @if (trn_list != null)
+                                                            {
+                                                                @foreach (var _trn in trn_list)
+                                                                {
+                                                                    <option data-subtext="@_trn.TrnName" value="@_trn.TrnSubCode">@_trn.TrnSubCode</option>
+                                                                }
+                                                            }
+                                                        </InputSelect>
+                                                        <ValidationMessage For="@(() => salaryDefVM.TrnSubCode)" />
                                                     </div>
-                                                </td>
-
-                                                <td class="text-center">
-
-                                                        <div class="form-group">
-                                                            <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
-                                                         ValueExpression="@(()=>_salaryDefVM.TrnCode)"
-                                                         Value="@_salaryDefVM.TrnCode"
-                                                         ValueChanged="@((int value) => onchange_trncode(value))">
-                                                                <option value=0>-----Nhóm giao dịch-----</option>
-                                                                @if (trngrp_list != null)
-                                                                {
-                                                                    @foreach (var _trngrp in trngrp_list)
-                                                                    {
-                                                                        <option data-subtext="@_trngrp.TrnGroupName" value="@_trngrp.TrnGroupCode">@_trngrp.TrnGroupCode</option>
-                                                                    }
-                                                                }
-                                                            </InputSelect>
-
-                                                            <ValidationMessage For="@(() => salaryDefVM.TrnCode)" />
-
-                                                            <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
-                                                         ValueExpression="@(()=>_salaryDefVM.TrnSubCode)"
-                                                         Value="@_salaryDefVM.TrnSubCode"
-                                                         ValueChanged="@((int value) => onchange_trnsubcode(value))">
-                                                                <option value=0>-----Giao dịch-----</option>
-                                                                @if (trn_list != null)
-                                                                {
-                                                                    @foreach (var _trn in trn_list)
-                                                                    {
-                                                                        <option data-subtext="@_trn.TrnName" value="@_trn.TrnSubCode">@_trn.TrnSubCode</option>
-                                                                    }
-                                                                }
-                                                            </InputSelect>
-
-                                                            <ValidationMessage For="@(() => salaryDefVM.TrnSubCode)" />
-
-                                                        </div>
-
                                                 </td>
 
                                                 <td class="text-center">
@@ -127,18 +111,7 @@
                                                     }
                                                 </td>
 
-                                                <td class="text-center">
-                                                    @if (_salaryDefVM.isCalcByShift)
-                                                    {
-                                                        <i class="fas fa-check text-success"></i>
-                                                    }
-                                                    else
-                                                    {
-                                                        <i class="fas fa-times"></i>
-                                                    }
-                                                </td>
-
-                                                <td class="text-center">
+                                                <td>
                                                     @if (_salaryDefVM.TrnCode != 0)
                                                     {
                                                         <span>[</span>
@@ -152,6 +125,10 @@
                                                         <span>] </span>
 
                                                         @_salaryDefVM.TrnName
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>[100] Tiền lương</span>
                                                     }
                                                 </td>
 
@@ -292,9 +269,9 @@
                     {
                         <div class="form-group row">
                             <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
-                                     ValueExpression="@(()=>salaryTransactionCodeVM.TrnGroupCode)"
-                                     Value="@salaryTransactionCodeVM.TrnGroupCode"
-                                     ValueChanged="@((int value) => onchange_trngrpcode(value))">
+                                         ValueExpression="@(()=>salaryTransactionCodeVM.TrnGroupCode)"
+                                         Value="@salaryTransactionCodeVM.TrnGroupCode"
+                                         ValueChanged="@((int value) => onchange_trngrpcode(value))">
                                 <option value=0>-----Nhóm giao dịch-----</option>
                                 @if (trngrp_list != null)
                                 {
@@ -694,20 +671,20 @@
                                 <th class="text-center" colspan="5">Công việc</th>
                                 <th class="text-center" colspan="11">Lương</th>
 
-                                    @if (dtCountShiftTypeCalc.Rows.Count > 0)
-                                    {
-                                        DataRow drCountShiftTypeCalc = dtCountShiftTypeCalc.Rows[0];
-                                        <th class="text-center" colspan=@drCountShiftTypeCalc["cShiftTypeID"]>Công tính lương</th>
-                                    }
+                                @if (dtCountShiftTypeCalc.Rows.Count > 0)
+                                {
+                                    DataRow drCountShiftTypeCalc = dtCountShiftTypeCalc.Rows[0];
+                                    <th class="text-center" colspan=@drCountShiftTypeCalc["cShiftTypeID"]>Công tính lương</th>
+                                }
 
-                                    @if (dtCountTrnGrp.Rows.Count > 0)
+                                @if (dtCountTrnGrp.Rows.Count > 0)
+                                {
+                                    for (int i = 0; i < dtCountTrnGrp.Rows.Count; i++)
                                     {
-                                        for (int i = 0; i < dtCountTrnGrp.Rows.Count; i++)
-                                        {
-                                            DataRow drCountTrnGrp = dtCountTrnGrp.Rows[i];
-                                            <th class="text-center" colspan="@drCountTrnGrp["cTrnCode"]">@drCountTrnGrp["TrnGrp"]</th>
-                                        }
+                                        DataRow drCountTrnGrp = dtCountTrnGrp.Rows[i];
+                                        <th class="text-center" colspan="@drCountTrnGrp["cTrnCode"]">@drCountTrnGrp["TrnGrp"]</th>
                                     }
+                                }
 
                                 <th class="text-center" rowspan="2">Thực lĩnh</th>
                             </tr>
@@ -728,29 +705,29 @@
                                         <th class="text-center">@drSalaryDef["SalaryTypeName"]</th>
                                     }
                                 }
-                                
+
                                 <th class="text-center">Tổng</th>
                                 <th class="text-center">Khóa công</th>
 
-                                    @if (dtShiftTypeCalc.Rows.Count > 0)
+                                @if (dtShiftTypeCalc.Rows.Count > 0)
+                                {
+                                    for (int i = 0; i < dtShiftTypeCalc.Rows.Count; i++)
                                     {
-                                        for (int i = 0; i < dtShiftTypeCalc.Rows.Count; i++)
-                                        {
-                                            DataRow drShiftTypeCalc = dtShiftTypeCalc.Rows[i];
-                                            <th class="text-center">@drShiftTypeCalc["ShiftTypeID"]<span>[</span>@drShiftTypeCalc["PercentIncome"]<span>%]</span></th>
-                                        }
+                                        DataRow drShiftTypeCalc = dtShiftTypeCalc.Rows[i];
+                                        <th class="text-center">@drShiftTypeCalc["ShiftTypeID"]<span>[</span>@drShiftTypeCalc["PercentIncome"]<span>%]</span></th>
                                     }
-                                
+                                }
+
                                 <th class="text-center">Tổng công</th>
 
-                                    @if (dtTrn.Rows.Count > 0)
+                                @if (dtTrn.Rows.Count > 0)
+                                {
+                                    for (int i = 0; i < dtTrn.Rows.Count; i++)
                                     {
-                                        for (int i = 0; i < dtTrn.Rows.Count; i++)
-                                        {
-                                            DataRow drTrn = dtTrn.Rows[i];
-                                            <th class="text-center">@drTrn["Trn"]</th>
-                                        }
+                                        DataRow drTrn = dtTrn.Rows[i];
+                                        <th class="text-center">@drTrn["Trn"]</th>
                                     }
+                                }
                             </tr>
                         </thead>
                         <tbody>
@@ -785,25 +762,25 @@
                                             @string.Format("{0:dd/MM/yyyy}", _drPayroll["LockFrom"])<span> - </span>@string.Format("{0:dd/MM/yyyy}", _drPayroll["LockTo"])
                                         </td>
 
-                                            @if (dtContent_ShiftTypeCalc.Rows.Count > 0)
+                                        @if (dtContent_ShiftTypeCalc.Rows.Count > 0)
+                                        {
+                                            for (int j = 0; j < dtContent_ShiftTypeCalc.Rows.Count; j++)
                                             {
-                                                for (int j = 0; j < dtContent_ShiftTypeCalc.Rows.Count; j++)
-                                                {
-                                                    DataRow drContent_ShiftTypeCalc = dtContent_ShiftTypeCalc.Rows[j];
-                                                    <td class="text-center">@_drPayroll[drContent_ShiftTypeCalc["ShiftTypeID"].ToString()]</td>
-                                                }
+                                                DataRow drContent_ShiftTypeCalc = dtContent_ShiftTypeCalc.Rows[j];
+                                                <td class="text-center">@_drPayroll[drContent_ShiftTypeCalc["ShiftTypeID"].ToString()]</td>
                                             }
-                                        
+                                        }
+
                                         <td class="text-center">@_drPayroll["TotalPaidDay"].ToString()</td>
 
-                                            @if (dtContent_Trn.Rows.Count > 0)
+                                        @if (dtContent_Trn.Rows.Count > 0)
+                                        {
+                                            for (int j = 0; j < dtContent_Trn.Rows.Count; j++)
                                             {
-                                                for (int j = 0; j < dtContent_Trn.Rows.Count; j++)
-                                                {
-                                                    DataRow drContent_Trn = dtContent_Trn.Rows[j];
-                                                    <td class="text-right">@string.Format("{0:#,#.}", _drPayroll[drContent_Trn["Trn"].ToString()])</td>
-                                                }
+                                                DataRow drContent_Trn = dtContent_Trn.Rows[j];
+                                                <td class="text-right">@string.Format("{0:#,#.}", _drPayroll[drContent_Trn["Trn"].ToString()])</td>
                                             }
+                                        }
 
                                         <td class="text-right">@string.Format("{0:#,#.}", _drPayroll["NetPay"])</td>
 
