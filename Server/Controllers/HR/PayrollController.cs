@@ -198,7 +198,7 @@ namespace D69soft.Server.Controllers.HR
 
                             var _beginSalaryDate_last = _beginSalaryDates.ToList()[j + 1];
 
-                            string sqlUpdateEndSalaryDateActive = "Update HR.SalaryActiveMonth set EndSalaryDateActive = '" + Convert.ToDateTime(_beginSalaryDate_last).AddDays(-1) + "' where Period=" + _filterHrVM.Period + " and Eserial='" + _eserialSal + "' and BeginSalaryDate = '" + _beginSalaryDate_fisrt + "' ";
+                            string sqlUpdateEndSalaryDateActive = "Update HR.SalaryActiveMonth set EndSalaryDateActive = DATEADD(day,-1,CONVERT(datetime,'" + _beginSalaryDate_last + "')) where Period=" + _filterHrVM.Period + " and Eserial='" + _eserialSal + "' and BeginSalaryDate = '" + _beginSalaryDate_fisrt + "' ";
 
                             await conn.ExecuteAsync(sqlUpdateEndSalaryDateActive);
                         }
@@ -337,15 +337,18 @@ namespace D69soft.Server.Controllers.HR
                     var sqlNotCalcByShift = string.Empty;
                     for (int i = 0; i < _salaryTypeIsNotCalcByShifts.ToList().Count; i++)
                     {
-                        var _ckSalaryTypeIsNotCalcByShift = _salaryTypeIsNotCalcByShifts.ToList()[i];
+                        var _salaryTypeIsNotCalcByShift = _salaryTypeIsNotCalcByShifts.ToList()[i];
 
                         sqlNotCalcByShift += "Insert into HR.MonthlyIncome (Eserial, Period, TrnCode, TrnSubCode, Amount, IsPIT, RatePIT, isPaySlip) ";
-                        sqlNotCalcByShift += "select mss.Eserial, mss.Period, sd.TrnCode, sd.TrnSubCode,ABS(coalesce(" + _ckSalaryTypeIsNotCalcByShift + "Active,0))*stc.Rate, stc.isPIT, stc.RatePIT, stc.isPaySlip ";
-                        sqlNotCalcByShift += "from (select * from HR.MonthlySalaryStaff where Period=" + _filterHrVM.Period + ") mss ";
-                        sqlNotCalcByShift += "join HR.EmployeeTransaction et on et.Eserial = mss.Eserial ";
-                        sqlNotCalcByShift += "join (select * from HR.SalaryDef where SalaryType = '" + _ckSalaryTypeIsNotCalcByShift + "') sd on et.TrnCode = sd.TrnCode and et.TrnSubCode = sd.TrnSubCode  ";
-                        sqlNotCalcByShift += "join HR.SalaryTransactionCode stc on stc.TrnCode = sd.TrnCode and stc.TrnSubCode = sd.TrnSubCode ";
-                        sqlNotCalcByShift += "where mss.Period=" + _filterHrVM.Period + " and mss.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join (select * from HR.JobHistory where CurrentJobID = 1 and DivisionID='" + _filterHrVM.DivisionID + "') jh on jh.Eserial = et.Eserial) and coalesce(WDDefault,0) > 0 and coalesce(mss.IsPayByMonth,0) = 1 ";
+                        sqlNotCalcByShift += "select mss.Eserial, mss.Period, sd.TrnCode, sd.TrnSubCode,SUM(ABS((coalesce(TotalShiftTypeActive, 0) * coalesce(" + _salaryTypeIsNotCalcByShift + "Active, 0) * coalesce(PercentIncome, 0)/100)/sta.WDDefault)*stc.Rate), stc.isPIT, stc.RatePIT, stc.isPaySlip ";
+                        sqlNotCalcByShift += "from HR.ShiftTypeActive sta ";
+                        sqlNotCalcByShift += "join(select * from HR.SalaryTransactionCode) stc on sta.ShiftTypeID = stc.ShiftTypeID ";
+                        sqlNotCalcByShift += "join(select * from HR.SalaryDef where SalaryType = '" + _salaryTypeIsNotCalcByShift + "') sd on 1 = 1 ";
+                        sqlNotCalcByShift += "join HR.ShiftType st on st.ShiftTypeID = sta.ShiftTypeID ";
+                        sqlNotCalcByShift += "join HR.EmployeeTransaction et on et.TrnCode = sd.TrnCode and et.TrnSubCode = sd.TrnSubCode and et.Eserial = sta.Eserial ";
+                        sqlNotCalcByShift += "join(select * from HR.MonthlySalaryStaff where Period = " + _filterHrVM.Period + ") mss on mss.Eserial = sta.Eserial ";
+                        sqlNotCalcByShift += "where sta.Period = " + _filterHrVM.Period + " and sta.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID = '" + _filterHrVM.DivisionID + "') and coalesce(sta.WDDefault,0) > 0 and coalesce(mss.IsPayByMonth,0) = 1 ";
+                        sqlNotCalcByShift += "group by mss.Eserial, mss.Period, sd.TrnCode, sd.TrnSubCode, stc.isPIT, stc.RatePIT, stc.isPaySlip ";
                     }
                     await conn.ExecuteAsync(sqlNotCalcByShift);
                 }
