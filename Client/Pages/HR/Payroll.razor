@@ -705,10 +705,10 @@
                                         <th class="text-center">@drSalaryDef["SalaryTypeName"]</th>
                                     }
                                 }
-
                                 <th class="text-center">Tổng</th>
-                                <th class="text-center">Khóa công</th>
 
+                                <th class="text-center">Khóa công</th>
+                                <th class="text-center">Công tiêu chuẩn</th>
                                 @if (dtShiftTypeCalc.Rows.Count > 0)
                                 {
                                     for (int i = 0; i < dtShiftTypeCalc.Rows.Count; i++)
@@ -717,7 +717,6 @@
                                         <th class="text-center">@drShiftTypeCalc["ShiftTypeID"]<span>[</span>@drShiftTypeCalc["PercentIncome"]<span>%]</span></th>
                                     }
                                 }
-
                                 <th class="text-center">Tổng công</th>
 
                                 @if (dtTrn.Rows.Count > 0)
@@ -761,6 +760,8 @@
                                         <td class="text-center">
                                             @string.Format("{0:dd/MM/yyyy}", _drPayroll["LockFrom"])<span> - </span>@string.Format("{0:dd/MM/yyyy}", _drPayroll["LockTo"])
                                         </td>
+
+                                        <td class="text-center">@_drPayroll["WDDefault"].ToString()</td>
 
                                         @if (dtContent_ShiftTypeCalc.Rows.Count > 0)
                                         {

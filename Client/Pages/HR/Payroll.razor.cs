@@ -313,7 +313,7 @@ namespace D69soft.Client.Pages.HR
 
             dtPayroll = await payrollService.GetPayrollList(filterHrVM);
 
-            var sqlCountShiftTypeCalc = "select Count(ShiftTypeID) + 2 as cShiftTypeID from HR.ShiftType where coalesce(PercentIncome,0) > 0";
+            var sqlCountShiftTypeCalc = "select Count(ShiftTypeID) + 3 as cShiftTypeID from HR.ShiftType where coalesce(PercentIncome,0) > 0";
             dtCountShiftTypeCalc = await sysService.ExecuteSQLQueryToDataTable(sqlCountShiftTypeCalc);
 
             var sqlCountTrnGrp = "select '['+cast(stg.TrnGroupCode as varchar)+'] '+ stg.TrnGroupName as TrnGrp, count(TrnCode) as cTrnCode from HR.SalaryTransactionGroup stg ";
