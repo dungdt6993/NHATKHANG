@@ -1007,6 +1007,8 @@ namespace D69soft.Client.Pages.FIN
 
             vSubTypeVMs = vSubTypeVMs.Where(x => x.VSubTypeID == _vSubTypeID);
 
+            bankAccountVMs = (await moneyService.GetBankAccountList()).ToList();
+
             var _VNumber = voucherVM.VNumber;
             var _VDDesc = voucherVM.VDesc;
             var _sumPrice = voucherVM.TotalAmount - voucherVM.PaymentAmount;
@@ -1074,6 +1076,8 @@ namespace D69soft.Client.Pages.FIN
         //RPT
         protected async Task ViewRPT(string _ReportName)
         {
+            isLoading = true;
+
             filterFinVM.TypeView = 1;
 
             ReportName = _ReportName;
@@ -1087,6 +1091,8 @@ namespace D69soft.Client.Pages.FIN
             {
                 inventoryVMs = await inventoryService.GetInventorys(filterFinVM);
             }
+
+            isLoading = false;
         }
     }
 }

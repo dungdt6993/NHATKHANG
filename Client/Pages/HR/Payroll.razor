@@ -668,7 +668,7 @@
                             <tr>
                                 <th rowspan="2">Họ tên</th>
 
-                                <th class="text-center" colspan="5">Công việc</th>
+                                <th class="text-center" colspan="6">Công việc</th>
                                 <th class="text-center" colspan="11">Lương</th>
 
                                 @if (dtCountShiftTypeCalc.Rows.Count > 0)
@@ -694,6 +694,7 @@
                                 <th>Bộ phận</th>
                                 <th>Khu vực</th>
                                 <th>Vị trí</th>
+                                <th>Loại công việc</th>
                                 <th class="text-center">Ngày vào làm</th>
                                 <th class="text-center">Ngày nghỉ việc</th>
 
@@ -741,6 +742,7 @@
                                         <td style="min-width: 200px;">@_drPayroll["DepartmentName"].ToString()</td>
                                         <td style="min-width: 70px;">@_drPayroll["SectionName"].ToString()</td>
                                         <td style="min-width: 200px;">@_drPayroll["PositionName"].ToString()</td>
+                                        <td style="min-width: 200px;">@_drPayroll["WorkTypeName"].ToString()</td>
 
                                         <td class="text-center">@string.Format("{0:dd/MM/yyyy}", _drPayroll["JoinDate"])</td>
                                         <td class="text-center">@string.Format("{0:dd/MM/yyyy}", _drPayroll["TerminateDate"])</td>

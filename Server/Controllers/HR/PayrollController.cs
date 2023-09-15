@@ -233,7 +233,7 @@ namespace D69soft.Server.Controllers.HR
 
                             var _jobStartDate_last = _jobStartDates.ToList()[j + 1];
 
-                            string sqlUpdateJobEndDateActive = "Update HR.JobActiveMonth set JobEndDateActive = '" + Convert.ToDateTime(_jobStartDate_last).AddDays(-1) + "' where Period=" + _filterHrVM.Period + " and Eserial='" + _eserialJob + "' and JobStartDate = '" + _jobStartDate_fisrt + "' ";
+                            string sqlUpdateJobEndDateActive = "Update HR.JobActiveMonth set JobEndDateActive = DATEADD(day,-1,CONVERT(datetime,'" + _jobStartDate_last + "')) where Period=" + _filterHrVM.Period + " and Eserial='" + _eserialJob + "' and JobStartDate = '" + _jobStartDate_fisrt + "' ";
 
                             await conn.ExecuteAsync(sqlUpdateJobEndDateActive);
                         }

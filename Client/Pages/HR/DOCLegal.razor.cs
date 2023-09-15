@@ -76,7 +76,7 @@ namespace D69soft.Client.Pages.HR
             filterHrVM.GroupType = "DOCLegal";
 
             division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterHrVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
+            filterHrVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
 
             doctype_filter_list = await documentService.GetDocTypes(filterHrVM);
 
