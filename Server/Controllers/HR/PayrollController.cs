@@ -133,7 +133,7 @@ namespace D69soft.Server.Controllers.HR
         [HttpGet("GetTrnGroupCodeList")]
         public async Task<ActionResult<IEnumerable<SalaryTransactionGroupVM>>> GetTrnGroupCodeList()
         {
-            var sql = "select * from HR.SalaryTransactionGroup where TrnGroupCode not in (100,500,520,620) order by TrnGroupCode";
+            var sql = "select * from HR.SalaryTransactionGroup where TrnGroupCode not in (100,200,500,520,620) order by TrnGroupCode";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)
