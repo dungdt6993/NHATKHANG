@@ -236,6 +236,29 @@
                                     <InputText class="form-control form-control-sm" @bind-Value="voucherVM.VDesc" />
                                     <ValidationMessage For="@(() => voucherVM.VDesc)" />
                                 </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label>Nhân viên bán hàng</label>
+                                        <select class="selectpicker form-control form-control-sm"
+                                                data-style="btn-selectpicker" data-container="body"
+                                                data-live-search="true" data-show-subtext="true"
+                                        @bind="voucherVM.EserialPerform">
+                                            <option value=@String.Empty>-----Chọn-----</option>
+                                            @if (profileVMs != null)
+                                            {
+                                                @foreach (var _profileVM in profileVMs)
+                                                {
+                                                    <option data-subtext="@_profileVM.Eserial" value="@_profileVM.Eserial">@_profileVM.FullName</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="col-sm-3" style="padding-left: 10px;">
 
@@ -1106,12 +1129,12 @@
                     {
                         @if (filterFinVM.FuncID == "FIN_Cash")
                         {
-                          <h5><b>SỔ QUỸ TIỀN MẶT</b></h5>
+                            <h5><b>SỔ QUỸ TIỀN MẶT</b></h5>
                         }
 
                         @if (filterFinVM.FuncID == "FIN_Deposit")
                         {
-                          <h5><b>SỔ TIỀN GỬI NGÂN HÀNG</b></h5>
+                            <h5><b>SỔ TIỀN GỬI NGÂN HÀNG</b></h5>
                         }
                     }
                     @if (ReportName == "FIN_Tong_hop_ton_kho")

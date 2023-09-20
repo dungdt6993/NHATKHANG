@@ -31,6 +31,9 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string InventoryCheck_StockCode { get; set; }
         public decimal InventoryCheck_Qty { get; set; }
         public decimal InventoryCheck_ActualQty { get; set; }
+        public int DebitAccount { get; set; }
+        public int CreditAccount { get; set; }
+        public int TaxAccount { get; set; }
         public string ICode { get; set; }
         public string IBarCode { get; set; }
         public string IName { get; set; }

@@ -13,6 +13,7 @@ using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extensions;
 using Microsoft.AspNetCore.Components.Forms;
+using D69soft.Server.Services.HR;
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -29,6 +30,8 @@ namespace D69soft.Client.Pages.FIN
         [Inject] InventoryService inventoryService { get; set; }
         [Inject] CustomerService customerService { get; set; }
         [Inject] MoneyService moneyService { get; set; }
+
+        [Inject] ProfileService profileService { get; set; }
 
         bool isLoading;
         bool isLoadingScreen = true;
@@ -51,6 +54,9 @@ namespace D69soft.Client.Pages.FIN
 
         //Division
         IEnumerable<DivisionVM> filter_divisionVMs;
+
+        //Profile
+        private List<ProfileVM> profileVMs;
 
         //VType
         IEnumerable<VTypeVM> filter_vTypeVMs;
@@ -222,6 +228,11 @@ namespace D69soft.Client.Pages.FIN
             {
                 vSubTypeVMs = vSubTypeVMs.Where(x => x.VSubTypeID != "FIN_Cash_Payment_Vendor" && x.VSubTypeID != "FIN_Cash_Receipt_Customer" && x.VSubTypeID != "FIN_Deposit_Debit_Vendor" && x.VSubTypeID != "FIN_Deposit_Credit_Customer");
             }
+
+            //Profile
+            filterHrVM.DivisionID = filterFinVM.DivisionID;
+            filterHrVM.TypeProfile = 0;
+            profileVMs = await profileService.GetProfileList(filterHrVM);
 
             vendorVMs = await purchasingService.GetVendorList();
 

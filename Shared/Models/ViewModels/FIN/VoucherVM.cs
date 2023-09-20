@@ -38,6 +38,7 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public bool IsInvoice { get; set; }
         public int InvoiceNumber { get; set; }
         public DateTimeOffset? InvoiceDate { get; set; }
+        public string EserialPerform { get; set; }
         public string VendorCode { get; set; }
         public string VendorName { get; set; }
         public string VendorTaxCode { get; set; }
