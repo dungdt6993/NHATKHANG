@@ -239,7 +239,10 @@
 
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
-                                        <label>Nhân viên bán hàng</label>
+                                        @if (filter_vTypeVMs != null && !String.IsNullOrEmpty(voucherVM.VTypeID))
+                                        {
+                                            <label>Nhân viên @filter_vTypeVMs.Where(x => x.VTypeID == voucherVM.VTypeID).Select(x => x.VTypeDesc).First().ToLower() </label>
+                                        }
                                         <select class="selectpicker form-control form-control-sm"
                                                 data-style="btn-selectpicker" data-container="body"
                                                 data-live-search="true" data-show-subtext="true"

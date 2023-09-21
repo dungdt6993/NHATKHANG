@@ -256,6 +256,8 @@ namespace D69soft.Client.Pages.FIN
                     filterFinVM.ITypeCode = voucherVM.ITypeCode = "HH";
                     voucherVM.PaymentTypeCode = "CASH";
                 }
+
+                voucherVM.EserialPerform = UserID;
             }
 
             if (_IsTypeUpdate != 0)
