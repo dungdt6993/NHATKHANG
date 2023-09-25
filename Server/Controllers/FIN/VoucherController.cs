@@ -227,6 +227,32 @@ namespace D69soft.Server.Controllers.FIN
                 return Ok(result);
             }
         }
+        [HttpPost("GetInvoices")]
+        public async Task<ActionResult<List<InvoiceVM>>> GetInvoices(FilterFinVM _filterFinVM)
+        {
+            var sql = "select vtype.VTypeDesc, v.InvoiceDate, v.InvoiceNumber, coalesce(vendor.VendorName,'') + coalesce(cus.CustomerName,'') as ObjectName, coalesce(vendor.VendorTaxCode,'') + coalesce(cus.CustomerTaxCode,'') as TaxCode, ";
+            sql += "sum(vd.VDAmount) as sumVDAmount, sum(vd.VDDiscountAmount) as sumVDDiscountAmount, sum(vd.VDAmount-vd.VDDiscountAmount) as sumTotalAmount, sum(vd.VATAmount) as sumVATAmount from FIN.Voucher v ";
+            sql += "join FIN.VoucherDetail vd on vd.VNumber = v.VNumber ";
+            sql += "join FIN.Items i on i.ICode = vd.ICode ";
+            sql += "join FIN.VATDef vat on vat.VATCode = vd.VATCode ";
+            sql += "join FIN.VType vtype on vtype.VTypeID = v.VTypeID ";
+            sql += "left join FIN.Vendor vendor on vendor.VendorCode = v.VendorCode ";
+            sql += "left join CRM.Customer cus on cus.CustomerCode = v.CustomerCode ";
+            sql += "where v.VActive=1 and coalesce(v.InvoiceNumber,0) <> 0 and coalesce(vd.VATCode,'') <> '' ";
+            sql += "and (v.DivisionID=@DivisionID or coalesce(@DivisionID,'')='') ";
+            sql += "and format(v.InvoiceDate,'MM/dd/yyyy')>=format(@StartDate,'MM/dd/yyyy') and format(v.InvoiceDate,'MM/dd/yyyy')<=format(@EndDate,'MM/dd/yyyy') ";
+            sql += "and (v.InvoiceNumber LIKE CONCAT('%',@InvoiceNumber,'%') or coalesce(@InvoiceNumber,'')='') ";
+            sql += "group by vtype.VTypeDesc, v.InvoiceDate, v.InvoiceNumber, coalesce(vendor.VendorName,'') + coalesce(cus.CustomerName,''), coalesce(vendor.VendorTaxCode,'') + coalesce(cus.CustomerTaxCode,'') ";
+            sql += "order by v.InvoiceDate ";
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == System.Data.ConnectionState.Closed)
+                    conn.Open();
+
+                var result = await conn.QueryAsync<InvoiceVM>(sql, _filterFinVM);
+                return result.ToList();
+            }
+        }
 
         //RPT
         [HttpPost("GetMoneyBooks")]
