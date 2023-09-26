@@ -231,7 +231,7 @@ namespace D69soft.Server.Controllers.FIN
         public async Task<ActionResult<List<InvoiceVM>>> GetInvoices(FilterFinVM _filterFinVM)
         {
             var sql = "select vtype.VTypeDesc, v.InvoiceDate, v.InvoiceNumber, coalesce(vendor.VendorName,'') + coalesce(cus.CustomerName,'') as ObjectName, coalesce(vendor.VendorTaxCode,'') + coalesce(cus.CustomerTaxCode,'') as TaxCode, ";
-            sql += "sum(vd.VDAmount) as sumVDAmount, sum(vd.VDDiscountAmount) as sumVDDiscountAmount, sum(vd.VDAmount-vd.VDDiscountAmount) as sumTotalAmount, sum(vd.VATAmount) as sumVATAmount from FIN.Voucher v ";
+            sql += "sum(vd.VDAmount) as sumVDAmount, sum(vd.VDDiscountAmount) as sumVDDiscountAmount, sum(vd.VATAmount) as sumVATAmount, sum(vd.VDAmount-vd.VDDiscountAmount+vd.VATAmount) as sumTotalAmount from FIN.Voucher v ";
             sql += "join FIN.VoucherDetail vd on vd.VNumber = v.VNumber ";
             sql += "join FIN.Items i on i.ICode = vd.ICode ";
             sql += "join FIN.VATDef vat on vat.VATCode = vd.VATCode ";

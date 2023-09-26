@@ -105,8 +105,10 @@
                                     <th class="text-center">Số hóa đơn</th>
                                     <th>Đối tượng</th>
                                     <th class="text-center">Mã số thuế</th>
-                                    <th class="text-right">Giá trị hàng chưa thuế</th>
+                                    <th class="text-right">Tổng tiền chưa thuế</th>
+                                    <th class="text-right">Tổng tiền chiết khấu</th>
                                     <th class="text-right">Thuế GTGT</th>
+                                    <th class="text-right">Tổng tiền thanh toán</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -118,8 +120,10 @@
                                         <td class="text-center">@invoiceVM.InvoiceNumber</td>
                                         <td>@invoiceVM.ObjectName</td>
                                         <td class="text-center">@invoiceVM.TaxCode</td>
-                                        <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.sumTotalAmount)</td>
+                                        <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.sumVDAmount)</td>
+                                        <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.sumVDDiscountAmount)</td>
                                         <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.sumVATAmount)</td>      
+                                        <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.sumTotalAmount)</td>      
                                     </tr>
                                 </Virtualize>
                             </tbody>

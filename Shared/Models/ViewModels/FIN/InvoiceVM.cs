@@ -9,8 +9,8 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string TaxCode { get; set; }
         public decimal sumVDAmount { get; set; }
         public decimal sumVDDiscountAmount { get; set; }
-        public decimal sumTotalAmount { get; set; }
         public decimal sumVATAmount { get; set; }
+        public decimal sumTotalAmount { get; set; }
 
         public string VNumber { get; set; }
         public string VReference { get; set; }
