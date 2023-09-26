@@ -939,6 +939,10 @@ namespace D69soft.Client.Pages.FIN
 
                         _voucherVM.DivisionID = filterFinVM.DivisionID;
 
+                        _voucherVM.BankAccountID = voucherVM.BankAccountID;
+
+                        _voucherVM.EserialPerform = voucherVM.EserialPerform;
+
                         _voucherVM.VDate = voucherVM.VDate;
 
                         _voucherVM.TotalAmount = voucherVM.TotalAmount;
