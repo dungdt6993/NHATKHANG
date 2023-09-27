@@ -243,7 +243,7 @@ namespace D69soft.Server.Controllers.FIN
             sql += "and format(v.InvoiceDate,'MM/dd/yyyy')>=format(@StartDate,'MM/dd/yyyy') and format(v.InvoiceDate,'MM/dd/yyyy')<=format(@EndDate,'MM/dd/yyyy') ";
             sql += "and (v.InvoiceNumber LIKE CONCAT('%',@InvoiceNumber,'%') or coalesce(@InvoiceNumber,'')='') ";
             sql += "group by vtype.VTypeDesc, v.InvoiceDate, v.InvoiceNumber, coalesce(vendor.VendorName,'') + coalesce(cus.CustomerName,''), coalesce(vendor.VendorTaxCode,'') + coalesce(cus.CustomerTaxCode,'') ";
-            sql += "order by v.InvoiceDate ";
+            sql += "order by v.InvoiceDate desc ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)

@@ -258,7 +258,6 @@
                                         </select>
                                     </div>
                                     <div class="form-group col-md-6">
-
                                     </div>
                                 </div>
 
@@ -401,6 +400,7 @@
                                             {
                                                 <th class="text-center" style="width: 110px;">% Thuế GTGT</th>
                                                 <th class="text-center" style="width: 110px;">Tiền thuế GTGT</th>
+                                                <th class="text-center" style="width: 110px;">TK Thuế</th>
                                             }
                                         }
 
@@ -597,6 +597,41 @@
                                                             }
 
                                                             <td class="text-right">@String.Format("{0:#,##0}", _voucherDetailVM.VATAmount)</td>
+
+                                                            @if (_voucherDetailVM.IsUpdateVAT == 0)
+                                                            {
+                                                                <td class="text-center">
+                                                                    @if (String.IsNullOrEmpty(_voucherDetailVM.VATCode))
+                                                                    {
+                                                                        <a class="text-center" @onclick=@(() => _voucherDetailVM.IsUpdateVAT = 1)>-----Chọn-----</a>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <a @onclick=@(() => _voucherDetailVM.IsUpdateVAT = 1)>@_voucherDetailVM.VATName</a>
+                                                                    }
+                                                                </td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td>
+                                                                    <InputSelect class="selectpicker form-control form-control-sm"
+                                                                                 data-style="btn-selectpicker"
+                                                                                 data-container="body"
+                                                                                 ValueExpression="@(()=>_voucherDetailVM.VATCode)"
+                                                                                 Value="@_voucherDetailVM.VATCode"
+                                                                                 ValueChanged="@((string value) =>onchange_VAT(value, _voucherDetailVM))">
+
+                                                                        <option value=@String.Empty>-----Chọn-----</option>
+                                                                        @if (vatDefVMs != null)
+                                                                        {
+                                                                            @foreach (var _vatDefVM in vatDefVMs)
+                                                                            {
+                                                                                <option value="@_vatDefVM.VATCode">@_vatDefVM.VATName</option>
+                                                                            }
+                                                                        }
+                                                                    </InputSelect>
+                                                                </td>
+                                                            }
                                                         }
                                                     }
 
@@ -749,6 +784,8 @@
                                                     <th class="text-center"></th>
 
                                                     <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VATAmount).Sum())</th>
+
+                                                    <th class="text-center"></th>
                                                 }
                                             }
                                             @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory))
@@ -1248,11 +1285,11 @@
                                                 {
                                                     @if (filterFinVM.FuncID == "FIN_Purchasing")
                                                     {
-                                                        <td class="text-center"><span class="badge badge-success">Đã nhận hóa đơn</span></td>
+                                                        <td class="text-center"><span class="badge badge-success">Đã nhận hóa đơn số @voucherVM.InvoiceNumber</span></td>
                                                     }
                                                     @if (filterFinVM.FuncID == "FIN_Sale")
                                                     {
-                                                        <td class="text-center"><span class="badge badge-success">Đã xuất hóa đơn</span></td>
+                                                        <td class="text-center"><span class="badge badge-success">Đã xuất hóa đơn @voucherVM.InvoiceNumber</span></td>
                                                     }
                                                 }
                                                 else
