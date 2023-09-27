@@ -598,38 +598,37 @@
 
                                                             <td class="text-right">@String.Format("{0:#,##0}", _voucherDetailVM.VATAmount)</td>
 
-                                                            @if (_voucherDetailVM.IsUpdateVAT == 0)
+                                                            @if (_voucherDetailVM.IsUpdateTaxAccount == 0)
                                                             {
                                                                 <td class="text-center">
-                                                                    @if (String.IsNullOrEmpty(_voucherDetailVM.VATCode))
+                                                                    @if (_voucherDetailVM.TaxAccount == 0)
                                                                     {
-                                                                        <a class="text-center" @onclick=@(() => _voucherDetailVM.IsUpdateVAT = 1)>-----Chọn-----</a>
+                                                                        <a class="text-center" @onclick=@(() => _voucherDetailVM.IsUpdateTaxAccount = 1)>-----Chọn-----</a>
                                                                     }
                                                                     else
                                                                     {
-                                                                        <a @onclick=@(() => _voucherDetailVM.IsUpdateVAT = 1)>@_voucherDetailVM.VATName</a>
+                                                                        <a @onclick=@(() => _voucherDetailVM.IsUpdateTaxAccount = 1)>@_voucherDetailVM.TaxAccount</a>
                                                                     }
                                                                 </td>
                                                             }
                                                             else
                                                             {
                                                                 <td>
-                                                                    <InputSelect class="selectpicker form-control form-control-sm"
+                                                                    <select class="selectpicker form-control form-control-sm"
                                                                                  data-style="btn-selectpicker"
                                                                                  data-container="body"
-                                                                                 ValueExpression="@(()=>_voucherDetailVM.VATCode)"
-                                                                                 Value="@_voucherDetailVM.VATCode"
-                                                                                 ValueChanged="@((string value) =>onchange_VAT(value, _voucherDetailVM))">
+                                                                                 data-show-subtext="true"
+                                                                                 @bind="_voucherDetailVM.TaxAccount">
 
                                                                         <option value=@String.Empty>-----Chọn-----</option>
-                                                                        @if (vatDefVMs != null)
+                                                                        @if (accountVMs != null)
                                                                         {
-                                                                            @foreach (var _vatDefVM in vatDefVMs)
+                                                                            @foreach (var _accountVM in accountVMs)
                                                                             {
-                                                                                <option value="@_vatDefVM.VATCode">@_vatDefVM.VATName</option>
+                                                                                <option data-subtext="@_accountVM.AccountName" value="@_accountVM.AccountNo">@_accountVM.AccountNo</option>
                                                                             }
                                                                         }
-                                                                    </InputSelect>
+                                                                    </select>
                                                                 </td>
                                                             }
                                                         }

@@ -85,6 +85,9 @@ namespace D69soft.Client.Pages.FIN
         //VAT
         IEnumerable<VATDefVM> vatDefVMs;
 
+        //Account
+        IEnumerable<AccountVM> accountVMs;
+
         //RPT
         string ReportName = String.Empty;
 
@@ -243,6 +246,8 @@ namespace D69soft.Client.Pages.FIN
             bankAccountVMs = (await moneyService.GetBankAccountList()).ToList();
 
             vatDefVMs = await voucherService.GetVATDefs();
+
+            accountVMs = await voucherService.GetAccounts();
 
             if (_IsTypeUpdate == 0)
             {

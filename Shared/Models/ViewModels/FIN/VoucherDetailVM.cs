@@ -29,6 +29,7 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public int IsUpdateVendor { get; set; }
         public int IsUpdateInventoryCheck_Stock { get; set; }
         public int IsUpdateVAT { get; set; }
+        public int IsUpdateTaxAccount { get; set; }
 
         public int Period { get; set; }
         public int Year { get; set; }

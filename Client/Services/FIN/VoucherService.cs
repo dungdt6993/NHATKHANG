@@ -65,6 +65,12 @@ namespace D69soft.Client.Services.FIN
             return await response.Content.ReadFromJsonAsync<List<InvoiceVM>>();
         }
 
+        //Account
+        public async Task<IEnumerable<AccountVM>> GetAccounts()
+        {
+            return await _httpClient.GetFromJsonAsync<IEnumerable<AccountVM>>($"api/Voucher/GetAccounts");
+        }
+
         //RPT
         public async Task<List<VoucherDetailVM>> GetMoneyBooks(FilterFinVM _filterFinVM)
         {

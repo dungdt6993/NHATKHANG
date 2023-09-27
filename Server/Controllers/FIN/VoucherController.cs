@@ -227,6 +227,7 @@ namespace D69soft.Server.Controllers.FIN
                 return Ok(result);
             }
         }
+
         [HttpPost("GetInvoices")]
         public async Task<ActionResult<List<InvoiceVM>>> GetInvoices(FilterFinVM _filterFinVM)
         {
@@ -251,6 +252,21 @@ namespace D69soft.Server.Controllers.FIN
 
                 var result = await conn.QueryAsync<InvoiceVM>(sql, _filterFinVM);
                 return result.ToList();
+            }
+        }
+
+        //Account
+        [HttpGet("GetAccounts")]
+        public async Task<ActionResult<IEnumerable<AccountVM>>> GetAccounts()
+        {
+            var sql = "select * from FIN.Account where LEN(AccountNo)>3 ";
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                var result = await conn.QueryAsync<AccountVM>(sql);
+                return Ok(result);
             }
         }
 
