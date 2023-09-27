@@ -616,11 +616,11 @@
                                                                 <td>
                                                                     <select class="selectpicker form-control form-control-sm"
                                                                                  data-style="btn-selectpicker"
-                                                                                 data-container="body"
+                                                                                 data-container="body" data-live-search="true"
                                                                                  data-show-subtext="true"
                                                                                  @bind="_voucherDetailVM.TaxAccount">
 
-                                                                        <option value=@String.Empty>-----Chọn-----</option>
+                                                                        <option value=0>-----Chọn-----</option>
                                                                         @if (accountVMs != null)
                                                                         {
                                                                             @foreach (var _accountVM in accountVMs)

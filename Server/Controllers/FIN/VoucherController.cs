@@ -78,7 +78,7 @@ namespace D69soft.Server.Controllers.FIN
         {
             var sql = "select SeqVD, vd.VDDesc, i.ICode, i.IName, i.IPrice, i.VendorDefault, i.StockDefault, vd.VDQty, iu.IUnitName, vd.VDPrice, vd.VDAmount, vd.VDDiscountPercent, vd.VDDiscountAmount,";
             sql +="vd.ToStockCode, toStock.StockName as ToStockName, vd.FromStockCode, fromStock.StockName as FromStockName, vd.VDNote, ";
-            sql += "vd.InventoryCheck_StockCode, inventorycheckStock.StockName as InventoryCheck_StockName, vd.InventoryCheck_Qty, vd.InventoryCheck_ActualQty, vat.VATCode, coalesce(vat.VATRate,0) as VATRate, vat.VATName, vd.VATAmount ";
+            sql += "vd.InventoryCheck_StockCode, inventorycheckStock.StockName as InventoryCheck_StockName, vd.InventoryCheck_Qty, vd.InventoryCheck_ActualQty, vat.VATCode, coalesce(vat.VATRate,0) as VATRate, vat.VATName, vd.VATAmount, vd.TaxAccount ";
             sql += "from FIN.VoucherDetail vd ";
             sql += "left join FIN.Items i on i.ICode = vd.ICode ";
             sql += "left join FIN.ItemsUnit iu on iu.IUnitCode = i.IUnitCode ";
@@ -150,8 +150,8 @@ namespace D69soft.Server.Controllers.FIN
                     //VoucherDetailVM
                     foreach (var _voucherDetailVM in _voucherDetailVMs)
                     {
-                        sqlVoucherDetailVM = "Insert into FIN.VoucherDetail(VNumber,VDDesc,ICode,VDQty,VDPrice,VDAmount,VDDiscountPercent,VDDiscountAmount,VATCode,VATAmount,FromStockCode,ToStockCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty) ";
-                        sqlVoucherDetailVM += "Values('" + VNumber + "',@VDDesc,@ICode,@VDQty,@VDPrice,@VDAmount,@VDDiscountPercent,@VDDiscountAmount,@VATCode,@VATAmount,@FromStockCode,@ToStockCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty) ";
+                        sqlVoucherDetailVM = "Insert into FIN.VoucherDetail(VNumber,VDDesc,ICode,VDQty,VDPrice,VDAmount,VDDiscountPercent,VDDiscountAmount,VATCode,VATAmount,TaxAccount,FromStockCode,ToStockCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty) ";
+                        sqlVoucherDetailVM += "Values('" + VNumber + "',@VDDesc,@ICode,@VDQty,@VDPrice,@VDAmount,@VDDiscountPercent,@VDDiscountAmount,@VATCode,@VATAmount,@TaxAccount,@FromStockCode,@ToStockCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty) ";
                         await conn.ExecuteAsync(sqlVoucherDetailVM, _voucherDetailVM);
                     }
 
@@ -177,8 +177,8 @@ namespace D69soft.Server.Controllers.FIN
                     //VoucherDetailVM
                     foreach (var _voucherDetailVM in _voucherDetailVMs)
                     {
-                        sqlVoucherDetailVM = "Insert into FIN.VoucherDetail(VNumber,VDDesc,ICode,VDQty,VDPrice,VDAmount,VDDiscountPercent,VDDiscountAmount,VATCode,VATAmount,FromStockCode,ToStockCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty) ";
-                        sqlVoucherDetailVM += "Values('" + _voucherVM.VNumber + "',@VDDesc,@ICode,@VDQty,@VDPrice,@VDAmount,@VDDiscountPercent,@VDDiscountAmount,@VATCode,@VATAmount,@FromStockCode,@ToStockCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty) ";
+                        sqlVoucherDetailVM = "Insert into FIN.VoucherDetail(VNumber,VDDesc,ICode,VDQty,VDPrice,VDAmount,VDDiscountPercent,VDDiscountAmount,VATCode,VATAmount,TaxAccount,FromStockCode,ToStockCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty) ";
+                        sqlVoucherDetailVM += "Values('" + _voucherVM.VNumber + "',@VDDesc,@ICode,@VDQty,@VDPrice,@VDAmount,@VDDiscountPercent,@VDDiscountAmount,@VATCode,@VATAmount,@TaxAccount,@FromStockCode,@ToStockCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty) ";
 
                         await conn.ExecuteAsync(sqlVoucherDetailVM, _voucherDetailVM);
                     }
@@ -259,7 +259,7 @@ namespace D69soft.Server.Controllers.FIN
         [HttpGet("GetAccounts")]
         public async Task<ActionResult<IEnumerable<AccountVM>>> GetAccounts()
         {
-            var sql = "select * from FIN.Account where LEN(AccountNo)>3 ";
+            var sql = "select * from FIN.Account where isGroup=0 ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)

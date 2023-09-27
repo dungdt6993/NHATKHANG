@@ -9,6 +9,6 @@ namespace D69soft.Shared.Models.Entities.FIN
     interface Account
     {
         public int AccountNo { get; set; }
-        public int AccountName { get; set; }
+        public string AccountName { get; set; }
     }
 }

@@ -10,6 +10,6 @@ namespace D69soft.Shared.Models.ViewModels.FIN
     public class AccountVM : Account
     {
         public int AccountNo { get; set; }
-        public int AccountName { get; set; }
+        public string AccountName { get; set; }
     }
 }
