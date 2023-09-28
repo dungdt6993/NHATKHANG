@@ -231,7 +231,7 @@ namespace D69soft.Server.Controllers.FIN
         [HttpPost("GetInvoices")]
         public async Task<ActionResult<List<InvoiceVM>>> GetInvoices(FilterFinVM _filterFinVM)
         {
-            var sql = "select vtype.VTypeDesc, v.InvoiceDate, v.InvoiceNumber, coalesce(vendor.VendorName,'') + coalesce(cus.CustomerName,'') as ObjectName, coalesce(vendor.VendorTaxCode,'') + coalesce(cus.CustomerTaxCode,'') as TaxCode, ";
+            var sql = "select v.InvoiceDate, v.InvoiceNumber, coalesce(vendor.VendorName,'') + coalesce(cus.CustomerName,'') as ObjectName, coalesce(vendor.VendorTaxCode,'') + coalesce(cus.CustomerTaxCode,'') as TaxCode, ";
 
             if (_filterFinVM.TypeView == 0)
             {
@@ -246,7 +246,6 @@ namespace D69soft.Server.Controllers.FIN
             sql += "from FIN.Voucher v join FIN.VoucherDetail vd on vd.VNumber = v.VNumber ";
             sql += "join FIN.Items i on i.ICode = vd.ICode ";
             sql += "join FIN.VATDef vat on vat.VATCode = vd.VATCode ";
-            sql += "join FIN.VType vtype on vtype.VTypeID = v.VTypeID ";
             sql += "left join FIN.Vendor vendor on vendor.VendorCode = v.VendorCode ";
             sql += "left join CRM.Customer cus on cus.CustomerCode = v.CustomerCode ";
             sql += "where v.VActive=1 and coalesce(v.InvoiceNumber,0) <> 0 and coalesce(vd.VATCode,'') <> '' ";
@@ -256,7 +255,7 @@ namespace D69soft.Server.Controllers.FIN
             sql += "and (v.InvoiceNumber LIKE CONCAT('%',@InvoiceNumber,'%') or coalesce(@InvoiceNumber,'')='') ";
             if (_filterFinVM.TypeView == 0)
             {
-                sql += "group by vtype.VTypeDesc, v.InvoiceDate, v.InvoiceNumber, coalesce(vendor.VendorName,'') + coalesce(cus.CustomerName,''), coalesce(vendor.VendorTaxCode,'') + coalesce(cus.CustomerTaxCode,'') ";
+                sql += "group by v.InvoiceDate, v.InvoiceNumber, coalesce(vendor.VendorName,'') + coalesce(cus.CustomerName,''), coalesce(vendor.VendorTaxCode,'') + coalesce(cus.CustomerTaxCode,'') ";
             }
             sql += "order by v.InvoiceDate desc ";
             using (var conn = new SqlConnection(_connConfig.Value))

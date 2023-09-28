@@ -129,15 +129,14 @@
                 {
                     if (filterFinVM.TypeView == 0)
                     {
-                        <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin">
                             <thead class="thead-light">
                                 <tr>
-                                    <th class="text-center">Loại hóa đơn</th>
                                     <th class="text-center">Ngày hóa đơn</th>
                                     <th class="text-center">Số hóa đơn</th>
                                     <th>Đối tượng</th>
                                     <th class="text-center">Mã số thuế</th>
-                                    <th class="text-right">Tổng tiền chưa thuế</th>
+                                    <th class="text-right">Tổng giá trị HHDV chưa thuế</th>
                                     <th class="text-right">Tổng tiền chiết khấu</th>
                                     <th class="text-right">Thuế GTGT</th>
                                     <th class="text-right">Tổng tiền thanh toán</th>
@@ -146,7 +145,6 @@
                             <tbody>
                                 <Virtualize Items="@invoiceVMs" Context="invoiceVM" OverscanCount="50">
                                     <tr>
-                                        <td class="text-center">@invoiceVM.VTypeDesc</td>
                                         <td class="text-center">
                                             @(invoiceVM.InvoiceDate.HasValue ? invoiceVM.InvoiceDate.Value.ToString("dd/MM/yyyy") : "")
                                         </td>
@@ -164,7 +162,6 @@
                                 <tr>
                                     <th class="text-center"></th>
                                     <th class="text-center"></th>
-                                    <th class="text-center"></th>
                                     <th></th>
                                     <th class="text-center"></th>
                                     <th class="text-right">@String.Format("{0:#,##0}",@invoiceVMs.Select(x=>x.sumVDAmount).Sum())</th>
@@ -178,10 +175,9 @@
 
                     if (filterFinVM.TypeView == 1)
                     {
-                        <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin">
                             <thead class="thead-light">
                                 <tr>
-                                    <th class="text-center">Loại hóa đơn</th>
                                     <th class="text-center">Ngày hóa đơn</th>
                                     <th class="text-center">Số hóa đơn</th>
                                     <th>Đối tượng</th>
@@ -198,7 +194,6 @@
                             <tbody>
                                 <Virtualize Items="@invoiceVMs" Context="invoiceVM" OverscanCount="50">
                                     <tr>
-                                        <td class="text-center">@invoiceVM.VTypeDesc</td>
                                         <td class="text-center">
                                             @(invoiceVM.InvoiceDate.HasValue ? invoiceVM.InvoiceDate.Value.ToString("dd/MM/yyyy") : "")
                                         </td>
@@ -217,7 +212,6 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th class="text-center"></th>
                                     <th class="text-center"></th>
                                     <th class="text-center"></th>
                                     <th></th>
