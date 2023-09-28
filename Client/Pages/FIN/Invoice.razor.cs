@@ -46,7 +46,6 @@ namespace D69soft.Client.Pages.FIN
         IEnumerable<DivisionVM> filter_divisionVMs;
 
         //Voucher
-        InvoiceVM invoiceVM = new();
         List<InvoiceVM> invoiceVMs;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -77,6 +76,8 @@ namespace D69soft.Client.Pages.FIN
 
             filter_divisionVMs = await organizationalChartService.GetDivisionList(filterHrVM);
             filterFinVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
+
+            filterFinVM.VTypeID = "FIN_Purchasing";
 
             filterFinVM.StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             filterFinVM.EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1).AddTicks(-1);

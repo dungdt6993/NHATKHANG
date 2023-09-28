@@ -292,7 +292,7 @@
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
                                             <label>Số hóa đơn</label>
-                                            <InputNumber class="form-control form-control-sm" @bind-Value="voucherVM.InvoiceNumber" />
+                                            <InputText class="form-control form-control-sm" @bind-Value="voucherVM.InvoiceNumber" />
                                             <ValidationMessage For="@(() => voucherVM.InvoiceNumber)" />
                                         </div>
                                         <div class="form-group col-md-6">
@@ -1280,7 +1280,7 @@
                                         {
                                             @if (voucherVM.IsInvoice)
                                             {
-                                                @if (voucherVM.InvoiceNumber != 0)
+                                                @if (!String.IsNullOrEmpty(voucherVM.InvoiceNumber))
                                                 {
                                                     @if (filterFinVM.FuncID == "FIN_Purchasing")
                                                     {

@@ -30,7 +30,18 @@
                 </div>
             </div>
 
-            <div class="col-sm-3">
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <select class="selectpicker form-control form-control-sm"
+                                 data-style="btn-selectpicker"
+                            data-container="body" @bind="filterFinVM.VTypeID">
+                        <option value="FIN_Purchasing">Hóa đơn mua vào</option>
+                        <option value="FIN_Sale">Hóa đơn bán ra</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-sm-2">
                 <div class="form-group">
                     <DateRangePicker Ranges="DateRanges" ApplyLabel="Thực hiện" CancelLabel="Hủy" CustomRangeLabel="Chọn ngày" OnRangeSelect="OnRangeSelect">
                         <PickerTemplate Context="c">
@@ -69,9 +80,30 @@
                 </div>
             </div>
 
-            <div class="col-sm-5">
+            <div class="col-sm-2">
                 <div class="form-group">
-                    <input type="search" class="form-control form-control-sm" placeholder="Số hóa đơn" @bind="filterFinVM.InvoiceDate" />
+                    <input type="search" class="form-control form-control-sm" placeholder="Tìm kiếm theo số hóa đơn" @bind="filterFinVM.InvoiceNumber" />
+                </div>
+            </div>
+
+            <div class="col-sm-2 col-md-2">
+                <!-- radio -->
+                <div class="form-group clearfix">
+                    <div class="icheck-success d-inline">
+                        <input type="radio" id="TypeView1" name="TypeView" checked="@(filterFinVM.TypeView == 0)" @onchange="(() => filterFinVM.TypeView = 0)">
+                        <label for="TypeView1">
+                            Tổng hợp
+                        </label>
+                    </div>
+                    <label>
+                        &nbsp;&nbsp;
+                    </label>
+                    <div class="icheck-success d-inline">
+                        <input type="radio" id="TypeView2" name="TypeView" checked="@(filterFinVM.TypeView == 1)" @onchange="(() => filterFinVM.TypeView = 1)">
+                        <label for="TypeView2">
+                            Chi tiết
+                        </label>
+                    </div>
                 </div>
             </div>
 
@@ -89,18 +121,18 @@
         <div class="card card-warning card-outline">
 
             <div class="card-header text-right">
-
             </div>
 
             <!-- /.card-header -->
             <div class="card-body table-responsive p-0" style="height: calc(100vh - 233px);">
-                @if (filterFinVM.TypeView == 0)
+                @if (invoiceVMs != null)
                 {
-                    @if (invoiceVMs != null)
+                    if (filterFinVM.TypeView == 0)
                     {
                         <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
                             <thead class="thead-light">
                                 <tr>
+                                    <th class="text-center">Loại hóa đơn</th>
                                     <th class="text-center">Ngày hóa đơn</th>
                                     <th class="text-center">Số hóa đơn</th>
                                     <th>Đối tượng</th>
@@ -114,6 +146,7 @@
                             <tbody>
                                 <Virtualize Items="@invoiceVMs" Context="invoiceVM" OverscanCount="50">
                                     <tr>
+                                        <td class="text-center">@invoiceVM.VTypeDesc</td>
                                         <td class="text-center">
                                             @(invoiceVM.InvoiceDate.HasValue ? invoiceVM.InvoiceDate.Value.ToString("dd/MM/yyyy") : "")
                                         </td>
@@ -122,19 +155,90 @@
                                         <td class="text-center">@invoiceVM.TaxCode</td>
                                         <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.sumVDAmount)</td>
                                         <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.sumVDDiscountAmount)</td>
-                                        <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.sumVATAmount)</td>      
-                                        <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.sumTotalAmount)</td>      
+                                        <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.sumVATAmount)</td>
+                                        <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.sumTotalAmount)</td>
                                     </tr>
                                 </Virtualize>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th class="text-center"></th>
+                                    <th class="text-center"></th>
+                                    <th class="text-center"></th>
+                                    <th></th>
+                                    <th class="text-center"></th>
+                                    <th class="text-right">@String.Format("{0:#,##0}",@invoiceVMs.Select(x=>x.sumVDAmount).Sum())</th>
+                                    <th class="text-right">@String.Format("{0:#,##0}",@invoiceVMs.Select(x=>x.sumVDDiscountAmount).Sum())</th>
+                                    <th class="text-right">@String.Format("{0:#,##0}",@invoiceVMs.Select(x=>x.sumVATAmount).Sum())</th>
+                                    <th class="text-right">@String.Format("{0:#,##0}",@invoiceVMs.Select(x=>x.sumTotalAmount).Sum())</th>
+                                </tr>
+                            </tfoot>
                         </table>
-                        if (invoiceVMs.Count() <= 0)
-                        {
-                            <img class="img-no-result" src="images/_default/no-results.png" />
-                        }
+                    }
+
+                    if (filterFinVM.TypeView == 1)
+                    {
+                        <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-center">Loại hóa đơn</th>
+                                    <th class="text-center">Ngày hóa đơn</th>
+                                    <th class="text-center">Số hóa đơn</th>
+                                    <th>Đối tượng</th>
+                                    <th class="text-center">Mã số thuế</th>
+                                    <th>Mặt hàng</th>
+                                    <th class="text-right">Giá trị HHDV chưa thuế</th>
+                                    <th class="text-right">Tiền chiết khấu</th>
+                                    <th class="text-center">Thuế suất</th>
+                                    <th class="text-right">Thuế GTGT</th>
+                                    <th class="text-right">Cộng</th>
+                                    <th class="text-center">TK thuế</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <Virtualize Items="@invoiceVMs" Context="invoiceVM" OverscanCount="50">
+                                    <tr>
+                                        <td class="text-center">@invoiceVM.VTypeDesc</td>
+                                        <td class="text-center">
+                                            @(invoiceVM.InvoiceDate.HasValue ? invoiceVM.InvoiceDate.Value.ToString("dd/MM/yyyy") : "")
+                                        </td>
+                                        <td class="text-center">@invoiceVM.InvoiceNumber</td>
+                                        <td>@invoiceVM.ObjectName</td>
+                                        <td class="text-center">@invoiceVM.TaxCode</td>
+                                        <td>@invoiceVM.IName</td>
+                                        <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.VDAmount)</td>
+                                        <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.VDDiscountAmount)</td>
+                                        <td class="text-center">@invoiceVM.VATName</td>
+                                        <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.VATAmount)</td>
+                                        <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.TotalAmount)</td>
+                                        <td class="text-center">@invoiceVM.TaxAccount</td>
+                                    </tr>
+                                </Virtualize>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th class="text-center"></th>
+                                    <th class="text-center"></th>
+                                    <th class="text-center"></th>
+                                    <th></th>
+                                    <th class="text-center"></th>
+                                    <th></th>
+                                    <th class="text-right">@String.Format("{0:#,##0}",@invoiceVMs.Select(x=>x.VDAmount).Sum())</th>
+                                    <th class="text-right">@String.Format("{0:#,##0}",@invoiceVMs.Select(x=>x.VDDiscountAmount).Sum())</th>
+                                    <th class="text-center"></th>
+                                    <th class="text-right">@String.Format("{0:#,##0}",@invoiceVMs.Select(x=>x.VATAmount).Sum())</th>
+                                    <th class="text-right">@String.Format("{0:#,##0}",@invoiceVMs.Select(x=>x.TotalAmount).Sum())</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    }
+
+                    if (invoiceVMs.Count() <= 0)
+                    {
+                        <img class="img-no-result" src="images/_default/no-results.png" />
                     }
                 }
-
             </div>
             <!-- /.card-body -->
             @if (invoiceVMs != null)

@@ -77,7 +77,7 @@ namespace D69soft.Server.Controllers.FIN
         public async Task<ActionResult<List<VoucherDetailVM>>> GetVoucherDetails(string _VNumber)
         {
             var sql = "select SeqVD, vd.VDDesc, i.ICode, i.IName, i.IPrice, i.VendorDefault, i.StockDefault, vd.VDQty, iu.IUnitName, vd.VDPrice, vd.VDAmount, vd.VDDiscountPercent, vd.VDDiscountAmount,";
-            sql +="vd.ToStockCode, toStock.StockName as ToStockName, vd.FromStockCode, fromStock.StockName as FromStockName, vd.VDNote, ";
+            sql += "vd.ToStockCode, toStock.StockName as ToStockName, vd.FromStockCode, fromStock.StockName as FromStockName, vd.VDNote, ";
             sql += "vd.InventoryCheck_StockCode, inventorycheckStock.StockName as InventoryCheck_StockName, vd.InventoryCheck_Qty, vd.InventoryCheck_ActualQty, vat.VATCode, coalesce(vat.VATRate,0) as VATRate, vat.VATName, vd.VATAmount, vd.TaxAccount ";
             sql += "from FIN.VoucherDetail vd ";
             sql += "left join FIN.Items i on i.ICode = vd.ICode ";
@@ -195,7 +195,7 @@ namespace D69soft.Server.Controllers.FIN
                 {
                     sqlVoucherVM = "Update FIN.Voucher set VActive=@VActive, VTimeActive=GETDATE() where VNumber=@VNumber ";
 
-                    if(_voucherVM.VActive)
+                    if (_voucherVM.VActive)
                     {
                         sqlVoucherVM += "Update FIN.Voucher set PaymentAmount = TotalAmount where VNumber=@VNumber and IsPayment=1 ";
                     }
@@ -232,8 +232,18 @@ namespace D69soft.Server.Controllers.FIN
         public async Task<ActionResult<List<InvoiceVM>>> GetInvoices(FilterFinVM _filterFinVM)
         {
             var sql = "select vtype.VTypeDesc, v.InvoiceDate, v.InvoiceNumber, coalesce(vendor.VendorName,'') + coalesce(cus.CustomerName,'') as ObjectName, coalesce(vendor.VendorTaxCode,'') + coalesce(cus.CustomerTaxCode,'') as TaxCode, ";
-            sql += "sum(vd.VDAmount) as sumVDAmount, sum(vd.VDDiscountAmount) as sumVDDiscountAmount, sum(vd.VATAmount) as sumVATAmount, sum(vd.VDAmount-vd.VDDiscountAmount+vd.VATAmount) as sumTotalAmount from FIN.Voucher v ";
-            sql += "join FIN.VoucherDetail vd on vd.VNumber = v.VNumber ";
+
+            if (_filterFinVM.TypeView == 0)
+            {
+                sql += "sum(vd.VDAmount) as sumVDAmount, sum(vd.VDDiscountAmount) as sumVDDiscountAmount, sum(vd.VATAmount) as sumVATAmount, sum(vd.VDAmount-vd.VDDiscountAmount+vd.VATAmount) as sumTotalAmount ";
+            }
+
+            if (_filterFinVM.TypeView == 1)
+            {
+                sql += "i.Iname, vd.VDAmount, vd.VDDiscountAmount, vat.VATName, vd.VATAmount, vd.VDAmount - vd.VDDiscountAmount + vd.VATAmount as TotalAmount, vd.TaxAccount ";
+            }
+
+            sql += "from FIN.Voucher v join FIN.VoucherDetail vd on vd.VNumber = v.VNumber ";
             sql += "join FIN.Items i on i.ICode = vd.ICode ";
             sql += "join FIN.VATDef vat on vat.VATCode = vd.VATCode ";
             sql += "join FIN.VType vtype on vtype.VTypeID = v.VTypeID ";
@@ -241,9 +251,13 @@ namespace D69soft.Server.Controllers.FIN
             sql += "left join CRM.Customer cus on cus.CustomerCode = v.CustomerCode ";
             sql += "where v.VActive=1 and coalesce(v.InvoiceNumber,0) <> 0 and coalesce(vd.VATCode,'') <> '' ";
             sql += "and (v.DivisionID=@DivisionID or coalesce(@DivisionID,'')='') ";
+            sql += "and (v.VTypeID=@VTypeID or coalesce(@VTypeID,'')='') ";
             sql += "and format(v.InvoiceDate,'MM/dd/yyyy')>=format(@StartDate,'MM/dd/yyyy') and format(v.InvoiceDate,'MM/dd/yyyy')<=format(@EndDate,'MM/dd/yyyy') ";
             sql += "and (v.InvoiceNumber LIKE CONCAT('%',@InvoiceNumber,'%') or coalesce(@InvoiceNumber,'')='') ";
-            sql += "group by vtype.VTypeDesc, v.InvoiceDate, v.InvoiceNumber, coalesce(vendor.VendorName,'') + coalesce(cus.CustomerName,''), coalesce(vendor.VendorTaxCode,'') + coalesce(cus.CustomerTaxCode,'') ";
+            if (_filterFinVM.TypeView == 0)
+            {
+                sql += "group by vtype.VTypeDesc, v.InvoiceDate, v.InvoiceNumber, coalesce(vendor.VendorName,'') + coalesce(cus.CustomerName,''), coalesce(vendor.VendorTaxCode,'') + coalesce(cus.CustomerTaxCode,'') ";
+            }
             sql += "order by v.InvoiceDate desc ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {

@@ -351,7 +351,7 @@ namespace D69soft.Client.Pages.FIN
                 //Hóa đơn
                 if (!voucherVM.IsInvoice)
                 {
-                    voucherVM.InvoiceNumber = 0;
+                    voucherVM.InvoiceNumber = String.Empty;
                     voucherVM.InvoiceDate = null;
 
                     voucherDetailVMs.ForEach(e => { e.VATCode = String.Empty; e.VATRate = 0; });
