@@ -17,8 +17,8 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string selectedICode { get; set; }
         public string searchText { get; set; }
         public int searchActive { get; set; }
-
         public int TypeView { get; set; } = 0;
+        public string ReportName { get; set; }
 
         //Request
         public bool isHandover { get; set; }

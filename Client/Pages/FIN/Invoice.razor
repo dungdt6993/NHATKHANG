@@ -33,7 +33,7 @@
             <div class="col-sm-2">
                 <div class="form-group">
                     <select class="selectpicker form-control form-control-sm"
-                                 data-style="btn-selectpicker"
+                            data-style="btn-selectpicker"
                             data-container="body" @bind="filterFinVM.VTypeID">
                         <option value="FIN_Purchasing">Hóa đơn mua vào</option>
                         <option value="FIN_Sale">Hóa đơn bán ra</option>
@@ -121,13 +121,24 @@
         <div class="card card-warning card-outline">
 
             <div class="card-header text-right">
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa-solid fa-chart-line"></i> Báo cáo
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" @onclick=@(() => ViewRPT("FIN_So_chi_tiet_hoa_don"))>Sổ chi tiết hóa đơn</a>
+                    </div>
+                </div>
+
             </div>
 
             <!-- /.card-header -->
             <div class="card-body table-responsive p-0" style="height: calc(100vh - 233px);">
-                @if (invoiceVMs != null)
+
+                @if (filterFinVM.TypeView == 0)
                 {
-                    if (filterFinVM.TypeView == 0)
+                    @if (invoiceVMs != null)
                     {
                         <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin">
                             <thead class="thead-light">
@@ -173,7 +184,15 @@
                         </table>
                     }
 
-                    if (filterFinVM.TypeView == 1)
+                    @if (invoiceVMs.Count() <= 0)
+                    {
+                        <img class="img-no-result" src="images/_default/no-results.png" />
+                    }
+                }
+
+                @if (filterFinVM.TypeView == 1)
+                {
+                    @if (invoiceVMs != null)
                     {
                         <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin">
                             <thead class="thead-light">
@@ -195,7 +214,9 @@
                                 <Virtualize Items="@invoiceVMs" Context="invoiceVM" OverscanCount="50">
                                     <tr>
                                         <td class="text-center">
-                                            @(invoiceVM.InvoiceDate.HasValue ? invoiceVM.InvoiceDate.Value.ToString("dd/MM/yyyy") : "")
+                                            @(
+                                        invoiceVM.InvoiceDate.HasValue ? invoiceVM.InvoiceDate.Value.ToString("dd/MM/yyyy") : ""
+                                        )
                                         </td>
                                         <td class="text-center">@invoiceVM.InvoiceNumber</td>
                                         <td>@invoiceVM.ObjectName</td>
@@ -228,11 +249,17 @@
                         </table>
                     }
 
-                    if (invoiceVMs.Count() <= 0)
+                    @if (invoiceVMs.Count() <= 0)
                     {
                         <img class="img-no-result" src="images/_default/no-results.png" />
                     }
                 }
+
+                @if (filterFinVM.TypeView == 3)
+                {
+
+                }
+
             </div>
             <!-- /.card-body -->
             @if (invoiceVMs != null)

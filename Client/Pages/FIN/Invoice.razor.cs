@@ -32,10 +32,6 @@ namespace D69soft.Client.Pages.FIN
 
         protected string UserID;
 
-        //Para
-        [Parameter]
-        public string _FuncID { get; set; }
-
         LogVM logVM = new();
 
         //Filter
@@ -115,6 +111,23 @@ namespace D69soft.Client.Pages.FIN
             invoiceVMs = await voucherService.GetInvoices(filterFinVM);
 
             isLoading = false;
-        }   
+        }
+
+        //RPT
+        protected async Task ViewRPT(string _ReportName)
+        {
+            isLoading = true;
+
+            filterFinVM.TypeView = 3;
+
+            filterFinVM.ReportName = _ReportName;
+
+            if (_ReportName == "FIN_So_chi_tiet_hoa_don")
+            {
+                
+            }
+
+            isLoading = false;
+        }
     }
 }
