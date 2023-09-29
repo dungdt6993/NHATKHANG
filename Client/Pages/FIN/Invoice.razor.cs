@@ -41,8 +41,11 @@ namespace D69soft.Client.Pages.FIN
         //Division
         IEnumerable<DivisionVM> filter_divisionVMs;
 
-        //Voucher
+        //Invoice
         List<InvoiceVM> invoiceVMs;
+
+        //InvoiceBooks
+        List<InventoryVM> invoiceBooks;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -120,11 +123,9 @@ namespace D69soft.Client.Pages.FIN
 
             filterFinVM.TypeView = 3;
 
-            filterFinVM.ReportName = _ReportName;
-
             if (_ReportName == "FIN_So_chi_tiet_hoa_don")
             {
-                
+                invoiceBooks = await voucherService.GetInvoiceBooks(filterFinVM);
             }
 
             isLoading = false;

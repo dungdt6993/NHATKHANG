@@ -79,5 +79,12 @@ namespace D69soft.Client.Services.FIN
             return await response.Content.ReadFromJsonAsync<List<VoucherDetailVM>>();
         }
 
+        public async Task<List<InventoryVM>> GetInvoiceBooks(FilterFinVM _filterFinVM)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetInvoiceBooks", _filterFinVM);
+
+            return await response.Content.ReadFromJsonAsync<List<InventoryVM>>();
+        }
+
     }
 }

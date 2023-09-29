@@ -92,7 +92,6 @@ namespace D69soft.Client.Pages.FIN
         string ReportName = String.Empty;
 
         //Inventory
-        InventoryVM inventoryVM = new();
         List<InventoryVM> inventoryVMs;
 
         //Cash

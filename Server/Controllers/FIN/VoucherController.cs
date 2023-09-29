@@ -303,5 +303,23 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
+        [HttpPost("GetInvoiceBooks")]
+        public async Task<ActionResult<List<InventoryVM>>> GetInvoiceBooks(FilterFinVM _filterFinVM)
+        {
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                DynamicParameters parm = new DynamicParameters();
+                parm.Add("@DivisionID", _filterFinVM.DivisionID);
+                parm.Add("@StartDate", _filterFinVM.StartDate);
+                parm.Add("@EndDate", _filterFinVM.EndDate);
+
+                var result = await conn.QueryAsync<InventoryVM>("FIN.GetInvoiceBooks", parm, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+
     }
 }
