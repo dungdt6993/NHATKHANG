@@ -133,9 +133,9 @@ namespace D69soft.Client.Pages.FIN
         }
 
         //Export
-        public void ExportToExcel(string htmlTable)
-        {
-            return File(Encoding.ASCII.GetBytes(htmlTable),"application/vnd.ms-excel","htmlTable.xlsx");
-        }
+        //public void ExportToExcel(string htmlTable)
+        //{
+        //    return File(Encoding.ASCII.GetBytes(htmlTable),"application/vnd.ms-excel","htmlTable.xlsx");
+        //}
     }
 }
