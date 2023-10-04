@@ -133,7 +133,7 @@ namespace D69soft.Server.Controllers.HR
         [HttpGet("GetTrnGroupCodeList")]
         public async Task<ActionResult<IEnumerable<SalaryTransactionGroupVM>>> GetTrnGroupCodeList()
         {
-            var sql = "select * from HR.SalaryTransactionGroup where TrnGroupCode not in (100,200,500,520,620) order by TrnGroupCode";
+            var sql = "select * from HR.SalaryTransactionGroup where TrnGroupCode not in (100,500,520,620) order by TrnGroupCode";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)
@@ -342,8 +342,8 @@ namespace D69soft.Server.Controllers.HR
                         sqlNotCalcByShift += "Insert into HR.MonthlyIncome (Eserial, Period, TrnCode, TrnSubCode, Amount, IsPIT, RatePIT, isPaySlip) ";
                         sqlNotCalcByShift += "select mss.Eserial, mss.Period, sd.TrnCode, sd.TrnSubCode,SUM(ABS((coalesce(TotalShiftTypeActive, 0) * coalesce(" + _salaryTypeIsNotCalcByShift + "Active, 0) * coalesce(PercentIncome, 0)/100)/sta.WDDefault)*stc.Rate), stc.isPIT, stc.RatePIT, stc.isPaySlip ";
                         sqlNotCalcByShift += "from HR.ShiftTypeActive sta ";
-                        sqlNotCalcByShift += "join(select * from HR.SalaryTransactionCode) stc on sta.ShiftTypeID = stc.ShiftTypeID ";
                         sqlNotCalcByShift += "join(select * from HR.SalaryDef where SalaryType = '" + _salaryTypeIsNotCalcByShift + "') sd on 1 = 1 ";
+                        sqlNotCalcByShift += "join(select * from HR.SalaryTransactionCode) stc on stc.TrnCode = sd.TrnCode and stc.TrnSubCode = sd.TrnSubCode ";
                         sqlNotCalcByShift += "join HR.ShiftType st on st.ShiftTypeID = sta.ShiftTypeID ";
                         sqlNotCalcByShift += "join HR.EmployeeTransaction et on et.TrnCode = sd.TrnCode and et.TrnSubCode = sd.TrnSubCode and et.Eserial = sta.Eserial ";
                         sqlNotCalcByShift += "join(select * from HR.MonthlySalaryStaff where Period = " + _filterHrVM.Period + ") mss on mss.Eserial = sta.Eserial ";
