@@ -5,6 +5,7 @@
         public string DivisionID { get; set; }
 
         public string DivisionName { get; set; }
+        public string DivisionShortName { get; set; }
 
         public string CodeDivs { get; set; }
 

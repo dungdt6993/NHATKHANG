@@ -78,6 +78,7 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public decimal BudgetSUN { get; set; }
         public string DivisionID { get; set; }
         public string DivisionName { get; set; }
+        public string DivisionShortName { get; set; }
         public string CodeDivs { get; set; }
         public string DivsAddress { get; set; }
         public string DivsTel { get; set; }

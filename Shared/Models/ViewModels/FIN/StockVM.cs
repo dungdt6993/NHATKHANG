@@ -18,6 +18,7 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public bool StockActive { get; set; } = true;
         public string DivisionID { get; set; }
         public string DivisionName { get; set; }
+        public string DivisionShortName { get; set; }
         public string CodeDivs { get; set; }
         public string DivsAddress { get; set; }
         public string DivsTel { get; set; }
