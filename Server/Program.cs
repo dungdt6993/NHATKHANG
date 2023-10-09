@@ -114,7 +114,7 @@ namespace D69soft
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
-                Path.Combine(app.Environment.ContentRootPath, "DataProtection")),
+                Path.Combine(app.Environment.ContentRootPath, "Files")),
                 RequestPath = "/Data"
             });
 

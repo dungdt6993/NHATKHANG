@@ -7,27 +7,50 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Remove="DataProtection\Upload\POS\**" />
-		<Content Remove="DataProtection\Upload\POS\**" />
-		<EmbeddedResource Remove="DataProtection\Upload\POS\**" />
-		<None Remove="DataProtection\Upload\POS\**" />
+		<Compile Remove="Files\Upload\POS\**" />
+		<Content Remove="Files\Upload\POS\**" />
+		<EmbeddedResource Remove="Files\Upload\POS\**" />
+		<None Remove="Files\Upload\POS\**" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Remove="DataProtection\Reports\Phieu_xuat_kho_ban_hang.cs" />
-		<Compile Remove="DataProtection\Reports\Phieu_xuat_kho_ban_hang.Designer.cs" />
+		<Compile Remove="Files\Reports\Phieu_xuat_kho_ban_hang.cs" />
+		<Compile Remove="Files\Reports\Phieu_xuat_kho_ban_hang.Designer.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Remove="DataProtection\Reports\Phieu_xuat_kho_ban_hang.resx" />
+		<EmbeddedResource Remove="Files\Reports\Phieu_xuat_kho_ban_hang.resx" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Remove="DataProtection\Reports\Bang_cham_cong.repx" />
-		<None Remove="DataProtection\Reports\Bang_ke_ban_hang_NCC.repx" />
-		<None Remove="DataProtection\Reports\Phieu_xuat_chuyen_kho_noi_bo.repx" />
-		<None Remove="DataProtection\Reports\Phieu_xuat_kho_ban_hang.repx" />
+		<None Remove="Files\Reports\Bang_cham_cong.repx" />
+		<None Remove="Files\Reports\Bang_ke_ban_hang_NCC.repx" />
+		<None Remove="Files\Reports\Phieu_xuat_chuyen_kho_noi_bo.repx" />
+		<None Remove="Files\Reports\Phieu_xuat_kho_ban_hang.repx" />
+		<None Remove="Files\Trademark\dashboard.png" />
+		<None Remove="Files\Trademark\favicon.png" />
+		<None Remove="Files\Trademark\logo-default.png" />
+		<None Remove="Files\Trademark\logo-login.png" />
 		<None Remove="PredefinedReports\CustomNewReport.vsrepx" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Files\Trademark\dashboard.png">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="Files\Trademark\favicon.png">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="Files\Trademark\logo-default.png">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="Files\Trademark\logo-login.png">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -50,9 +73,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="DataProtection\Export\" />
-		<Folder Include="DataProtection\Upload\FIN\Images\Items\" />
-		<Folder Include="DataProtection\Upload\HR\Images\Profile\" />
+		<Folder Include="Files\Export\" />
+		<Folder Include="Files\Upload\DOC\" />
+		<Folder Include="Files\Upload\FIN\Images\Items\" />
+		<Folder Include="Files\Upload\HR\Images\Profile\" />
 		<Folder Include="Hubs\" />
 	</ItemGroup>
 

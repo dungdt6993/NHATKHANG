@@ -12,18 +12,18 @@
     position: relative;
 }
 
-.dashboard-content:before {
-    content: '';
-    display: block;
-    background: url("../images/_default/dashboard.png") no-repeat center center;
-    background-size: 60%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1;
-}
+    .dashboard-content:before {
+        content: '';
+        display: block;
+        background: url("/Data/trademark/dashboard.png") no-repeat center center;
+        background-size: 60%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+    }
 
 /*Dashboard*/
 

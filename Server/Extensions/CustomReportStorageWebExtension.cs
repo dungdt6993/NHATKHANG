@@ -11,7 +11,7 @@ namespace D69soft.Client.Extensions
 
         public CustomReportStorageWebExtension(IWebHostEnvironment env)
         {
-            ReportDirectory = Path.Combine(env.ContentRootPath, "DataProtection/Reports");
+            ReportDirectory = Path.Combine(env.ContentRootPath, "Files/Reports");
             if (!Directory.Exists(ReportDirectory))
             {
                 Directory.CreateDirectory(ReportDirectory);
