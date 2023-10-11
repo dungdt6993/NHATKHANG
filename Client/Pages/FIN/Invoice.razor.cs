@@ -112,6 +112,8 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
+            filterFinVM.TypeView = filterFinVM.TypeView == 2 ? 0 : filterFinVM.TypeView;
+
             invoiceVMs = await voucherService.GetInvoices(filterFinVM);
 
             isLoading = false;
@@ -122,7 +124,7 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            filterFinVM.TypeView = 3;
+            filterFinVM.TypeView = 2;
 
             if (_ReportName == "FIN_So_chi_tiet_hoa_don")
             {
