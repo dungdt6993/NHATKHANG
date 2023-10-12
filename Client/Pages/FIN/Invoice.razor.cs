@@ -15,6 +15,7 @@ using D69soft.Client.Extensions;
 using Microsoft.AspNetCore.Components.Forms;
 using D69soft.Server.Services.HR;
 using System.Text;
+using static System.Net.WebRequestMethods;
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -134,10 +135,5 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
-        //Export
-        //public void ExportToExcel(string htmlTable)
-        //{
-        //    return File(Encoding.ASCII.GetBytes(htmlTable),"application/vnd.ms-excel","htmlTable.xlsx");
-        //}
     }
 }
