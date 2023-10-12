@@ -1,20 +1,14 @@
 ﻿using BlazorDateRangePicker;
-using Blazored.Typeahead;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
-using System.Text.RegularExpressions;
 using D69soft.Client.Services.FIN;
 using D69soft.Client.Services.HR;
 using D69soft.Client.Services;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.HR;
-using D69soft.Shared.Utilities;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extensions;
-using Microsoft.AspNetCore.Components.Forms;
-using D69soft.Server.Services.HR;
-using System.Text;
 
 namespace D69soft.Client.Pages.FIN
 {
