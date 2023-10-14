@@ -17,20 +17,19 @@ namespace D69soft.Client.Pages.SYS
         [Inject] SysService sysService { get; set; }
         [Inject] AuthService authService { get; set; }
 
-        protected string UserID;
-        protected int Role;
-
         bool isLoading;
-
         bool isLoadingScreen;
+
+        //log
+        LogVM logVM = new();
+
+        //Filter
+        FilterVM filterVM = new();
 
         [Parameter] public string ReportName { get; set; }
 
         bool IsEditRpt = false;
 
-        LogVM logVM = new();
-
-        FilterRptVM filterRptVM = new();
         List<SysRptVM> modules = new();
         List<SysRptVM> rptgrps = new();
 
@@ -51,13 +50,13 @@ namespace D69soft.Client.Pages.SYS
 
         protected override async Task OnInitializedAsync()
         {
-            UserID = (await authenticationStateTask).User.GetUserId();
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckPermisRpt(UserID))
+            if (await sysService.CheckPermisRpt(filterVM.UserID))
             {
                 logVM.LogType = "FUNC";
                 logVM.LogName = "RPT";
-                logVM.LogUser = UserID;
+                logVM.LogUser = filterVM.UserID;
                 await sysService.InsertLog(logVM);
             }
             else
@@ -65,14 +64,14 @@ namespace D69soft.Client.Pages.SYS
                 navigationManager.NavigateTo("/");
             }
 
-            Role = await authService.GetRole(UserID);
+            filterVM.Role = await authService.GetRole(filterVM.UserID);
 
-            modules = await sysService.GetModuleRpt(UserID);
-            filterRptVM.ModuleID = modules.First().ModuleID;
+            modules = await sysService.GetModuleRpt(filterVM.UserID);
+            filterVM.ModuleID = modules.First().ModuleID;
 
-            rptgrps = await sysService.GetRptGrpByID(filterRptVM.ModuleID, UserID);
+            rptgrps = await sysService.GetRptGrpByID(filterVM.ModuleID, filterVM.UserID);
 
-            rpts = await sysService.GetRptList(filterRptVM.ModuleID, filterRptVM.RptGrpID, UserID);
+            rpts = await sysService.GetRptList(filterVM.ModuleID, filterVM.RptGrpID, filterVM.UserID);
 
             isLoadingScreen = false;
         }
@@ -81,15 +80,15 @@ namespace D69soft.Client.Pages.SYS
         {
             isLoading = true;
 
-            filterRptVM.ModuleID = value;
+            filterVM.ModuleID = value;
 
-            filterRptVM.RptGrpID = 0;
+            filterVM.RptGrpID = 0;
 
-            filterRptVM.RptID = 0;
+            filterVM.RptID = 0;
 
-            rptgrps = await sysService.GetRptGrpByID(filterRptVM.ModuleID, UserID);
+            rptgrps = await sysService.GetRptGrpByID(filterVM.ModuleID, filterVM.UserID);
 
-            rpts = await sysService.GetRptList(filterRptVM.ModuleID, filterRptVM.RptGrpID, UserID);
+            rpts = await sysService.GetRptList(filterVM.ModuleID, filterVM.RptGrpID, filterVM.UserID);
 
             isLoading = false;
 
@@ -100,11 +99,11 @@ namespace D69soft.Client.Pages.SYS
         {
             isLoading = true;
 
-            filterRptVM.RptGrpID = value;
+            filterVM.RptGrpID = value;
 
-            filterRptVM.RptID = 0;
+            filterVM.RptID = 0;
 
-            rpts = await sysService.GetRptList(filterRptVM.ModuleID, filterRptVM.RptGrpID, UserID);
+            rpts = await sysService.GetRptList(filterVM.ModuleID, filterVM.RptGrpID, filterVM.UserID);
 
             isLoading = false;
 
@@ -119,14 +118,14 @@ namespace D69soft.Client.Pages.SYS
 
             if(rptVM.PassUserID)
             {
-                ReportName = rptVM.RptUrl + "?UserID=" + UserID + "";
+                ReportName = rptVM.RptUrl + "?UserID=" + filterVM.UserID + "";
             }
             else
             {
                 ReportName = rptVM.RptUrl;
             }
 
-            filterRptVM.RptID = value;
+            filterVM.RptID = value;
 
             isLoading = false;
 
@@ -169,7 +168,7 @@ namespace D69soft.Client.Pages.SYS
 
             if (rptVM.IsTypeUpdate != 2)
             {
-                rptVM.UserID = UserID;
+                rptVM.UserID = filterVM.UserID;
                 await sysService.UpdateRpt(rptVM);
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Rpt");
@@ -177,7 +176,7 @@ namespace D69soft.Client.Pages.SYS
 
                 ReportName = rptVM.RptUrl;
 
-                rpts = await sysService.GetRptList(filterRptVM.ModuleID, filterRptVM.RptGrpID, UserID);
+                rpts = await sysService.GetRptList(filterVM.ModuleID, filterVM.RptGrpID, filterVM.UserID);
 
 
                 onchange_filter_rpt(rptVM.RptID);
@@ -197,8 +196,8 @@ namespace D69soft.Client.Pages.SYS
 
                     ReportName = null;
 
-                    filterRptVM.RptID = 0;
-                    rpts = await sysService.GetRptList(filterRptVM.ModuleID, filterRptVM.RptGrpID, UserID);
+                    filterVM.RptID = 0;
+                    rpts = await sysService.GetRptList(filterVM.ModuleID, filterVM.RptGrpID, filterVM.UserID);
                 }
             }
 
@@ -217,10 +216,10 @@ namespace D69soft.Client.Pages.SYS
             }
             else
             {
-                rptGrpVM = await sysService.GetRptGrp(filterRptVM.RptGrpID);
+                rptGrpVM = await sysService.GetRptGrp(filterVM.RptGrpID);
                 rptGrpVM.IsTypeUpdate = 1;
             }
-            rptGrpVM.ModuleID = filterRptVM.ModuleID;
+            rptGrpVM.ModuleID = filterVM.ModuleID;
 
             isLoading = false;
         }
@@ -236,8 +235,8 @@ namespace D69soft.Client.Pages.SYS
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModal_GrtRpt");
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
-                filterRptVM.RptID = 0;
-                rptgrps = await sysService.GetRptGrpByID(filterRptVM.ModuleID, UserID);
+                filterVM.RptID = 0;
+                rptgrps = await sysService.GetRptGrpByID(filterVM.ModuleID, filterVM.UserID);
             }
             else
             {
@@ -248,9 +247,9 @@ namespace D69soft.Client.Pages.SYS
                     await js.InvokeAsync<object>("CloseModal", "#InitializeModal_GrtRpt");
                     await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
 
-                    filterRptVM.RptGrpID = 0;
-                    rptgrps = await sysService.GetRptGrpByID(filterRptVM.ModuleID, UserID);
-                    rpts = await sysService.GetRptList(filterRptVM.ModuleID, filterRptVM.RptGrpID, UserID);
+                    filterVM.RptGrpID = 0;
+                    rptgrps = await sysService.GetRptGrpByID(filterVM.ModuleID, filterVM.UserID);
+                    rpts = await sysService.GetRptList(filterVM.ModuleID, filterVM.RptGrpID, filterVM.UserID);
                 }
             }
 

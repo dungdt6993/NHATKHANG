@@ -34,7 +34,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("GetAgreementTextList")]
-        public async Task<ActionResult<List<AgreementTextVM>>> GetAgreementTextList(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<List<AgreementTextVM>>> GetAgreementTextList(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -42,13 +42,13 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@sPeriod", _filterHrVM.Year * 100 + _filterHrVM.Month);
-                parm.Add("@DivsID", _filterHrVM.DivisionID);
-                parm.Add("@SectionID", _filterHrVM.SectionID);
-                parm.Add("@DeptID", _filterHrVM.DepartmentID);
-                parm.Add("@arrPos", _filterHrVM.PositionGroupID);
-                parm.Add("@Eserial", _filterHrVM.Eserial);
-                parm.Add("@AgreementText", _filterHrVM.RptID);
+                parm.Add("@sPeriod", _filterVM.Year * 100 + _filterVM.Month);
+                parm.Add("@DivsID", _filterVM.DivisionID);
+                parm.Add("@SectionID", _filterVM.SectionID);
+                parm.Add("@DeptID", _filterVM.DepartmentID);
+                parm.Add("@arrPos", _filterVM.PositionGroupID);
+                parm.Add("@Eserial", _filterVM.Eserial);
+                parm.Add("@AgreementText", _filterVM.RptID);
 
                 var result = await conn.QueryAsync<AgreementTextVM>("HR.AgreementText_viewMain", parm, commandType: CommandType.StoredProcedure);
                 return result.ToList();

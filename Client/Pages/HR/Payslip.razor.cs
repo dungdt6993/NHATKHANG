@@ -21,16 +21,15 @@ namespace D69soft.Client.Pages.HR
         [Inject] DutyRosterService dutyRosterService { get; set; }
         [Inject] PayrollService payrollService { get; set; }
 
-        protected string UserID;
-
         bool isLoading;
-
         bool isLoadingScreen = true;
 
+        //log
         LogVM logVM = new();
 
         //Filter
-        FilterHrVM filterHrVM = new();
+        FilterVM filterVM = new();
+
         IEnumerable<PeriodVM> year_filter_list;
         IEnumerable<PeriodVM> month_filter_list;
         IEnumerable<DivisionVM> division_filter_list;
@@ -54,11 +53,11 @@ namespace D69soft.Client.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            UserID = (await authenticationStateTask).User.GetUserId();
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "HR_Payslip"))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, "HR_Payslip"))
             {
-                logVM.LogUser = UserID;
+                logVM.LogUser = filterVM.UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "HR_Payslip";
                 await sysService.InsertLog(logVM);
@@ -69,30 +68,28 @@ namespace D69soft.Client.Pages.HR
             }
 
             //Initialize Filter
-            filterHrVM.UserID = UserID;
-
             year_filter_list = await sysService.GetYearFilter();
-            filterHrVM.Year = DateTime.Now.Year;
+            filterVM.Year = DateTime.Now.Year;
 
             month_filter_list = await sysService.GetMonthFilter();
-            filterHrVM.Month = DateTime.Now.Month;
+            filterVM.Month = DateTime.Now.Month;
 
-            filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
+            filterVM.Period = filterVM.Year * 100 + filterVM.Month;
 
-            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterHrVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
+            division_filter_list = await organizationalChartService.GetDivisionList(filterVM);
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
 
-            filterHrVM.SectionID = string.Empty;
+            filterVM.SectionID = string.Empty;
             section_filter_list = await organizationalChartService.GetSectionList();
 
-            filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
+            filterVM.DepartmentID = string.Empty;
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterVM);
 
-            filterHrVM.PositionGroupID = string.Empty;
+            filterVM.PositionGroupID = string.Empty;
             position_filter_list = await organizationalChartService.GetPositionList();
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             isLoadingScreen = false;
         }
@@ -101,12 +98,12 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.Month = value;
+            filterVM.Month = value;
 
-            filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
+            filterVM.Period = filterVM.Year * 100 + filterVM.Month;
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             payslipVMs = null;
 
@@ -119,15 +116,15 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.Year = value;
+            filterVM.Year = value;
 
-            filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
+            filterVM.Period = filterVM.Year * 100 + filterVM.Month;
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
-            filterHrVM.TrnCode = 0;
-            filterHrVM.TrnSubCode = 0;
+            filterVM.TrnCode = 0;
+            filterVM.TrnSubCode = 0;
 
             payslipVMs = null;
 
@@ -140,19 +137,19 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DivisionID = value;
+            filterVM.DivisionID = value;
 
-            filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
+            filterVM.DepartmentID = string.Empty;
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterVM);
 
-            filterHrVM.PositionGroupID = string.Empty;
-            filterHrVM.arrPositionID = new string[] { };
+            filterVM.PositionGroupID = string.Empty;
+            filterVM.arrPositionID = new string[] { };
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
-            filterHrVM.TrnCode = 0;
-            filterHrVM.TrnSubCode = 0;
+            filterVM.TrnCode = 0;
+            filterVM.TrnSubCode = 0;
 
             payslipVMs = null;
 
@@ -165,13 +162,13 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DepartmentID = value;
+            filterVM.DepartmentID = value;
 
-            filterHrVM.PositionGroupID = string.Empty;
-            filterHrVM.arrPositionID = new string[] { };
+            filterVM.PositionGroupID = string.Empty;
+            filterVM.arrPositionID = new string[] { };
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             payslipVMs = null;
 
@@ -184,13 +181,13 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.SectionID = value;
+            filterVM.SectionID = value;
 
-            filterHrVM.PositionGroupID = string.Empty;
-            filterHrVM.arrPositionID = new string[] { };
+            filterVM.PositionGroupID = string.Empty;
+            filterVM.arrPositionID = new string[] { };
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             payslipVMs = null;
 
@@ -203,15 +200,15 @@ namespace D69soft.Client.Pages.HR
         {
             get
             {
-                return filterHrVM.arrPositionID;
+                return filterVM.arrPositionID;
             }
             set
             {
                 isLoading = true;
 
-                filterHrVM.arrPositionID = (string[])value;
+                filterVM.arrPositionID = (string[])value;
 
-                filterHrVM.PositionGroupID = string.Join(",", (string[])value);
+                filterVM.PositionGroupID = string.Join(",", (string[])value);
 
                 reload_filter_eserial();
 
@@ -223,8 +220,8 @@ namespace D69soft.Client.Pages.HR
 
         private async void reload_filter_eserial()
         {
-            filterHrVM.Eserial = String.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = String.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             StateHasChanged();
         }
@@ -233,7 +230,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.Eserial = value;
+            filterVM.Eserial = value;
 
             payslipVMs = null;
 
@@ -246,9 +243,9 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.IsTypeSearch = int.Parse(args.Value.ToString());
+            filterVM.IsTypeSearch = int.Parse(args.Value.ToString());
 
-            filterHrVM.Eserial = string.Empty;
+            filterVM.Eserial = string.Empty;
 
             payslipVMs = null;
 
@@ -259,7 +256,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            payslipVMs = await payrollService.GetPayslipList(filterHrVM);
+            payslipVMs = await payrollService.GetPayslipList(filterVM);
 
             ReportName = "CustomNewReport";
 
@@ -272,7 +269,7 @@ namespace D69soft.Client.Pages.HR
 
             _payslipVM.SalaryReply = value;
 
-            _payslipVM.UserID = UserID;
+            _payslipVM.UserID = filterVM.UserID;
 
             await payrollService.UpdateSalaryReply(_payslipVM);
 

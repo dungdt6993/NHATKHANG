@@ -2,6 +2,7 @@
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.OP;
 using System.Net.Http.Json;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Client.Services.OP
 {
@@ -14,17 +15,17 @@ namespace D69soft.Client.Services.OP
             _httpClient = httpClient;
         }
 
-        public async Task<IEnumerable<TenderVM>> GetTenders(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<TenderVM>> GetTenders(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/OP/GetTenders", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/OP/GetTenders", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<TenderVM>>();
         }
 
         //CruiseSchedule
-        public async Task<List<CruiseScheduleVM>> GetCruiseSchedules(FilterHrVM _filterHrVM)
+        public async Task<List<CruiseScheduleVM>> GetCruiseSchedules(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/OP/GetCruiseSchedules", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/OP/GetCruiseSchedules", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<List<CruiseScheduleVM>>();
         }
@@ -42,9 +43,9 @@ namespace D69soft.Client.Services.OP
         }
 
         //TenderSchedule
-        public async Task<IEnumerable<TenderScheduleVM>> GetTenderSchedules(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<TenderScheduleVM>> GetTenderSchedules(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/OP/GetTenderSchedules", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/OP/GetTenderSchedules", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<TenderScheduleVM>>();
         }

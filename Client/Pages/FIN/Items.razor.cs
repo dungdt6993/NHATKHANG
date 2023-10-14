@@ -24,16 +24,14 @@ namespace D69soft.Client.Pages.FIN
         [Inject] PurchasingService purchasingService { get; set; }
         [Inject] InventoryService inventoryService { get; set; }
 
-        protected string UserID;
-
         bool isLoading;
-
         bool isLoadingScreen = true;
 
+        //Log
         LogVM logVM = new();
 
         //Filter
-        FilterFinVM filterFinVM = new();
+        FilterVM filterVM = new();
 
         //ItemsType
         IEnumerable<ItemsTypeVM> itemsTypeVMs;
@@ -84,11 +82,11 @@ namespace D69soft.Client.Pages.FIN
 
         protected override async Task OnInitializedAsync()
         {
-            UserID = (await authenticationStateTask).User.GetUserId();
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "FIN_Items"))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, "FIN_Items"))
             {
-                logVM.LogUser = UserID;
+                logVM.LogUser = filterVM.UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "FIN_Items";
                 await sysService.InsertLog(logVM);
@@ -106,7 +104,7 @@ namespace D69soft.Client.Pages.FIN
 
             vatDefVMs = await voucherService.GetVATDefs();
 
-            filterFinVM.IActive = true;
+            filterVM.IActive = true;
 
             await GetItems();
 
@@ -119,7 +117,7 @@ namespace D69soft.Client.Pages.FIN
 
             itemsVM = new();
 
-            itemsVMs = await inventoryService.GetItemsList(filterFinVM);
+            itemsVMs = await inventoryService.GetItemsList(filterVM);
 
             isLoading = false;
         }
@@ -142,11 +140,11 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            filterFinVM.IClsCode = value;
+            filterVM.IClsCode = value;
 
-            filterFinVM.IGrpCode = String.Empty;
+            filterVM.IGrpCode = String.Empty;
 
-            filterFinVM.searchText = String.Empty;
+            filterVM.searchText = String.Empty;
 
             await GetItems();
 
@@ -159,11 +157,11 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            filterFinVM.IGrpCode = value;
+            filterVM.IGrpCode = value;
 
             itemsGroupVM = String.IsNullOrEmpty(value) ? new() : itemsGroupVMs.First(x => x.IGrpCode == value);
 
-            filterFinVM.searchText = String.Empty;
+            filterVM.searchText = String.Empty;
 
             await GetItems();
 
@@ -174,7 +172,7 @@ namespace D69soft.Client.Pages.FIN
 
         protected async void FilterItems(ChangeEventArgs args)
         {
-            filterFinVM.searchText = args.Value.ToString();
+            filterVM.searchText = args.Value.ToString();
 
             await GetItems();
 
@@ -185,9 +183,9 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            filterFinVM.IActive = bool.Parse(args.Value.ToString());
+            filterVM.IActive = bool.Parse(args.Value.ToString());
 
-            filterFinVM.searchText = String.Empty;
+            filterVM.searchText = String.Empty;
 
             await GetItems();
 
@@ -202,7 +200,7 @@ namespace D69soft.Client.Pages.FIN
             {
                 itemsGroupVM = new();
 
-                itemsGroupVM.IClsCode = filterFinVM.IClsCode;
+                itemsGroupVM.IClsCode = filterVM.IClsCode;
             }
 
             itemsGroupVM.IsTypeUpdate = _IsTypeUpdate;
@@ -231,8 +229,8 @@ namespace D69soft.Client.Pages.FIN
 
                     if (affectedRows > 0)
                     {
-                        filterFinVM.IGrpCode = String.Empty;
-                        itemsVMs = await inventoryService.GetItemsList(filterFinVM);
+                        filterVM.IGrpCode = String.Empty;
+                        itemsVMs = await inventoryService.GetItemsList(filterVM);
 
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsGroup");
                         await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
@@ -270,8 +268,8 @@ namespace D69soft.Client.Pages.FIN
                 quantitativeItemsVMs = new();
 
                 itemsVM.IURLPicture1 = "/images/_default/no-image.png";
-                itemsVM.IClsCode = filterFinVM.IClsCode;
-                itemsVM.IGrpCode = filterFinVM.IGrpCode;
+                itemsVM.IClsCode = filterVM.IClsCode;
+                itemsVM.IGrpCode = filterVM.IGrpCode;
                 itemsVM.IActive = true;
             }
 

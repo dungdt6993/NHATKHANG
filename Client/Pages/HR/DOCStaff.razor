@@ -212,14 +212,14 @@
 
 <section class="content-header">
 
-    <EditForm Model="@filterHrVM">
+    <EditForm Model="@filterVM">
         <div class="row">
 
             <div class="col-md-3">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
-                                 Value="@filterHrVM.DivisionID"
+                                 ValueExpression="@(()=>filterVM.DivisionID)"
+                                 Value="@filterVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
                         @if (division_filter_list != null)
                         {
@@ -235,8 +235,8 @@
             <div class="col-md-5">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.DepartmentID)"
-                                 Value="@filterHrVM.DepartmentID"
+                                 ValueExpression="@(()=>filterVM.DepartmentID)"
+                                 Value="@filterVM.DepartmentID"
                                  ValueChanged="@((string value) => onchange_filter_department(value))">
                         <option value=@string.Empty>-----Bộ phận-----</option>
                         @if (department_filter_list != null)
@@ -253,8 +253,8 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
-                                 ValueExpression="@(()=>filterHrVM.Eserial)"
-                                 Value="@filterHrVM.Eserial"
+                                 ValueExpression="@(()=>filterVM.Eserial)"
+                                 Value="@filterVM.Eserial"
                                  ValueChanged="@((string value) => onchange_filter_eserial(value))">
                         <option value=@string.Empty>-----Nhân viên-----</option>
                         @if (eserial_filter_list != null)
@@ -271,8 +271,8 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.DocTypeID)"
-                                 Value="@filterHrVM.DocTypeID"
+                                 ValueExpression="@(()=>filterVM.DocTypeID)"
+                                 Value="@filterVM.DocTypeID"
                                  ValueChanged="@((int value) => onchange_filter_doctype(value))">
                         <option value=0>-----Loại giấy tờ-----</option>
                         @if (doctype_filter_list != null)
@@ -290,7 +290,7 @@
                 <!-- radio -->
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
-                        <input type="radio" id="profiletype1" name="profiletype" value="0" @onchange="onchange_filter_profiletype" checked="@(filterHrVM.TypeProfile == 0? true: false)">
+                        <input type="radio" id="profiletype1" name="profiletype" value="0" @onchange="onchange_filter_profiletype" checked="@(filterVM.TypeProfile == 0? true: false)">
                         <label for="profiletype1">
                             Đang làm
                         </label>
@@ -299,7 +299,7 @@
                         &nbsp;&nbsp;
                     </label>
                     <div class="icheck-danger d-inline">
-                        <input type="radio" id="profiletype2" name="profiletype" value="1" @onchange="onchange_filter_profiletype" checked="@(filterHrVM.TypeProfile == 1? true: false)">
+                        <input type="radio" id="profiletype2" name="profiletype" value="1" @onchange="onchange_filter_profiletype" checked="@(filterVM.TypeProfile == 1? true: false)">
                         <label for="profiletype2">
                             Nghỉ việc
                         </label>
@@ -311,7 +311,7 @@
                 <!-- radio -->
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
-                        <input type="radio" id="r1" name="r" value="0" @onchange="onchange_filter_type" checked="@(filterHrVM.IsTypeSearch == 0? true: false)">
+                        <input type="radio" id="r1" name="r" value="0" @onchange="onchange_filter_type" checked="@(filterVM.IsTypeSearch == 0? true: false)">
                         <label for="r1">
                             Tất cả
                         </label>
@@ -320,7 +320,7 @@
                         &nbsp;&nbsp;
                     </label>
                     <div class="icheck-danger d-inline">
-                        <input type="radio" id="r2" name="r" value="1" @onchange="onchange_filter_type" checked="@(filterHrVM.IsTypeSearch == 1? true: false)">
+                        <input type="radio" id="r2" name="r" value="1" @onchange="onchange_filter_type" checked="@(filterVM.IsTypeSearch == 1? true: false)">
                         <label for="r2">
                             Hết hạn
                         </label>
@@ -329,7 +329,7 @@
                         &nbsp;&nbsp;
                     </label>
                     <div class="icheck-warning d-inline">
-                        <input type="radio" id="r3" name="r" value="2" @onchange="onchange_filter_type" checked="@(filterHrVM.IsTypeSearch == 2? true: false)">
+                        <input type="radio" id="r3" name="r" value="2" @onchange="onchange_filter_type" checked="@(filterVM.IsTypeSearch == 2? true: false)">
                         <label for="r3">
                             Thiếu file Scan
                         </label>

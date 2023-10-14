@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Utilities;
 using Newtonsoft.Json;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Server.Controllers.HR
 {
@@ -23,7 +24,7 @@ namespace D69soft.Server.Controllers.HR
 
         //Monthly Income
         [HttpPost("GetMonthlyIncomeTrnOtherList")]
-        public async Task<ActionResult<List<MonthlyIncomeTrnOtherVM>>> GetMonthlyIncomeTrnOtherList(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<List<MonthlyIncomeTrnOtherVM>>> GetMonthlyIncomeTrnOtherList(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -31,16 +32,16 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@Y", _filterHrVM.Year);
-                parm.Add("@M", _filterHrVM.Month);
-                parm.Add("@DivsID", _filterHrVM.DivisionID);
-                parm.Add("@SectionID", _filterHrVM.SectionID);
-                parm.Add("@DeptID", _filterHrVM.DepartmentID);
-                parm.Add("@arrPos", _filterHrVM.PositionGroupID);
-                parm.Add("@Eserial", _filterHrVM.Eserial);
-                parm.Add("@TrnCode", _filterHrVM.TrnCode);
-                parm.Add("@TrnSubCode", _filterHrVM.TrnSubCode);
-                parm.Add("@IsTypeSearch", _filterHrVM.IsTypeSearch);
+                parm.Add("@Y", _filterVM.Year);
+                parm.Add("@M", _filterVM.Month);
+                parm.Add("@DivsID", _filterVM.DivisionID);
+                parm.Add("@SectionID", _filterVM.SectionID);
+                parm.Add("@DeptID", _filterVM.DepartmentID);
+                parm.Add("@arrPos", _filterVM.PositionGroupID);
+                parm.Add("@Eserial", _filterVM.Eserial);
+                parm.Add("@TrnCode", _filterVM.TrnCode);
+                parm.Add("@TrnSubCode", _filterVM.TrnSubCode);
+                parm.Add("@IsTypeSearch", _filterVM.IsTypeSearch);
 
                 var result = await conn.QueryAsync<MonthlyIncomeTrnOtherVM>("HR.MonthlyIncome_viewMain", parm, commandType: CommandType.StoredProcedure);
                 return result.ToList();
@@ -88,14 +89,14 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("GetDataMITrnOtherFromExcel")]
-        public async Task<ActionResult<bool>> GetDataMITrnOtherFromExcel(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<bool>> GetDataMITrnOtherFromExcel(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                string str = LibraryFunc.RepalceWhiteSpace(_filterHrVM.strDataFromExcel.Trim()).Replace(" \t", "\t").Replace("\t ", "\t").Replace(",", string.Empty).Replace(" ", "\n");
+                string str = LibraryFunc.RepalceWhiteSpace(_filterVM.strDataFromExcel.Trim()).Replace(" \t", "\t").Replace("\t ", "\t").Replace(",", string.Empty).Replace(" ", "\n");
 
                 var sql = string.Empty;
                 try
@@ -116,7 +117,7 @@ namespace D69soft.Server.Controllers.HR
 
                         sql += ") ";
 
-                        await conn.ExecuteAsync(sql, _filterHrVM);
+                        await conn.ExecuteAsync(sql, _filterVM);
                     }
                 }
                 catch (Exception)
@@ -160,25 +161,25 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("CalcSalary")]
-        public async Task<ActionResult<bool>> CalcSalary(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<bool>> CalcSalary(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var sqlBeginLog = "Update HR.LockSalary set isSalCalc=1, StatusSalCalc = 0 where Period=" + _filterHrVM.Period + " and DivisionID='" + _filterHrVM.DivisionID + "' ";
+                var sqlBeginLog = "Update HR.LockSalary set isSalCalc=1, StatusSalCalc = 0 where Period=" + _filterVM.Period + " and DivisionID='" + _filterVM.DivisionID + "' ";
                 await conn.ExecuteAsync(sqlBeginLog);
 
                 /***************Lấy thông tin dữ liệu lương***************/
                 DynamicParameters parmSal = new DynamicParameters();
-                parmSal.Add("@Y", _filterHrVM.Year);
-                parmSal.Add("@M", _filterHrVM.Month);
-                parmSal.Add("@DivsID", _filterHrVM.DivisionID);
+                parmSal.Add("@Y", _filterVM.Year);
+                parmSal.Add("@M", _filterVM.Month);
+                parmSal.Add("@DivsID", _filterVM.DivisionID);
                 await conn.ExecuteAsync("HR.Payroll_calcSalaryActiveMonth", parmSal, commandType: CommandType.StoredProcedure);
 
                 /***************Cập nhật ngày tính lương active cho những người thay đổi trong tháng***************/
-                string sqlSal = "select Eserial from HR.SalaryActiveMonth where Period=" + _filterHrVM.Period + " and Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterHrVM.DivisionID + "') group by Eserial having count(Eserial) >1 ";
+                string sqlSal = "select Eserial from HR.SalaryActiveMonth where Period=" + _filterVM.Period + " and Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterVM.DivisionID + "') group by Eserial having count(Eserial) >1 ";
 
                 var _eserialSals = await conn.QueryAsync<string>(sqlSal);
 
@@ -188,7 +189,7 @@ namespace D69soft.Server.Controllers.HR
                     {
                         var _eserialSal = _eserialSals.ToList()[i];
 
-                        string sqlEserialSal = "select BeginSalaryDate from HR.SalaryActiveMonth where Period=" + _filterHrVM.Period + " and Eserial='" + _eserialSal + "' order by BeginSalaryDate";
+                        string sqlEserialSal = "select BeginSalaryDate from HR.SalaryActiveMonth where Period=" + _filterVM.Period + " and Eserial='" + _eserialSal + "' order by BeginSalaryDate";
 
                         var _beginSalaryDates = await conn.QueryAsync<string>(sqlEserialSal);
 
@@ -198,7 +199,7 @@ namespace D69soft.Server.Controllers.HR
 
                             var _beginSalaryDate_last = _beginSalaryDates.ToList()[j + 1];
 
-                            string sqlUpdateEndSalaryDateActive = "Update HR.SalaryActiveMonth set EndSalaryDateActive = DATEADD(day,-1,CONVERT(datetime,'" + _beginSalaryDate_last + "')) where Period=" + _filterHrVM.Period + " and Eserial='" + _eserialSal + "' and BeginSalaryDate = '" + _beginSalaryDate_fisrt + "' ";
+                            string sqlUpdateEndSalaryDateActive = "Update HR.SalaryActiveMonth set EndSalaryDateActive = DATEADD(day,-1,CONVERT(datetime,'" + _beginSalaryDate_last + "')) where Period=" + _filterVM.Period + " and Eserial='" + _eserialSal + "' and BeginSalaryDate = '" + _beginSalaryDate_fisrt + "' ";
 
                             await conn.ExecuteAsync(sqlUpdateEndSalaryDateActive);
                         }
@@ -207,13 +208,13 @@ namespace D69soft.Server.Controllers.HR
 
                 /***************Lấy thông tin dữ liệu công việc***************/
                 DynamicParameters parmJob = new DynamicParameters();
-                parmJob.Add("@Y", _filterHrVM.Year);
-                parmJob.Add("@M", _filterHrVM.Month);
-                parmJob.Add("@DivsID", _filterHrVM.DivisionID);
+                parmJob.Add("@Y", _filterVM.Year);
+                parmJob.Add("@M", _filterVM.Month);
+                parmJob.Add("@DivsID", _filterVM.DivisionID);
                 await conn.ExecuteAsync("HR.Payroll_calcJobActiveMonth", parmJob, commandType: CommandType.StoredProcedure);
 
                 /***************Cập nhật ngày công việc active cho những người thay đổi trong tháng***************/
-                string sqlJob = "select Eserial from HR.JobActiveMonth where Period=" + _filterHrVM.Period + " and DivisionID='" + _filterHrVM.DivisionID + "' group by Eserial having count(Eserial) >1 ";
+                string sqlJob = "select Eserial from HR.JobActiveMonth where Period=" + _filterVM.Period + " and DivisionID='" + _filterVM.DivisionID + "' group by Eserial having count(Eserial) >1 ";
 
                 var _eserialJobs = await conn.QueryAsync<string>(sqlJob);
 
@@ -223,7 +224,7 @@ namespace D69soft.Server.Controllers.HR
                     {
                         var _eserialJob = _eserialJobs.ToList()[i];
 
-                        string sqlEserialJob = "select JobStartDate from HR.JobActiveMonth where Period=" + _filterHrVM.Period + " and Eserial='" + _eserialJob + "' order by JobStartDate";
+                        string sqlEserialJob = "select JobStartDate from HR.JobActiveMonth where Period=" + _filterVM.Period + " and Eserial='" + _eserialJob + "' order by JobStartDate";
 
                         var _jobStartDates = await conn.QueryAsync<string>(sqlEserialJob);
 
@@ -233,7 +234,7 @@ namespace D69soft.Server.Controllers.HR
 
                             var _jobStartDate_last = _jobStartDates.ToList()[j + 1];
 
-                            string sqlUpdateJobEndDateActive = "Update HR.JobActiveMonth set JobEndDateActive = DATEADD(day,-1,CONVERT(datetime,'" + _jobStartDate_last + "')) where Period=" + _filterHrVM.Period + " and Eserial='" + _eserialJob + "' and JobStartDate = '" + _jobStartDate_fisrt + "' ";
+                            string sqlUpdateJobEndDateActive = "Update HR.JobActiveMonth set JobEndDateActive = DATEADD(day,-1,CONVERT(datetime,'" + _jobStartDate_last + "')) where Period=" + _filterVM.Period + " and Eserial='" + _eserialJob + "' and JobStartDate = '" + _jobStartDate_fisrt + "' ";
 
                             await conn.ExecuteAsync(sqlUpdateJobEndDateActive);
                         }
@@ -241,21 +242,21 @@ namespace D69soft.Server.Controllers.HR
                 }
 
                 /***************Đẩy thông tin MonthlySalary***************/
-                parmJob.Add("@Y", _filterHrVM.Year);
-                parmJob.Add("@M", _filterHrVM.Month);
-                parmJob.Add("@DivsID", _filterHrVM.DivisionID);
+                parmJob.Add("@Y", _filterVM.Year);
+                parmJob.Add("@M", _filterVM.Month);
+                parmJob.Add("@DivsID", _filterVM.DivisionID);
                 await conn.ExecuteAsync("HR.Payroll_calcMonthlySalaryStaff", parmJob, commandType: CommandType.StoredProcedure);
 
                 /***************Đẩy thông tin mức lương tính toán trong tháng***************/
-                parmJob.Add("@Y", _filterHrVM.Year);
-                parmJob.Add("@M", _filterHrVM.Month);
-                parmJob.Add("@DivsID", _filterHrVM.DivisionID);
+                parmJob.Add("@Y", _filterVM.Year);
+                parmJob.Add("@M", _filterVM.Month);
+                parmJob.Add("@DivsID", _filterVM.DivisionID);
                 await conn.ExecuteAsync("HR.Payroll_calcAvgSalaryActive", parmJob, commandType: CommandType.StoredProcedure);
 
                 /***************Cập nhật ngày công***************/
-                parmJob.Add("@Y", _filterHrVM.Year);
-                parmJob.Add("@M", _filterHrVM.Month);
-                parmJob.Add("@DivsID", _filterHrVM.DivisionID);
+                parmJob.Add("@Y", _filterVM.Year);
+                parmJob.Add("@M", _filterVM.Month);
+                parmJob.Add("@DivsID", _filterVM.DivisionID);
                 await conn.ExecuteAsync("HR.Payroll_calcShiftTypeActive", parmJob, commandType: CommandType.StoredProcedure);
 
                 var sqlShiftType = "select * from HR.ShiftType where coalesce(PercentIncome,0) > 0 order by PercentIncome desc";
@@ -272,11 +273,11 @@ namespace D69soft.Server.Controllers.HR
                         sqlUpdateShiftType += "case when coalesce(sr.ShiftTypeID,'') <> '" + _shiftType + "' and coalesce(sr1.ShiftTypeID,'') = '" + _shiftType + "' then 0.5 else ";
                         sqlUpdateShiftType += "case when coalesce(sr.ShiftTypeID,'') = '" + _shiftType + "' and coalesce(sr1.ShiftTypeID,'') = '" + _shiftType + "' then 1 else 0 end end end end) as ST, BeginSalaryDateActive,EndSalaryDateActive ";
                         sqlUpdateShiftType += "from HR.DutyRoster ro ";
-                        sqlUpdateShiftType += "join (select * from HR.MonthlySalaryStaff where Period=" + _filterHrVM.Period + " and DivisionID='" + _filterHrVM.DivisionID + "') mss on mss.Eserial = ro.Eserial ";
-                        sqlUpdateShiftType += "join (select * from HR.LockDutyRoster where Period=" + _filterHrVM.Period + " and DivisionID='" + _filterHrVM.DivisionID + "') rld on rld.DepartmentID = mss.DepartmentID and dDate >= LockFrom and dDate <=LockTo ";
-                        sqlUpdateShiftType += "join HR.Shift sr on sr.ShiftID = ro.FirstShiftID left join HR.Shift sr1 on sr1.ShiftID = ro.SecondShiftID join (select * from HR.ShiftTypeActive where Period=" + _filterHrVM.Period + ") sta on sta.Eserial = ro.Eserial and sta.ShiftTypeID = '" + _shiftType + "' ";
-                        sqlUpdateShiftType += "where dDate >= BeginSalaryDateActive and dDate <= EndSalaryDateActive and ro.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterHrVM.DivisionID + "') group by ro.Eserial,BeginSalaryDateActive,EndSalaryDateActive) ro where  ";
-                        sqlUpdateShiftType += "ro.BeginSalaryDateActive = ShiftTypeActive.BeginSalaryDateActive and ro.EndSalaryDateActive = ShiftTypeActive.EndSalaryDateActive and ShiftTypeActive.ShiftTypeID = '" + _shiftType + "' and ro.Eserial = ShiftTypeActive.Eserial and ShiftTypeActive.Period = " + _filterHrVM.Period + " ";
+                        sqlUpdateShiftType += "join (select * from HR.MonthlySalaryStaff where Period=" + _filterVM.Period + " and DivisionID='" + _filterVM.DivisionID + "') mss on mss.Eserial = ro.Eserial ";
+                        sqlUpdateShiftType += "join (select * from HR.LockDutyRoster where Period=" + _filterVM.Period + " and DivisionID='" + _filterVM.DivisionID + "') rld on rld.DepartmentID = mss.DepartmentID and dDate >= LockFrom and dDate <=LockTo ";
+                        sqlUpdateShiftType += "join HR.Shift sr on sr.ShiftID = ro.FirstShiftID left join HR.Shift sr1 on sr1.ShiftID = ro.SecondShiftID join (select * from HR.ShiftTypeActive where Period=" + _filterVM.Period + ") sta on sta.Eserial = ro.Eserial and sta.ShiftTypeID = '" + _shiftType + "' ";
+                        sqlUpdateShiftType += "where dDate >= BeginSalaryDateActive and dDate <= EndSalaryDateActive and ro.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterVM.DivisionID + "') group by ro.Eserial,BeginSalaryDateActive,EndSalaryDateActive) ro where  ";
+                        sqlUpdateShiftType += "ro.BeginSalaryDateActive = ShiftTypeActive.BeginSalaryDateActive and ro.EndSalaryDateActive = ShiftTypeActive.EndSalaryDateActive and ShiftTypeActive.ShiftTypeID = '" + _shiftType + "' and ro.Eserial = ShiftTypeActive.Eserial and ShiftTypeActive.Period = " + _filterVM.Period + " ";
                     }
                     await conn.ExecuteAsync(sqlUpdateShiftType);
 
@@ -287,21 +288,21 @@ namespace D69soft.Server.Controllers.HR
 
                         if (i == 0)
                         {
-                            sqlSumTotalShift += "Update HR.ShiftTypeActive set TotalShiftTypeCalc = mo.SumTotalShiftType from (select Eserial,Period,BeginSalaryDateActive, sum(coalesce(TotalShiftType,0)) as SumTotalShiftType from HR.ShiftTypeActive where Period = " + _filterHrVM.Period + " and Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterHrVM.DivisionID + "') ";
-                            sqlSumTotalShift += "Group by Eserial,Period,BeginSalaryDateActive) mo where mo.Eserial = ShiftTypeActive.Eserial and ShiftTypeActive.Period = " + _filterHrVM.Period + " and mo.BeginSalaryDateActive = ShiftTypeActive.BeginSalaryDateActive and ShiftTypeActive.ShiftTypeID = '" + _shiftType + "' and ShiftTypeActive.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterHrVM.DivisionID + "') ";
+                            sqlSumTotalShift += "Update HR.ShiftTypeActive set TotalShiftTypeCalc = mo.SumTotalShiftType from (select Eserial,Period,BeginSalaryDateActive, sum(coalesce(TotalShiftType,0)) as SumTotalShiftType from HR.ShiftTypeActive where Period = " + _filterVM.Period + " and Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterVM.DivisionID + "') ";
+                            sqlSumTotalShift += "Group by Eserial,Period,BeginSalaryDateActive) mo where mo.Eserial = ShiftTypeActive.Eserial and ShiftTypeActive.Period = " + _filterVM.Period + " and mo.BeginSalaryDateActive = ShiftTypeActive.BeginSalaryDateActive and ShiftTypeActive.ShiftTypeID = '" + _shiftType + "' and ShiftTypeActive.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterVM.DivisionID + "') ";
                         }
-                        sqlSumTotalShift += "Update HR.ShiftTypeActive set TotalShiftTypeCalc = coalesce(PaidDefault,0) where coalesce(TotalShiftTypeCalc,0) > coalesce(PaidDefault,0) and Period = " + _filterHrVM.Period + " and ShiftTypeID = '" + _shiftType + "' and ShiftTypeActive.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterHrVM.DivisionID + "') ";
-                        sqlSumTotalShift += "Update HR.ShiftTypeActive set TotalShiftTypeCalc = coalesce(TotalShiftTypeCalc,0) - coalesce(TotalShiftType,0) where Period = " + _filterHrVM.Period + " and ShiftTypeID = '" + _shiftType + "' and ShiftTypeActive.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterHrVM.DivisionID + "') ";
-                        sqlSumTotalShift += "Update HR.ShiftTypeActive set TotalShiftTypeActive = case when coalesce(TotalShiftTypeCalc,0) >= 0 then coalesce(TotalShiftType,0) else coalesce(TotalShiftTypeCalc,0) + coalesce(TotalShiftType,0) end where Period = " + _filterHrVM.Period + " and ShiftTypeID = '" + _shiftType + "' and ShiftTypeActive.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterHrVM.DivisionID + "') ";
-                        sqlSumTotalShift += "Update HR.ShiftTypeActive set TotalShiftTypeCalc = coalesce(mo.TotalShiftTypeCalc,0) from (select Eserial,Period,BeginSalaryDateActive, TotalShiftTypeCalc from HR.ShiftTypeActive where Period = " + _filterHrVM.Period + " and ShiftTypeID = '" + _shiftType + "' and ShiftTypeActive.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterHrVM.DivisionID + "')) mo ";
-                        sqlSumTotalShift += "where mo.Eserial = ShiftTypeActive.Eserial and ShiftTypeActive.Period = " + _filterHrVM.Period + " and mo.BeginSalaryDateActive = ShiftTypeActive.BeginSalaryDateActive and ShiftTypeActive.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterHrVM.DivisionID + "') ";
-                        sqlSumTotalShift += "Update HR.ShiftTypeActive set TotalShiftTypeActive = 0 where coalesce(TotalShiftTypeActive,0) < 0 and Period = " + _filterHrVM.Period + " and ShiftTypeActive.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterHrVM.DivisionID + "')  ";
+                        sqlSumTotalShift += "Update HR.ShiftTypeActive set TotalShiftTypeCalc = coalesce(PaidDefault,0) where coalesce(TotalShiftTypeCalc,0) > coalesce(PaidDefault,0) and Period = " + _filterVM.Period + " and ShiftTypeID = '" + _shiftType + "' and ShiftTypeActive.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterVM.DivisionID + "') ";
+                        sqlSumTotalShift += "Update HR.ShiftTypeActive set TotalShiftTypeCalc = coalesce(TotalShiftTypeCalc,0) - coalesce(TotalShiftType,0) where Period = " + _filterVM.Period + " and ShiftTypeID = '" + _shiftType + "' and ShiftTypeActive.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterVM.DivisionID + "') ";
+                        sqlSumTotalShift += "Update HR.ShiftTypeActive set TotalShiftTypeActive = case when coalesce(TotalShiftTypeCalc,0) >= 0 then coalesce(TotalShiftType,0) else coalesce(TotalShiftTypeCalc,0) + coalesce(TotalShiftType,0) end where Period = " + _filterVM.Period + " and ShiftTypeID = '" + _shiftType + "' and ShiftTypeActive.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterVM.DivisionID + "') ";
+                        sqlSumTotalShift += "Update HR.ShiftTypeActive set TotalShiftTypeCalc = coalesce(mo.TotalShiftTypeCalc,0) from (select Eserial,Period,BeginSalaryDateActive, TotalShiftTypeCalc from HR.ShiftTypeActive where Period = " + _filterVM.Period + " and ShiftTypeID = '" + _shiftType + "' and ShiftTypeActive.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterVM.DivisionID + "')) mo ";
+                        sqlSumTotalShift += "where mo.Eserial = ShiftTypeActive.Eserial and ShiftTypeActive.Period = " + _filterVM.Period + " and mo.BeginSalaryDateActive = ShiftTypeActive.BeginSalaryDateActive and ShiftTypeActive.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterVM.DivisionID + "') ";
+                        sqlSumTotalShift += "Update HR.ShiftTypeActive set TotalShiftTypeActive = 0 where coalesce(TotalShiftTypeActive,0) < 0 and Period = " + _filterVM.Period + " and ShiftTypeActive.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterVM.DivisionID + "')  ";
                     }
                     await conn.ExecuteAsync(sqlSumTotalShift);
                 }
 
                 //Clear MonthlyIncome truoc khi tinh toan
-                string sqlClearMonthlyIncome = "Delete from HR.MonthlyIncome where Period = " + _filterHrVM.Period + " and Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterHrVM.DivisionID + "') ";
+                string sqlClearMonthlyIncome = "Delete from HR.MonthlyIncome where Period = " + _filterVM.Period + " and Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterVM.DivisionID + "') ";
                 await conn.ExecuteAsync(sqlClearMonthlyIncome);
 
                 //*******************Tính thu nhập theo công theo lương Profile*********************/
@@ -323,8 +324,8 @@ namespace D69soft.Server.Controllers.HR
                         sqlCalcByShift += "join (select * from HR.SalaryTransactionCode) stc on sta.ShiftTypeID = stc.ShiftTypeID ";
                         sqlCalcByShift += "join HR.ShiftType st on st.ShiftTypeID = sta.ShiftTypeID ";
                         sqlCalcByShift += "join HR.EmployeeTransaction et on et.TrnCode = stc.TrnCode and et.TrnSubCode = stc.TrnSubCode and et.Eserial = sta.Eserial ";
-                        sqlCalcByShift += "join (select * from HR.MonthlySalaryStaff where Period=" + _filterHrVM.Period + ") mss on mss.Eserial = sta.Eserial ";
-                        sqlCalcByShift += "where sta.Period=" + _filterHrVM.Period + " and sta.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterHrVM.DivisionID + "') and coalesce(sta.WDDefault,0) > 0 and coalesce(mss.IsPayByMonth,0) = 1 ";
+                        sqlCalcByShift += "join (select * from HR.MonthlySalaryStaff where Period=" + _filterVM.Period + ") mss on mss.Eserial = sta.Eserial ";
+                        sqlCalcByShift += "where sta.Period=" + _filterVM.Period + " and sta.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID='" + _filterVM.DivisionID + "') and coalesce(sta.WDDefault,0) > 0 and coalesce(mss.IsPayByMonth,0) = 1 ";
                     }
                     await conn.ExecuteAsync(sqlCalcByShift);
                 }
@@ -346,45 +347,45 @@ namespace D69soft.Server.Controllers.HR
                         sqlNotCalcByShift += "join(select * from HR.SalaryTransactionCode) stc on stc.TrnCode = sd.TrnCode and stc.TrnSubCode = sd.TrnSubCode ";
                         sqlNotCalcByShift += "join HR.ShiftType st on st.ShiftTypeID = sta.ShiftTypeID ";
                         sqlNotCalcByShift += "join HR.EmployeeTransaction et on et.TrnCode = sd.TrnCode and et.TrnSubCode = sd.TrnSubCode and et.Eserial = sta.Eserial ";
-                        sqlNotCalcByShift += "join(select * from HR.MonthlySalaryStaff where Period = " + _filterHrVM.Period + ") mss on mss.Eserial = sta.Eserial ";
-                        sqlNotCalcByShift += "where sta.Period = " + _filterHrVM.Period + " and sta.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID = '" + _filterHrVM.DivisionID + "') and coalesce(sta.WDDefault,0) > 0 and coalesce(mss.IsPayByMonth,0) = 1 ";
+                        sqlNotCalcByShift += "join(select * from HR.MonthlySalaryStaff where Period = " + _filterVM.Period + ") mss on mss.Eserial = sta.Eserial ";
+                        sqlNotCalcByShift += "where sta.Period = " + _filterVM.Period + " and sta.Eserial in (select distinct et.Eserial from HR.EmployeeTransaction et join HR.JobHistory jh on jh.Eserial = et.Eserial where CurrentJobID = 1 and jh.DivisionID = '" + _filterVM.DivisionID + "') and coalesce(sta.WDDefault,0) > 0 and coalesce(mss.IsPayByMonth,0) = 1 ";
                         sqlNotCalcByShift += "group by mss.Eserial, mss.Period, sd.TrnCode, sd.TrnSubCode, stc.isPIT, stc.RatePIT, stc.isPaySlip ";
                     }
                     await conn.ExecuteAsync(sqlNotCalcByShift);
                 }
 
                 //Tinh bao hiem
-                parmJob.Add("@Y", _filterHrVM.Year);
-                parmJob.Add("@M", _filterHrVM.Month);
-                parmJob.Add("@DivsID", _filterHrVM.DivisionID);
+                parmJob.Add("@Y", _filterVM.Year);
+                parmJob.Add("@M", _filterVM.Month);
+                parmJob.Add("@DivsID", _filterVM.DivisionID);
                 await conn.ExecuteAsync("HR.Payroll_calcInsurrance", parmJob, commandType: CommandType.StoredProcedure);
 
                 //Tinh cac khoan thu nhap khac
-                parmJob.Add("@Y", _filterHrVM.Year);
-                parmJob.Add("@M", _filterHrVM.Month);
-                parmJob.Add("@DivsID", _filterHrVM.DivisionID);
+                parmJob.Add("@Y", _filterVM.Year);
+                parmJob.Add("@M", _filterVM.Month);
+                parmJob.Add("@DivsID", _filterVM.DivisionID);
                 await conn.ExecuteAsync("HR.Payroll_calcMonthlyIncomeTrnOther", parmJob, commandType: CommandType.StoredProcedure);
 
                 //Tinh giam tru gia canh/nguoi phu thuoc
-                parmJob.Add("@Y", _filterHrVM.Year);
-                parmJob.Add("@M", _filterHrVM.Month);
-                parmJob.Add("@DivsID", _filterHrVM.DivisionID);
+                parmJob.Add("@Y", _filterVM.Year);
+                parmJob.Add("@M", _filterVM.Month);
+                parmJob.Add("@DivsID", _filterVM.DivisionID);
                 await conn.ExecuteAsync("HR.Payroll_calcDependanDeduction", parmJob, commandType: CommandType.StoredProcedure);
 
                 //Tinh thue
-                parmJob.Add("@Y", _filterHrVM.Year);
-                parmJob.Add("@M", _filterHrVM.Month);
-                parmJob.Add("@DivsID", _filterHrVM.DivisionID);
+                parmJob.Add("@Y", _filterVM.Year);
+                parmJob.Add("@M", _filterVM.Month);
+                parmJob.Add("@DivsID", _filterVM.DivisionID);
                 await conn.ExecuteAsync("HR.Payroll_calcPIT", parmJob, commandType: CommandType.StoredProcedure);
 
-                var sqlEndLog = "Update HR.LockSalary set isSalCalc=1, EserialSalCalc = '" + _filterHrVM.UserID + "', TimeSalCalc = GETDATE(), StatusSalCalc=1 where Period=" + _filterHrVM.Period + " and DivisionID='" + _filterHrVM.DivisionID + "' "; ;
+                var sqlEndLog = "Update HR.LockSalary set isSalCalc=1, EserialSalCalc = '" + _filterVM.UserID + "', TimeSalCalc = GETDATE(), StatusSalCalc=1 where Period=" + _filterVM.Period + " and DivisionID='" + _filterVM.DivisionID + "' "; ;
                 await conn.ExecuteAsync(sqlEndLog);
             }
             return true;
         }
 
         [HttpPost("CancelCalcSalary")]
-        public async Task<ActionResult<bool>> CancelCalcSalary(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<bool>> CancelCalcSalary(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -393,13 +394,13 @@ namespace D69soft.Server.Controllers.HR
 
                 var sql = "delete from HR.MonthlySalaryStaff where Period=@Period and DivisionID=@DivisionID ";
                 sql += "Update HR.LockSalary set isSalCalc=0, EserialSalCalc = @UserID, TimeSalCalc = GETDATE(), StatusSalCalc=0 where Period=@Period and DivisionID=@DivisionID "; ;
-                await conn.ExecuteAsync(sql, _filterHrVM);
+                await conn.ExecuteAsync(sql, _filterVM);
             }
             return true;
         }
 
         [HttpPost("LockSalary")]
-        public async Task<ActionResult<bool>> LockSalary(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<bool>> LockSalary(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -407,13 +408,13 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var sql = "Update HR.LockSalary set isSalLock=1, EserialSalLock = @UserID, TimeSalLock = GETDATE() where Period=@Period and DivisionID=@DivisionID "; ;
-                await conn.ExecuteAsync(sql, _filterHrVM);
+                await conn.ExecuteAsync(sql, _filterVM);
             }
             return true;
         }
 
         [HttpPost("CancelLockSalary")]
-        public async Task<ActionResult<bool>> CancelLockSalary(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<bool>> CancelLockSalary(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -421,22 +422,22 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var sql = "Update HR.LockSalary set isSalLock=0, EserialSalLock = @UserID, TimeSalLock = GETDATE() where Period=@Period and DivisionID=@DivisionID "; ;
-                await conn.ExecuteAsync(sql, _filterHrVM);
+                await conn.ExecuteAsync(sql, _filterVM);
             }
             return true;
         }
 
         [HttpPost("GetPayrollList")]
-        public async Task<ActionResult<string>> GetPayrollList(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<string>> GetPayrollList(FilterVM _filterVM)
         {
             return JsonConvert.SerializeObject(ExecuteStoredProcPrmsToDataTable("HR.Payroll_viewPayrollDetail",
-                "@Y", _filterHrVM.Year,
-                "@M", _filterHrVM.Month,
-                "@DivsID", _filterHrVM.DivisionID,
-                "@SectionID", _filterHrVM.SectionID,
-                "@DeptID", _filterHrVM.DepartmentID,
-                "@arrPos", _filterHrVM.PositionGroupID,
-                "@Eserial", _filterHrVM.Eserial,
+                "@Y", _filterVM.Year,
+                "@M", _filterVM.Month,
+                "@DivsID", _filterVM.DivisionID,
+                "@SectionID", _filterVM.SectionID,
+                "@DeptID", _filterVM.DepartmentID,
+                "@arrPos", _filterVM.PositionGroupID,
+                "@Eserial", _filterVM.Eserial,
                 "@PayByBank", 0,
                 "@PayByCash", 0));
         }
@@ -474,7 +475,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("GetLockSalary")]
-        public async Task<ActionResult<LockSalaryVM>> GetLockSalary(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<LockSalaryVM>> GetLockSalary(FilterVM _filterVM)
         {
             var sql = "IF NOT EXISTS (select * from HR.LockSalary where Period=@Period and DivisionID=@DivisionID) ";
             sql += "BEGIN ";
@@ -493,13 +494,13 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryFirstAsync<LockSalaryVM>(sql, _filterHrVM);
+                var result = await conn.QueryFirstAsync<LockSalaryVM>(sql, _filterVM);
                 return result;
             }
         }
 
         [HttpPost("IsOpenFunc")]
-        public async Task<bool> IsOpenFunc(FilterHrVM _filterHrVM)
+        public async Task<bool> IsOpenFunc(FilterVM _filterVM)
         {
             var sql = "SELECT CAST(CASE WHEN NOT EXISTS (SELECT 1 FROM HR.LockSalary where Period=@Period and DivisionID = @DivisionID and isSalCalc=1) THEN 1 ELSE 0 END as BIT)";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -507,7 +508,7 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                return await conn.ExecuteScalarAsync<bool>(sql, _filterHrVM);
+                return await conn.ExecuteScalarAsync<bool>(sql, _filterVM);
             }
         }
 
@@ -604,7 +605,7 @@ namespace D69soft.Server.Controllers.HR
 
         //WDDefaut
         [HttpPost("GetWDDefautList")]
-        public async Task<ActionResult<IEnumerable<WDDefaultVM>>> GetWDDefautList(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<WDDefaultVM>>> GetWDDefautList(FilterVM _filterVM)
         {
             var sql = "select * from HR.DODefault dd join HR.WorkType wt on wt.WorkTypeID = dd.WorkTypeID where Period=@Period ";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -612,14 +613,14 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<WDDefaultVM>(sql, _filterHrVM);
+                var result = await conn.QueryAsync<WDDefaultVM>(sql, _filterVM);
                 return Ok(result);
             }
         }
 
         //Payslip
         [HttpPost("GetPayslipList")]
-        public async Task<ActionResult<List<PayslipVM>>> GetPayslipList(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<List<PayslipVM>>> GetPayslipList(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -627,14 +628,14 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@Y", _filterHrVM.Year);
-                parm.Add("@M", _filterHrVM.Month);
-                parm.Add("@DivsID", _filterHrVM.DivisionID);
-                parm.Add("@SectionID", _filterHrVM.SectionID);
-                parm.Add("@DeptID", _filterHrVM.DepartmentID);
-                parm.Add("@arrPos", _filterHrVM.PositionGroupID);
-                parm.Add("@Eserial", _filterHrVM.Eserial);
-                parm.Add("@isSearch", _filterHrVM.IsTypeSearch);
+                parm.Add("@Y", _filterVM.Year);
+                parm.Add("@M", _filterVM.Month);
+                parm.Add("@DivsID", _filterVM.DivisionID);
+                parm.Add("@SectionID", _filterVM.SectionID);
+                parm.Add("@DeptID", _filterVM.DepartmentID);
+                parm.Add("@arrPos", _filterVM.PositionGroupID);
+                parm.Add("@Eserial", _filterVM.Eserial);
+                parm.Add("@isSearch", _filterVM.IsTypeSearch);
 
                 var result = await conn.QueryAsync<PayslipVM>("HR.Payslip_viewMain", parm, commandType: CommandType.StoredProcedure);
                 return result.ToList();

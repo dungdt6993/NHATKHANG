@@ -103,9 +103,9 @@ namespace D69soft.Client.Services
             return await _httpClient.GetFromJsonAsync<IEnumerable<PeriodVM>>($"api/Sys/GetYearFilter");
         }
 
-        public async Task<IEnumerable<PeriodVM>> GetDayFilter(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<PeriodVM>> GetDayFilter(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Sys/GetDayFilter", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Sys/GetDayFilter", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<PeriodVM>>();
         }

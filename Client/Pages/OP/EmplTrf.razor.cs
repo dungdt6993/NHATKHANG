@@ -24,16 +24,14 @@ namespace D69soft.Client.Pages.OP
         [Inject] DutyRosterService dutyRosterService { get; set; }
         [Inject] OPService opService { get; set; }
 
-        protected string UserID;
-
         bool isLoading;
-
         bool isLoadingScreen = true;
 
+        //log
         LogVM logVM = new();
 
         //Filter
-        FilterHrVM filterHrVM = new();
+        FilterVM filterVM = new();
 
         IEnumerable<DivisionVM> division_filter_list;
         IEnumerable<PositionVM> position_filter_list;
@@ -68,14 +66,14 @@ namespace D69soft.Client.Pages.OP
         }
 
         protected override async Task OnInitializedAsync()
-        {          
-            UserID = (await authenticationStateTask).User.GetUserId();
+        {
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "OP_EmplTrf"))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, "OP_EmplTrf"))
             {
                 logVM.LogType = "FUNC";
                 logVM.LogName = "OP_EmplTrf";
-                logVM.LogUser = UserID;
+                logVM.LogUser = filterVM.UserID;
                 await sysService.InsertLog(logVM);
             }
             else
@@ -84,17 +82,17 @@ namespace D69soft.Client.Pages.OP
             }
 
             //Initialize Filter
-            filterHrVM.UserID = dutyRosterVM.UserID = UserID;
+            dutyRosterVM.UserID = filterVM.UserID;
 
-            filterHrVM.dDate = DateTime.Now;
+            filterVM.dDate = DateTime.Now;
 
-            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterHrVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
+            division_filter_list = await organizationalChartService.GetDivisionList(filterVM);
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
 
-            filterHrVM.ShiftID = string.Empty;
+            filterVM.ShiftID = string.Empty;
             shiftVMs = await dutyRosterService.GetShiftList();
 
-            filterHrVM.PositionGroupID = string.Empty;
+            filterVM.PositionGroupID = string.Empty;
             position_filter_list = await organizationalChartService.GetPositionList();
 
             isLoadingScreen = false;
@@ -102,7 +100,7 @@ namespace D69soft.Client.Pages.OP
 
         public async Task OnRangeSelect_dDate(DateRange _range)
         {
-            filterHrVM.dDate = _range.Start;
+            filterVM.dDate = _range.Start;
 
             dutyRosterVMs = null;
 
@@ -113,13 +111,13 @@ namespace D69soft.Client.Pages.OP
         {
             isLoading = true;
 
-            filterHrVM.DivisionID = value;
+            filterVM.DivisionID = value;
 
-            filterHrVM.ShiftID = string.Empty;
-            filterHrVM.arrShiftID = new string[] { };
+            filterVM.ShiftID = string.Empty;
+            filterVM.arrShiftID = new string[] { };
 
-            filterHrVM.PositionGroupID = string.Empty;
-            filterHrVM.arrPositionID = new string[] { };
+            filterVM.PositionGroupID = string.Empty;
+            filterVM.arrPositionID = new string[] { };
 
             position_filter_list = await organizationalChartService.GetPositionList();
 
@@ -134,15 +132,15 @@ namespace D69soft.Client.Pages.OP
         {
             get
             {
-                return filterHrVM.arrShiftID;
+                return filterVM.arrShiftID;
             }
             set
             {
                 isLoading = true;
 
-                filterHrVM.arrShiftID = (string[])value;
+                filterVM.arrShiftID = (string[])value;
 
-                filterHrVM.ShiftID = string.Join(",", (string[])value);
+                filterVM.ShiftID = string.Join(",", (string[])value);
 
                 dutyRosterVMs = null;
 
@@ -154,15 +152,15 @@ namespace D69soft.Client.Pages.OP
         {
             get
             {
-                return filterHrVM.arrPositionID;
+                return filterVM.arrPositionID;
             }
             set
             {
                 isLoading = true;
 
-                filterHrVM.arrPositionID = (string[])value;
+                filterVM.arrPositionID = (string[])value;
 
-                filterHrVM.PositionGroupID = string.Join(",", (string[])value);
+                filterVM.PositionGroupID = string.Join(",", (string[])value);
 
                 dutyRosterVMs = null;
 
@@ -174,11 +172,11 @@ namespace D69soft.Client.Pages.OP
         {
             isLoading = true;
 
-            dutyRosterVMs = await dutyRosterService.GetEmplTrfList(filterHrVM);
+            dutyRosterVMs = await dutyRosterService.GetEmplTrfList(filterVM);
 
-            dutyRosterNotes = await dutyRosterService.GetDutyRosterNotes(filterHrVM);
+            dutyRosterNotes = await dutyRosterService.GetDutyRosterNotes(filterVM);
 
-            tenderScheduleVMs = await opService.GetTenderSchedules(filterHrVM);
+            tenderScheduleVMs = await opService.GetTenderSchedules(filterVM);
 
             isLoading = false;
         }
@@ -198,7 +196,7 @@ namespace D69soft.Client.Pages.OP
         {
             _dutyRosterVM.inputLoading_updateShift = true;
 
-            _dutyRosterVM.UserID = UserID;
+            _dutyRosterVM.UserID = filterVM.UserID;
 
             _dutyRosterVM.OldWorkShift = _dutyRosterVM.WorkShift;
 
@@ -235,15 +233,15 @@ namespace D69soft.Client.Pages.OP
                     break;
                 default:
 
-                    filterHrVM.Year = int.Parse(filterHrVM.dDate.Value.ToString("yyyy"));
-                    filterHrVM.Month = int.Parse(filterHrVM.dDate.Value.ToString("MM"));
-					filterHrVM.Day = _dutyRosterVM.dDate.Day;
+                    filterVM.Year = int.Parse(filterVM.dDate.Value.ToString("yyyy"));
+                    filterVM.Month = int.Parse(filterVM.dDate.Value.ToString("MM"));
+					filterVM.Day = _dutyRosterVM.dDate.Day;
 
-					filterHrVM.SectionID = String.Empty;
-                    filterHrVM.DepartmentID = String.Empty;
-                    filterHrVM.Eserial = _dutyRosterVM.Eserial;
+					filterVM.SectionID = String.Empty;
+                    filterVM.DepartmentID = String.Empty;
+                    filterVM.Eserial = _dutyRosterVM.Eserial;
 
-                    DutyRosterVM tmpDutyRosterVM = (await dutyRosterService.GetDutyRosterList(filterHrVM)).First();
+                    DutyRosterVM tmpDutyRosterVM = (await dutyRosterService.GetDutyRosterList(filterVM)).First();
 
                     _dutyRosterVM.WorkShift = tmpDutyRosterVM.WorkShift;
                     _dutyRosterVM.ColorHEX = tmpDutyRosterVM.ColorHEX;
@@ -283,8 +281,8 @@ namespace D69soft.Client.Pages.OP
 
             dutyRosterVM = new();
 
-            dutyRosterVM.UserID = UserID;
-            dutyRosterVM.dDate = filterHrVM.dDate.Value.DateTime;
+            dutyRosterVM.UserID = filterVM.UserID;
+            dutyRosterVM.dDate = filterVM.dDate.Value.DateTime;
 
             dutyRosterVM.ShiftID = _shift;
             dutyRosterVM.PositionGroupID = _positiongrp;

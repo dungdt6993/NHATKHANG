@@ -26,9 +26,11 @@ namespace D69soft.Client.Pages.FIN
         bool isLoading;
         bool isLoadingScreen = true;
 
-        protected string UserID;
-
+        //Log
         LogVM logVM = new();
+
+        //Filter
+        FilterVM filterVM = new();
 
         //Bank
         List<BankVM> bankVMs;
@@ -49,11 +51,11 @@ namespace D69soft.Client.Pages.FIN
 
         protected override async Task OnInitializedAsync()
         {
-            UserID = (await authenticationStateTask).User.GetUserId();
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "FIN_BankAccount"))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, "FIN_BankAccount"))
             {
-                logVM.LogUser = UserID;
+                logVM.LogUser = filterVM.UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "FIN_BankAccount";
                 await sysService.InsertLog(logVM);

@@ -10,8 +10,6 @@ namespace D69soft.Client.Shared
         [Inject] AuthenticationStateProvider authenticationStateProvider { get; set; }
         [Inject] AuthService authService { get; set; }
 
-        protected string UserID;
-
         //List<LogNotificationVM> notifications;
 
         //protected override async Task OnInitializedAsync()

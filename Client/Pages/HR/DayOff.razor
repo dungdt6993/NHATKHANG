@@ -23,7 +23,7 @@
                     </div>
                     <div class="modal-body">
 
-                        @if (filterHrVM.ShiftID == "AL")
+                        @if (filterVM.ShiftID == "AL")
                         {
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Điều chỉnh</label>
@@ -42,7 +42,7 @@
                             </div>
                         }
 
-                        @if (filterHrVM.ShiftID == "DO")
+                        @if (filterVM.ShiftID == "DO")
                         {
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Điều chỉnh</label>
@@ -61,7 +61,7 @@
                             </div>
                         }
 
-                        @if (filterHrVM.ShiftID == "PH")
+                        @if (filterVM.ShiftID == "PH")
                         {
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Điều chỉnh</label>
@@ -81,7 +81,7 @@
                         }
 
                     </div>
-                    @if (IsOpenFunc)
+                    @if (filterVM.IsOpenFunc)
                     {
                         <div class="modal-footer justify-content-center">
                             <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save"></i> Lưu</button>
@@ -373,7 +373,7 @@
 
 <section class="content-header">
 
-    <EditForm Model="@filterHrVM">
+    <EditForm Model="@filterVM">
         <div class="row">
 
             <div class="col-md-2">
@@ -381,8 +381,8 @@
                     <label class="col-sm-3 col-form-label">Tháng:</label>
                     <div class="col-sm-9">
                         <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                           ValueExpression="@(()=>filterHrVM.Month)"
-                                           Value="@filterHrVM.Month"
+                                           ValueExpression="@(()=>filterVM.Month)"
+                                           Value="@filterVM.Month"
                                            ValueChanged="@((int value) => onchange_filter_month(value))">
                             @if (month_filter_list != null)
                             {
@@ -401,8 +401,8 @@
                     <label class="col-sm-3 col-form-label">Năm:</label>
                     <div class="col-sm-9">
                         <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                           ValueExpression="@(()=>filterHrVM.Year)"
-                                           Value="@filterHrVM.Year"
+                                           ValueExpression="@(()=>filterVM.Year)"
+                                           Value="@filterVM.Year"
                                            ValueChanged="@((int value) => onchange_filter_year(value))">
                             @if (year_filter_list != null)
                             {
@@ -419,8 +419,8 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
-                                 Value="@filterHrVM.DivisionID"
+                                 ValueExpression="@(()=>filterVM.DivisionID)"
+                                 Value="@filterVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
                         @if (division_filter_list != null)
                         {
@@ -436,8 +436,8 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.DepartmentID)"
-                                 Value="@filterHrVM.DepartmentID"
+                                 ValueExpression="@(()=>filterVM.DepartmentID)"
+                                 Value="@filterVM.DepartmentID"
                                  ValueChanged="@((string value) => onchange_filter_department(value))">
                         <option value=@string.Empty>-----Bộ phận-----</option>
                         @if (department_filter_list != null)
@@ -454,8 +454,8 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.SectionID)"
-                                 Value="@filterHrVM.SectionID"
+                                 ValueExpression="@(()=>filterVM.SectionID)"
+                                 Value="@filterVM.SectionID"
                                  ValueChanged="@((string value) => onchange_filter_section(value))">
                         <option value=@string.Empty>-----Khu vực-----</option>
                         @if (section_filter_list != null)
@@ -486,8 +486,8 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
-                                 ValueExpression="@(()=>filterHrVM.Eserial)"
-                                 Value="@filterHrVM.Eserial"
+                                 ValueExpression="@(()=>filterVM.Eserial)"
+                                 Value="@filterVM.Eserial"
                                  ValueChanged="@((string value) => onchange_filter_eserial(value))">
                         <option value=@string.Empty>-----Nhân viên-----</option>
                         @if (eserial_filter_list != null)
@@ -504,8 +504,8 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
-                                 ValueExpression="@(()=>filterHrVM.ShiftID)"
-                                 Value="@filterHrVM.ShiftID"
+                                 ValueExpression="@(()=>filterVM.ShiftID)"
+                                 Value="@filterVM.ShiftID"
                                  ValueChanged="@((string value) => onchange_filter_dayofftype(value))">
                         @if (dayofftype_filter_list != null)
                         {
@@ -519,7 +519,7 @@
             </div>
 
             <div class="col-md-1">
-                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetDayOffList(filterHrVM.ShiftID))">
+                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetDayOffList(filterVM.ShiftID))">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -535,19 +535,19 @@
                 @if (HR_DayOff_Config)
                 {
                     <button type="button" class="btn btn-sm btn-secondary" data-target="#InitializeModalList_GlobalParameter" data-toggle="modal" @onclick="()=>InitializeModalList_GlobalParameter()"><i class="fa-solid fa-calendar"></i> Cấu hình ngày nghỉ</button>
-                    if (filterHrVM.ShiftID == "PH")
+                    if (filterVM.ShiftID == "PH")
                     {
                         <button type="button" class="btn btn-sm btn-secondary" data-target="#InitializeModalList_PublicHoliday" data-toggle="modal" @onclick="()=>InitializeModalList_PublicHoliday()"><i class="fa-solid fa-champagne-glasses"></i> Ngày lễ tết</button>
                     }
                 }
 
-                @if (IsOpenFunc)
+                @if (filterVM.IsOpenFunc)
                 {
                     @if (HR_DayOff_Calc)
                     {
-                        if (filterHrVM.ShiftID == "AL" || filterHrVM.ShiftID == "DO" || filterHrVM.ShiftID == "PH")
+                        if (filterVM.ShiftID == "AL" || filterVM.ShiftID == "DO" || filterVM.ShiftID == "PH")
                         {
-                            <button type="button" class="btn btn-sm btn-secondary" @onclick="()=>CalcDayOff(filterHrVM.ShiftID)"><i class="fa-solid fa-calculator"></i> Tính dữ liệu</button>
+                            <button type="button" class="btn btn-sm btn-secondary" @onclick="()=>CalcDayOff(filterVM.ShiftID)"><i class="fa-solid fa-calculator"></i> Tính dữ liệu</button>
                         }
                     }
                 }
@@ -557,13 +557,13 @@
             <div class="card-body table-responsive p-0" style="height: calc(100vh - 249px);">
                 @if (dayOffVMs != null)
                 {
-                    if (filterHrVM.ShiftID == "AL")
+                    if (filterVM.ShiftID == "AL")
                     {
                         <table class="table table-sm table-bordered table-head-fixed table-hover text-nowrap tblFontSizeMin tblDayOff">
                             <thead>
                                 <tr>
                                     <th>Nhân viên</th>
-                                    @if (@filterHrVM.DepartmentID == string.Empty)
+                                    @if (@filterVM.DepartmentID == string.Empty)
                                     {
                                         <th>Bộ phận</th>
                                     }
@@ -584,7 +584,7 @@
                                 <Virtualize Items="@dayOffVMs" Context="_dayOffVM" OverscanCount="50">
                                     <tr>
                                         <th>@_dayOffVM.Eserial - @_dayOffVM.LastName @_dayOffVM.MiddleName @_dayOffVM.FirstName</th>
-                                        @if (@filterHrVM.DepartmentID == string.Empty)
+                                        @if (@filterVM.DepartmentID == string.Empty)
                                         {
                                             <td>@_dayOffVM.DepartmentName</td>
                                         }
@@ -608,13 +608,13 @@
                         </table>
                     }
 
-                    if (filterHrVM.ShiftID == "DO")
+                    if (filterVM.ShiftID == "DO")
                     {
                         <table class="table table-sm table-bordered table-head-fixed table-hover text-nowrap tblFontSizeMin tblDayOff">
                             <thead>
                                 <tr>
                                     <th></th>
-                                    @if (@filterHrVM.DepartmentID == string.Empty)
+                                    @if (@filterVM.DepartmentID == string.Empty)
                                     {
                                         <th></th>
                                     }
@@ -629,7 +629,7 @@
 
                                 <tr>
                                     <th>Nhân viên</th>
-                                    @if (@filterHrVM.DepartmentID == string.Empty)
+                                    @if (@filterVM.DepartmentID == string.Empty)
                                     {
                                         <th>Bộ phận</th>
                                     }
@@ -654,7 +654,7 @@
                                 <Virtualize Items="@dayOffVMs" Context="_dayOffVM" OverscanCount="50">
                                     <tr>
                                         <th>@_dayOffVM.Eserial - @_dayOffVM.LastName @_dayOffVM.MiddleName @_dayOffVM.FirstName</th>
-                                        @if (@filterHrVM.DepartmentID == string.Empty)
+                                        @if (@filterVM.DepartmentID == string.Empty)
                                         {
                                             <td>@_dayOffVM.DepartmentName</td>
                                         }
@@ -678,13 +678,13 @@
                         </table>
                     }
 
-                    if (filterHrVM.ShiftID == "PH")
+                    if (filterVM.ShiftID == "PH")
                     {
                         <table class="table table-sm table-bordered table-head-fixed table-hover text-nowrap tblFontSizeMin tblDayOff">
                             <thead>
                                 <tr>
                                     <th></th>
-                                    @if (@filterHrVM.DepartmentID == string.Empty)
+                                    @if (@filterVM.DepartmentID == string.Empty)
                                     {
                                         <th></th>
                                     }
@@ -699,7 +699,7 @@
 
                                 <tr>
                                     <th>Nhân viên</th>
-                                    @if (@filterHrVM.DepartmentID == string.Empty)
+                                    @if (@filterVM.DepartmentID == string.Empty)
                                     {
                                         <th>Bộ phận</th>
                                     }
@@ -724,7 +724,7 @@
                                 <Virtualize Items="@dayOffVMs" Context="_dayOffVM" OverscanCount="50">
                                     <tr>
                                         <th>@_dayOffVM.Eserial - @_dayOffVM.LastName @_dayOffVM.MiddleName @_dayOffVM.FirstName</th>
-                                        @if (@filterHrVM.DepartmentID == string.Empty)
+                                        @if (@filterVM.DepartmentID == string.Empty)
                                         {
                                             <td>@_dayOffVM.DepartmentName</td>
                                         }

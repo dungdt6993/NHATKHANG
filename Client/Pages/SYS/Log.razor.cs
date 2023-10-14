@@ -16,7 +16,7 @@ namespace D69soft.Client.Pages.SYS
 
         List<LogVM> logVMs;
 
-        FilterHrVM filterHrVM = new();
+        FilterVM FilterVM = new();
 
         protected override async Task OnInitializedAsync()
         {

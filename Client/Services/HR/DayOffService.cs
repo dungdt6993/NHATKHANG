@@ -1,4 +1,5 @@
 ﻿using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 using System.Net.Http.Json;
 
 namespace D69soft.Client.Services.HR
@@ -11,9 +12,9 @@ namespace D69soft.Client.Services.HR
         {
             _httpClient = httpClient;
         }
-        public async Task<List<DayOffVM>> GetDayOffList(FilterHrVM _filterHrVM)
+        public async Task<List<DayOffVM>> GetDayOffList(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DayOff/GetDayOffList", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DayOff/GetDayOffList", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<List<DayOffVM>>();
         }
@@ -23,44 +24,44 @@ namespace D69soft.Client.Services.HR
             return await _httpClient.GetFromJsonAsync<IEnumerable<ShiftVM>>($"api/DayOff/GetDayOffTypeList");
         }
 
-        public async Task<bool> DayOff_calcAL(FilterHrVM _filterHrVM)
+        public async Task<bool> DayOff_calcAL(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DayOff/DayOff_calcAL", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DayOff/DayOff_calcAL", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<bool> DayOff_calcDO(FilterHrVM _filterHrVM)
+        public async Task<bool> DayOff_calcDO(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DayOff/DayOff_calcDO", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DayOff/DayOff_calcDO", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<bool> DayOff_calcPH(FilterHrVM _filterHrVM)
+        public async Task<bool> DayOff_calcPH(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DayOff/DayOff_calcPH", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DayOff/DayOff_calcPH", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<bool> DayOff_calcControlDAYOFF(FilterHrVM _filterHrVM)
+        public async Task<bool> DayOff_calcControlDAYOFF(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DayOff/DayOff_calcControlDAYOFF", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DayOff/DayOff_calcControlDAYOFF", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<bool> DayOff_calcDODefault(FilterHrVM _filterHrVM, int _typeCalc)
+        public async Task<bool> DayOff_calcDODefault(FilterVM _filterVM, int _typeCalc)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DayOff/DayOff_calcDODefault/{_typeCalc}", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DayOff/DayOff_calcDODefault/{_typeCalc}", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<bool> DayOff_calcPHDefault(FilterHrVM _filterHrVM, int _typeCalc)
+        public async Task<bool> DayOff_calcPHDefault(FilterVM _filterVM, int _typeCalc)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DayOff/DayOff_calcPHDefault/{_typeCalc}", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DayOff/DayOff_calcPHDefault/{_typeCalc}", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
@@ -78,9 +79,9 @@ namespace D69soft.Client.Services.HR
         }
 
         //SpecialDayOff
-        public async Task<List<DayOffVM>> GetSpecialDayOffList(FilterHrVM _filterHrVM)
+        public async Task<List<DayOffVM>> GetSpecialDayOffList(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DayOff/GetSpecialDayOffList", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DayOff/GetSpecialDayOffList", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<List<DayOffVM>>();
         }

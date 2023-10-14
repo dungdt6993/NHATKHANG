@@ -25,13 +25,11 @@ namespace D69soft.Client.Pages.FIN
         bool isLoading;
         bool isLoadingScreen = true;
 
-        protected string UserID;
-
+        //Log
         LogVM logVM = new();
 
         //Filter
-        FilterFinVM filterFinVM = new();
-        FilterHrVM filterHrVM = new();
+        FilterVM filterVM = new();
 
         //Division
         IEnumerable<DivisionVM> filter_divisionVMs;
@@ -54,11 +52,11 @@ namespace D69soft.Client.Pages.FIN
 
         protected override async Task OnInitializedAsync()
         {
-            filterHrVM.UserID = UserID = (await authenticationStateTask).User.GetUserId();
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "FIN_Customer"))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, "FIN_Customer"))
             {
-                logVM.LogUser = UserID;
+                logVM.LogUser = filterVM.UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "FIN_Customer";
                 await sysService.InsertLog(logVM);
@@ -68,8 +66,8 @@ namespace D69soft.Client.Pages.FIN
                 navigationManager.NavigateTo("/");
             }
 
-            filter_divisionVMs = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterFinVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
+            filter_divisionVMs = await organizationalChartService.GetDivisionList(filterVM);
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
 
             await GetCustomers();
 

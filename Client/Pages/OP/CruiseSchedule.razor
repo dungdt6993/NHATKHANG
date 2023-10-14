@@ -71,7 +71,7 @@
 
 <section class="content-header">
 
-    <EditForm Model="@filterHrVM">
+    <EditForm Model="@filterVM">
         <div class="row">
 
             <div class="col-md-2">
@@ -79,8 +79,8 @@
                     <label class="col-sm-3 col-form-label">Tháng:</label>
                     <div class="col-sm-9">
                         <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                           ValueExpression="@(()=>filterHrVM.Month)"
-                                           Value="@filterHrVM.Month"
+                                           ValueExpression="@(()=>filterVM.Month)"
+                                           Value="@filterVM.Month"
                                            ValueChanged="@((int value) => onchange_filter_month(value))">
                             @if (month_filter_list != null)
                             {
@@ -99,8 +99,8 @@
                     <label class="col-sm-3 col-form-label">Năm:</label>
                     <div class="col-sm-9">
                         <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                           ValueExpression="@(()=>filterHrVM.Year)"
-                                           Value="@filterHrVM.Year"
+                                           ValueExpression="@(()=>filterVM.Year)"
+                                           Value="@filterVM.Year"
                                            ValueChanged="@((int value) => onchange_filter_year(value))">
                             @if (year_filter_list != null)
                             {
@@ -117,8 +117,8 @@
             <div class="col-md-8">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
-                                 Value="@filterHrVM.DivisionID"
+                                 ValueExpression="@(()=>filterVM.DivisionID)"
+                                 Value="@filterVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
                         @if (division_filter_list != null)
                         {

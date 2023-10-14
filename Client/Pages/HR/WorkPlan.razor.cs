@@ -24,16 +24,14 @@ namespace D69soft.Client.Pages.HR
         [Inject] OrganizationalChartService organizationalChartService { get; set; }
         [Inject] DutyRosterService dutyRosterService { get; set; }
 
-        protected string UserID;
-
         bool isLoading;
-
         bool isLoadingScreen = true;
 
+        //Log
         LogVM logVM = new();
 
         //Filter
-        FilterHrVM filterHrVM = new();
+        FilterVM filterVM = new();
 
         IEnumerable<DivisionVM> division_filter_list;
         IEnumerable<PositionVM> position_filter_list;
@@ -62,11 +60,11 @@ namespace D69soft.Client.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {         
-            UserID = (await authenticationStateTask).User.GetUserId();
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "HR_WorkPlan"))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, "HR_WorkPlan"))
             {
-				logVM.LogUser = UserID;
+				logVM.LogUser = filterVM.UserID;
 				logVM.LogType = "FUNC";
                 logVM.LogName = "HR_WorkPlan";
                 await sysService.InsertLog(logVM);
@@ -77,14 +75,14 @@ namespace D69soft.Client.Pages.HR
             }
 
             //Initialize Filter
-            filterHrVM.UserID = workPlanVM.UserID = UserID;
+            workPlanVM.UserID = filterVM.UserID;
 
-            filterHrVM.dDate = DateTime.Now;
+            filterVM.dDate = DateTime.Now;
 
-            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterHrVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
+            division_filter_list = await organizationalChartService.GetDivisionList(filterVM);
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
 
-            filterHrVM.PositionGroupID = string.Empty;
+            filterVM.PositionGroupID = string.Empty;
             position_filter_list = await organizationalChartService.GetPositionList();
 
             await GetWorkPlans();
@@ -94,7 +92,7 @@ namespace D69soft.Client.Pages.HR
 
         public async Task OnRangeSelect_dDate(DateRange _range)
         {
-            filterHrVM.dDate = _range.Start;
+            filterVM.dDate = _range.Start;
 
             await GetWorkPlans();
 
@@ -104,10 +102,10 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DivisionID = value;
+            filterVM.DivisionID = value;
 
-            filterHrVM.PositionGroupID = string.Empty;
-            filterHrVM.arrPositionID = new string[] { };
+            filterVM.PositionGroupID = string.Empty;
+            filterVM.arrPositionID = new string[] { };
 
             position_filter_list = await organizationalChartService.GetPositionList();
 
@@ -122,15 +120,15 @@ namespace D69soft.Client.Pages.HR
         {
             get
             {
-                return filterHrVM.arrPositionID;
+                return filterVM.arrPositionID;
             }
             set
             {
                 isLoading = true;
 
-                filterHrVM.arrPositionID = (string[])value;
+                filterVM.arrPositionID = (string[])value;
 
-                filterHrVM.PositionGroupID = string.Join(",", (string[])value);
+                filterVM.PositionGroupID = string.Join(",", (string[])value);
 
                 isLoading = false;
             }
@@ -140,7 +138,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            workPlanVMs = await dutyRosterService.GetWorkPlans(filterHrVM);
+            workPlanVMs = await dutyRosterService.GetWorkPlans(filterVM);
 
             isLoading = false;
         }
@@ -156,7 +154,7 @@ namespace D69soft.Client.Pages.HR
                 workPlanVM.PositionGroupID = _PositionGroupID;
                 workPlanVM.WorkPlanStartDate = DateTime.Now.Date;
 
-                workPlanVM.UserCreated = UserID;
+                workPlanVM.UserCreated = filterVM.UserID;
             }
 
             if (_IsTypeUpdate == 1)

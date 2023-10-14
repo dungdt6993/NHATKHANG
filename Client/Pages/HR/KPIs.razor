@@ -5,7 +5,7 @@
 
 <section class="content-header">
 
-    <EditForm Model="@filterHrVM">
+    <EditForm Model="@filterVM">
         <div class="row">
 
             <div class="col-md-2">
@@ -13,8 +13,8 @@
                     <label class="col-sm-3 col-form-label">Tháng:</label>
                     <div class="col-sm-9">
                         <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                           ValueExpression="@(()=>filterHrVM.Month)"
-                                           Value="@filterHrVM.Month"
+                                           ValueExpression="@(()=>filterVM.Month)"
+                                           Value="@filterVM.Month"
                                            ValueChanged="@((int value) => onchange_filter_month(value))">
                             @if (month_filter_list != null)
                             {
@@ -33,8 +33,8 @@
                     <label class="col-sm-3 col-form-label">Năm:</label>
                     <div class="col-sm-9">
                         <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                           ValueExpression="@(()=>filterHrVM.Year)"
-                                           Value="@filterHrVM.Year"
+                                           ValueExpression="@(()=>filterVM.Year)"
+                                           Value="@filterVM.Year"
                                            ValueChanged="@((int value) => onchange_filter_year(value))">
                             @if (year_filter_list != null)
                             {
@@ -51,8 +51,8 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
-                                 Value="@filterHrVM.DivisionID"
+                                 ValueExpression="@(()=>filterVM.DivisionID)"
+                                 Value="@filterVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
                         @if (division_filter_list != null)
                         {
@@ -68,8 +68,8 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.DepartmentID)"
-                                 Value="@filterHrVM.DepartmentID"
+                                 ValueExpression="@(()=>filterVM.DepartmentID)"
+                                 Value="@filterVM.DepartmentID"
                                  ValueChanged="@((string value) => onchange_filter_department(value))">
                         <option value=@string.Empty>-----Bộ phận-----</option>
                         @if (department_filter_list != null)
@@ -100,8 +100,8 @@
             <div class="col-md-5">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
-                                 ValueExpression="@(()=>filterHrVM.Eserial)"
-                                 Value="@filterHrVM.Eserial"
+                                 ValueExpression="@(()=>filterVM.Eserial)"
+                                 Value="@filterVM.Eserial"
                                  ValueChanged="@((string value) => onchange_filter_eserial(value))">
                         <option value=@string.Empty>-----Nhân viên-----</option>
                         @if (eserial_filter_list != null)
@@ -131,7 +131,7 @@
             <div class="card-header text-right">
             </div>
             <!-- /.card-header -->
-            @if (!String.IsNullOrEmpty(filterHrVM.Eserial))
+            @if (!String.IsNullOrEmpty(filterVM.Eserial))
             {
                 @if (kPIVMs != null)
                 {
@@ -164,7 +164,7 @@
                                         @if (rankVM.isSendKPI)
                                         {
                                             <span class="text-success">Đã gửi duyệt<br>(@rankVM.TimeSendKPI.ToString("dd/MM/yyyy HH:mm"))</span>
-                                            @if (@rankVM.Eserial == UserID)
+                                            @if (@rankVM.Eserial == filterVM.UserID)
                                             {
                                                 if ((rankVM.isSendAppraiser ? 1 : 0) + (rankVM.isSendDirectManager ? 1 : 0) + (rankVM.isSendControlDept ? 1 : 0) + (rankVM.isSendApprove ? 1 : 0) == 0)
                                                 {
@@ -174,7 +174,7 @@
                                         }
                                         else
                                         {
-                                            if (@rankVM.Eserial == UserID)
+                                            if (@rankVM.Eserial == filterVM.UserID)
                                             {
                                                 if ((rankVM.isSendAppraiser ? 1 : 0) + (rankVM.isSendDirectManager ? 1 : 0) + (rankVM.isSendControlDept ? 1 : 0) + (rankVM.isSendApprove ? 1 : 0) == 0)
                                                 {
@@ -198,7 +198,7 @@
                                             @if (@rankVM.isSendAppraiser)
                                             {
                                                 <span class="text-success">Đã duyệt<br>(@rankVM.TimeSendAppraiser.ToString("dd/MM/yyyy HH:mm"))</span>
-                                                if (@rankVM.Appraiser_Eserial == UserID)
+                                                if (@rankVM.Appraiser_Eserial == filterVM.UserID)
                                                 {
                                                     if ((rankVM.isSendDirectManager ? 1 : 0) + (rankVM.isSendControlDept ? 1 : 0) + (rankVM.isSendApprove ? 1 : 0) == 0)
                                                     {
@@ -208,7 +208,7 @@
                                             }
                                             else
                                             {
-                                                if (@rankVM.Appraiser_Eserial == UserID)
+                                                if (@rankVM.Appraiser_Eserial == filterVM.UserID)
                                                 {
                                                     if ((rankVM.isSendDirectManager ? 1 : 0) + (rankVM.isSendControlDept ? 1 : 0) + (rankVM.isSendApprove ? 1 : 0) == 0)
                                                     {
@@ -233,7 +233,7 @@
                                             @if (@rankVM.isSendDirectManager)
                                             {
                                                 <span class="text-success">Đã duyệt<br>(@rankVM.TimeSendDirectManager.ToString("dd/MM/yyyy HH:mm"))</span>
-                                                @if (@rankVM.DirectManager_Eserial == UserID)
+                                                @if (@rankVM.DirectManager_Eserial == filterVM.UserID)
                                                 {
                                                     if ((rankVM.isSendControlDept ? 1 : 0) + (rankVM.isSendApprove ? 1 : 0) == 0)
                                                     {
@@ -243,7 +243,7 @@
                                             }
                                             else
                                             {
-                                                if (@rankVM.DirectManager_Eserial == UserID)
+                                                if (@rankVM.DirectManager_Eserial == filterVM.UserID)
                                                 {
                                                     if ((rankVM.isSendControlDept ? 1 : 0) + (rankVM.isSendApprove ? 1 : 0) == 0)
                                                     {
@@ -268,7 +268,7 @@
                                             @if (@rankVM.isSendControlDept)
                                             {
                                                 <span class="text-success">Đã duyệt<br>(@rankVM.TimeSendControlDept.ToString("dd/MM/yyyy HH:mm"))</span>
-                                                @if (@rankVM.ControlDept_Eserial == UserID)
+                                                @if (@rankVM.ControlDept_Eserial == filterVM.UserID)
                                                 {
                                                     if ((rankVM.isSendApprove ? 1 : 0) == 0)
                                                     {
@@ -278,7 +278,7 @@
                                             }
                                             else
                                             {
-                                                if (@rankVM.ControlDept_Eserial == UserID)
+                                                if (@rankVM.ControlDept_Eserial == filterVM.UserID)
                                                 {
                                                     if ((rankVM.isSendApprove ? 1 : 0) == 0)
                                                     {
@@ -303,14 +303,14 @@
                                             @if (@rankVM.isSendApprove)
                                             {
                                                 <span class="text-success">Đã duyệt<br>(@rankVM.TimeSendApprove.ToString("dd/MM/yyyy HH:mm"))</span>
-                                                @if (@rankVM.Approve_Eserial == UserID)
+                                                @if (@rankVM.Approve_Eserial == filterVM.UserID)
                                                 {
                                                     <button class="btn btn-sm btn-block btn-danger" @onclick="@(() => SendKPI(false,"SendApprove"))"><i class="fa-solid fa-ban"></i> Hủy</button>
                                                 }
                                             }
                                             else
                                             {
-                                                if (@rankVM.Approve_Eserial == UserID)
+                                                if (@rankVM.Approve_Eserial == filterVM.UserID)
                                                 {
                                                     <button class="btn btn-sm btn-block btn-success" @onclick="@(() => SendKPI(true,"SendApprove"))"><i class="fa-solid fa-check"></i> Duyệt</button>
                                                 }
@@ -344,7 +344,7 @@
                                     bool disabled_manager = false;
                                     bool disabled_staff = false;
 
-                                    if (rankVM.Eserial == UserID)
+                                    if (rankVM.Eserial == filterVM.UserID)
                                     {
                                         disabled_manager = true;
 
@@ -359,22 +359,22 @@
                                     {
                                         disabled_staff = true;
 
-                                        if (rankVM.Appraiser_Eserial == UserID)
+                                        if (rankVM.Appraiser_Eserial == filterVM.UserID)
                                         {
                                             disabled_manager = rankVM.isSendAppraiser ? true : false;
                                         }
 
-                                        if (rankVM.DirectManager_Eserial == UserID)
+                                        if (rankVM.DirectManager_Eserial == filterVM.UserID)
                                         {
                                             disabled_manager = rankVM.isSendDirectManager ? true : false;
                                         }
 
-                                        if (rankVM.ControlDept_Eserial == UserID)
+                                        if (rankVM.ControlDept_Eserial == filterVM.UserID)
                                         {
                                             disabled_manager = rankVM.isSendControlDept ? true : false;
                                         }
 
-                                        if (rankVM.Approve_Eserial == UserID)
+                                        if (rankVM.Approve_Eserial == filterVM.UserID)
                                         {
                                             disabled_manager = rankVM.isSendApprove ? true : false;
                                         }
@@ -584,7 +584,7 @@
                                                 @if (!String.IsNullOrEmpty(_rankVM.Approve_Eserial))
                                                 {
                                                     <span class="@(_rankVM.isSendApprove?"text-success":"text-danger")">@_rankVM.Approve_Eserial - @_rankVM.Approve_FullName</span>
-                                                    if (_rankVM.Approve_Eserial == UserID)
+                                                    if (_rankVM.Approve_Eserial == filterVM.UserID)
                                                     {
                                                         <br />
                                                         @if (!_rankVM.isSendApprove)

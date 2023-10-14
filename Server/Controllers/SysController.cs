@@ -269,9 +269,9 @@ namespace D69soft.Server.Controllers
         }
 
         [HttpPost("GetDayFilter")]
-        public async Task<ActionResult<IEnumerable<PeriodVM>>> GetDayFilter(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<PeriodVM>>> GetDayFilter(FilterVM _filterVM)
         {
-            var date = _filterHrVM.Year + "-" + _filterHrVM.Month + "-" + "01";
+            var date = _filterVM.Year + "-" + _filterVM.Month + "-" + "01";
 
             var sql = "WITH nums AS (SELECT 1 AS value UNION ALL SELECT value + 1 AS value FROM nums WHERE nums.value <= (SELECT Day(DATEADD(d,-1, DATEADD(mm, DATEDIFF(mm, 0 ,'" + date + "')+1, 0))))-1) SELECT value as [Day] FROM nums";
 

@@ -7,7 +7,7 @@
 <Modal_RptViewer ReportName=@ReportName></Modal_RptViewer>
 
 <section class="content-header">
-    <EditForm Model="@filterHrVM">
+    <EditForm Model="@filterVM">
         <div class="row">
 
             <div class="col-md-2">
@@ -15,8 +15,8 @@
                     <label class="col-sm-3 col-form-label">Tháng:</label>
                     <div class="col-sm-9">
                         <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                           ValueExpression="@(()=>filterHrVM.Month)"
-                                           Value="@filterHrVM.Month"
+                                           ValueExpression="@(()=>filterVM.Month)"
+                                           Value="@filterVM.Month"
                                            ValueChanged="@((int value) => onchange_filter_month(value))">
                             @if (month_filter_list != null)
                             {
@@ -35,8 +35,8 @@
                     <label class="col-sm-3 col-form-label">Năm:</label>
                     <div class="col-sm-9">
                         <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                           ValueExpression="@(()=>filterHrVM.Year)"
-                                           Value="@filterHrVM.Year"
+                                           ValueExpression="@(()=>filterVM.Year)"
+                                           Value="@filterVM.Year"
                                            ValueChanged="@((int value) => onchange_filter_year(value))">
                             @if (year_filter_list != null)
                             {
@@ -53,8 +53,8 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
-                                 Value="@filterHrVM.DivisionID"
+                                 ValueExpression="@(()=>filterVM.DivisionID)"
+                                 Value="@filterVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
                         @if (division_filter_list != null)
                         {
@@ -70,8 +70,8 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.DepartmentID)"
-                                 Value="@filterHrVM.DepartmentID"
+                                 ValueExpression="@(()=>filterVM.DepartmentID)"
+                                 Value="@filterVM.DepartmentID"
                                  ValueChanged="@((string value) => onchange_filter_department(value))">
                         <option value=@string.Empty>-----Bộ phận-----</option>
                         @if (department_filter_list != null)
@@ -88,8 +88,8 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.SectionID)"
-                                 Value="@filterHrVM.SectionID"
+                                 ValueExpression="@(()=>filterVM.SectionID)"
+                                 Value="@filterVM.SectionID"
                                  ValueChanged="@((string value) => onchange_filter_section(value))">
                         <option value=@string.Empty>-----Khu vực-----</option>
                         @if (section_filter_list != null)
@@ -120,8 +120,8 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
-                                 ValueExpression="@(()=>filterHrVM.Eserial)"
-                                 Value="@filterHrVM.Eserial"
+                                 ValueExpression="@(()=>filterVM.Eserial)"
+                                 Value="@filterVM.Eserial"
                                  ValueChanged="@((string value) => onchange_filter_eserial(value))">
                         <option value=@string.Empty>-----Nhân viên-----</option>
                         @if (eserial_filter_list != null)
@@ -139,7 +139,7 @@
                 <!-- radio -->
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
-                        <input type="radio" id="r1" name="r" value="0" @onchange="onchange_filter_typepayslip" checked="@(filterHrVM.IsTypeSearch == 0? true: false)">
+                        <input type="radio" id="r1" name="r" value="0" @onchange="onchange_filter_typepayslip" checked="@(filterVM.IsTypeSearch == 0? true: false)">
                         <label for="r1">
                             Tất cả
                         </label>
@@ -148,7 +148,7 @@
                         &nbsp;&nbsp;
                     </label>
                     <div class="icheck-warning d-inline">
-                        <input type="radio" id="r2" name="r" value="1" @onchange="onchange_filter_typepayslip" checked="@(filterHrVM.IsTypeSearch == 1? true: false)">
+                        <input type="radio" id="r2" name="r" value="1" @onchange="onchange_filter_typepayslip" checked="@(filterVM.IsTypeSearch == 1? true: false)">
                         <label for="r2">
                             Thắc mắc lương
                         </label>
@@ -157,7 +157,7 @@
                         &nbsp;&nbsp;
                     </label>
                     <div class="icheck-danger d-inline">
-                        <input type="radio" id="r3" name="r" value="2" @onchange="onchange_filter_typepayslip" checked="@(filterHrVM.IsTypeSearch == 2? true: false)">
+                        <input type="radio" id="r3" name="r" value="2" @onchange="onchange_filter_typepayslip" checked="@(filterVM.IsTypeSearch == 2? true: false)">
                         <label for="r3">
                             Chưa giải đáp
                         </label>

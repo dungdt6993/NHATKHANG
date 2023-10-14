@@ -20,18 +20,18 @@ namespace D69soft.Client.Pages.HR
         [Inject] OrganizationalChartService organizationalChartService { get; set; }
         [Inject] KPIService kpiService { get; set; }
 
-        protected string UserID;
-
         bool isLoading;
         bool isLoadingScreen = true;
+
+        //Log
+        LogVM logVM = new();
+
+        //Filter
+        FilterVM filterVM = new();
 
         //PermisFunc
         bool KPI_KPIs_Management;
 
-        LogVM logVM = new();
-
-        //Filter
-        FilterHrVM filterHrVM = new();
         IEnumerable<PeriodVM> year_filter_list;
         IEnumerable<PeriodVM> month_filter_list;
         IEnumerable<DivisionVM> division_filter_list;
@@ -58,11 +58,11 @@ namespace D69soft.Client.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            UserID = (await authenticationStateTask).User.GetUserId();
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "KPI_KPIs"))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, "KPI_KPIs"))
             {
-                logVM.LogUser = UserID;
+                logVM.LogUser = filterVM.UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "KPI_KPIs";
                 await sysService.InsertLog(logVM);
@@ -72,30 +72,28 @@ namespace D69soft.Client.Pages.HR
                 navigationManager.NavigateTo("/");
             }
 
-            KPI_KPIs_Management = await sysService.CheckAccessSubFunc(UserID, "KPI_KPIs_Management");
+            KPI_KPIs_Management = await sysService.CheckAccessSubFunc(filterVM.UserID, "KPI_KPIs_Management");
 
             //Initialize Filter
-            filterHrVM.UserID = UserID;
+            month_filter_list = await kpiService.GetMonthFilter(filterVM);
+            filterVM.Month = month_filter_list.OrderByDescending(x => x.Month).ToList().ElementAt(0).Month;
 
-            month_filter_list = await kpiService.GetMonthFilter(filterHrVM);
-            filterHrVM.Month = month_filter_list.OrderByDescending(x => x.Month).ToList().ElementAt(0).Month;
+            year_filter_list = await kpiService.GetYearFilter(filterVM);
+            filterVM.Year = year_filter_list.OrderByDescending(x => x.Year).ToList().ElementAt(0).Year;
 
-            year_filter_list = await kpiService.GetYearFilter(filterHrVM);
-            filterHrVM.Year = year_filter_list.OrderByDescending(x => x.Year).ToList().ElementAt(0).Year;
+            filterVM.Period = filterVM.Year * 100 + filterVM.Month;
 
-            filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
+            division_filter_list = await kpiService.GetDivisions(filterVM);
+            filterVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
 
-            division_filter_list = await kpiService.GetDivisions(filterHrVM);
-            filterHrVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
+            filterVM.DepartmentID = string.Empty;
+            department_filter_list = await kpiService.GetDepartments(filterVM);
 
-            filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await kpiService.GetDepartments(filterHrVM);
-
-            filterHrVM.PositionGroupID = string.Empty;
+            filterVM.PositionGroupID = string.Empty;
             position_filter_list = await organizationalChartService.GetPositionList();
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await kpiService.GetEserials(filterHrVM);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await kpiService.GetEserials(filterVM);
 
             await GetKPIs();
 
@@ -106,12 +104,12 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.Month = value;
+            filterVM.Month = value;
 
-            filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
+            filterVM.Period = filterVM.Year * 100 + filterVM.Month;
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await kpiService.GetEserials(filterHrVM);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await kpiService.GetEserials(filterVM);
 
             await GetKPIs();
 
@@ -124,17 +122,17 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.Year = value;
+            filterVM.Year = value;
 
-            filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
+            filterVM.Period = filterVM.Year * 100 + filterVM.Month;
 
-            month_filter_list = await kpiService.GetMonthFilter(filterHrVM);
-            filterHrVM.Month = month_filter_list.OrderByDescending(x => x.Month).ToList().ElementAt(0).Month;
+            month_filter_list = await kpiService.GetMonthFilter(filterVM);
+            filterVM.Month = month_filter_list.OrderByDescending(x => x.Month).ToList().ElementAt(0).Month;
 
-            filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
+            filterVM.Period = filterVM.Year * 100 + filterVM.Month;
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await kpiService.GetEserials(filterHrVM);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await kpiService.GetEserials(filterVM);
 
             await GetKPIs();
 
@@ -147,16 +145,16 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DivisionID = value;
+            filterVM.DivisionID = value;
 
-            filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await kpiService.GetDepartments(filterHrVM);
+            filterVM.DepartmentID = string.Empty;
+            department_filter_list = await kpiService.GetDepartments(filterVM);
 
-            filterHrVM.PositionGroupID = string.Empty;
-            filterHrVM.arrPositionID = new string[] { };
+            filterVM.PositionGroupID = string.Empty;
+            filterVM.arrPositionID = new string[] { };
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await kpiService.GetEserials(filterHrVM);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await kpiService.GetEserials(filterVM);
 
             await GetKPIs();
 
@@ -169,13 +167,13 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DepartmentID = value;
+            filterVM.DepartmentID = value;
 
-            filterHrVM.PositionGroupID = string.Empty;
-            filterHrVM.arrPositionID = new string[] { };
+            filterVM.PositionGroupID = string.Empty;
+            filterVM.arrPositionID = new string[] { };
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await kpiService.GetEserials(filterHrVM);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await kpiService.GetEserials(filterVM);
 
             await GetKPIs();
 
@@ -188,15 +186,15 @@ namespace D69soft.Client.Pages.HR
         {
             get
             {
-                return filterHrVM.arrPositionID;
+                return filterVM.arrPositionID;
             }
             set
             {
                 isLoading = true;
 
-                filterHrVM.arrPositionID = value;
+                filterVM.arrPositionID = value;
 
-                filterHrVM.PositionGroupID = string.Join(",", value);
+                filterVM.PositionGroupID = string.Join(",", value);
 
                 reload_filter_eserial();
 
@@ -210,8 +208,8 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await kpiService.GetEserials(filterHrVM);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await kpiService.GetEserials(filterVM);
 
             await GetKPIs();
 
@@ -224,7 +222,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.Eserial = value;
+            filterVM.Eserial = value;
 
             await GetKPIs();
 
@@ -241,14 +239,14 @@ namespace D69soft.Client.Pages.HR
             rankVM = new();
             rankVMs = null;
 
-            if (!string.IsNullOrEmpty(filterHrVM.Eserial))
+            if (!string.IsNullOrEmpty(filterVM.Eserial))
             {
-                kPIVMs = await kpiService.GetKPIs(filterHrVM);
-                rankVM = await kpiService.GetRank(filterHrVM);
+                kPIVMs = await kpiService.GetKPIs(filterVM);
+                rankVM = await kpiService.GetRank(filterVM);
             }
             else
             {
-                rankVMs = await kpiService.GetRanks(filterHrVM);
+                rankVMs = await kpiService.GetRanks(filterVM);
             }
 
             isLoading = false;
@@ -259,7 +257,7 @@ namespace D69soft.Client.Pages.HR
             _kpiVM.StaffScore = float.Parse(e.Value.ToString());
             await kpiService.UpdateStaffScore(_kpiVM);
 
-            rankVM = await kpiService.GetRank(filterHrVM);
+            rankVM = await kpiService.GetRank(filterVM);
 
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
@@ -271,7 +269,7 @@ namespace D69soft.Client.Pages.HR
             _kpiVM.FinalScore = float.Parse(e.Value.ToString());
             await kpiService.UpdateFinalScore(_kpiVM);
 
-            rankVM = await kpiService.GetRank(filterHrVM);
+            rankVM = await kpiService.GetRank(filterVM);
 
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
@@ -334,7 +332,7 @@ namespace D69soft.Client.Pages.HR
 
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn cập nhật lại Form KPI?", SweetAlertMessageType.question))
             {
-                await kpiService.InitializeKPI(filterHrVM, _Eserial);
+                await kpiService.InitializeKPI(filterVM, _Eserial);
 
                 kPIVMs = null;
                 rankVM = new();

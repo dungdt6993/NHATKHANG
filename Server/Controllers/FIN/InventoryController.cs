@@ -164,7 +164,7 @@ namespace D69soft.Server.Controllers.FIN
         }
 
         [HttpPost("GetItemsList")]
-        public async Task<ActionResult<List<ItemsVM>>> GetItemsList(FilterFinVM _filterFinVM)
+        public async Task<ActionResult<List<ItemsVM>>> GetItemsList(FilterVM _filterVM)
         {
             var sql = "select * from FIN.Items i ";
             sql += "join FIN.ItemsUnit iu on iu.IUnitCode = i.IUnitCode ";
@@ -181,7 +181,7 @@ namespace D69soft.Server.Controllers.FIN
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<ItemsVM>(sql, _filterFinVM);
+                var result = await conn.QueryAsync<ItemsVM>(sql, _filterVM);
                 return result.ToList();
             }
         }
@@ -373,7 +373,7 @@ namespace D69soft.Server.Controllers.FIN
         }
 
         [HttpPost("GetInventorys")]
-        public async Task<ActionResult<List<InventoryVM>>> GetInventorys(FilterFinVM _filterFinVM)
+        public async Task<ActionResult<List<InventoryVM>>> GetInventorys(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -381,11 +381,11 @@ namespace D69soft.Server.Controllers.FIN
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@DivisionID", _filterFinVM.DivisionID);
-                parm.Add("@StartDate", _filterFinVM.StartDate);
-                parm.Add("@EndDate", _filterFinVM.EndDate);
-                parm.Add("@StockCode", _filterFinVM.StockCode);
-                parm.Add("@ICode", _filterFinVM.ICode);
+                parm.Add("@DivisionID", _filterVM.DivisionID);
+                parm.Add("@StartDate", _filterVM.StartDate);
+                parm.Add("@EndDate", _filterVM.EndDate);
+                parm.Add("@StockCode", _filterVM.StockCode);
+                parm.Add("@ICode", _filterVM.ICode);
 
                 var result = await conn.QueryAsync<InventoryVM>("FIN.GetInventorys", parm, commandType: CommandType.StoredProcedure);
                 return result.ToList();
@@ -395,7 +395,7 @@ namespace D69soft.Server.Controllers.FIN
         [HttpPost("GetInventoryBookDetails")]
         public async Task<ActionResult<List<InventoryBookDetailVM>>> GetInventoryBookDetails(ArrayList _arrayList)
         {
-            FilterFinVM _filterFinVM = JsonConvert.DeserializeObject<FilterFinVM>(_arrayList[0].ToString());
+            FilterVM _filterVM = JsonConvert.DeserializeObject<FilterVM>(_arrayList[0].ToString());
             InventoryVM _inventoryVM = JsonConvert.DeserializeObject<InventoryVM>(_arrayList[1].ToString());
 
             var sql = "select v.VDate, v.VNumber, v.VDesc, ";
@@ -403,7 +403,7 @@ namespace D69soft.Server.Controllers.FIN
             sql += "case when vd.FromStockCode = @StockCode then vd.VDQty else 0 end as QtyOutput ";
             sql += "from (select * from FIN.Voucher where VActive=1) v ";
             sql += "join FIN.VoucherDetail vd on vd.VNumber = v.VNumber ";
-            sql += "where format(v.VDate,'MM/dd/yyyy')>='" + _filterFinVM.StartDate.ToString("MM/dd/yyyy") + "' and format(v.VDate,'MM/dd/yyyy')<='" + _filterFinVM.EndDate.ToString("MM/dd/yyyy") + "' and (vd.ToStockCode = @StockCode or vd.FromStockCode = @StockCode) and vd.ICode=@ICode ";
+            sql += "where format(v.VDate,'MM/dd/yyyy')>='" + _filterVM.StartDate.ToString("MM/dd/yyyy") + "' and format(v.VDate,'MM/dd/yyyy')<='" + _filterVM.EndDate.ToString("MM/dd/yyyy") + "' and (vd.ToStockCode = @StockCode or vd.FromStockCode = @StockCode) and vd.ICode=@ICode ";
             sql += "order by v.VDate ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {

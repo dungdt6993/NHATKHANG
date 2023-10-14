@@ -6,6 +6,7 @@ using Model.ViewModels.OP;
 using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.OP;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Server.Controllers.OP
 {
@@ -21,7 +22,7 @@ namespace D69soft.Server.Controllers.OP
         }
 
         [HttpPost("GetTenders")]
-        public async Task<ActionResult<IEnumerable<TenderVM>>> GetTenders(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<TenderVM>>> GetTenders(FilterVM _filterVM)
         {
             var sql = "select * from OP.Tender where DivisionID=@DivisionID order by TenderCode ";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -29,14 +30,14 @@ namespace D69soft.Server.Controllers.OP
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<TenderVM>(sql, _filterHrVM);
+                var result = await conn.QueryAsync<TenderVM>(sql, _filterVM);
                 return Ok(result);
             }
         }
 
         //CruiseSchedule
         [HttpPost("GetCruiseSchedules")]
-        public async Task<ActionResult<List<CruiseScheduleVM>>> GetCruiseSchedules(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<List<CruiseScheduleVM>>> GetCruiseSchedules(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -44,9 +45,9 @@ namespace D69soft.Server.Controllers.OP
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@M", _filterHrVM.Month);
-                parm.Add("@Y", _filterHrVM.Year);
-                parm.Add("@DivisionID", _filterHrVM.DivisionID);
+                parm.Add("@M", _filterVM.Month);
+                parm.Add("@Y", _filterVM.Year);
+                parm.Add("@DivisionID", _filterVM.DivisionID);
 
                 var result = await conn.QueryAsync<CruiseScheduleVM>("OP.CruiseSchedule_view", parm, commandType: CommandType.StoredProcedure);
                 return result.ToList();
@@ -88,7 +89,7 @@ namespace D69soft.Server.Controllers.OP
 
         //TenderSchedule
         [HttpPost("GetTenderSchedules")]
-        public async Task<ActionResult<IEnumerable<TenderScheduleVM>>> GetTenderSchedules(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<TenderScheduleVM>>> GetTenderSchedules(FilterVM _filterVM)
         {
             var sql = "select * from OP.TenderSchedule ts join OP.Tender t on t.TenderCode = ts.TenderCode where dDate=format(@dDate,'yyyy-MM-dd') ";
             sql += "order by ShiftID ";
@@ -97,7 +98,7 @@ namespace D69soft.Server.Controllers.OP
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<TenderScheduleVM>(sql, _filterHrVM);
+                var result = await conn.QueryAsync<TenderScheduleVM>(sql, _filterVM);
                 return Ok(result);
             }
         }

@@ -1,5 +1,6 @@
 ﻿using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 using System.Data;
 using System.Net.Http.Json;
 
@@ -15,59 +16,59 @@ namespace D69soft.Client.Services.HR
         }
 
         //Filter
-        public async Task<IEnumerable<PeriodVM>> GetMonthFilter(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<PeriodVM>> GetMonthFilter(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/KPI/GetMonthFilter", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/KPI/GetMonthFilter", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<PeriodVM>>();
         }
-        public async Task<IEnumerable<PeriodVM>> GetYearFilter(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<PeriodVM>> GetYearFilter(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/KPI/GetYearFilter", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/KPI/GetYearFilter", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<PeriodVM>>();
         }
 
-        public async Task<IEnumerable<DivisionVM>> GetDivisions(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<DivisionVM>> GetDivisions(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/KPI/GetDivisions", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/KPI/GetDivisions", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<DivisionVM>>();
         }
 
-        public async Task<IEnumerable<DepartmentVM>> GetDepartments(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<DepartmentVM>> GetDepartments(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/KPI/GetDepartments", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/KPI/GetDepartments", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<DepartmentVM>>();
         }
 
-        public async Task<IEnumerable<EserialVM>> GetEserials(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<EserialVM>> GetEserials(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/KPI/GetEserials", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/KPI/GetEserials", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<EserialVM>>();
         }
 
         //End Filter
 
-        public async Task<IEnumerable<KPIVM>> GetKPIs(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<KPIVM>> GetKPIs(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/KPI/GetKPIs", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/KPI/GetKPIs", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<KPIVM>>();
         }
 
-        public async Task<RankVM> GetRank(FilterHrVM _filterHrVM)
+        public async Task<RankVM> GetRank(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/KPI/GetRank", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/KPI/GetRank", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<RankVM>();
         }
 
-        public async Task<List<RankVM>> GetRanks(FilterHrVM _filterHrVM)
+        public async Task<List<RankVM>> GetRanks(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/KPI/GetRanks", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/KPI/GetRanks", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<List<RankVM>>();
         }
@@ -121,9 +122,9 @@ namespace D69soft.Client.Services.HR
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<bool> InitializeKPI(FilterHrVM _filterHrVM, string _Eserial)
+        public async Task<bool> InitializeKPI(FilterVM _filterVM, string _Eserial)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/KPI/InitializeKPI/{_Eserial}", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/KPI/InitializeKPI/{_Eserial}", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }

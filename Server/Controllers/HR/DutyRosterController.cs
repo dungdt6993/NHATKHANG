@@ -21,8 +21,8 @@ namespace D69soft.Server.Controllers.HR
             _connConfig = connConfig;
         }
 
-        [HttpPost("GetEserialByID/{_UserID}")]
-        public async Task<ActionResult<IEnumerable<EserialVM>>> GetEserialByID(FilterHrVM _filterHrVM, string _UserID)
+        [HttpPost("GetEserialByID")]
+        public async Task<ActionResult<IEnumerable<EserialVM>>> GetEserialByID(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -30,13 +30,13 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@sPeriod", _filterHrVM.Year * 100 + _filterHrVM.Month);
-                parm.Add("@DivsID", _filterHrVM.DivisionID);
-                parm.Add("@SectionID", _filterHrVM.SectionID);
-                parm.Add("@DeptID", _filterHrVM.DepartmentID);
-                parm.Add("@arrPos", _filterHrVM.PositionGroupID);
-                parm.Add("@Eserial", _filterHrVM.Eserial);
-                parm.Add("@UserID", _UserID);
+                parm.Add("@sPeriod", _filterVM.Year * 100 + _filterVM.Month);
+                parm.Add("@DivsID", _filterVM.DivisionID);
+                parm.Add("@SectionID", _filterVM.SectionID);
+                parm.Add("@DeptID", _filterVM.DepartmentID);
+                parm.Add("@arrPos", _filterVM.PositionGroupID);
+                parm.Add("@Eserial", _filterVM.Eserial);
+                parm.Add("@UserID", _filterVM.UserID);
 
                 var result = await conn.QueryAsync<EserialVM>("HR.DutyRoster_viewEserialMain", parm, commandType: CommandType.StoredProcedure);
                 return Ok(result);
@@ -44,7 +44,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("GetDutyRosterList")]
-        public async Task<ActionResult<List<DutyRosterVM>>> GetDutyRosterList(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<List<DutyRosterVM>>> GetDutyRosterList(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -52,15 +52,15 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@Y", _filterHrVM.Year);
-                parm.Add("@M", _filterHrVM.Month);
-                parm.Add("@D", _filterHrVM.Day);
-                parm.Add("@DivsID", _filterHrVM.DivisionID);
-                parm.Add("@SectionID", _filterHrVM.SectionID);
-                parm.Add("@DeptID", _filterHrVM.DepartmentID);
-                parm.Add("@arrPos", _filterHrVM.PositionGroupID);
-                parm.Add("@Eserial", _filterHrVM.Eserial);
-                parm.Add("@UserID", _filterHrVM.UserID);
+                parm.Add("@Y", _filterVM.Year);
+                parm.Add("@M", _filterVM.Month);
+                parm.Add("@D", _filterVM.Day);
+                parm.Add("@DivsID", _filterVM.DivisionID);
+                parm.Add("@SectionID", _filterVM.SectionID);
+                parm.Add("@DeptID", _filterVM.DepartmentID);
+                parm.Add("@arrPos", _filterVM.PositionGroupID);
+                parm.Add("@Eserial", _filterVM.Eserial);
+                parm.Add("@UserID", _filterVM.UserID);
 
                 var result = await conn.QueryAsync<DutyRosterVM>("HR.DutyRoster_viewDutyRosterList", parm, commandType: CommandType.StoredProcedure);
                 return result.ToList();
@@ -70,7 +70,7 @@ namespace D69soft.Server.Controllers.HR
         [HttpPost("GetDutyRosterByDay")]
         public async Task<ActionResult<DutyRosterVM>> GetDutyRosterByDay(ArrayList _arrayList)
         {
-            FilterHrVM _filterHrVM = JsonConvert.DeserializeObject<FilterHrVM>(_arrayList[0].ToString());
+            FilterVM _filterVM = JsonConvert.DeserializeObject<FilterVM>(_arrayList[0].ToString());
 
             DutyRosterVM _dutyRosterVM = JsonConvert.DeserializeObject<DutyRosterVM>(_arrayList[1].ToString());
 
@@ -80,15 +80,15 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@Y", _filterHrVM.Year);
-                parm.Add("@M", _filterHrVM.Month);
+                parm.Add("@Y", _filterVM.Year);
+                parm.Add("@M", _filterVM.Month);
                 parm.Add("@D", _dutyRosterVM.dDate.Day);
-                parm.Add("@DivsID", _filterHrVM.DivisionID);
-                parm.Add("@SectionID", _filterHrVM.SectionID);
-                parm.Add("@DeptID", _filterHrVM.DepartmentID);
-                parm.Add("@arrPos", _filterHrVM.PositionGroupID);
+                parm.Add("@DivsID", _filterVM.DivisionID);
+                parm.Add("@SectionID", _filterVM.SectionID);
+                parm.Add("@DeptID", _filterVM.DepartmentID);
+                parm.Add("@arrPos", _filterVM.PositionGroupID);
                 parm.Add("@Eserial", _dutyRosterVM.Eserial);
-                parm.Add("@UserID", _filterHrVM.UserID);
+                parm.Add("@UserID", _filterVM.UserID);
 
                 var result = await conn.QueryFirstAsync<DutyRosterVM>("HR.DutyRoster_viewDutyRosterList", parm, commandType: CommandType.StoredProcedure);
                 return result;
@@ -96,11 +96,11 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("GetLockDutyRoster")]
-        public async Task<ActionResult<IEnumerable<LockDutyRosterVM>>> GetLockDutyRoster(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<LockDutyRosterVM>>> GetLockDutyRoster(FilterVM _filterVM)
         {
             var sql = "select de.DepartmentID, de.DepartmentName, rld.LockFrom, rld.LockTo from HR.Department de left join (select * from HR.LockDutyRoster where Period=@Period) rld on rld.DepartmentID = de.DepartmentID where de.isActive = 1 and de.DivisionID=@DivisionID ";
 
-            if (_filterHrVM.DepartmentID != string.Empty)
+            if (_filterVM.DepartmentID != string.Empty)
             {
                 sql += " and de.DepartmentID=@DepartmentID ";
             }
@@ -110,13 +110,13 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<LockDutyRosterVM>(sql, new { Period = _filterHrVM.Year * 100 + _filterHrVM.Month, DivisionID = _filterHrVM.DivisionID, DepartmentID = _filterHrVM.DepartmentID });
+                var result = await conn.QueryAsync<LockDutyRosterVM>(sql, new { Period = _filterVM.Year * 100 + _filterVM.Month, DivisionID = _filterVM.DivisionID, DepartmentID = _filterVM.DepartmentID });
                 return Ok(result);
             }
         }
 
-        [HttpPost("LockDutyRoster/{_UserID}")]
-        public async Task<ActionResult<bool>> LockDutyRoster(LockDutyRosterVM _filterHrVM, string _UserID)
+        [HttpPost("LockDutyRoster")]
+        public async Task<ActionResult<bool>> LockDutyRoster(LockDutyRosterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -124,36 +124,36 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var sqlDel = "Delete from HR.LockDutyRoster where Period=@Period and DivisionID=@DivisionID ";
-                if (_filterHrVM.DepartmentID != string.Empty)
+                if (_filterVM.DepartmentID != string.Empty)
                 {
                     sqlDel += " and DepartmentID=@DepartmentID ";
                 }
                 else
                 {
-                    sqlDel += " and DepartmentID in (select DepartmentID from SYSTEM.PermissionDepartment where UserID='" + _UserID + "' and DivisionID=@DivisionID) ";
+                    sqlDel += " and DepartmentID in (select DepartmentID from SYSTEM.PermissionDepartment where UserID=@UserID and DivisionID=@DivisionID) ";
                 }
 
-                await conn.ExecuteAsync(sqlDel, _filterHrVM);
+                await conn.ExecuteAsync(sqlDel, _filterVM);
 
-                if (_filterHrVM.IsTypeUpdate == 1)
+                if (_filterVM.IsTypeUpdate == 1)
                 {
                     var sqlInsert = string.Empty;
-                    if (_filterHrVM.DepartmentID != string.Empty)
+                    if (_filterVM.DepartmentID != string.Empty)
                     {
-                        sqlInsert += "Insert into HR.LockDutyRoster values(@Period,@DivisionID,@DepartmentID,@LockFrom,@LockTo,'" + _UserID + "',GETDATE()) ";
+                        sqlInsert += "Insert into HR.LockDutyRoster values(@Period,@DivisionID,@DepartmentID,@LockFrom,@LockTo,@UserID,GETDATE()) ";
                     }
                     else
                     {
-                        sqlInsert += "Insert into HR.LockDutyRoster select @Period,DivisionID, DepartmentID,@LockFrom,@LockTo,'" + _UserID + "',GETDATE() from SYSTEM.PermissionDepartment where UserID='" + _UserID + "' and DivisionID=@DivisionID ";
+                        sqlInsert += "Insert into HR.LockDutyRoster select @Period,DivisionID, DepartmentID,@LockFrom,@LockTo,@UserID,GETDATE() from SYSTEM.PermissionDepartment where UserID=@UserID and DivisionID=@DivisionID ";
                     }
-                    await conn.ExecuteAsync(sqlInsert, _filterHrVM);
+                    await conn.ExecuteAsync(sqlInsert, _filterVM);
                 }
             }
             return true;
         }
 
         [HttpPost("InitializeAttendanceRecordDutyRoster")]
-        public async Task<ActionResult<bool>> InitializeAttendanceRecordDutyRoster(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<bool>> InitializeAttendanceRecordDutyRoster(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -161,7 +161,7 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@sPeriod", _filterHrVM.Year * 100 + _filterHrVM.Month);
+                parm.Add("@sPeriod", _filterVM.Year * 100 + _filterVM.Month);
 
                 await conn.ExecuteAsync("HR.DutyRoster_insertEserialNotPeriod", parm, commandType: CommandType.StoredProcedure);
                 await conn.ExecuteAsync("HR.AttendanceRecord_insertEserialNotPeriod", parm, commandType: CommandType.StoredProcedure);
@@ -171,7 +171,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("UpdateShiftWork")]
-        public async Task<ActionResult<string>> UpdateShiftWork(DutyRosterVM _filterHrVM)
+        public async Task<ActionResult<string>> UpdateShiftWork(DutyRosterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -179,13 +179,13 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@dDate", _filterHrVM.dDate);
-                parm.Add("@Eserial", _filterHrVM.Eserial);
-                parm.Add("@WorkShift", _filterHrVM.WorkShift);
-                parm.Add("@FirstShiftID", _filterHrVM.FirstShiftID);
-                parm.Add("@SecondShiftID", _filterHrVM.SecondShiftID);
+                parm.Add("@dDate", _filterVM.dDate);
+                parm.Add("@Eserial", _filterVM.Eserial);
+                parm.Add("@WorkShift", _filterVM.WorkShift);
+                parm.Add("@FirstShiftID", _filterVM.FirstShiftID);
+                parm.Add("@SecondShiftID", _filterVM.SecondShiftID);
 
-                parm.Add("@UserID", _filterHrVM.UserID);
+                parm.Add("@UserID", _filterVM.UserID);
 
                 var eserial = await conn.ExecuteScalarAsync<string>("HR.DutyRoster_updateShift", parm, commandType: CommandType.StoredProcedure);
 
@@ -269,7 +269,7 @@ namespace D69soft.Server.Controllers.HR
 
         //Att
         [HttpPost("GetProfileUser")]
-        public async Task<ActionResult<ProfileVM>> GetProfileUser(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<ProfileVM>> GetProfileUser(FilterVM _filterVM)
         {
             var sql = " select p.Eserial, p.LastName, p.MiddleName, p.FirstName, jh.DivisionID, jh.DepartmentID from HR.JobHistory jh ";
             sql += "join HR.Profile p on p.Eserial = jh.Eserial ";
@@ -280,12 +280,12 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                return await conn.QueryFirstAsync<ProfileVM>(sql, _filterHrVM);
+                return await conn.QueryFirstAsync<ProfileVM>(sql, _filterVM);
             }
         }
 
         [HttpPost("GetAttendanceRecordList")]
-        public async Task<ActionResult<IEnumerable<DutyRosterVM>>> GetAttendanceRecordList(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<DutyRosterVM>>> GetAttendanceRecordList(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -293,15 +293,15 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@Y", _filterHrVM.Year);
-                parm.Add("@M", _filterHrVM.Month);
-                parm.Add("@D", _filterHrVM.Day);
-                parm.Add("@DivsID", _filterHrVM.DivisionID);
-                parm.Add("@SectionID", _filterHrVM.SectionID);
-                parm.Add("@DeptID", _filterHrVM.DepartmentID);
-                parm.Add("@arrPos", _filterHrVM.PositionGroupID);
-                parm.Add("@Eserial", _filterHrVM.Eserial);
-                parm.Add("@UserID", _filterHrVM.UserID);
+                parm.Add("@Y", _filterVM.Year);
+                parm.Add("@M", _filterVM.Month);
+                parm.Add("@D", _filterVM.Day);
+                parm.Add("@DivsID", _filterVM.DivisionID);
+                parm.Add("@SectionID", _filterVM.SectionID);
+                parm.Add("@DeptID", _filterVM.DepartmentID);
+                parm.Add("@arrPos", _filterVM.PositionGroupID);
+                parm.Add("@Eserial", _filterVM.Eserial);
+                parm.Add("@UserID", _filterVM.UserID);
 
                 var result = await conn.QueryAsync<DutyRosterVM>("HR.DutyRoster_viewDutyRosterList", parm, commandType: CommandType.StoredProcedure);
                 return Ok(result);
@@ -379,7 +379,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("CalcFingerData")]
-        public async Task<ActionResult<bool>> CalcFingerData(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<bool>> CalcFingerData(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -387,9 +387,9 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@Y", _filterHrVM.Year);
-                parm.Add("@M", _filterHrVM.Month);
-                parm.Add("@DivsID", _filterHrVM.DivisionID);
+                parm.Add("@Y", _filterVM.Year);
+                parm.Add("@M", _filterVM.Month);
+                parm.Add("@DivsID", _filterVM.DivisionID);
 
                 await conn.ExecuteAsync("HR.AttendanceRecord_calcFingerData", parm, commandType: CommandType.StoredProcedure);
             }
@@ -398,7 +398,7 @@ namespace D69soft.Server.Controllers.HR
 
         //EmplTrf
         [HttpPost("GetEmplTrfList")]
-        public async Task<ActionResult<IEnumerable<DutyRosterVM>>> GetEmplTrfList(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<DutyRosterVM>>> GetEmplTrfList(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -406,10 +406,10 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@dDate", _filterHrVM.dDate);
-                parm.Add("@DivisionID", _filterHrVM.DivisionID);
-                parm.Add("@ShiftID", _filterHrVM.ShiftID);
-                parm.Add("@PositionGroupID", _filterHrVM.PositionGroupID);
+                parm.Add("@dDate", _filterVM.dDate);
+                parm.Add("@DivisionID", _filterVM.DivisionID);
+                parm.Add("@ShiftID", _filterVM.ShiftID);
+                parm.Add("@PositionGroupID", _filterVM.PositionGroupID);
 
                 var result = await conn.QueryAsync<DutyRosterVM>("OP.EmplTrf_view", parm, commandType: CommandType.StoredProcedure);
                 return Ok(result);
@@ -431,7 +431,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("GetDutyRosterNotes")]
-        public async Task<ActionResult<IEnumerable<DutyRosterVM>>> GetDutyRosterNotes(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<DutyRosterVM>>> GetDutyRosterNotes(FilterVM _filterVM)
         {
             var sql = "select * from HR.DutyRosterNote where dDate=format(@dDate,'yyyy-MM-dd') ";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -439,7 +439,7 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<DutyRosterVM>(sql, _filterHrVM);
+                var result = await conn.QueryAsync<DutyRosterVM>(sql, _filterVM);
                 return Ok(result);
             }
         }
@@ -465,7 +465,7 @@ namespace D69soft.Server.Controllers.HR
 
         //WorkPlan
         [HttpPost("GetWorkPlans")]
-        public async Task<ActionResult<IEnumerable<DutyRosterVM>>> GetWorkPlans(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<DutyRosterVM>>> GetWorkPlans(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -473,8 +473,8 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@dDate", _filterHrVM.dDate);
-                parm.Add("@DivisionID", _filterHrVM.DivisionID);
+                parm.Add("@dDate", _filterVM.dDate);
+                parm.Add("@DivisionID", _filterVM.DivisionID);
 
                 var result = await conn.QueryAsync<DutyRosterVM>("HR.WorkPlan_viewList", parm, commandType: CommandType.StoredProcedure);
                 return Ok(result);

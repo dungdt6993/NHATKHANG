@@ -36,8 +36,6 @@ namespace D69soft.Client.Pages.FIN
         bool isLoading;
         bool isLoadingScreen = true;
 
-        protected string UserID;
-
         //Para
         [Parameter]
         public string _FuncID { get; set; }
@@ -46,11 +44,11 @@ namespace D69soft.Client.Pages.FIN
         bool FIN_Voucher_Update;
         bool FIN_Voucher_CancelActive;
 
+        //Log
         LogVM logVM = new();
 
         //Filter
-        FilterFinVM filterFinVM = new();
-        FilterHrVM filterHrVM = new();
+        FilterVM filterVM = new();
 
         //Division
         IEnumerable<DivisionVM> filter_divisionVMs;
@@ -118,15 +116,15 @@ namespace D69soft.Client.Pages.FIN
 
         protected override async Task OnInitializedAsync()
         {
-            filterHrVM.UserID = UserID = (await authenticationStateTask).User.GetUserId();
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            filterFinVM.FuncID = _FuncID;
+            filterVM.FuncID = _FuncID;
 
-            if (await sysService.CheckAccessFunc(UserID, filterFinVM.FuncID))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, filterVM.FuncID))
             {
-                logVM.LogUser = UserID;
+                logVM.LogUser = filterVM.UserID;
                 logVM.LogType = "FUNC";
-                logVM.LogName = filterFinVM.FuncID;
+                logVM.LogName = filterVM.FuncID;
                 await sysService.InsertLog(logVM);
             }
             else
@@ -134,16 +132,16 @@ namespace D69soft.Client.Pages.FIN
                 navigationManager.NavigateTo("/");
             }
 
-            FIN_Voucher_Update = await sysService.CheckAccessSubFunc(UserID, $"{filterFinVM.FuncID}_Update");
-            FIN_Voucher_CancelActive = await sysService.CheckAccessSubFunc(UserID, $"{filterFinVM.FuncID}_CancelActive");
+            FIN_Voucher_Update = await sysService.CheckAccessSubFunc(filterVM.UserID, $"{filterVM.FuncID}_Update");
+            FIN_Voucher_CancelActive = await sysService.CheckAccessSubFunc(filterVM.UserID, $"{filterVM.FuncID}_CancelActive");
 
-            filter_divisionVMs = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterFinVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
+            filter_divisionVMs = await organizationalChartService.GetDivisionList(filterVM);
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
 
-            filterFinVM.searchActive = 2;
+            filterVM.searchActive = 2;
 
-            filterFinVM.StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-            filterFinVM.EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1).AddTicks(-1);
+            filterVM.StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            filterVM.EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1).AddTicks(-1);
 
             await GetVouchers();
 
@@ -159,7 +157,7 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            filterFinVM.DivisionID = value;
+            filterVM.DivisionID = value;
 
             await GetVouchers();
 
@@ -172,7 +170,7 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            filterFinVM.VTypeID = value;
+            filterVM.VTypeID = value;
 
             await GetVouchers();
 
@@ -183,8 +181,8 @@ namespace D69soft.Client.Pages.FIN
 
         public async Task OnRangeSelect(DateRange _range)
         {
-            filterFinVM.StartDate = _range.Start;
-            filterFinVM.EndDate = _range.End;
+            filterVM.StartDate = _range.Start;
+            filterVM.EndDate = _range.End;
 
             await GetVouchers();
         }
@@ -193,15 +191,15 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            filterFinVM.FuncID = _FuncID;
-            filter_vTypeVMs = await voucherService.GetVTypeVMs(filterFinVM.FuncID);
+            filterVM.FuncID = _FuncID;
+            filter_vTypeVMs = await voucherService.GetVTypeVMs(filterVM.FuncID);
 
             voucherVM = new();
             voucherDetailVMs = new();
 
-            filterFinVM.TypeView = 0;
+            filterVM.TypeView = 0;
 
-            voucherVMs = await voucherService.GetVouchers(filterFinVM);
+            voucherVMs = await voucherService.GetVouchers(filterVM);
 
             isLoading = false;
         }
@@ -226,15 +224,15 @@ namespace D69soft.Client.Pages.FIN
 
             vSubTypeVMs = await voucherService.GetVSubTypeVMs(_vTypeID);
 
-            if (filterFinVM.FuncID == "FIN_Cash" || filterFinVM.FuncID == "FIN_Deposit")
+            if (filterVM.FuncID == "FIN_Cash" || filterVM.FuncID == "FIN_Deposit")
             {
                 vSubTypeVMs = vSubTypeVMs.Where(x => x.VSubTypeID != "FIN_Cash_Payment_Vendor" && x.VSubTypeID != "FIN_Cash_Receipt_Customer" && x.VSubTypeID != "FIN_Deposit_Debit_Vendor" && x.VSubTypeID != "FIN_Deposit_Credit_Customer");
             }
 
             //Profile
-            filterHrVM.DivisionID = filterFinVM.DivisionID;
-            filterHrVM.TypeProfile = 0;
-            profileVMs = await profileService.GetProfileList(filterHrVM);
+            filterVM.DivisionID = filterVM.DivisionID;
+            filterVM.TypeProfile = 0;
+            profileVMs = await profileService.GetProfileList(filterVM);
 
             vendorVMs = await purchasingService.GetVendorList();
 
@@ -255,13 +253,13 @@ namespace D69soft.Client.Pages.FIN
 
                 voucherVM.VCode = filter_vTypeVMs.Where(x => x.VTypeID == _vTypeID).Select(x => x.VCode).First();
 
-                if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Deposit")
+                if (filterVM.FuncID != "FIN_Cash" && filterVM.FuncID != "FIN_Deposit")
                 {
-                    filterFinVM.ITypeCode = voucherVM.ITypeCode = "HH";
+                    filterVM.ITypeCode = voucherVM.ITypeCode = "HH";
                     voucherVM.PaymentTypeCode = "CASH";
                 }
 
-                voucherVM.EserialPerform = UserID;
+                voucherVM.EserialPerform = filterVM.UserID;
             }
 
             if (_IsTypeUpdate != 0)
@@ -294,11 +292,11 @@ namespace D69soft.Client.Pages.FIN
                 voucherVM.IsInvoice = true;
             }
 
-            voucherVM.UserID = UserID;
+            voucherVM.UserID = filterVM.UserID;
 
             voucherVM.VTypeID = _vTypeID;
 
-            voucherVM.DivisionID = filterFinVM.DivisionID;
+            voucherVM.DivisionID = filterVM.DivisionID;
             voucherVM.IsTypeUpdate = _IsTypeUpdate;
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_Voucher");
@@ -648,11 +646,11 @@ namespace D69soft.Client.Pages.FIN
 
                     var itemSplit = Regex.Split(itemfinger, "\t").Select(x => x.Trim()).ToArray();
 
-                    filterFinVM.ICode = itemSplit[0].Trim();
+                    filterVM.ICode = itemSplit[0].Trim();
 
                     IEnumerable<VoucherDetailVM> _voucherDetailVMs;
 
-                    _voucherDetailVMs = await SearchItems(filterFinVM.ICode);
+                    _voucherDetailVMs = await SearchItems(filterVM.ICode);
 
                     voucherDetailVM = _voucherDetailVMs.First();
 
@@ -939,9 +937,9 @@ namespace D69soft.Client.Pages.FIN
 
                         _voucherVM.IsTypeUpdate = 0;
 
-                        _voucherVM.UserID = UserID;
+                        _voucherVM.UserID = filterVM.UserID;
 
-                        _voucherVM.DivisionID = filterFinVM.DivisionID;
+                        _voucherVM.DivisionID = filterVM.DivisionID;
 
                         _voucherVM.BankAccountID = voucherVM.BankAccountID;
 
@@ -1012,14 +1010,14 @@ namespace D69soft.Client.Pages.FIN
 
             if (_vTypeID == "FIN_Cash_Receipt" || _vTypeID == "FIN_Cash_Payment")
             {
-                filterFinVM.FuncID = "FIN_Cash";
+                filterVM.FuncID = "FIN_Cash";
 
                 filter_vTypeVMs = await voucherService.GetVTypeVMs("FIN_Cash");
             }
 
             if (_vTypeID == "FIN_Deposit_Credit" || _vTypeID == "FIN_Deposit_Debit")
             {
-                filterFinVM.FuncID = "FIN_Deposit";
+                filterVM.FuncID = "FIN_Deposit";
 
                 filter_vTypeVMs = await voucherService.GetVTypeVMs("FIN_Deposit");
             }
@@ -1044,9 +1042,9 @@ namespace D69soft.Client.Pages.FIN
 
             voucherVM.IsTypeUpdate = 0;
 
-            voucherVM.UserID = UserID;
+            voucherVM.UserID = filterVM.UserID;
 
-            voucherVM.DivisionID = filterFinVM.DivisionID;
+            voucherVM.DivisionID = filterVM.DivisionID;
 
             if (_vTypeID == "FIN_Cash_Receipt")
             {
@@ -1099,18 +1097,18 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            filterFinVM.TypeView = 1;
+            filterVM.TypeView = 1;
 
             ReportName = _ReportName;
 
             if (_ReportName == "FIN_So_quy_tien")
             {
-                moneyBooks = await voucherService.GetMoneyBooks(filterFinVM);
+                moneyBooks = await voucherService.GetMoneyBooks(filterVM);
             }
 
             if (_ReportName == "FIN_Tong_hop_ton_kho")
             {
-                inventoryVMs = await inventoryService.GetInventorys(filterFinVM);
+                inventoryVMs = await inventoryService.GetInventorys(filterVM);
             }
 
             isLoading = false;

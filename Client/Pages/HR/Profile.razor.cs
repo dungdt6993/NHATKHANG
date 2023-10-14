@@ -31,7 +31,11 @@ namespace D69soft.Client.Pages.HR
         bool isLoading;
         bool isLoadingScreen = true;
 
-        protected string UserID;
+        //log
+        LogVM logVM = new();
+
+        //Filter
+        FilterVM filterVM = new();
 
         //PermisFunc
         bool HR_Profile_EditSal;
@@ -64,9 +68,6 @@ namespace D69soft.Client.Pages.HR
         bool disabled_BasicSalary; bool disabled_Benefit4; bool disabled_OtherSalary; bool disabled_Benefit5; bool disabled_Benefit1; bool disabled_Benefit6; bool disabled_Benefit2; bool disabled_Benefit7;
         bool disabled_Benefit3; bool disabled_Benefit8; bool disabled_Reason; bool disabled_ApprovedBy; bool disabled_BeginSalaryDate; bool disabled_SalaryByBank; bool disabled_IsPayBy;
 
-        LogVM logVM = new();
-
-        FilterHrVM filterHrVM = new();
         IEnumerable<DivisionVM> division_filter_list;
         IEnumerable<DepartmentVM> department_filter_list;
         IEnumerable<SectionVM> section_filter_list;
@@ -107,11 +108,11 @@ namespace D69soft.Client.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            filterHrVM.UserID = UserID = (await authenticationStateTask).User.GetUserId();
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "HR_Profile"))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, "HR_Profile"))
             {
-                logVM.LogUser = UserID;
+                logVM.LogUser = filterVM.UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "HR_Profile";
                 await sysService.InsertLog(logVM);
@@ -121,39 +122,39 @@ namespace D69soft.Client.Pages.HR
                 navigationManager.NavigateTo("/");
             }
 
-            HR_Profile_EditSal = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_EditSal");
-            HR_Profile_ChangeSal = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_ChangeSal");
-            HR_Profile_ViewSal = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_ViewSal");
-            HR_Profile_User_Permis = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_User_Permis");
-            HR_Profile_User_ResetPass = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_User_ResetPass");
-            HR_Profile_EmployeeTransaction = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_EmployeeTransaction");
-            HR_Profile_UpdateHistory = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_UpdateHistory");
-            HR_Profile_UpdateContractType = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_UpdateContractType");
-            HR_Profile_UpdateWorkType = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_UpdateWorkType");
-            HR_Profile_Edit = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_Edit");
-            HR_Profile_New = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_New");
-            HR_Profile_Del = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_Del");
-            HR_Profile_Adjust = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_Adjust");
-            HR_Profile_Terminate = await sysService.CheckAccessSubFunc(UserID, "HR_Profile_Terminate");
+            HR_Profile_EditSal = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_Profile_EditSal");
+            HR_Profile_ChangeSal = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_Profile_ChangeSal");
+            HR_Profile_ViewSal = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_Profile_ViewSal");
+            HR_Profile_User_Permis = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_Profile_User_Permis");
+            HR_Profile_User_ResetPass = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_Profile_User_ResetPass");
+            HR_Profile_EmployeeTransaction = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_Profile_EmployeeTransaction");
+            HR_Profile_UpdateHistory = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_Profile_UpdateHistory");
+            HR_Profile_UpdateContractType = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_Profile_UpdateContractType");
+            HR_Profile_UpdateWorkType = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_Profile_UpdateWorkType");
+            HR_Profile_Edit = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_Profile_Edit");
+            HR_Profile_New = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_Profile_New");
+            HR_Profile_Del = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_Profile_Del");
+            HR_Profile_Adjust = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_Profile_Adjust");
+            HR_Profile_Terminate = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_Profile_Terminate");
 
             //Initialize Filter
-            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterHrVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
+            division_filter_list = await organizationalChartService.GetDivisionList(filterVM);
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
 
-            filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
+            filterVM.DepartmentID = string.Empty;
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterVM);
 
-            filterHrVM.SectionID = string.Empty;
+            filterVM.SectionID = string.Empty;
             section_filter_list = await organizationalChartService.GetSectionList();
 
-            filterHrVM.PositionGroupID = string.Empty;
+            filterVM.PositionGroupID = string.Empty;
             position_filter_list = await organizationalChartService.GetPositionList();
 
-            filterHrVM.Eserial = string.Empty;
+            filterVM.Eserial = string.Empty;
 
-            filterHrVM.searchValues = string.Empty;
+            filterVM.searchValues = string.Empty;
 
-            filterHrVM.Year = DateTime.Now.Year;
+            filterVM.Year = DateTime.Now.Year;
 
             await GetProfileList();
 
@@ -164,15 +165,15 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DivisionID = value;
+            filterVM.DivisionID = value;
 
-            filterHrVM.TypeProfile = 0;
+            filterVM.TypeProfile = 0;
 
-            filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
+            filterVM.DepartmentID = string.Empty;
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterVM);
 
-            filterHrVM.PositionGroupID = string.Empty;
-            filterHrVM.arrPositionID = new string[] { };
+            filterVM.PositionGroupID = string.Empty;
+            filterVM.arrPositionID = new string[] { };
 
             await GetProfileList();
 
@@ -185,10 +186,10 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DepartmentID = value;
+            filterVM.DepartmentID = value;
 
-            filterHrVM.PositionGroupID = string.Empty;
-            filterHrVM.arrPositionID = new string[] { };
+            filterVM.PositionGroupID = string.Empty;
+            filterVM.arrPositionID = new string[] { };
 
             //Load profiles
             profileVMs = new();
@@ -205,7 +206,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.SectionID = value;
+            filterVM.SectionID = value;
 
             //Load profiles
             profileVMs = new();
@@ -222,9 +223,9 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.arrPositionID = value;
+            filterVM.arrPositionID = value;
 
-            filterHrVM.PositionGroupID = string.Join(",", value);
+            filterVM.PositionGroupID = string.Join(",", value);
 
             //Load profiles
             profileVMs = new();
@@ -239,7 +240,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.TypeProfile = int.Parse(args.Value.ToString());
+            filterVM.TypeProfile = int.Parse(args.Value.ToString());
 
             //Load profiles
             profileVMs = new();
@@ -252,7 +253,7 @@ namespace D69soft.Client.Pages.HR
 
         private async Task SearchProfile(string value)
         {
-            filterHrVM.searchValues = value;
+            filterVM.searchValues = value;
 
             await virtualizeProfileList.RefreshDataAsync();
             StateHasChanged();
@@ -293,10 +294,10 @@ namespace D69soft.Client.Pages.HR
             profileVM = new();
 
             //Bien dong nhan su
-            dtEmplChange = await profileService.dtEmplChange(filterHrVM);
+            dtEmplChange = await profileService.dtEmplChange(filterVM);
 
             //Load profiles
-            profileVMs = await profileService.GetProfileList(filterHrVM);
+            profileVMs = await profileService.GetProfileList(filterVM);
 
             if(empls == null)
             {
@@ -312,8 +313,8 @@ namespace D69soft.Client.Pages.HR
         private ValueTask<ItemsProviderResult<ProfileVM>> LoadProfileList(ItemsProviderRequest request)
         {
             return new(new ItemsProviderResult<ProfileVM>(
-                    profileVMs.Where(x => x.Eserial.Contains(filterHrVM.searchValues) || x.FullName.ToUpper().Contains(filterHrVM.searchValues.ToUpper())).Skip(request.StartIndex).Take(request.Count),
-                    profileVMs.Where(x => x.Eserial.Contains(filterHrVM.searchValues) || x.FullName.ToUpper().Contains(filterHrVM.searchValues.ToUpper())).Count()
+                    profileVMs.Where(x => x.Eserial.Contains(filterVM.searchValues) || x.FullName.ToUpper().Contains(filterVM.searchValues.ToUpper())).Skip(request.StartIndex).Take(request.Count),
+                    profileVMs.Where(x => x.Eserial.Contains(filterVM.searchValues) || x.FullName.ToUpper().Contains(filterVM.searchValues.ToUpper())).Count()
                 ));
         }
 
@@ -381,7 +382,7 @@ namespace D69soft.Client.Pages.HR
                 profileVM.StartDayAL = LibraryFunc.FormatDateDDMMYYYY(value, profileVM.StartDayAL);
             }
         }
-
+        
         public string onchange_StartContractDate
         {
             get
@@ -793,7 +794,7 @@ namespace D69soft.Client.Pages.HR
 
             bankVMs = (await moneyService.GetBankList()).ToList();
 
-            permissionUserVMs = await authService.GetPermissionUser(UserID);
+            permissionUserVMs = await authService.GetPermissionUser(filterVM.UserID);
 
             salaryDefVMs = await profileService.GetSalaryDef();
 
@@ -810,7 +811,7 @@ namespace D69soft.Client.Pages.HR
 
                     profileVM.EthnicID = 1;
 
-                    profileVM.DivisionID = filterHrVM.DivisionID;
+                    profileVM.DivisionID = filterVM.DivisionID;
 
                     profileVM.PermisId = 4;
 
@@ -823,7 +824,7 @@ namespace D69soft.Client.Pages.HR
 
                 profileHistorys = null;
 
-                profileVM.isAutoEserial = division_filter_list.Where(x => x.DivisionID == filterHrVM.DivisionID).Select(x => x.isAutoEserial).First();
+                profileVM.isAutoEserial = division_filter_list.Where(x => x.DivisionID == filterVM.DivisionID).Select(x => x.isAutoEserial).First();
 
                 if (!profileVM.isAutoEserial)
                 {
@@ -937,7 +938,7 @@ namespace D69soft.Client.Pages.HR
 
             disabled_btnUpdateProfile = true;
 
-            profileVM.UserID = UserID;
+            profileVM.UserID = filterVM.UserID;
 
             profileVM.Eserial = await profileService.UpdateProfile(profileVM);
 
@@ -1003,15 +1004,15 @@ namespace D69soft.Client.Pages.HR
             {
                 if (await profileService.DelProfileHistory(profilehistory))
                 {
-                    filterHrVM.Eserial = profileVM.Eserial;
+                    filterVM.Eserial = profileVM.Eserial;
 
-                    profileVM = (await profileService.GetProfileList(filterHrVM)).First();
+                    profileVM = (await profileService.GetProfileList(filterVM)).First();
 
                     profileHistorys = await profileService.GetProfileHistory(profileVM.Eserial);
 
                     profileVM.IsTypeUpdate = 1;
 
-                    filterHrVM.Eserial = String.Empty;
+                    filterVM.Eserial = String.Empty;
 
                     logVM.LogDesc = "Xóa lịch sử hồ sơ " + profileVM.Eserial + "";
                     await sysService.InsertLog(logVM);
@@ -1051,7 +1052,7 @@ namespace D69soft.Client.Pages.HR
 
             profileVM.IsTypeUpdate = 4;
 
-            profileVM.UserID = UserID;
+            profileVM.UserID = filterVM.UserID;
 
             isLoading = false;
         }
@@ -1082,7 +1083,7 @@ namespace D69soft.Client.Pages.HR
 
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắc chắn hủy chấm dứt hợp đồng?", SweetAlertMessageType.question))
             {
-                if (await profileService.RestoreTerminateProfile(profileVM.Eserial, UserID))
+                if (await profileService.RestoreTerminateProfile(profileVM.Eserial, filterVM.UserID))
                 {
                     logVM.LogDesc = "Hủy chấm dứt hợp đồng " + profileVM.Eserial + "";
                     await sysService.InsertLog(logVM);

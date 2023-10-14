@@ -5,7 +5,7 @@
 <LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 <Loading isLoading="@isLoading"></Loading>
 
-<EditForm Model="@filterFinVM">
+<EditForm Model="@filterVM">
     <section class="content-header">
         <div class="row">
 
@@ -15,8 +15,8 @@
                                  data-style="btn-selectpicker"
                                  data-live-search="true"
                                  data-container="body"
-                                 ValueExpression="@(()=>filterFinVM.DivisionID)"
-                                 Value="@filterFinVM.DivisionID"
+                                 ValueExpression="@(()=>filterVM.DivisionID)"
+                                 Value="@filterVM.DivisionID"
                                  ValueChanged="@((string value) =>onchange_DivisionID(value))">
 
                         @if (filter_divisionVMs != null)
@@ -34,7 +34,7 @@
                 <div class="form-group">
                     <select class="selectpicker form-control form-control-sm"
                             data-style="btn-selectpicker"
-                            data-container="body" @bind="filterFinVM.VTypeID">
+                            data-container="body" @bind="filterVM.VTypeID">
                         <option value="FIN_Purchasing">Hóa đơn mua vào</option>
                         <option value="FIN_Sale">Hóa đơn bán ra</option>
                     </select>
@@ -82,7 +82,7 @@
 
             <div class="col-sm-2">
                 <div class="form-group">
-                    <input type="search" class="form-control form-control-sm" placeholder="Tìm kiếm theo số hóa đơn" @bind="filterFinVM.InvoiceNumber" />
+                    <input type="search" class="form-control form-control-sm" placeholder="Tìm kiếm theo số hóa đơn" @bind="filterVM.InvoiceNumber" />
                 </div>
             </div>
 
@@ -90,7 +90,7 @@
                 <!-- radio -->
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
-                        <input type="radio" id="TypeView1" name="TypeView" checked="@(filterFinVM.TypeView == 0)" @onchange="(() => filterFinVM.TypeView = 0)">
+                        <input type="radio" id="TypeView1" name="TypeView" checked="@(filterVM.TypeView == 0)" @onchange="(() => filterVM.TypeView = 0)">
                         <label for="TypeView1">
                             Tổng hợp
                         </label>
@@ -99,7 +99,7 @@
                         &nbsp;&nbsp;
                     </label>
                     <div class="icheck-success d-inline">
-                        <input type="radio" id="TypeView2" name="TypeView" checked="@(filterFinVM.TypeView == 1)" @onchange="(() => filterFinVM.TypeView = 1)">
+                        <input type="radio" id="TypeView2" name="TypeView" checked="@(filterVM.TypeView == 1)" @onchange="(() => filterVM.TypeView = 1)">
                         <label for="TypeView2">
                             Chi tiết
                         </label>
@@ -137,19 +137,19 @@
 
             </div>
 
-            @if (filterFinVM.TypeView == 2)
+            @if (filterVM.TypeView == 2)
             {
                 <div class="card-header text-center">
                     <h5><b>SỔ CHI TIẾT</b></h5>
                     <i>
-                        @if (filterFinVM.StartDate.ToString("dd/MM/yyyy") == filterFinVM.EndDate.ToString("dd/MM/yyyy"))
+                        @if (filterVM.StartDate.ToString("dd/MM/yyyy") == filterVM.EndDate.ToString("dd/MM/yyyy"))
                         {
-                            <b>Ngày @filterFinVM.StartDate.ToString("dd/MM/yyyy")</b>
+                            <b>Ngày @filterVM.StartDate.ToString("dd/MM/yyyy")</b>
 
                         }
                         else
                         {
-                            <b>Từ ngày @filterFinVM.StartDate.ToString("dd/MM/yyyy") đến ngày @filterFinVM.EndDate.ToString("dd/MM/yyyy")</b>
+                            <b>Từ ngày @filterVM.StartDate.ToString("dd/MM/yyyy") đến ngày @filterVM.EndDate.ToString("dd/MM/yyyy")</b>
                         }
                     </i>
 
@@ -159,7 +159,7 @@
             <!-- /.card-header -->
             <div id="tblInvoice" class="card-body table-responsive p-0" style="height: calc(100vh - 233px);">
 
-                @if (filterFinVM.TypeView == 0)
+                @if (filterVM.TypeView == 0)
                 {
                     @if (invoiceVMs != null)
                     {
@@ -213,7 +213,7 @@
                     }
                 }
 
-                @if (filterFinVM.TypeView == 1)
+                @if (filterVM.TypeView == 1)
                 {
                     @if (invoiceVMs != null)
                     {
@@ -276,7 +276,7 @@
                     }
                 }
 
-                @if (filterFinVM.TypeView == 2)
+                @if (filterVM.TypeView == 2)
                 {
                     @if (invoiceBooks != null)
                     {

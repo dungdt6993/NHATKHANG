@@ -23,30 +23,30 @@ namespace D69soft.Server.Services.HR
         }
 
         //Profile
-        public async Task<DataTable> dtEmplChange(FilterHrVM _filterHrVM)
+        public async Task<DataTable> dtEmplChange(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Profile/dtEmplChange", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Profile/dtEmplChange", _filterVM);
 
             return JsonConvert.DeserializeObject<DataTable>(await response.Content.ReadAsStringAsync());
         }
 
-        public async Task<IEnumerable<EserialVM>> GetEserialListByID(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<EserialVM>> GetEserialListByID(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Profile/GetEserialListByID", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Profile/GetEserialListByID", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<EserialVM>>();
         }
 
-        public async Task<List<ProfileVM>> GetProfileList(FilterHrVM _filterHrVM)
+        public async Task<List<ProfileVM>> GetProfileList(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Profile/GetProfileList", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Profile/GetProfileList", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<List<ProfileVM>>();
         }
 
-        public async Task<IEnumerable<ProfileVM>> GetSearchEmpl(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<ProfileVM>> GetSearchEmpl(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Profile/GetSearchEmpl", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Profile/GetSearchEmpl", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<ProfileVM>>();
         }

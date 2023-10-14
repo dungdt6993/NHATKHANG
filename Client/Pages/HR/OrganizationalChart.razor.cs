@@ -21,15 +21,14 @@ namespace D69soft.Client.Pages.HR
         [Inject] SysService sysService { get; set; }
         [Inject] OrganizationalChartService organizationalChartService { get; set; }
 
-        protected string UserID;
-
         bool isLoading;
-
         bool isLoadingScreen = true;
 
+        //Log
         LogVM logVM = new();
 
-        FilterHrVM filterHrVM = new();
+        //Filter
+        FilterVM filterVM = new();
 
         //Division
         DivisionVM divisionVM = new();
@@ -65,11 +64,11 @@ namespace D69soft.Client.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            UserID = (await authenticationStateTask).User.GetUserId();
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "HR_OrganizationalChart"))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, "HR_OrganizationalChart"))
             {
-                logVM.LogUser = UserID;
+                logVM.LogUser = filterVM.UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "HR_OrganizationalChart";
                 await sysService.InsertLog(logVM);
@@ -79,11 +78,11 @@ namespace D69soft.Client.Pages.HR
                 navigationManager.NavigateTo("/");
             }
 
-            filterHrVM.UserID = String.Empty;
+            filterVM.UserID = String.Empty;
 
-            filterHrVM.searchValues = string.Empty;
+            filterVM.searchValues = string.Empty;
 
-            divisionVMs = await organizationalChartService.GetDivisionList(filterHrVM);
+            divisionVMs = await organizationalChartService.GetDivisionList(filterVM);
 
             departmentGroupVMs = await organizationalChartService.GetDepartmentGroupList();
 
@@ -100,7 +99,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DivisionID = filterHrVM.DivisionID == _divisionVM.DivisionID ? String.Empty : _divisionVM.DivisionID;
+            filterVM.DivisionID = filterVM.DivisionID == _divisionVM.DivisionID ? String.Empty : _divisionVM.DivisionID;
 
             divisionVM = _divisionVM;
 
@@ -122,7 +121,7 @@ namespace D69soft.Client.Pages.HR
 
                 divisionVM.IsTypeUpdate = 0;
 
-                filterHrVM.DivisionID = string.Empty;
+                filterVM.DivisionID = string.Empty;
             }
 
             divisionVM.IsTypeUpdate = _IsTypeUpdate;
@@ -179,8 +178,8 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DivisionID = String.Empty;
-            divisionVMs = await organizationalChartService.GetDivisionList(filterHrVM);
+            filterVM.DivisionID = String.Empty;
+            divisionVMs = await organizationalChartService.GetDivisionList(filterVM);
 
             isLoading = false;
         }
@@ -190,7 +189,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DepartmentID = filterHrVM.DepartmentID == _departmentVM.DepartmentID ? String.Empty : _departmentVM.DepartmentID;
+            filterVM.DepartmentID = filterVM.DepartmentID == _departmentVM.DepartmentID ? String.Empty : _departmentVM.DepartmentID;
 
             departmentVM = _departmentVM;
 
@@ -205,7 +204,7 @@ namespace D69soft.Client.Pages.HR
             {
                 departmentVM = new();
 
-                departmentVM.DivisionID = filterHrVM.DivisionID;
+                departmentVM.DivisionID = filterVM.DivisionID;
                 departmentVM.isActive = true;
             }
 
@@ -263,8 +262,8 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DepartmentID = String.Empty;
-            departmentVMs = await organizationalChartService.GetDepartmentList(filterHrVM);
+            filterVM.DepartmentID = String.Empty;
+            departmentVMs = await organizationalChartService.GetDepartmentList(filterVM);
 
             isLoading = false;
         }
@@ -347,7 +346,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.SectionID = filterHrVM.SectionID == _sectionVM.SectionID ? String.Empty : _sectionVM.SectionID;
+            filterVM.SectionID = filterVM.SectionID == _sectionVM.SectionID ? String.Empty : _sectionVM.SectionID;
 
             sectionVM = _sectionVM;
 
@@ -417,7 +416,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.SectionID = String.Empty;
+            filterVM.SectionID = String.Empty;
             sectionVMs = await organizationalChartService.GetSectionList();
 
             isLoading = false;
@@ -428,7 +427,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.PositionID = filterHrVM.PositionID == _positionVM.PositionID ? String.Empty : _positionVM.PositionID;
+            filterVM.PositionID = filterVM.PositionID == _positionVM.PositionID ? String.Empty : _positionVM.PositionID;
 
             positionVM = _positionVM;
 
@@ -510,7 +509,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.searchValues = args.Value.ToString();
+            filterVM.searchValues = args.Value.ToString();
 
             isLoading = false;
         }
@@ -519,7 +518,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.PositionID = String.Empty;
+            filterVM.PositionID = String.Empty;
             positionVMs = await organizationalChartService.GetPositionList();
 
             isLoading = false;

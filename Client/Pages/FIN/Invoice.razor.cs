@@ -25,13 +25,11 @@ namespace D69soft.Client.Pages.FIN
         bool isLoading;
         bool isLoadingScreen = true;
 
-        protected string UserID;
-
+        //Log
         LogVM logVM = new();
 
         //Filter
-        FilterFinVM filterFinVM = new();
-        FilterHrVM filterHrVM = new();
+        FilterVM filterVM = new();
 
         //Division
         IEnumerable<DivisionVM> filter_divisionVMs;
@@ -54,11 +52,11 @@ namespace D69soft.Client.Pages.FIN
 
         protected override async Task OnInitializedAsync()
         {
-            filterHrVM.UserID = UserID = (await authenticationStateTask).User.GetUserId();
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "FIN_Invoice"))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, "FIN_Invoice"))
             {
-                logVM.LogUser = UserID;
+                logVM.LogUser = filterVM.UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "FIN_Invoice";
                 await sysService.InsertLog(logVM);
@@ -68,13 +66,13 @@ namespace D69soft.Client.Pages.FIN
                 navigationManager.NavigateTo("/");
             }
 
-            filter_divisionVMs = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterFinVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
+            filter_divisionVMs = await organizationalChartService.GetDivisionList(filterVM);
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
 
-            filterFinVM.VTypeID = "FIN_Purchasing";
+            filterVM.VTypeID = "FIN_Purchasing";
 
-            filterFinVM.StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-            filterFinVM.EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1).AddTicks(-1);
+            filterVM.StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            filterVM.EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1).AddTicks(-1);
 
             await GetInvoices();
 
@@ -85,7 +83,7 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            filterFinVM.DivisionID = value;
+            filterVM.DivisionID = value;
 
             await GetInvoices();
 
@@ -96,8 +94,8 @@ namespace D69soft.Client.Pages.FIN
 
         public async Task OnRangeSelect(DateRange _range)
         {
-            filterFinVM.StartDate = _range.Start;
-            filterFinVM.EndDate = _range.End;
+            filterVM.StartDate = _range.Start;
+            filterVM.EndDate = _range.End;
 
             await GetInvoices();
         }
@@ -106,9 +104,9 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            filterFinVM.TypeView = filterFinVM.TypeView == 2 ? 0 : filterFinVM.TypeView;
+            filterVM.TypeView = filterVM.TypeView == 2 ? 0 : filterVM.TypeView;
 
-            invoiceVMs = await voucherService.GetInvoices(filterFinVM);
+            invoiceVMs = await voucherService.GetInvoices(filterVM);
 
             isLoading = false;
         }
@@ -118,11 +116,11 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            filterFinVM.TypeView = 2;
+            filterVM.TypeView = 2;
 
             if (_ReportName == "FIN_So_chi_tiet_hoa_don")
             {
-                invoiceBooks = await voucherService.GetInvoiceBooks(filterFinVM);
+                invoiceBooks = await voucherService.GetInvoiceBooks(filterVM);
             }
 
             isLoading = false;

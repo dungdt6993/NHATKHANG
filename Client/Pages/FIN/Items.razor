@@ -529,7 +529,7 @@
     </div>
 </div>
 
-<EditForm Model="@filterFinVM">
+<EditForm Model="@filterVM">
 
     <div id="content" style="padding-top:10px">
         <div class="container-fluid">
@@ -546,8 +546,8 @@
                             <InputSelect class="selectpicker form-control form-control-sm"
                                          data-style="btn-selectpicker" data-container="body"
                                          data-live-search="true" data-show-subtext="true"
-                                         ValueExpression="@(()=>filterFinVM.IClsCode)"
-                                         Value="@filterFinVM.IClsCode"
+                                         ValueExpression="@(()=>filterVM.IClsCode)"
+                                         Value="@filterVM.IClsCode"
                                          ValueChanged="@((string value) => onchange_filter_IClsCode(value))">
                                 <option value=@String.Empty>-----Tất cả-----</option>
                                 @if (itemsClassVMs != null)
@@ -576,19 +576,19 @@
                                 <InputSelect class="selectpicker form-control form-control-sm"
                                              data-style="btn-selectpicker" data-container="body"
                                              data-live-search="true" data-show-subtext="true"
-                                             ValueExpression="@(()=>filterFinVM.IGrpCode)"
-                                             Value="@filterFinVM.IGrpCode"
+                                             ValueExpression="@(()=>filterVM.IGrpCode)"
+                                             Value="@filterVM.IGrpCode"
                                              ValueChanged="@((string value) => onchange_filter_IGrpCode(value))">
                                     <option value=@String.Empty>-----Tất cả-----</option>
                                     @if (itemsGroupVMs != null)
                                     {
-                                        @foreach (var _itemsGroupVM in itemsGroupVMs.Where(x => x.IClsCode == filterFinVM.IClsCode || String.IsNullOrEmpty(filterFinVM.IClsCode)))
+                                        @foreach (var _itemsGroupVM in itemsGroupVMs.Where(x => x.IClsCode == filterVM.IClsCode || String.IsNullOrEmpty(filterVM.IClsCode)))
                                         {
                                             <option data-subtext="@_itemsGroupVM.IGrpCode" value="@_itemsGroupVM.IGrpCode">@_itemsGroupVM.IGrpName</option>
                                         }
                                     }
                                 </InputSelect>
-                                @if (!String.IsNullOrEmpty(filterFinVM.IGrpCode))
+                                @if (!String.IsNullOrEmpty(filterVM.IGrpCode))
                                 {
                                     <div class="input-group-append">
                                         <button class="btn" @onclick="(() => InitializeModalUpdate_ItemsGroup(1))"><i class="fa-solid fa-pencil text-secondary"></i></button>
@@ -623,13 +623,13 @@
                         <div class="card-body">
                             <div class="form-group clearfix">
                                 <div class="icheck-success d-inline">
-                                    <input type="radio" id="ckboxItemsActive" name="rFilterActive" value="true" @onchange="onchange_filter_IActive" checked="@(filterFinVM.IActive == true)">
+                                    <input type="radio" id="ckboxItemsActive" name="rFilterActive" value="true" @onchange="onchange_filter_IActive" checked="@(filterVM.IActive == true)">
                                     <label for="ckboxItemsActive">Hàng đang hoạt động</label>
                                 </div>
                             </div>
                             <div class="form-group clearfix">
                                 <div class="icheck-danger d-inline">
-                                    <input type="radio" id="ckboxItemsNoActive" name="rFilterActive" value="false" @onchange="onchange_filter_IActive" checked="@(filterFinVM.IActive == false)">
+                                    <input type="radio" id="ckboxItemsNoActive" name="rFilterActive" value="false" @onchange="onchange_filter_IActive" checked="@(filterVM.IActive == false)">
                                     <label for="ckboxItemsNoActive">Hàng ngừng hoạt động</label>
                                 </div>
                             </div>

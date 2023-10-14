@@ -1,4 +1,5 @@
 ﻿using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 using System.Net.Http.Json;
 
 namespace D69soft.Client.Services.HR
@@ -12,9 +13,9 @@ namespace D69soft.Client.Services.HR
             _httpClient = httpClient;
         }
         //Division
-        public async Task<IEnumerable<DivisionVM>> GetDivisionList(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<DivisionVM>> GetDivisionList(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/OrganizationalChart/GetDivisionList", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/OrganizationalChart/GetDivisionList", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<DivisionVM>>();
         }
@@ -30,9 +31,9 @@ namespace D69soft.Client.Services.HR
         }
 
         //Department
-        public async Task<IEnumerable<DepartmentVM>> GetDepartmentList(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<DepartmentVM>> GetDepartmentList(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/OrganizationalChart/GetDepartmentList", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/OrganizationalChart/GetDepartmentList", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<DepartmentVM>>();
         }

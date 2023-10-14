@@ -158,14 +158,14 @@
 
 <section class="content-header">
 
-    <EditForm Model="@filterHrVM">
+    <EditForm Model="@filterVM">
         <div class="row">
 
             <div class="col-md-2">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
-                                 Value="@filterHrVM.DivisionID"
+                                 ValueExpression="@(()=>filterVM.DivisionID)"
+                                 Value="@filterVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
                         @if (division_filter_list != null)
                         {
@@ -181,8 +181,8 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.DocTypeID)"
-                                 Value="@filterHrVM.DocTypeID"
+                                 ValueExpression="@(()=>filterVM.DocTypeID)"
+                                 Value="@filterVM.DocTypeID"
                                  ValueChanged="@((int value) => onchange_filter_doctype(value))">
                         <option value=0>-----Loại giấy tờ-----</option>
                         @if (doctype_filter_list != null)

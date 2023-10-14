@@ -23,17 +23,14 @@ namespace D69soft.Client.Pages.FIN
         [Inject] OrganizationalChartService organizationalChartService { get; set; }
         [Inject] InventoryService inventoryService { get; set; }
 
-        protected string UserID;
-
         bool isLoading;
-
         bool isLoadingScreen = true;
 
+        //Log
         LogVM logVM = new();
 
         //Filter
-        FilterFinVM filterFinVM = new();
-        FilterHrVM filterHrVM = new();
+        FilterVM filterVM = new();
 
         //Division
         IEnumerable<DivisionVM> divisionVMs;
@@ -64,15 +61,13 @@ namespace D69soft.Client.Pages.FIN
 
         protected override async Task OnInitializedAsync()
         {
-            
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            UserID = (await authenticationStateTask).User.GetUserId();
-
-            if (await sysService.CheckAccessFunc(UserID, "FIN_Inventory"))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, "FIN_Inventory"))
             {
                 logVM.LogType = "FUNC";
                 logVM.LogName = "FIN_Inventory";
-                logVM.LogUser = UserID;
+                logVM.LogUser = filterVM.UserID;
                 await sysService.InsertLog(logVM);
             }
             else
@@ -80,13 +75,11 @@ namespace D69soft.Client.Pages.FIN
                 navigationManager.NavigateTo("/");
             }
 
-            filterHrVM.UserID = UserID;
+            divisionVMs = await organizationalChartService.GetDivisionList(filterVM);
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
 
-            divisionVMs = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterFinVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
-
-            filterFinVM.StartDate = DateTime.Now;
-            filterFinVM.EndDate = DateTime.Now;
+            filterVM.StartDate = DateTime.Now;
+            filterVM.EndDate = DateTime.Now;
 
             stockVMs = await inventoryService.GetStockList();
 
@@ -97,15 +90,15 @@ namespace D69soft.Client.Pages.FIN
 
         public void OnRangeSelect(DateRange _range)
         {
-            filterFinVM.StartDate = _range.Start;
-            filterFinVM.EndDate = _range.End;
+            filterVM.StartDate = _range.Start;
+            filterVM.EndDate = _range.End;
         }
 
         private async Task<IEnumerable<ItemsVM>> SearchItems(string searchText)
         {
-            filterFinVM.searchText = searchText;
-            filterFinVM.IActive = true;
-            return await inventoryService.GetItemsList(filterFinVM);
+            filterVM.searchText = searchText;
+            filterVM.IActive = true;
+            return await inventoryService.GetItemsList(filterVM);
         }
 
         private async Task SelectedItem(ItemsVM result)
@@ -113,12 +106,12 @@ namespace D69soft.Client.Pages.FIN
             if (result != null)
             {
                 itemsVM = result;
-                filterFinVM.ICode = result.ICode;
+                filterVM.ICode = result.ICode;
             }
             else
             {
                 itemsVM = null;
-                filterFinVM.ICode = String.Empty;
+                filterVM.ICode = String.Empty;
             }
         }
 
@@ -128,7 +121,7 @@ namespace D69soft.Client.Pages.FIN
 
             IsViewInventoryBookDetail = false;
 
-            inventoryVMs = await inventoryService.GetInventorys(filterFinVM);
+            inventoryVMs = await inventoryService.GetInventorys(filterVM);
 
             isLoading = false;
         }
@@ -142,7 +135,7 @@ namespace D69soft.Client.Pages.FIN
 
             inventoryVM = _inventory;
 
-            inventoryBookDetailVMs = await inventoryService.GetInventoryBookDetails(filterFinVM, inventoryVM);
+            inventoryBookDetailVMs = await inventoryService.GetInventoryBookDetails(filterVM, inventoryVM);
 
             isLoading = false;
         }

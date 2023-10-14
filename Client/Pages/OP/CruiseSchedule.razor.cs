@@ -22,16 +22,16 @@ namespace D69soft.Client.Pages.OP
         [Inject] OrganizationalChartService organizationalChartService { get; set; }
         [Inject] OPService opService { get; set; }
 
-        protected string UserID;
-
         bool isLoading;
 
         bool isLoadingScreen = true;
 
+        //Log
         LogVM logVM = new();
 
         //Filter
-        FilterHrVM filterHrVM = new();
+        FilterVM filterVM = new();
+
         IEnumerable<PeriodVM> year_filter_list;
         IEnumerable<PeriodVM> month_filter_list;
         IEnumerable<DivisionVM> division_filter_list;
@@ -56,11 +56,11 @@ namespace D69soft.Client.Pages.OP
 
         protected override async Task OnInitializedAsync()
         {
-            UserID = (await authenticationStateTask).User.GetUserId();
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "OP_CruiseSchedule"))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, "OP_CruiseSchedule"))
             {
-                logVM.LogUser = UserID;
+                logVM.LogUser = filterVM.UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "OP_CruiseSchedule";
                 await sysService.InsertLog(logVM);
@@ -71,18 +71,16 @@ namespace D69soft.Client.Pages.OP
             }
 
             //Initialize Filter
-            filterHrVM.UserID = UserID;
-
             year_filter_list = await sysService.GetYearFilter();
-            filterHrVM.Year = DateTime.Now.Year;
+            filterVM.Year = DateTime.Now.Year;
 
             month_filter_list = await sysService.GetMonthFilter();
-            filterHrVM.Month = DateTime.Now.Month;
+            filterVM.Month = DateTime.Now.Month;
 
-            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterHrVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
+            division_filter_list = await organizationalChartService.GetDivisionList(filterVM);
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
 
-            cruiseScheduleVMs = await opService.GetCruiseSchedules(filterHrVM);
+            cruiseScheduleVMs = await opService.GetCruiseSchedules(filterVM);
             cruiseStatusVMs = await opService.GetCruiseStatus();
 
             isLoadingScreen = false;
@@ -92,7 +90,7 @@ namespace D69soft.Client.Pages.OP
         {
             isLoading = true;
 
-            filterHrVM.Month = value;
+            filterVM.Month = value;
 
             await GetCruiseSchedules();
 
@@ -105,7 +103,7 @@ namespace D69soft.Client.Pages.OP
         {
             isLoading = true;
 
-            filterHrVM.Year = value;
+            filterVM.Year = value;
 
             await GetCruiseSchedules();
 
@@ -118,7 +116,7 @@ namespace D69soft.Client.Pages.OP
         {
             isLoading = true;
 
-            filterHrVM.DivisionID = value;
+            filterVM.DivisionID = value;
 
             await GetCruiseSchedules();
 
@@ -131,7 +129,7 @@ namespace D69soft.Client.Pages.OP
         {
             isLoading = true;
 
-            cruiseScheduleVMs = await opService.GetCruiseSchedules(filterHrVM);
+            cruiseScheduleVMs = await opService.GetCruiseSchedules(filterVM);
 
             isLoading = false;
         }

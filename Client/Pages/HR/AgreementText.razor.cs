@@ -21,15 +21,15 @@ namespace D69soft.Client.Pages.HR
         [Inject] DutyRosterService dutyRosterService { get; set; }
         [Inject] AgreementTextService agreementTextService { get; set; }
 
-        protected string UserID;
-
         bool isLoading;
 
         bool isLoadingScreen = true;
 
+        //Log
         LogVM logVM = new();
 
-        FilterHrVM filterHrVM = new();
+        //Filter
+        FilterVM filterVM = new();
 
         IEnumerable<PeriodVM> year_filter_list;
         IEnumerable<PeriodVM> month_filter_list;
@@ -61,15 +61,13 @@ namespace D69soft.Client.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            UserID = (await authenticationStateTask).User.GetUserId();
-
-            if (await sysService.CheckAccessFunc(UserID, "HR_AgreementText"))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, "HR_AgreementText"))
             {
                 logVM.LogType = "FUNC";
                 logVM.LogName = "HR_AgreementText";
-                logVM.LogUser = UserID;
+                logVM.LogUser = filterVM.UserID;
                 await sysService.InsertLog(logVM);
             }
             else
@@ -78,28 +76,26 @@ namespace D69soft.Client.Pages.HR
             }
 
             //Initialize Filter
-            filterHrVM.UserID = UserID;
-
             year_filter_list = await sysService.GetYearFilter();
-            filterHrVM.Year = DateTime.Now.Year;
+            filterVM.Year = DateTime.Now.Year;
 
             month_filter_list = await sysService.GetMonthFilter();
-            filterHrVM.Month = DateTime.Now.Month;
+            filterVM.Month = DateTime.Now.Month;
 
-            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterHrVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
+            division_filter_list = await organizationalChartService.GetDivisionList(filterVM);
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
 
-            filterHrVM.SectionID = string.Empty;
+            filterVM.SectionID = string.Empty;
             section_filter_list = await organizationalChartService.GetSectionList();
 
-            filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
+            filterVM.DepartmentID = string.Empty;
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterVM);
 
-            filterHrVM.PositionGroupID = string.Empty;
+            filterVM.PositionGroupID = string.Empty;
             position_filter_list = await organizationalChartService.GetPositionList();
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             agreementtexttype_filter_list = await agreementTextService.GetAgreementTextTypeList();
 
@@ -110,12 +106,12 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterHrVM);
+            await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterVM);
 
-            filterHrVM.Month = value;
+            filterVM.Month = value;
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
             agreementTextVMs = null;
 
             isLoading = false;
@@ -127,12 +123,12 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterHrVM);
+            await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterVM);
 
-            filterHrVM.Year = value;
+            filterVM.Year = value;
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
             agreementTextVMs = null;
 
             isLoading = false;
@@ -151,18 +147,18 @@ namespace D69soft.Client.Pages.HR
                 divisionFilterVM = division_filter_list.First(x => x.DivisionID == value);
             }
 
-            filterHrVM.DivisionID = value;
+            filterVM.DivisionID = value;
 
-            filterHrVM.is2625 = divisionFilterVM.is2625;
+            filterVM.is2625 = divisionFilterVM.is2625;
 
-            filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
+            filterVM.DepartmentID = string.Empty;
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterVM);
 
-            filterHrVM.PositionGroupID = string.Empty;
-            filterHrVM.arrPositionID = new string[] { };
+            filterVM.PositionGroupID = string.Empty;
+            filterVM.arrPositionID = new string[] { };
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             agreementTextVMs = null;
 
@@ -175,13 +171,13 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DepartmentID = value;
+            filterVM.DepartmentID = value;
 
-            filterHrVM.PositionGroupID = string.Empty;
-            filterHrVM.arrPositionID = new string[] { };
+            filterVM.PositionGroupID = string.Empty;
+            filterVM.arrPositionID = new string[] { };
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             agreementTextVMs = null;
 
@@ -194,10 +190,10 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.SectionID = value;
+            filterVM.SectionID = value;
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             agreementTextVMs = null;
 
@@ -210,15 +206,15 @@ namespace D69soft.Client.Pages.HR
         {
             get
             {
-                return filterHrVM.arrPositionID;
+                return filterVM.arrPositionID;
             }
             set
             {
                 isLoading = true;
 
-                filterHrVM.arrPositionID = (string[])value;
+                filterVM.arrPositionID = (string[])value;
 
-                filterHrVM.PositionGroupID = string.Join(",", (string[])value);
+                filterVM.PositionGroupID = string.Join(",", (string[])value);
 
                 reload_filter_eserial();
 
@@ -231,7 +227,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.Eserial = value;
+            filterVM.Eserial = value;
 
             agreementTextVMs = null;
 
@@ -241,8 +237,8 @@ namespace D69soft.Client.Pages.HR
         }
         private async void reload_filter_eserial()
         {
-            filterHrVM.Eserial = String.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = String.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             StateHasChanged();
         }
@@ -251,7 +247,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.RptID = value;
+            filterVM.RptID = value;
 
             agreementTextVMs = null;
 
@@ -264,7 +260,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            agreementTextVMs = await agreementTextService.GetAgreementTextList(filterHrVM);
+            agreementTextVMs = await agreementTextService.GetAgreementTextList(filterVM);
 
             isLoading = false;
         }
@@ -272,20 +268,20 @@ namespace D69soft.Client.Pages.HR
         private void CheckAll(object checkValue)
         {
             bool isChecked = (bool)checkValue;
-            filterHrVM.IsChecked = isChecked;
+            filterVM.IsChecked = isChecked;
             agreementTextVMs.ToList().ForEach(e => e.IsChecked = isChecked);
         }
 
         private async Task PrintAgreementText()
         {
-            IEnumerable<SysRptVM> sysRptVMs = await agreementTextService.PrintAgreementText(agreementTextVMs.Where(x => x.IsChecked == true), UserID);
+            IEnumerable<SysRptVM> sysRptVMs = await agreementTextService.PrintAgreementText(agreementTextVMs.Where(x => x.IsChecked == true), filterVM.UserID);
 
             foreach (var sysReport in sysRptVMs)
             {
                 await js.InvokeAsync<object>("openInNewTab", "/SYS/RptViewer/" + sysReport.RptUrl + "");
             }
 
-            filterHrVM.IsChecked = false;
+            filterVM.IsChecked = false;
 
             await GetAgreementTextList();
         }
@@ -308,7 +304,7 @@ namespace D69soft.Client.Pages.HR
 
             adjustProfileVM = _adjustProfileVM;
 
-            sysRptVMs = await sysService.GetRptList("HR",0, UserID);
+            sysRptVMs = await sysService.GetRptList("HR",0, filterVM.UserID);
 
             adjustProfileVM.arrRptID = adjustProfileRptVMs.Where(x => x.AdjustProfileID == _adjustProfileVM.AdjustProfileID).Select(x => x.RptID).ToArray();
             adjustProfileVM.strRpt = string.Join(",", (int[])adjustProfileVM.arrRptID);

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.HR;
 using System.Data.SqlClient;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Server.Controllers.HR
 {
@@ -21,7 +22,7 @@ namespace D69soft.Server.Controllers.HR
 
         //Filter
         [HttpPost("GetMonthFilter")]
-        public async Task<ActionResult<IEnumerable<PeriodVM>>> GetMonthFilter(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<PeriodVM>>> GetMonthFilter(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -30,7 +31,7 @@ namespace D69soft.Server.Controllers.HR
 
                 DynamicParameters parm = new DynamicParameters();
                 parm.Add("@typeView", 1);
-                parm.Add("@Year", _filterHrVM.Year);
+                parm.Add("@Year", _filterVM.Year);
 
                 var result = await conn.QueryAsync<PeriodVM>("KPI.viewMonthYearPeriodKPI", parm, commandType: CommandType.StoredProcedure);
                 return Ok(result);
@@ -38,7 +39,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("GetYearFilter")]
-        public async Task<ActionResult<IEnumerable<PeriodVM>>> GetYearFilter(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<PeriodVM>>> GetYearFilter(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -47,7 +48,7 @@ namespace D69soft.Server.Controllers.HR
 
                 DynamicParameters parm = new DynamicParameters();
                 parm.Add("@typeView", 2);
-                parm.Add("@Year", _filterHrVM.Year);
+                parm.Add("@Year", _filterVM.Year);
 
                 var result = await conn.QueryAsync<PeriodVM>("KPI.viewMonthYearPeriodKPI", parm, commandType: CommandType.StoredProcedure);
                 return Ok(result);
@@ -55,7 +56,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("GetDivisions")]
-        public async Task<ActionResult<IEnumerable<DivisionVM>>> GetDivisions(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<DivisionVM>>> GetDivisions(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -63,8 +64,8 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@sPeriod", _filterHrVM.Period);
-                parm.Add("@UserID", _filterHrVM.UserID);
+                parm.Add("@sPeriod", _filterVM.Period);
+                parm.Add("@UserID", _filterVM.UserID);
 
                 var result = await conn.QueryAsync<DivisionVM>("KPI.KPIs_viewDivision", parm, commandType: CommandType.StoredProcedure);
                 return Ok(result);
@@ -72,7 +73,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("GetDepartments")]
-        public async Task<ActionResult<IEnumerable<DepartmentVM>>> GetDepartments(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<DepartmentVM>>> GetDepartments(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -80,9 +81,9 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@sPeriod", _filterHrVM.Period);
-                parm.Add("@DivsID", _filterHrVM.DivisionID);
-                parm.Add("@UserID", _filterHrVM.UserID);
+                parm.Add("@sPeriod", _filterVM.Period);
+                parm.Add("@DivsID", _filterVM.DivisionID);
+                parm.Add("@UserID", _filterVM.UserID);
 
                 var result = await conn.QueryAsync<DepartmentVM>("KPI.KPIs_viewDepartment", parm, commandType: CommandType.StoredProcedure);
                 return Ok(result);
@@ -90,7 +91,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("GetEserials")]
-        public async Task<ActionResult<IEnumerable<EserialVM>>> GetEserials(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<EserialVM>>> GetEserials(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -98,11 +99,11 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@sPeriod", _filterHrVM.Period);
-                parm.Add("@DivsID", _filterHrVM.DivisionID);
-                parm.Add("@DeptID", _filterHrVM.DepartmentID);
-                parm.Add("@arrPos", _filterHrVM.PositionGroupID);
-                parm.Add("@UserID", _filterHrVM.UserID);
+                parm.Add("@sPeriod", _filterVM.Period);
+                parm.Add("@DivsID", _filterVM.DivisionID);
+                parm.Add("@DeptID", _filterVM.DepartmentID);
+                parm.Add("@arrPos", _filterVM.PositionGroupID);
+                parm.Add("@UserID", _filterVM.UserID);
 
                 var result = await conn.QueryAsync<EserialVM>("KPI.KPIs_viewEserial", parm, commandType: CommandType.StoredProcedure);
                 return Ok(result);
@@ -111,7 +112,7 @@ namespace D69soft.Server.Controllers.HR
 
         //End Filter
         [HttpPost("GetKPIs")]
-        public async Task<ActionResult<IEnumerable<KPIVM>>> GetKPIs(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<KPIVM>>> GetKPIs(FilterVM _filterVM)
         {
             var sql = "select * from KPI.Management where Eserial=@Eserial and Period=@Period order by CriteriaGroupName, KPINo";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -119,13 +120,13 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<KPIVM>(sql, _filterHrVM);
+                var result = await conn.QueryAsync<KPIVM>(sql, _filterVM);
                 return Ok(result);
             }
         }
 
         [HttpPost("GetRank")]
-        public async Task<ActionResult<RankVM>> GetRank(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<RankVM>> GetRank(FilterVM _filterVM)
         {
             var sql = "select r.Period, r.Eserial, p.LastName, p.MiddleName, p.FirstName, r.PositionID, p.LastName + ' ' + p.MiddleName + ' ' + p.FirstName as FullName, ";
             sql += "pAppraiser.LastName + ' ' + pAppraiser.MiddleName + ' ' + pAppraiser.FirstName as Appraiser_FullName, ";
@@ -156,13 +157,13 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryFirstAsync<RankVM>(sql, _filterHrVM);
+                var result = await conn.QueryFirstAsync<RankVM>(sql, _filterVM);
                 return result;
             }
         }
 
         [HttpPost("GetRanks")]
-        public async Task<ActionResult<List<RankVM>>> GetRanks(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<List<RankVM>>> GetRanks(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -170,11 +171,11 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@sPeriod", _filterHrVM.Period);
-                parm.Add("@DivsID", _filterHrVM.DivisionID);
-                parm.Add("@DeptID", _filterHrVM.DepartmentID);
-                parm.Add("@arrPos", _filterHrVM.PositionGroupID);
-                parm.Add("@UserID", _filterHrVM.UserID);
+                parm.Add("@sPeriod", _filterVM.Period);
+                parm.Add("@DivsID", _filterVM.DivisionID);
+                parm.Add("@DeptID", _filterVM.DepartmentID);
+                parm.Add("@arrPos", _filterVM.PositionGroupID);
+                parm.Add("@UserID", _filterVM.UserID);
 
                 var result = await conn.QueryAsync<RankVM>("KPI.KPIs_viewRanks", parm, commandType: CommandType.StoredProcedure);
                 return result.ToList();
@@ -313,7 +314,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("InitializeKPI/{_Eserial}")]
-        public async Task<ActionResult<bool>> InitializeKPI(FilterHrVM _filterHrVM, string _Eserial)
+        public async Task<ActionResult<bool>> InitializeKPI(FilterVM _filterVM, string _Eserial)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -321,10 +322,10 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@sPeriod", _filterHrVM.Period);
-                parm.Add("@DivsID", _filterHrVM.DivisionID);
+                parm.Add("@sPeriod", _filterVM.Period);
+                parm.Add("@DivsID", _filterVM.DivisionID);
                 parm.Add("@Eserial", _Eserial);
-                parm.Add("@UserID", _filterHrVM.UserID);
+                parm.Add("@UserID", _filterVM.UserID);
 
                 await conn.QueryAsync<EserialVM>("KPI.KPIs_open", parm, commandType: CommandType.StoredProcedure);
             }

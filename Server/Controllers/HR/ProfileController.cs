@@ -48,12 +48,12 @@ namespace D69soft.Server.Controllers.HR
 
         //Profile
         [HttpPost("dtEmplChange")]
-        public async Task<ActionResult<string>> dtEmplChange(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<string>> dtEmplChange(FilterVM _filterVM)
         {
             return JsonConvert.SerializeObject(ExecuteStoredProcPrmsToDataTable(
                 "RPT.HR_Bao_cao_bien_dong_nhan_su",
-                "@Y", _filterHrVM.Year,
-                "@DivisionID", _filterHrVM.DivisionID));
+                "@Y", _filterVM.Year,
+                "@DivisionID", _filterVM.DivisionID));
         }
 
         public DataTable ExecuteStoredProcPrmsToDataTable(string storedName, params object[] prms)
@@ -89,7 +89,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("GetEserialListByID")]
-        public async Task<ActionResult<IEnumerable<EserialVM>>> GetEserialListByID(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<EserialVM>>> GetEserialListByID(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -97,12 +97,12 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@DivsID", _filterHrVM.DivisionID);
-                parm.Add("@SectionID", _filterHrVM.SectionID);
-                parm.Add("@DeptID", _filterHrVM.DepartmentID);
-                parm.Add("@arrPos", _filterHrVM.PositionGroupID);
-                parm.Add("@isSearch", _filterHrVM.TypeProfile);
-                parm.Add("@UserID", _filterHrVM.UserID);
+                parm.Add("@DivsID", _filterVM.DivisionID);
+                parm.Add("@SectionID", _filterVM.SectionID);
+                parm.Add("@DeptID", _filterVM.DepartmentID);
+                parm.Add("@arrPos", _filterVM.PositionGroupID);
+                parm.Add("@isSearch", _filterVM.TypeProfile);
+                parm.Add("@UserID", _filterVM.UserID);
 
                 var result = await conn.QueryAsync<EserialVM>("HR.Profile_viewEserialMain", parm, commandType: CommandType.StoredProcedure);
                 return Ok(result);
@@ -110,7 +110,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("GetProfileList")]
-        public async Task<ActionResult<List<ProfileVM>>> GetProfileList(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<List<ProfileVM>>> GetProfileList(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -118,13 +118,13 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@DivsID", _filterHrVM.DivisionID);
-                parm.Add("@SectionID", _filterHrVM.SectionID);
-                parm.Add("@DeptID", _filterHrVM.DepartmentID);
-                parm.Add("@arrPos", _filterHrVM.PositionGroupID);
-                parm.Add("@Eserial", _filterHrVM.Eserial);
-                parm.Add("@isSearch", _filterHrVM.TypeProfile);
-                parm.Add("@UserID", _filterHrVM.UserID);
+                parm.Add("@DivsID", _filterVM.DivisionID);
+                parm.Add("@SectionID", _filterVM.SectionID);
+                parm.Add("@DeptID", _filterVM.DepartmentID);
+                parm.Add("@arrPos", _filterVM.PositionGroupID);
+                parm.Add("@Eserial", _filterVM.Eserial);
+                parm.Add("@isSearch", _filterVM.TypeProfile);
+                parm.Add("@UserID", _filterVM.UserID);
 
                 var result = await conn.QueryAsync<ProfileVM>("HR.Profile_viewListProfile", parm, commandType: CommandType.StoredProcedure);
                 return result.ToList();
@@ -132,7 +132,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("GetSearchEmpl")]
-        public async Task<ActionResult<IEnumerable<ProfileVM>>> GetSearchEmpl(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<ProfileVM>>> GetSearchEmpl(FilterVM _filterVM)
         {
             var sql = "select * from HR.Profile p ";
             sql += "join (select * from HR.Staff where coalesce(Terminated,0)=0) s on s.Eserial = p.Eserial ";
@@ -145,7 +145,7 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<ProfileVM>(sql, _filterHrVM);
+                var result = await conn.QueryAsync<ProfileVM>(sql, _filterVM);
                 return Ok(result);
             }
         }

@@ -24,16 +24,15 @@ namespace D69soft.Client.Pages.HR
         [Inject] ProfileService profileService { get; set; }
         [Inject] DocumentService documentService { get; set; }
 
-        protected string UserID;
-
         bool isLoading;
-
         bool isLoadingScreen = true;
 
+        //Log
         LogVM logVM = new();
 
         //Filter
-        FilterHrVM filterHrVM = new();
+        FilterVM filterVM = new();
+
         IEnumerable<DivisionVM> division_filter_list;
         IEnumerable<DepartmentVM> department_filter_list;
         IEnumerable<EserialVM> eserial_filter_list;
@@ -60,11 +59,11 @@ namespace D69soft.Client.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            filterHrVM.UserID = UserID = (await authenticationStateTask).User.GetUserId();
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "DOC_DOCStaff"))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, "DOC_DOCStaff"))
             {
-                logVM.LogUser = UserID;
+                logVM.LogUser = filterVM.UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "DOC_DOCStaff";
                 await sysService.InsertLog(logVM);
@@ -74,25 +73,25 @@ namespace D69soft.Client.Pages.HR
                 navigationManager.NavigateTo("/");
             }
 
-            DOC_DOCStaff_Update = await sysService.CheckAccessSubFunc(UserID, "DOC_DOCStaff_Update");
+            DOC_DOCStaff_Update = await sysService.CheckAccessSubFunc(filterVM.UserID, "DOC_DOCStaff_Update");
 
             //Initialize Filter
-            filterHrVM.GroupType = "DOCStaff";
+            filterVM.GroupType = "DOCStaff";
 
-            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterHrVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
+            division_filter_list = await organizationalChartService.GetDivisionList(filterVM);
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
 
-            filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
+            filterVM.DepartmentID = string.Empty;
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterVM);
 
-            filterHrVM.SectionID = string.Empty;
+            filterVM.SectionID = string.Empty;
 
-            filterHrVM.PositionGroupID = string.Empty;
+            filterVM.PositionGroupID = string.Empty;
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await profileService.GetEserialListByID(filterVM);
 
-            doctype_filter_list = await documentService.GetDocTypes(filterHrVM);
+            doctype_filter_list = await documentService.GetDocTypes(filterVM);
 
             isLoadingScreen = false;
         }
@@ -101,10 +100,10 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DivisionID = value;
+            filterVM.DivisionID = value;
 
-            filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
+            filterVM.DepartmentID = string.Empty;
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterVM);
 
             documentVMs = null;
 
@@ -117,10 +116,10 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DepartmentID = value;
+            filterVM.DepartmentID = value;
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await profileService.GetEserialListByID(filterVM);
 
             documentVMs = null;
 
@@ -133,7 +132,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.Eserial = value;
+            filterVM.Eserial = value;
 
             documentVMs = null;
 
@@ -146,7 +145,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DocTypeID = value;
+            filterVM.DocTypeID = value;
 
             documentVMs = null;
 
@@ -159,10 +158,10 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.TypeProfile = int.Parse(args.Value.ToString());
+            filterVM.TypeProfile = int.Parse(args.Value.ToString());
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await profileService.GetEserialListByID(filterHrVM);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await profileService.GetEserialListByID(filterVM);
 
             documentVMs = null;
 
@@ -173,7 +172,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.IsTypeSearch = int.Parse(args.Value.ToString());
+            filterVM.IsTypeSearch = int.Parse(args.Value.ToString());
 
             documentVMs = null;
 
@@ -186,7 +185,7 @@ namespace D69soft.Client.Pages.HR
 
             memoryStream = null;
 
-            documentVMs = await documentService.GetDocs(filterHrVM);
+            documentVMs = await documentService.GetDocs(filterVM);
 
             isLoading = false;
         }
@@ -200,8 +199,8 @@ namespace D69soft.Client.Pages.HR
             {
                 documentVM = new();
 
-                documentVM.DivisionID = filterHrVM.DivisionID;
-                documentVM.Eserial = filterHrVM.Eserial;
+                documentVM.DivisionID = filterVM.DivisionID;
+                documentVM.Eserial = filterVM.Eserial;
                 documentVM.GroupType = "DOCStaff";
                 documentVM.IsDelFileScan = true;
             }
@@ -350,7 +349,7 @@ namespace D69soft.Client.Pages.HR
                 logVM.LogDesc = "Cập nhật loại tài liệu thành công!";
                 await sysService.InsertLog(logVM);
 
-                doctype_filter_list = await documentService.GetDocTypes(filterHrVM);
+                doctype_filter_list = await documentService.GetDocTypes(filterVM);
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_DocType");
                 await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
@@ -367,7 +366,7 @@ namespace D69soft.Client.Pages.HR
                         await sysService.InsertLog(logVM);
 
                         documentVM.DocTypeID = 0;
-                        doctype_filter_list = await documentService.GetDocTypes(filterHrVM);
+                        doctype_filter_list = await documentService.GetDocTypes(filterVM);
 
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_DocType");
                         await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);

@@ -270,7 +270,7 @@
                 <FluentValidationValidator />
 
                 <div class="modal-header">
-                    <h5 class="modal-title">Khóa bảng công <strong style="color:#6f42c1">Tháng @filterHrVM.Month/@filterHrVM.Year</strong></h5>
+                    <h5 class="modal-title">Khóa bảng công <strong style="color:#6f42c1">Tháng @filterVM.Month/@filterVM.Year</strong></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -355,7 +355,7 @@
 
 <section class="content-header">
 
-    <EditForm Model="@filterHrVM">
+    <EditForm Model="@filterVM">
         <div class="row">
 
             <div class="col-md-2">
@@ -363,8 +363,8 @@
                     <label class="col-sm-3 col-form-label">Tháng:</label>
                     <div class="col-sm-9">
                         <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                           ValueExpression="@(()=>filterHrVM.Month)"
-                                           Value="@filterHrVM.Month"
+                                           ValueExpression="@(()=>filterVM.Month)"
+                                           Value="@filterVM.Month"
                                            ValueChanged="@((int value) => onchange_filter_month(value))">
                             @if (month_filter_list != null)
                             {
@@ -383,8 +383,8 @@
                     <label class="col-sm-3 col-form-label">Năm:</label>
                     <div class="col-sm-9">
                         <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                           ValueExpression="@(()=>filterHrVM.Year)"
-                                           Value="@filterHrVM.Year"
+                                           ValueExpression="@(()=>filterVM.Year)"
+                                           Value="@filterVM.Year"
                                            ValueChanged="@((int value) => onchange_filter_year(value))">
                             @if (year_filter_list != null)
                             {
@@ -401,8 +401,8 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
-                                 Value="@filterHrVM.DivisionID"
+                                 ValueExpression="@(()=>filterVM.DivisionID)"
+                                 Value="@filterVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
                         @if (division_filter_list != null)
                         {
@@ -418,8 +418,8 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.DepartmentID)"
-                                 Value="@filterHrVM.DepartmentID"
+                                 ValueExpression="@(()=>filterVM.DepartmentID)"
+                                 Value="@filterVM.DepartmentID"
                                  ValueChanged="@((string value) => onchange_filter_department(value))">
                         <option value=@string.Empty>-----Bộ phận-----</option>
                         @if (department_filter_list != null)
@@ -436,8 +436,8 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.SectionID)"
-                                 Value="@filterHrVM.SectionID"
+                                 ValueExpression="@(()=>filterVM.SectionID)"
+                                 Value="@filterVM.SectionID"
                                  ValueChanged="@((string value) => onchange_filter_section(value))">
                         <option value=@string.Empty>-----Khu vực-----</option>
                         @if (section_filter_list != null)
@@ -468,8 +468,8 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" data-show-subtext="true"
-                                 ValueExpression="@(()=>filterHrVM.Eserial)"
-                                 Value="@filterHrVM.Eserial"
+                                 ValueExpression="@(()=>filterVM.Eserial)"
+                                 Value="@filterVM.Eserial"
                                  ValueChanged="@((string value) => onchange_filter_eserial(value))">
                         <option value=@string.Empty>-----Nhân viên-----</option>
                         @if (eserial_filter_list != null)
@@ -498,7 +498,7 @@
 
             <div class="card-header text-right">
                 <button type="button" class="btn btn-sm btn-info" data-target="#InitializeModal_Shift" data-toggle="modal" @onclick="()=>InitializeModal_Shift()"><i class="fa-solid fa-clipboard-list"></i> Bảng ca</button>
-                @if (IsOpenFunc)
+                @if (filterVM.IsOpenFunc)
                 {
                     @if (HR_DutyRoster_ControlOFF)
                     {
@@ -520,7 +520,7 @@
                             <thead>
                                 <tr>
                                     <th>Nhân viên</th>
-                                    @if (@filterHrVM.DepartmentID == string.Empty)
+                                    @if (@filterVM.DepartmentID == string.Empty)
                                     {
                                         <th>Bộ phận</th>
                                     }
@@ -548,7 +548,7 @@
                                         }
 
                                         <th class="text-center" style="@colorDayoff">
-                                            @if (_day.dDate.Month == filterHrVM.Month)
+                                            @if (_day.dDate.Month == filterVM.Month)
                                             {
                                                 @_day.dDate.Day
                                                 <br> <span style="font-size: 8.5px;">@LibraryFunc.GetDayName(@_day.dDate)</span>
@@ -580,7 +580,7 @@
                                 {
                                     <tr>
                                         <th><a @onclick="()=>InitializeModal_DayOffDetail(_dutyRosterVM_0.Eserial)">@_dutyRosterVM_0.Eserial - @_dutyRosterVM_0.LastName @_dutyRosterVM_0.MiddleName @_dutyRosterVM_0.FirstName</a></th>
-                                        @if (@filterHrVM.DepartmentID == string.Empty)
+                                        @if (@filterVM.DepartmentID == string.Empty)
                                         {
                                             <td>@_dutyRosterVM_0.DepartmentName</td>
                                         }

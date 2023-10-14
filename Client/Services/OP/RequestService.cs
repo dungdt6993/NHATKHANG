@@ -1,5 +1,6 @@
 ﻿using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.OP;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 using System.Net.Http.Json;
 
 namespace D69soft.Client.Services.OP
@@ -53,9 +54,9 @@ namespace D69soft.Client.Services.OP
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<List<RequestVM>> GetRequests(FilterFinVM _filterFinVM)
+        public async Task<List<RequestVM>> GetRequests(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Request/GetRequests", _filterFinVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Request/GetRequests", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<List<RequestVM>>();
         }

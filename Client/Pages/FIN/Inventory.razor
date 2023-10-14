@@ -4,13 +4,13 @@
 <LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 <Loading isLoading="@isLoading"></Loading>
 
-<EditForm Model="@filterFinVM">
+<EditForm Model="@filterVM">
     <section class="content-header">
         <div class="row">
 
             <div class="col-md-2">
                 <div class="form-group">
-                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true" data-container="body" @bind="filterFinVM.DivisionID">
+                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true" data-container="body" @bind="filterVM.DivisionID">
                         @if (divisionVMs != null)
                         {
                             @foreach (var _divisionVM in divisionVMs)
@@ -66,7 +66,7 @@
                     <select class="selectpicker form-control form-control-sm"
                             data-style="btn-selectpicker" data-container="body"
                             data-live-search="true" data-show-subtext="true"
-                            @bind="filterFinVM.StockCode">
+                            @bind="filterVM.StockCode">
                         <option value=@String.Empty>-----Kho-----</option>
                         @if (stockVMs != null)
                         {
@@ -128,14 +128,14 @@
                     <h5><b>SỔ CHI TIẾT VẬT TƯ HÀNG HÓA</b></h5>
                     <i>
                         <b>Kho: @inventoryVM.StockCode - @inventoryVM.StockName, Mặt hàng: @inventoryVM.ICode - @inventoryVM.IName</b> <br />
-                        @if (filterFinVM.StartDate.ToString("dd/MM/yyyy") == filterFinVM.EndDate.ToString("dd/MM/yyyy"))
+                        @if (filterVM.StartDate.ToString("dd/MM/yyyy") == filterVM.EndDate.ToString("dd/MM/yyyy"))
                         {
-                            <b>Ngày @filterFinVM.StartDate.ToString("dd/MM/yyyy")</b>
+                            <b>Ngày @filterVM.StartDate.ToString("dd/MM/yyyy")</b>
 
                         }
                         else
                         {
-                            <b>Từ ngày @filterFinVM.StartDate.ToString("dd/MM/yyyy") đến ngày @filterFinVM.EndDate.ToString("dd/MM/yyyy")</b>
+                            <b>Từ ngày @filterVM.StartDate.ToString("dd/MM/yyyy") đến ngày @filterVM.EndDate.ToString("dd/MM/yyyy")</b>
                         }
                     </i>
                 </div>
@@ -214,14 +214,14 @@
                 <div class="card-header text-center">
                     <h5><b>TỔNG HỢP TỒN KHO</b></h5>
                     <i>
-                        @if (filterFinVM.StartDate.ToString("dd/MM/yyyy") == filterFinVM.EndDate.ToString("dd/MM/yyyy"))
+                        @if (filterVM.StartDate.ToString("dd/MM/yyyy") == filterVM.EndDate.ToString("dd/MM/yyyy"))
                         {
-                            <b>Ngày @filterFinVM.StartDate.ToString("dd/MM/yyyy")</b>
+                            <b>Ngày @filterVM.StartDate.ToString("dd/MM/yyyy")</b>
 
                         }
                         else
                         {
-                            <b>Từ ngày @filterFinVM.StartDate.ToString("dd/MM/yyyy") đến ngày @filterFinVM.EndDate.ToString("dd/MM/yyyy")</b>
+                            <b>Từ ngày @filterVM.StartDate.ToString("dd/MM/yyyy") đến ngày @filterVM.EndDate.ToString("dd/MM/yyyy")</b>
                         }
                     </i>
                 </div>

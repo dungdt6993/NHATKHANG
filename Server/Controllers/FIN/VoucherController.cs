@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System.Collections;
 using System.Data;
 using D69soft.Client.Pages.FIN;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Server.Controllers.FIN
 {
@@ -50,7 +51,7 @@ namespace D69soft.Server.Controllers.FIN
         }
 
         [HttpPost("GetVouchers")]
-        public async Task<ActionResult<List<VoucherVM>>> GetVouchers(FilterFinVM _filterFinVM)
+        public async Task<ActionResult<List<VoucherVM>>> GetVouchers(FilterVM _filterVM)
         {
             var sql = "select v.VNumber, v.VReference, v.VDate, v.VDesc, vType.VTypeID, vType.VTypeDesc, vSubType.VSubTypeID, ";
             sql += "v.VendorCode, v.CustomerCode, v.StockCode, v.BankAccountID, v.VContact, v.ITypeCode, v.VActive, v.IsPayment, v.PaymentTypeCode, v.TotalAmount, v.PaymentAmount, v.IsInventory, v.IsInvoice, v.InvoiceNumber, v.InvoiceDate, v.EserialPerform ";
@@ -68,7 +69,7 @@ namespace D69soft.Server.Controllers.FIN
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<VoucherVM>(sql, _filterFinVM);
+                var result = await conn.QueryAsync<VoucherVM>(sql, _filterVM);
                 return result.ToList();
             }
         }
@@ -229,16 +230,16 @@ namespace D69soft.Server.Controllers.FIN
         }
 
         [HttpPost("GetInvoices")]
-        public async Task<ActionResult<List<InvoiceVM>>> GetInvoices(FilterFinVM _filterFinVM)
+        public async Task<ActionResult<List<InvoiceVM>>> GetInvoices(FilterVM _filterVM)
         {
             var sql = "select v.InvoiceDate, v.InvoiceNumber, coalesce(vendor.VendorName,'') + coalesce(cus.CustomerName,'') as ObjectName, coalesce(vendor.VendorTaxCode,'') + coalesce(cus.CustomerTaxCode,'') as TaxCode, ";
 
-            if (_filterFinVM.TypeView == 0)
+            if (_filterVM.TypeView == 0)
             {
                 sql += "sum(vd.VDAmount) as sumVDAmount, sum(vd.VDDiscountAmount) as sumVDDiscountAmount, sum(vd.VATAmount) as sumVATAmount, sum(vd.VDAmount-vd.VDDiscountAmount+vd.VATAmount) as sumTotalAmount ";
             }
 
-            if (_filterFinVM.TypeView == 1)
+            if (_filterVM.TypeView == 1)
             {
                 sql += "i.Iname, vd.VDAmount, vd.VDDiscountAmount, vat.VATName, vd.VATAmount, vd.VDAmount - vd.VDDiscountAmount + vd.VATAmount as TotalAmount, vd.TaxAccount ";
             }
@@ -253,7 +254,7 @@ namespace D69soft.Server.Controllers.FIN
             sql += "and (v.VTypeID=@VTypeID or coalesce(@VTypeID,'')='') ";
             sql += "and format(v.InvoiceDate,'MM/dd/yyyy')>=format(@StartDate,'MM/dd/yyyy') and format(v.InvoiceDate,'MM/dd/yyyy')<=format(@EndDate,'MM/dd/yyyy') ";
             sql += "and (v.InvoiceNumber LIKE CONCAT('%',@InvoiceNumber,'%') or coalesce(@InvoiceNumber,'')='') ";
-            if (_filterFinVM.TypeView == 0)
+            if (_filterVM.TypeView == 0)
             {
                 sql += "group by v.InvoiceDate, v.InvoiceNumber, coalesce(vendor.VendorName,'') + coalesce(cus.CustomerName,''), coalesce(vendor.VendorTaxCode,'') + coalesce(cus.CustomerTaxCode,'') ";
             }
@@ -263,7 +264,7 @@ namespace D69soft.Server.Controllers.FIN
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<InvoiceVM>(sql, _filterFinVM);
+                var result = await conn.QueryAsync<InvoiceVM>(sql, _filterVM);
                 return result.ToList();
             }
         }
@@ -285,7 +286,7 @@ namespace D69soft.Server.Controllers.FIN
 
         //RPT
         [HttpPost("GetMoneyBooks")]
-        public async Task<ActionResult<List<VoucherDetailVM>>> GetMoneyBooks(FilterFinVM _filterFinVM)
+        public async Task<ActionResult<List<VoucherDetailVM>>> GetMoneyBooks(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -293,10 +294,10 @@ namespace D69soft.Server.Controllers.FIN
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@DivisionID", _filterFinVM.DivisionID);
-                parm.Add("@StartDate", _filterFinVM.StartDate);
-                parm.Add("@EndDate", _filterFinVM.EndDate);
-                parm.Add("@MoneyType", _filterFinVM.FuncID);
+                parm.Add("@DivisionID", _filterVM.DivisionID);
+                parm.Add("@StartDate", _filterVM.StartDate);
+                parm.Add("@EndDate", _filterVM.EndDate);
+                parm.Add("@MoneyType", _filterVM.FuncID);
 
                 var result = await conn.QueryAsync<VoucherDetailVM>("FIN.GetMoneyBooks", parm, commandType: CommandType.StoredProcedure);
                 return result.ToList();
@@ -304,7 +305,7 @@ namespace D69soft.Server.Controllers.FIN
         }
 
         [HttpPost("GetInvoiceBooks")]
-        public async Task<ActionResult<List<InventoryVM>>> GetInvoiceBooks(FilterFinVM _filterFinVM)
+        public async Task<ActionResult<List<InventoryVM>>> GetInvoiceBooks(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -312,9 +313,9 @@ namespace D69soft.Server.Controllers.FIN
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@DivisionID", _filterFinVM.DivisionID);
-                parm.Add("@StartDate", _filterFinVM.StartDate);
-                parm.Add("@EndDate", _filterFinVM.EndDate);
+                parm.Add("@DivisionID", _filterVM.DivisionID);
+                parm.Add("@StartDate", _filterVM.StartDate);
+                parm.Add("@EndDate", _filterVM.EndDate);
 
                 var result = await conn.QueryAsync<InventoryVM>("FIN.GetInvoiceBooks", parm, commandType: CommandType.StoredProcedure);
                 return result.ToList();

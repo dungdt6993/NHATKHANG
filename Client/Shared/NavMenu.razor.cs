@@ -16,7 +16,8 @@ namespace D69soft.Client.Shared
 
         bool isLoadingScreen = true;
 
-        protected string UserID;
+        //Filter
+        FilterVM filterVM = new();
 
         UserVM userVM = new();
 
@@ -30,22 +31,22 @@ namespace D69soft.Client.Shared
 
         protected override async Task OnInitializedAsync()
         {
-            UserID = (await authenticationStateTask).User.GetUserId();
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            userVM = await sysService.GetInfoUser(UserID);
+            userVM = await sysService.GetInfoUser(filterVM.UserID);
 
             if (userVM == null)
             {
                 navigationManager.NavigateTo("/Auth/Login");
             }
 
-            modules = await sysService.GetModuleMenu(UserID);
+            modules = await sysService.GetModuleMenu(filterVM.UserID);
 
-            funcMenuGrps = await sysService.GetFuncMenuGroup(UserID);
+            funcMenuGrps = await sysService.GetFuncMenuGroup(filterVM.UserID);
 
-            funcMenus = await sysService.GetFuncMenu(UserID);
+            funcMenus = await sysService.GetFuncMenu(filterVM.UserID);
 
-            ckViewFuncMenuRpt = await sysService.CheckViewFuncMenuRpt(UserID);
+            ckViewFuncMenuRpt = await sysService.CheckViewFuncMenuRpt(filterVM.UserID);
 
             isLoadingScreen = false;
         }

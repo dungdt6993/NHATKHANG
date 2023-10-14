@@ -104,7 +104,7 @@
 
 <section class="content-header">
 
-    <EditForm Model="@filterHrVM">
+    <EditForm Model="@filterVM">
         <div class="row">
 
             <div class="col-md-2">
@@ -115,7 +115,7 @@
                         <div class="input-group">
                             <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask"
                                              Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))"
-                                             @bind-StartDate="filterHrVM.dDate" OnRangeSelect="OnRangeSelect_dDate" />
+                                             @bind-StartDate="filterVM.dDate" OnRangeSelect="OnRangeSelect_dDate" />
 
                             <div class="input-group-append">
                                 <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
@@ -129,8 +129,8 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
-                                 Value="@filterHrVM.DivisionID"
+                                 ValueExpression="@(()=>filterVM.DivisionID)"
+                                 Value="@filterVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
                         @if (division_filter_list != null)
                         {
@@ -169,10 +169,10 @@
             @if (workPlanVMs != null)
             {
                 <div class="card-header text-center">
-                    <h5><b>KẾ HOẠCH LÀM VIỆC NGÀY @filterHrVM.dDate.Value.ToString("dd/MM/yyyy")</b></h5>
+                    <h5><b>KẾ HOẠCH LÀM VIỆC NGÀY @filterVM.dDate.Value.ToString("dd/MM/yyyy")</b></h5>
                 </div>
 
-                @foreach (var _positionGroup in workPlanVMs.Where(x => filterHrVM.arrPositionID.Contains(x.PositionGroupID) || filterHrVM.arrPositionID.Length == 0).Select(x => new
+                @foreach (var _positionGroup in workPlanVMs.Where(x => filterVM.arrPositionID.Contains(x.PositionGroupID) || filterVM.arrPositionID.Length == 0).Select(x => new
                 {
                     x.PositionGroupID,
                     x.PositionGroupName
@@ -215,7 +215,7 @@
                                 if (_workPlan.WorkPlanIsDone && _workPlan.WorkPlanDeadline != null && _workPlan.WorkPlanDoneDate.Value.Date > _workPlan.WorkPlanDeadline) _StatusDone = 2;//Hoàn thành muộn
 
                                 if (!_workPlan.WorkPlanIsDone) _StatusNotDone = 1;//Đang làm
-                                if (!_workPlan.WorkPlanIsDone && _workPlan.WorkPlanDeadline != null && filterHrVM.dDate.Value.Date > _workPlan.WorkPlanDeadline.Value.Date) _StatusNotDone = 2;//Quá hạn
+                                if (!_workPlan.WorkPlanIsDone && _workPlan.WorkPlanDeadline != null && filterVM.dDate.Value.Date > _workPlan.WorkPlanDeadline.Value.Date) _StatusNotDone = 2;//Quá hạn
 
                                 <tr>
                                     @if (IsFirst)

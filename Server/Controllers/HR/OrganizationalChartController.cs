@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Server.Controllers.HR
 {
@@ -20,7 +21,7 @@ namespace D69soft.Server.Controllers.HR
 
         //Division
         [HttpPost("GetDivisionList")]
-        public async Task<ActionResult<IEnumerable<DivisionVM>>> GetDivisionList(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<DivisionVM>>> GetDivisionList(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -28,7 +29,7 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@UserID", _filterHrVM.UserID);
+                parm.Add("@UserID", _filterVM.UserID);
 
                 var result = await conn.QueryAsync<DivisionVM>("HR.Profile_viewDivisionMain", parm, commandType: CommandType.StoredProcedure);
                 return Ok(result);
@@ -78,7 +79,7 @@ namespace D69soft.Server.Controllers.HR
 
         //Department
         [HttpPost("GetDepartmentList")]
-        public async Task<ActionResult<IEnumerable<DepartmentVM>>> GetDepartmentList(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<DepartmentVM>>> GetDepartmentList(FilterVM _filterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -86,8 +87,8 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 DynamicParameters parm = new DynamicParameters();
-                parm.Add("@DivsID", _filterHrVM.DivisionID);
-                parm.Add("@UserID", _filterHrVM.UserID);
+                parm.Add("@DivsID", _filterVM.DivisionID);
+                parm.Add("@UserID", _filterVM.UserID);
 
                 var result = await conn.QueryAsync<DepartmentVM>("HR.Profile_viewDepartmentMain", parm, commandType: CommandType.StoredProcedure);
                 return Ok(result);

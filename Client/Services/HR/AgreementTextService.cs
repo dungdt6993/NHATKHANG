@@ -18,9 +18,9 @@ namespace D69soft.Client.Services.HR
             return await _httpClient.GetFromJsonAsync<IEnumerable<AgreementTextTypeVM>>($"api/AgreementText/GetAgreementTextTypeList");
         }
 
-        public async Task<List<AgreementTextVM>> GetAgreementTextList(FilterHrVM _filterHrVM)
+        public async Task<List<AgreementTextVM>> GetAgreementTextList(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/AgreementText/GetAgreementTextList", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/AgreementText/GetAgreementTextList", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<List<AgreementTextVM>>();
         }

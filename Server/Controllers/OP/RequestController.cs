@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using D69soft.Shared.Models.ViewModels.FIN;
 using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.OP;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Server.Controllers.OP
 {
@@ -119,33 +120,33 @@ namespace D69soft.Server.Controllers.OP
         }
 
         [HttpPost("GetRequests")]
-        public async Task<ActionResult<List<RequestVM>>> GetRequests(FilterFinVM _filterFinVM)
+        public async Task<ActionResult<List<RequestVM>>> GetRequests(FilterVM _filterVM)
         {
             var sql = "select * from EA.RequestDetail rdtl ";
 
             sql += "join (select ";
-            if (_filterFinVM.ShowEntity != 0)
+            if (_filterVM.ShowEntity != 0)
             {
-                sql += "top " + _filterFinVM.ShowEntity + " ";
+                sql += "top " + _filterVM.ShowEntity + " ";
             }
             sql += "* from EA.Request where (DeptRequest=@DepartmentID or coalesce(@DepartmentID,'') = '') and format(DateOfRequest,'MM/dd/yyyy')>=format(@StartDate,'MM/dd/yyyy') and format(DateOfRequest,'MM/dd/yyyy')<=format(@EndDate,'MM/dd/yyyy') ";
-            if (_filterFinVM.RequestStatus == "pending")
+            if (_filterVM.RequestStatus == "pending")
             {
                 sql += "and coalesce(isSendApprove,0) = 0 ";
             }
-            if (_filterFinVM.RequestStatus == "approved")
+            if (_filterVM.RequestStatus == "approved")
             {
                 sql += "and coalesce(isSendApprove,0) = 1 ";
             }
-            if (_filterFinVM.RequestStatus == "nothandover")
+            if (_filterVM.RequestStatus == "nothandover")
             {
                 sql += "and coalesce(isSendApprove,0) = 1 ";
             }
-            if (!_filterFinVM.isHandover)
+            if (!_filterVM.isHandover)
             {
                 sql += "and (EserialRequest = @UserID or DirectManager_Eserial = @UserID or ControlDept_Eserial = @UserID or Approve_Eserial = @UserID) ";
             }
-            if (_filterFinVM.ShowEntity != 0)
+            if (_filterVM.ShowEntity != 0)
             {
                 sql += "order by DateOfRequest desc ";
             }
@@ -165,7 +166,7 @@ namespace D69soft.Server.Controllers.OP
             sql += "left join (select Eserial, LastName + ' ' + MiddleName + ' ' + FirstName as ControlDept_FullName from HR.Profile) pControlDept on pControlDept.Eserial = r.ControlDept_Eserial ";
             sql += "left join (select Eserial, LastName + ' ' + MiddleName + ' ' + FirstName as Approve_FullName from HR.Profile) pApprove on pApprove.Eserial = r.Approve_Eserial ";
 
-            if (_filterFinVM.RequestStatus == "nothandover")
+            if (_filterVM.RequestStatus == "nothandover")
             {
                 sql += "where sv.VActive = 0 ";
             }
@@ -176,7 +177,7 @@ namespace D69soft.Server.Controllers.OP
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<RequestVM>(sql, _filterFinVM);
+                var result = await conn.QueryAsync<RequestVM>(sql, _filterVM);
                 return result.ToList();
             }
         }

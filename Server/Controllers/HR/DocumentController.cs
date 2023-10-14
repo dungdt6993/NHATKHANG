@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Utilities;
 using DevExpress.Web;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Server.Controllers.HR
 {
@@ -23,7 +24,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("GetDocTypes")]
-        public async Task<ActionResult<IEnumerable<DocumentTypeVM>>> GetDocTypes(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<IEnumerable<DocumentTypeVM>>> GetDocTypes(FilterVM _filterVM)
         {
             var sql = "select * from DOC.DocumentType where GroupType = @GroupType order by DocTypeName ";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -31,40 +32,40 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<DocumentTypeVM>(sql, _filterHrVM);
+                var result = await conn.QueryAsync<DocumentTypeVM>(sql, _filterVM);
                 return Ok(result);
             }
         }
 
         [HttpPost("GetDocs")]
-        public async Task<ActionResult<List<DocumentVM>>> GetDocs(FilterHrVM _filterHrVM)
+        public async Task<ActionResult<List<DocumentVM>>> GetDocs(FilterVM _filterVM)
         {
             var sql = "select *, case when DATEDIFF(d,GETDATE(),ExpDate) - NumExpDate <=0 and NumExpDate <> 0 then 1 else 0 end as IsExpDoc, case when coalesce(FileScan,'') = '' then 1 else 0 end as IsDelFileScan from DOC.Document do ";
             sql += "join DOC.DocumentType dot on dot.DocTypeID = do.DocTypeID ";
 
-            if (_filterHrVM.GroupType == "DocBoat")
+            if (_filterVM.GroupType == "DocBoat")
             {
                 sql += "join (select * from HR.Department where isActive=1) de on de.DepartmentID = do.DepartmentID ";
                 sql += "where dot.GroupType = @GroupType and do.DivisionID=@DivisionID and (do.DepartmentID=@DepartmentID or coalesce(@DepartmentID,'')='') ";
             }
 
-            if (_filterHrVM.GroupType == "DocTender")
+            if (_filterVM.GroupType == "DocTender")
             {
                 sql += "join (select *, TenderName as DepartmentName from OP.Tender where TenderActive=1) cr on cr.TenderCode = do.DepartmentID ";
                 sql += "where dot.GroupType = @GroupType and do.DivisionID=@DivisionID and (do.DepartmentID=@DepartmentID or coalesce(@DepartmentID,'')='') ";
             }
 
-            if (_filterHrVM.GroupType == "DOCLegal")
+            if (_filterVM.GroupType == "DOCLegal")
             {
                 sql += "where dot.GroupType = @GroupType and do.DivisionID=@DivisionID ";
             }
 
-            if (_filterHrVM.GroupType == "DOCForm")
+            if (_filterVM.GroupType == "DOCForm")
             {
                 sql += "where dot.GroupType = @GroupType and do.DivisionID=@DivisionID ";
             }
 
-            if (_filterHrVM.GroupType == "DOCStaff")
+            if (_filterVM.GroupType == "DOCStaff")
             {
                 sql += "join (select Eserial, LastName, MiddleName, FirstName from HR.Profile) p on p.Eserial = do.Eserial ";
                 sql += "join (select * from HR.Staff where coalesce(Terminated,0)=@TypeProfile) s on s.Eserial = p.Eserial ";
@@ -76,12 +77,12 @@ namespace D69soft.Server.Controllers.HR
             sql += "and (do.DocTypeID=@DocTypeID or coalesce(@DocTypeID,0)=0) ";
             sql += "and ((DATEDIFF(d,GETDATE(),ExpDate) - NumExpDate <=0 and NumExpDate <> 0 and @IsTypeSearch=1) or (coalesce(FileScan,'') = '' and @IsTypeSearch=2) or @IsTypeSearch=0) ";
 
-            if (_filterHrVM.GroupType == "DocBoat")
+            if (_filterVM.GroupType == "DocBoat")
             {
                 sql += "order by de.DepartmentName, dot.DocTypeName ";
             }
 
-            if (_filterHrVM.GroupType == "DOCStaff")
+            if (_filterVM.GroupType == "DOCStaff")
             {
                 sql += "order by de.DepartmentName, p.Eserial ";
             }
@@ -91,7 +92,7 @@ namespace D69soft.Server.Controllers.HR
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<DocumentVM>(sql, _filterHrVM);
+                var result = await conn.QueryAsync<DocumentVM>(sql, _filterVM);
                 return result.ToList();
             }
         }

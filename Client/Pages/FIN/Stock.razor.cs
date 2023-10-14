@@ -24,16 +24,14 @@ namespace D69soft.Client.Pages.FIN
         [Inject] OrganizationalChartService organizationalChartService { get; set; }
         [Inject] InventoryService inventoryService { get; set; }
 
-        protected string UserID;
-
         bool isLoading;
-
         bool isLoadingScreen = true;
 
+        //Log
         LogVM logVM = new();
 
         //Filter
-        FilterFinVM filterFinVM = new();
+        FilterVM filterVM = new();
 
         //Stock
         StockVM stockVM = new();
@@ -50,11 +48,11 @@ namespace D69soft.Client.Pages.FIN
 
         protected override async Task OnInitializedAsync()
         {
-            UserID = (await authenticationStateTask).User.GetUserId();
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "FIN_Stock"))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, "FIN_Stock"))
             {
-                logVM.LogUser = UserID;
+                logVM.LogUser = filterVM.UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "FIN_Stock";
                 await sysService.InsertLog(logVM);
@@ -75,7 +73,7 @@ namespace D69soft.Client.Pages.FIN
 
             stockVM = new();
 
-            filterFinVM.searchText = String.Empty;
+            filterVM.searchText = String.Empty;
             stockVMs = (await inventoryService.GetStockList()).ToList();
 
             isLoading = false;

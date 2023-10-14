@@ -25,24 +25,21 @@ namespace D69soft.Client.Pages.HR
         [Inject] DutyRosterService dutyRosterService { get; set; }
         [Inject] DayOffService dayOffService { get; set; }
 
-        protected string UserID;
-
         bool isLoading;
-
         bool isLoadingScreen = true;
 
         //PermisFunc
-        bool IsOpenFunc;
-
         bool HR_DutyRoster_UpdateShift;
         bool HR_DutyRoster_ControlOFF;
         bool HR_DutyRoster_Lock;
         bool HR_DutyRoster_Update;
 
+        //Log
         LogVM logVM = new();
 
         //Filter
-        FilterHrVM filterHrVM = new();
+        FilterVM filterVM = new();
+
         IEnumerable<PeriodVM> year_filter_list;
         IEnumerable<PeriodVM> month_filter_list;
         IEnumerable<DivisionVM> division_filter_list;
@@ -69,12 +66,12 @@ namespace D69soft.Client.Pages.HR
         }
 
         protected override async Task OnInitializedAsync()
-        {       
-            UserID = (await authenticationStateTask).User.GetUserId();
+        {
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "HR_DutyRoster"))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, "HR_DutyRoster"))
             {
-                logVM.LogUser = UserID;
+                logVM.LogUser = filterVM.UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "HR_DutyRoster";
                 await sysService.InsertLog(logVM);
@@ -84,47 +81,47 @@ namespace D69soft.Client.Pages.HR
                 navigationManager.NavigateTo("/");
             }
 
-            HR_DutyRoster_UpdateShift = await sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_UpdateShift");
-            HR_DutyRoster_ControlOFF = await sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_ControlOFF");
-            HR_DutyRoster_Lock = await sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_Lock");
-            HR_DutyRoster_Update = await sysService.CheckAccessSubFunc(UserID, "HR_DutyRoster_Update");
+            HR_DutyRoster_UpdateShift = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_DutyRoster_UpdateShift");
+            HR_DutyRoster_ControlOFF = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_DutyRoster_ControlOFF");
+            HR_DutyRoster_Lock = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_DutyRoster_Lock");
+            HR_DutyRoster_Update = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_DutyRoster_Update");
 
             //Initialize Filter
-            filterHrVM.UserID = dutyRosterVM.UserID = UserID;
+            dutyRosterVM.UserID = filterVM.UserID;
 
             year_filter_list = await sysService.GetYearFilter();
-            filterHrVM.Year = DateTime.Now.Year;
+            filterVM.Year = DateTime.Now.Year;
 
             month_filter_list = await sysService.GetMonthFilter();
-            filterHrVM.Month = DateTime.Now.Month;
+            filterVM.Month = DateTime.Now.Month;
 
-            filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
+            filterVM.Period = filterVM.Year * 100 + filterVM.Month;
 
             //Initialize AttendanceRecordDutyRoster
-            await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterHrVM);
+            await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterVM);
 
             //Initialize DODefault
-            await dayOffService.DayOff_calcDODefault(filterHrVM, 0);
+            await dayOffService.DayOff_calcDODefault(filterVM, 0);
 
             //Initialize PHDefault
-            await dayOffService.DayOff_calcPHDefault(filterHrVM, 0);
+            await dayOffService.DayOff_calcPHDefault(filterVM, 0);
 
-            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterHrVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
+            division_filter_list = await organizationalChartService.GetDivisionList(filterVM);
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
 
-            filterHrVM.SectionID = string.Empty;
+            filterVM.SectionID = string.Empty;
             section_filter_list = await organizationalChartService.GetSectionList();
 
-            filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
+            filterVM.DepartmentID = string.Empty;
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterVM);
 
-            filterHrVM.PositionGroupID = string.Empty;
+            filterVM.PositionGroupID = string.Empty;
             position_filter_list = await organizationalChartService.GetPositionList();
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
-            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
+            filterVM.IsOpenFunc = await payrollService.IsOpenFunc(filterVM);
 
             isLoadingScreen = false;
         }
@@ -133,20 +130,20 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.Month = value;
+            filterVM.Month = value;
 
-            filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
+            filterVM.Period = filterVM.Year * 100 + filterVM.Month;
 
-            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
+            filterVM.IsOpenFunc = await payrollService.IsOpenFunc(filterVM);
 
             //Initialize AttendanceRecordDutyRoster
-            await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterHrVM);
+            await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterVM);
 
             //Initialize DODefault
-            await dayOffService.DayOff_calcDODefault(filterHrVM,0);
+            await dayOffService.DayOff_calcDODefault(filterVM,0);
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             dutyRosterVMs = search_dutyRosterVMs = null;
 
@@ -159,20 +156,20 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.Year = value;
+            filterVM.Year = value;
 
-            filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
+            filterVM.Period = filterVM.Year * 100 + filterVM.Month;
 
-            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
+            filterVM.IsOpenFunc = await payrollService.IsOpenFunc(filterVM);
 
             //Initialize AttendanceRecordDutyRoster
-            await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterHrVM);
+            await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterVM);
 
             //Initialize DODefault
-            await dayOffService.DayOff_calcDODefault(filterHrVM,0);
+            await dayOffService.DayOff_calcDODefault(filterVM,0);
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             dutyRosterVMs = search_dutyRosterVMs = null;
 
@@ -185,19 +182,19 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DivisionID = value;
+            filterVM.DivisionID = value;
 
-            IsOpenFunc = await payrollService.IsOpenFunc(filterHrVM);
+            filterVM.IsOpenFunc = await payrollService.IsOpenFunc(filterVM);
 
-            filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
+            filterVM.DepartmentID = string.Empty;
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterVM);
 
-            filterHrVM.PositionGroupID = string.Empty;
-            filterHrVM.arrPositionID = new string[] { };
+            filterVM.PositionGroupID = string.Empty;
+            filterVM.arrPositionID = new string[] { };
             position_filter_list = await organizationalChartService.GetPositionList();
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             dutyRosterVMs = search_dutyRosterVMs = null;
 
@@ -210,16 +207,16 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DepartmentID = value;
+            filterVM.DepartmentID = value;
 
-            filterHrVM.SectionID = string.Empty;
+            filterVM.SectionID = string.Empty;
 
-            filterHrVM.PositionGroupID = string.Empty;
-            filterHrVM.arrPositionID = new string[] { };
+            filterVM.PositionGroupID = string.Empty;
+            filterVM.arrPositionID = new string[] { };
             position_filter_list = await organizationalChartService.GetPositionList();
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             dutyRosterVMs = search_dutyRosterVMs = null;
 
@@ -232,13 +229,13 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.SectionID = value;
+            filterVM.SectionID = value;
 
-            filterHrVM.PositionGroupID = string.Empty;
-            filterHrVM.arrPositionID = new string[] { };
+            filterVM.PositionGroupID = string.Empty;
+            filterVM.arrPositionID = new string[] { };
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             dutyRosterVMs = search_dutyRosterVMs = null;
 
@@ -251,15 +248,15 @@ namespace D69soft.Client.Pages.HR
         {
             get
             {
-                return filterHrVM.arrPositionID;
+                return filterVM.arrPositionID;
             }
             set
             {
                 isLoading = true;
 
-                filterHrVM.arrPositionID = (string[])value;
+                filterVM.arrPositionID = (string[])value;
 
-                filterHrVM.PositionGroupID = string.Join(",", (string[])value);
+                filterVM.PositionGroupID = string.Join(",", (string[])value);
 
                 reload_filter_eserial();
 
@@ -271,8 +268,8 @@ namespace D69soft.Client.Pages.HR
 
         private async void reload_filter_eserial()
         {
-            filterHrVM.Eserial = String.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = String.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             StateHasChanged();
         }
@@ -281,7 +278,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.Eserial = value;
+            filterVM.Eserial = value;
 
             dutyRosterVMs = search_dutyRosterVMs = null;
 
@@ -362,7 +359,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            dutyRosterVMs = await dutyRosterService.GetDutyRosterList(filterHrVM);
+            dutyRosterVMs = await dutyRosterService.GetDutyRosterList(filterVM);
 
             curPage = 1;
             pagerSize = 3;
@@ -384,7 +381,7 @@ namespace D69soft.Client.Pages.HR
         {
             _dutyRosterVM.inputLoading_updateShift = true;
 
-            _dutyRosterVM.UserID = UserID;
+            _dutyRosterVM.UserID = filterVM.UserID;
 
             _dutyRosterVM.OldWorkShift = _dutyRosterVM.WorkShift;
 
@@ -420,7 +417,7 @@ namespace D69soft.Client.Pages.HR
                     await js.Swal_Message("Cảnh báo!", "Sử dụng ký hiệu <strong>OFF</strong> để nhập ngày nghỉ.", SweetAlertMessageType.warning);
                     break;
                 default:
-                    DutyRosterVM tmpDutyRosterVM = await dutyRosterService.GetDutyRosterByDay(filterHrVM, _dutyRosterVM);
+                    DutyRosterVM tmpDutyRosterVM = await dutyRosterService.GetDutyRosterByDay(filterVM, _dutyRosterVM);
                     _dutyRosterVM.WorkShift = tmpDutyRosterVM.WorkShift;
                     _dutyRosterVM.ColorHEX = tmpDutyRosterVM.ColorHEX;
                     _dutyRosterVM.inputLoading_updateShift = false;
@@ -444,28 +441,28 @@ namespace D69soft.Client.Pages.HR
 
             lockDutyRosterVM = new();
 
-            lockDutyRosterVMs = await dutyRosterService.GetLockDutyRoster(filterHrVM);
+            lockDutyRosterVMs = await dutyRosterService.GetLockDutyRoster(filterVM);
 
 
-            DivisionVM divisionFilterHrVM = new();
+            DivisionVM divisionFilterVM = new();
 
-            divisionFilterHrVM = division_filter_list.First(x => x.DivisionID == filterHrVM.DivisionID);
+            divisionFilterVM = division_filter_list.First(x => x.DivisionID == filterVM.DivisionID);
 
-            filterHrVM.is2625 = divisionFilterHrVM.is2625;
+            filterVM.is2625 = divisionFilterVM.is2625;
 
             DateTime fDate;
             DateTime tDate;
 
-            if (filterHrVM.is2625 == 1)
+            if (filterVM.is2625 == 1)
             {
-                fDate = new DateTime(filterHrVM.Year, filterHrVM.Month, 26).AddMonths(-1);
-                tDate = new DateTime(filterHrVM.Year, filterHrVM.Month, 25);
+                fDate = new DateTime(filterVM.Year, filterVM.Month, 26).AddMonths(-1);
+                tDate = new DateTime(filterVM.Year, filterVM.Month, 25);
 
             }
             else
             {
-                fDate = new DateTime(filterHrVM.Year, filterHrVM.Month, 1);
-                tDate = new DateTime(filterHrVM.Year, filterHrVM.Month, DateTime.DaysInMonth(filterHrVM.Year, filterHrVM.Month));
+                fDate = new DateTime(filterVM.Year, filterVM.Month, 1);
+                tDate = new DateTime(filterVM.Year, filterVM.Month, DateTime.DaysInMonth(filterVM.Year, filterVM.Month));
             }
 
             lockDutyRosterVM.LockFrom = fDate;
@@ -485,15 +482,15 @@ namespace D69soft.Client.Pages.HR
 
                 DateTime fDate;
                 DateTime tDate;
-                if (filterHrVM.is2625 == 1)
+                if (filterVM.is2625 == 1)
                 {
-                    fDate = new DateTime(filterHrVM.Year, filterHrVM.Month, 26).AddMonths(-1);
-                    tDate = new DateTime(filterHrVM.Year, filterHrVM.Month, 25);
+                    fDate = new DateTime(filterVM.Year, filterVM.Month, 26).AddMonths(-1);
+                    tDate = new DateTime(filterVM.Year, filterVM.Month, 25);
                 }
                 else
                 {
-                    fDate = new DateTime(filterHrVM.Year, filterHrVM.Month, 1);
-                    tDate = new DateTime(filterHrVM.Year, filterHrVM.Month, DateTime.DaysInMonth(filterHrVM.Year, filterHrVM.Month));
+                    fDate = new DateTime(filterVM.Year, filterVM.Month, 1);
+                    tDate = new DateTime(filterVM.Year, filterVM.Month, DateTime.DaysInMonth(filterVM.Year, filterVM.Month));
                 }
                 lockDutyRosterVM.LockTo = lockDutyRosterVM.LockTo < fDate ? fDate : lockDutyRosterVM.LockTo;
                 lockDutyRosterVM.LockTo = lockDutyRosterVM.LockTo > tDate ? tDate : lockDutyRosterVM.LockTo;
@@ -504,15 +501,15 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            lockDutyRosterVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
-            lockDutyRosterVM.DivisionID = filterHrVM.DivisionID;
-            lockDutyRosterVM.DepartmentID = filterHrVM.DepartmentID;
+            lockDutyRosterVM.Period = filterVM.Year * 100 + filterVM.Month;
+            lockDutyRosterVM.DivisionID = filterVM.DivisionID;
+            lockDutyRosterVM.DepartmentID = filterVM.DepartmentID;
 
-            if (await dutyRosterService.LockDutyRoster(lockDutyRosterVM, UserID))
+            if (await dutyRosterService.LockDutyRoster(lockDutyRosterVM))
             {
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
-                lockDutyRosterVMs = await dutyRosterService.GetLockDutyRoster(filterHrVM);
+                lockDutyRosterVMs = await dutyRosterService.GetLockDutyRoster(filterVM);
 
                 dutyRosterVMs = search_dutyRosterVMs = null;
             }
@@ -627,9 +624,9 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn kiểm soát ngày nghỉ Tháng "+filterHrVM.Month+" năm "+filterHrVM.Year+"?", SweetAlertMessageType.question))
+            if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn kiểm soát ngày nghỉ Tháng "+filterVM.Month+" năm "+filterVM.Year+"?", SweetAlertMessageType.question))
             {
-                await dayOffService.DayOff_calcControlDAYOFF(filterHrVM);
+                await dayOffService.DayOff_calcControlDAYOFF(filterVM);
 
                 await GetDutyRosterList();
 
@@ -645,7 +642,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            dayOffVMs = await dayOffService.GetDayOffDetail(filterHrVM.Period, _eserial);
+            dayOffVMs = await dayOffService.GetDayOffDetail(filterVM.Period, _eserial);
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModal_DayOffDetail");
 

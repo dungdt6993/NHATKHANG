@@ -1,4 +1,5 @@
 ﻿using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 using System.Collections;
 using System.Net.Http.Json;
 
@@ -53,9 +54,9 @@ namespace D69soft.Client.Services.FIN
             return await _httpClient.GetFromJsonAsync<bool>($"api/Inventory/ContainsIUnitCode/{id}");
         }
 
-        public async Task<List<ItemsVM>> GetItemsList(FilterFinVM _filterFinVM)
+        public async Task<List<ItemsVM>> GetItemsList(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Inventory/GetItemsList", _filterFinVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Inventory/GetItemsList", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<List<ItemsVM>>();
         }
@@ -104,17 +105,17 @@ namespace D69soft.Client.Services.FIN
             return await response.Content.ReadFromJsonAsync<int>();
         }
 
-        public async Task<List<InventoryVM>> GetInventorys(FilterFinVM _filterFinVM)
+        public async Task<List<InventoryVM>> GetInventorys(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Inventory/GetInventorys", _filterFinVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Inventory/GetInventorys", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<List<InventoryVM>>();
         }
 
-        public async Task<List<InventoryBookDetailVM>> GetInventoryBookDetails(FilterFinVM _filterFinVM, InventoryVM _inventoryVM)
+        public async Task<List<InventoryBookDetailVM>> GetInventoryBookDetails(FilterVM _filterVM, InventoryVM _inventoryVM)
         {
             ArrayList _arrayList = new ArrayList();
-            _arrayList.Add(_filterFinVM);
+            _arrayList.Add(_filterVM);
             _arrayList.Add(_inventoryVM);
 
             var response = await _httpClient.PostAsJsonAsync($"api/Inventory/GetInventoryBookDetails", _arrayList);

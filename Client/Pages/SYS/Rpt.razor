@@ -165,14 +165,14 @@
 </div>
 
 <section class="content-header">
-    <EditForm Model="@filterRptVM">
+    <EditForm Model="@filterVM">
         <div class="row">
 
             <div class="col-sm-2 col-md-2">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterRptVM.ModuleID)"
-                                 Value="@filterRptVM.ModuleID"
+                                 ValueExpression="@(()=>filterVM.ModuleID)"
+                                 Value="@filterVM.ModuleID"
                                  ValueChanged="@((string value) => onchange_filter_module(value))">
                         @if (modules != null)
                         {
@@ -190,8 +190,8 @@
                 <div class="form-group">
                     <div class="input-group">
                         <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                           ValueExpression="@(()=>filterRptVM.RptGrpID)"
-                                           Value="@filterRptVM.RptGrpID"
+                                           ValueExpression="@(()=>filterVM.RptGrpID)"
+                                           Value="@filterVM.RptGrpID"
                                            ValueChanged="@((int value) => onchange_filter_rptgrp(value))">
                             <option value="0">-----Chọn nhóm báo cáo-----</option>
                             @if (rptgrps != null)
@@ -203,9 +203,9 @@
                             }
                         </InputSelectNumber>
 
-                        @if (Role <= 2)
+                        @if (filterVM.Role <= 2)
                         {
-                            @if (filterRptVM.RptGrpID == 0)
+                            @if (filterVM.RptGrpID == 0)
                             {
                                 <div class="input-group-append" data-target="#InitializeModal_GrtRpt" data-toggle="modal" @onclick=@(()=>InitializeModal_GrtRpt(0))>
                                     <span class="input-group-text"><i class="fa-solid fa-circle-plus"></i></span>
@@ -228,8 +228,8 @@
                 <div class="form-group">
                     <div class="input-group">
                         <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                           ValueExpression="@(()=>filterRptVM.RptID)"
-                                           Value="@filterRptVM.RptID"
+                                           ValueExpression="@(()=>filterVM.RptID)"
+                                           Value="@filterVM.RptID"
                                            ValueChanged="@((int value) => onchange_filter_rpt(value))">
                             <option value="0">-----Chọn báo cáo-----</option>
                             @if (rpts != null)
@@ -240,11 +240,11 @@
                                 }
                             }
                         </InputSelectNumber>
-                        @if (Role <= 2)
+                        @if (filterVM.Role <= 2)
                         {
                             @if (rptgrps.Count() > 0)
                             {
-                                @if (filterRptVM.RptID == 0)
+                                @if (filterVM.RptID == 0)
                                 {
                                     <div class="input-group-append" data-target="#InitializeModal_Rpt" data-toggle="modal" @onclick=@(()=>InitializeModal_Rpt(0))>
                                         <span class="input-group-text"><i class="fa-solid fa-circle-plus"></i></span>
@@ -271,7 +271,7 @@
     <div class="container-fluid">
         <div class="card card-warning card-outline">
 
-            @if (Role <= 2)
+            @if (filterVM.Role <= 2)
             {
                 <div class="card-header text-right">
 
@@ -302,7 +302,7 @@
                 }
                 else
                 {
-                    if (filterRptVM.RptID != 0)
+                    if (filterVM.RptID != 0)
                     {
                         <DxWasmDocumentViewer ReportName="@ReportName" Height="calc(100vh - 239px)" Width="100%">
                             <DxDocumentViewerExportSettings ShowPrintNotificationDialog="false" />

@@ -1,6 +1,7 @@
 ﻿using D69soft.Shared.Models.ViewModels.FIN;
 using System.Net.Http.Json;
 using System.Collections;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 
 namespace D69soft.Client.Services.FIN
 {
@@ -23,24 +24,24 @@ namespace D69soft.Client.Services.FIN
             return await _httpClient.GetFromJsonAsync<IEnumerable<RoomTableAreaVM>>($"api/Cashier/GetRoomTableArea/{_POSCode}");
         }
 
-        public async Task<IEnumerable<RoomTableVM>> GetRoomTable(FilterPosVM _filterPosVM)
+        public async Task<IEnumerable<RoomTableVM>> GetRoomTable(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Cashier/GetRoomTable", _filterPosVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Cashier/GetRoomTable", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<RoomTableVM>>();
         }
 
-        public async Task<List<ItemsVM>> GetItems(FilterPosVM _filterPosVM)
+        public async Task<List<ItemsVM>> GetItems(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Cashier/GetItems", _filterPosVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Cashier/GetItems", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<List<ItemsVM>>();
         }
 
-        public async Task<bool> OpenRoomTable(FilterPosVM _filterPosVM, InvoiceVM _invoiceVM)
+        public async Task<bool> OpenRoomTable(FilterVM _filterVM, InvoiceVM _invoiceVM)
         {
             ArrayList _arrayList = new ArrayList();
-            _arrayList.Add(_filterPosVM);
+            _arrayList.Add(_filterVM);
             _arrayList.Add(_invoiceVM);
 
             var response = await _httpClient.PostAsJsonAsync($"api/Cashier/OpenRoomTable", _arrayList);
@@ -48,16 +49,16 @@ namespace D69soft.Client.Services.FIN
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<bool> OpenTakeOut(FilterPosVM _filterPosVM)
+        public async Task<bool> OpenTakeOut(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Cashier/OpenTakeOut", _filterPosVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Cashier/OpenTakeOut", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<bool> ChooseItems(FilterPosVM _filterPosVM)
+        public async Task<bool> ChooseItems(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Cashier/ChooseItems", _filterPosVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Cashier/ChooseItems", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
@@ -83,9 +84,9 @@ namespace D69soft.Client.Services.FIN
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<InvoiceVM> GetInfoInvoice(FilterPosVM _filterPosVM)
+        public async Task<InvoiceVM> GetInfoInvoice(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Cashier/GetInfoInvoice", _filterPosVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Cashier/GetInfoInvoice", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<InvoiceVM>();
         }
@@ -128,9 +129,9 @@ namespace D69soft.Client.Services.FIN
         }
 
         //Invoice
-        public async Task<List<InvoiceVM>> GetInvoices(FilterPosVM _filterPosVM)
+        public async Task<List<InvoiceVM>> GetInvoices(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Cashier/GetInvoices", _filterPosVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Cashier/GetInvoices", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<List<InvoiceVM>>();
         }

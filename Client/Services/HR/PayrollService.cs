@@ -1,4 +1,5 @@
 ﻿using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 using Newtonsoft.Json;
 using System.Data;
 using System.Net.Http.Json;
@@ -14,9 +15,9 @@ namespace D69soft.Client.Services.HR
         }
 
         //Monthly Income
-        public async Task<List<MonthlyIncomeTrnOtherVM>> GetMonthlyIncomeTrnOtherList(FilterHrVM _filterHrVM)
+        public async Task<List<MonthlyIncomeTrnOtherVM>> GetMonthlyIncomeTrnOtherList(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/GetMonthlyIncomeTrnOtherList", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/GetMonthlyIncomeTrnOtherList", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<List<MonthlyIncomeTrnOtherVM>>();
         }
@@ -28,9 +29,9 @@ namespace D69soft.Client.Services.HR
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<bool> GetDataMITrnOtherFromExcel(FilterHrVM _filterHrVM)
+        public async Task<bool> GetDataMITrnOtherFromExcel(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/GetDataMITrnOtherFromExcel", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/GetDataMITrnOtherFromExcel", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
@@ -46,51 +47,51 @@ namespace D69soft.Client.Services.HR
             return await _httpClient.GetFromJsonAsync<IEnumerable<SalaryTransactionCodeVM>>($"api/Payroll/GetTrnCodeList/{_TrnGroupCode}");
         }
 
-        public async Task<bool> CalcSalary(FilterHrVM _filterHrVM)
+        public async Task<bool> CalcSalary(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/CalcSalary", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/CalcSalary", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<bool> CancelCalcSalary(FilterHrVM _filterHrVM)
+        public async Task<bool> CancelCalcSalary(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/CancelCalcSalary", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/CancelCalcSalary", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<bool> LockSalary(FilterHrVM _filterHrVM)
+        public async Task<bool> LockSalary(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/LockSalary", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/LockSalary", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<bool> CancelLockSalary(FilterHrVM _filterHrVM)
+        public async Task<bool> CancelLockSalary(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/CancelLockSalary", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/CancelLockSalary", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<DataTable> GetPayrollList(FilterHrVM _filterHrVM)
+        public async Task<DataTable> GetPayrollList(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/GetPayrollList", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/GetPayrollList", _filterVM);
 
             return JsonConvert.DeserializeObject<DataTable>(await response.Content.ReadAsStringAsync());
         }
 
-        public async Task<LockSalaryVM> GetLockSalary(FilterHrVM _filterHrVM)
+        public async Task<LockSalaryVM> GetLockSalary(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/GetLockSalary", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/GetLockSalary", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<LockSalaryVM>();
         }
 
-        public async Task<bool> IsOpenFunc(FilterHrVM _filterHrVM)
+        public async Task<bool> IsOpenFunc(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/IsOpenFunc", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/IsOpenFunc", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
@@ -127,17 +128,17 @@ namespace D69soft.Client.Services.HR
         }
 
         //WDDefaut
-        public async Task<IEnumerable<WDDefaultVM>> GetWDDefautList(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<WDDefaultVM>> GetWDDefautList(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/GetWDDefautList", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/GetWDDefautList", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<WDDefaultVM>>();
         }
 
         //Payslip
-        public async Task<List<PayslipVM>> GetPayslipList(FilterHrVM _filterHrVM)
+        public async Task<List<PayslipVM>> GetPayslipList(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/GetPayslipList", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Payroll/GetPayslipList", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<List<PayslipVM>>();
         }

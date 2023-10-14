@@ -18,37 +18,36 @@ namespace D69soft.Client.Pages.HR
 
         bool isLoadingScreen = true;
 
-        protected string UserID;
-
+        //Log
         LogVM logVM = new();
 
+        //Filter
+        FilterVM filterVM = new();
+
         List<ProfileVM> contacts;
-
         List<ProfileVM> search_contacts;
-
-        FilterHrVM filterHrVM = new();
 
         protected override async Task OnInitializedAsync()
         {
-            UserID = (await authenticationStateTask).User.GetUserId();
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            logVM.LogUser = UserID;
+            logVM.LogUser = filterVM.UserID;
             logVM.LogType = "FUNC";
             logVM.LogName = "HR_Contact";
             await sysService.InsertLog(logVM);
 
-            search_contacts = contacts = await profileService.GetContacts(UserID);
+            search_contacts = contacts = await profileService.GetContacts(filterVM.UserID);
 
             isLoadingScreen = false;
         }
 
         private string onchange_SearchValues
         {
-            get { return filterHrVM.searchValues; }
+            get { return filterVM.searchValues; }
             set
             {
-                filterHrVM.searchValues = value;
-                search_contacts = contacts.Where(x => x.FullName.ToUpper().Contains(filterHrVM.searchValues.ToUpper())).ToList();
+                filterVM.searchValues = value;
+                search_contacts = contacts.Where(x => x.FullName.ToUpper().Contains(filterVM.searchValues.ToUpper())).ToList();
             }
         }
 

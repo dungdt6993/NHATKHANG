@@ -1,4 +1,5 @@
 ﻿using D69soft.Shared.Models.ViewModels.HR;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 using System.Net.Http.Json;
 
 namespace D69soft.Client.Services.HR
@@ -12,16 +13,16 @@ namespace D69soft.Client.Services.HR
             _httpClient = httpClient;
         }
 
-        public async Task<IEnumerable<DocumentTypeVM>> GetDocTypes(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<DocumentTypeVM>> GetDocTypes(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Document/GetDocTypes", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Document/GetDocTypes", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<DocumentTypeVM>>();
         }
 
-        public async Task<List<DocumentVM>> GetDocs(FilterHrVM _filterHrVM)
+        public async Task<List<DocumentVM>> GetDocs(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Document/GetDocs", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Document/GetDocs", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<List<DocumentVM>>();
         }

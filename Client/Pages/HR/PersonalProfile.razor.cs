@@ -17,17 +17,15 @@ namespace D69soft.Client.Pages.HR
         [Inject] SysService sysService { get; set; }
         [Inject] PayrollService payrollService { get; set; }
 
-        protected string UserID;
-
         bool isLoadingScreen = true;
 
+        //Log
         LogVM logVM = new();
 
         //Filter
-        FilterHrVM filterHrVM = new();
+        FilterVM filterVM = new();
 
         UserVM userInfo = new UserVM();
-
         IEnumerable<PayslipVM> payslipUsers;
 
         //Monthly Income
@@ -35,34 +33,34 @@ namespace D69soft.Client.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            UserID = (await authenticationStateTask).User.GetUserId();
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
             logVM.LogType = "FUNC";
             logVM.LogName = "HR_PersonalProfile";
-            logVM.LogUser = UserID;
+            logVM.LogUser = filterVM.UserID;
             await sysService.InsertLog(logVM);
 
-            userInfo = await sysService.GetInfoUser(UserID);
+            userInfo = await sysService.GetInfoUser(filterVM.UserID);
 
-            payslipUsers = await payrollService.GetPayslipUser(UserID);
+            payslipUsers = await payrollService.GetPayslipUser(filterVM.UserID);
 
             isLoadingScreen = false;
         }
 
         private async Task InitializeModalList_SalTrn(int _period)
         {
-            filterHrVM.Month = int.Parse(_period.ToString().Substring(4, 2));
-            filterHrVM.Year = int.Parse(_period.ToString().Substring(0, 4));
-            filterHrVM.DivisionID = userInfo.DivisionID;
-            filterHrVM.DepartmentID = string.Empty;
-            filterHrVM.PositionGroupID = string.Empty;
-            filterHrVM.arrPositionID = new string[] { };
-            filterHrVM.SectionID = string.Empty;
-            filterHrVM.Eserial = UserID;
-            filterHrVM.TrnCode = 0;
-            filterHrVM.TrnSubCode = 0;
+            filterVM.Month = int.Parse(_period.ToString().Substring(4, 2));
+            filterVM.Year = int.Parse(_period.ToString().Substring(0, 4));
+            filterVM.DivisionID = userInfo.DivisionID;
+            filterVM.DepartmentID = string.Empty;
+            filterVM.PositionGroupID = string.Empty;
+            filterVM.arrPositionID = new string[] { };
+            filterVM.SectionID = string.Empty;
+            filterVM.Eserial = filterVM.UserID;
+            filterVM.TrnCode = 0;
+            filterVM.TrnSubCode = 0;
 
-            monthlyIncomeTrnOtherVMs = await payrollService.GetMonthlyIncomeTrnOtherList(filterHrVM);
+            monthlyIncomeTrnOtherVMs = await payrollService.GetMonthlyIncomeTrnOtherList(filterVM);
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalList_SalTrn");
         }

@@ -321,7 +321,7 @@
                                                 <th style="width:7%" class="text-danger">Công ty:</th>
                                                 <td style="width:33%">
                                                     <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true">
-                                                        <option data-subtext="@filterHrVM.DivisionID" showSubtext="true">@(division_filter_list != null ? @division_filter_list.Where(x => x.DivisionID == filterHrVM.DivisionID).Select(x => x.DivisionName).First() : String.Empty)</option>
+                                                        <option data-subtext="@filterVM.DivisionID" showSubtext="true">@(division_filter_list != null ? @division_filter_list.Where(x => x.DivisionID == filterVM.DivisionID).Select(x => x.DivisionName).First() : String.Empty)</option>
                                                     </select>
                                                 </td>
                                                 <th style="width:10%" class="text-danger">Ngày ký HĐ:</th>
@@ -839,7 +839,7 @@
                                                     <td class="text-right">@string.Format("{0:#,#.}", ph.TotalSalary)</td>
                                                     <td class="text-center">@(ph.BeginSalaryDate.HasValue ? ph.BeginSalaryDate.Value.ToString("dd/MM/yyyy") : "")</td>
                                                     <td>
-                                                        @if (HR_Profile_UpdateHistory && profileVM.IsTypeUpdate == 1 && filterHrVM.TypeProfile == 0)
+                                                        @if (HR_Profile_UpdateHistory && profileVM.IsTypeUpdate == 1 && filterVM.TypeProfile == 0)
                                                         {
                                                             if (profileHistorys.Count > 1 && profileHistorys.IndexOf(ph) == 0)
                                                             {
@@ -1788,14 +1788,14 @@
         </table>
     }
 
-    <EditForm Model="@filterHrVM">
+    <EditForm Model="@filterVM">
         <div class="row">
 
             <div class="col-md-2">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
-                                 Value="@filterHrVM.DivisionID"
+                                 ValueExpression="@(()=>filterVM.DivisionID)"
+                                 Value="@filterVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
                         @if (division_filter_list != null)
                         {
@@ -1811,8 +1811,8 @@
             <div class="col-md-5">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.DepartmentID)"
-                                 Value="@filterHrVM.DepartmentID"
+                                 ValueExpression="@(()=>filterVM.DepartmentID)"
+                                 Value="@filterVM.DepartmentID"
                                  ValueChanged="@((string value) => onchange_filter_department(value))">
                         <option value=@string.Empty>-----Bộ phận-----</option>
                         @if (department_filter_list != null)
@@ -1829,8 +1829,8 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.SectionID)"
-                                 Value="@filterHrVM.SectionID"
+                                 ValueExpression="@(()=>filterVM.SectionID)"
+                                 Value="@filterVM.SectionID"
                                  ValueChanged="@((string value) => onchange_filter_section(value))">
                         <option value=@string.Empty>-----Khu vực-----</option>
                         @if (section_filter_list != null)
@@ -1849,7 +1849,7 @@
                     <InputSelect class="selectpicker form-control form-control-sm"
                                  data-style="btn-selectpicker" data-container="body"
                                  data-live-search="true" multiple data-actions-box="true"
-                                 title="-----Nhóm vị trí-----" @bind-Value:get="filterHrVM.arrPositionID" @bind-Value:set="onchange_filter_positiongroup">
+                                 title="-----Nhóm vị trí-----" @bind-Value:get="filterVM.arrPositionID" @bind-Value:set="onchange_filter_positiongroup">
                         @if (position_filter_list != null)
                         {
                             @foreach (var positiongroup_filter in position_filter_list.Select(x => new { x.PositionGroupID, x.PositionGroupName }).Distinct())
@@ -1863,7 +1863,7 @@
 
             <div class="col-sm-6 col-md-6">
                 <div class="form-group">
-                    <InputText type="search" class="form-control form-control-sm form-control-border" placeholder="Tìm kiếm theo mã hoặc tên nhân viên..." @bind-Value:get="filterHrVM.searchValues" @bind-Value:set="SearchProfile" />
+                    <InputText type="search" class="form-control form-control-sm form-control-border" placeholder="Tìm kiếm theo mã hoặc tên nhân viên..." @bind-Value:get="filterVM.searchValues" @bind-Value:set="SearchProfile" />
                 </div>
             </div>
 
@@ -1871,7 +1871,7 @@
                 <!-- radio -->
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
-                        <input type="radio" id="r1" name="r" value="0" @onchange="onchange_filter_typeprofile" checked="@(filterHrVM.TypeProfile == 0? true: false)">
+                        <input type="radio" id="r1" name="r" value="0" @onchange="onchange_filter_typeprofile" checked="@(filterVM.TypeProfile == 0? true: false)">
                         <label for="r1">
                             Hiện tại
                         </label>
@@ -1880,7 +1880,7 @@
                         &nbsp;&nbsp;
                     </label>
                     <div class="icheck-danger d-inline">
-                        <input type="radio" id="r2" name="r" value="1" @onchange="onchange_filter_typeprofile" checked="@(filterHrVM.TypeProfile == 1? true: false)">
+                        <input type="radio" id="r2" name="r" value="1" @onchange="onchange_filter_typeprofile" checked="@(filterVM.TypeProfile == 1? true: false)">
                         <label for="r2">
                             Nhân viên nghỉ việc
                         </label>
@@ -1889,7 +1889,7 @@
                         &nbsp;&nbsp;
                     </label>
                     <div class="icheck-warning d-inline">
-                        <input type="radio" id="r3" name="r" value="2" @onchange="onchange_filter_typeprofile" checked="@(filterHrVM.TypeProfile == 2? true: false)">
+                        <input type="radio" id="r3" name="r" value="2" @onchange="onchange_filter_typeprofile" checked="@(filterVM.TypeProfile == 2? true: false)">
                         <label for="r3">
                             Hết hạn hợp đồng
                         </label>
@@ -1898,8 +1898,8 @@
             </div>
 
             <div class="col-sm-1 col-md-1">
-                <button class="btn btn-outline-dark btn-sm @(filterHrVM.typeView==1?"active":"")" @onclick=@(() => filterHrVM.typeView = 1)><i class="fa-solid fa-list"></i></button>
-                <button class="btn btn-outline-dark btn-sm @(filterHrVM.typeView==2?"active":"")" @onclick=@(() => filterHrVM.typeView = 2)><i class="fa-solid fa-grip"></i></button>
+                <button class="btn btn-outline-dark btn-sm @(filterVM.TypeView==0?"active":"")" @onclick=@(() => filterVM.TypeView = 0)><i class="fa-solid fa-list"></i></button>
+                <button class="btn btn-outline-dark btn-sm @(filterVM.TypeView==1?"active":"")" @onclick=@(() => filterVM.TypeView = 1)><i class="fa-solid fa-grip"></i></button>
             </div>
 
             <div class="col-md-1">
@@ -1941,7 +1941,7 @@
                         <button type="button" class="btn btn-sm btn-secondary" data-target="#InitializeModal_Profile" data-toggle="modal" @onclick="()=>Initialize_ModalProfile(1)"><i class="fa-solid fa-user-pen"></i> Sửa</button>
                     }
 
-                    if (filterHrVM.TypeProfile != 1)
+                    if (filterVM.TypeProfile != 1)
                     {
                         @if (HR_Profile_Del)
                         {
@@ -1956,7 +1956,7 @@
 
                     @if (HR_Profile_Terminate)
                     {
-                        if (filterHrVM.TypeProfile != 1)
+                        if (filterVM.TypeProfile != 1)
                         {
                             <button type="button" class="btn btn-sm bg-navy" data-target="#InitializeModal_TerminateProfile" data-toggle="modal" @onclick="()=>InitializeModal_TerminateProfile()"><i class="fas fa-ban"></i> Chấm dứt hợp đồng</button>
                         }
@@ -1973,7 +1973,7 @@
             <div class="card-body table-responsive p-0" style="height: calc(100vh - 339px);">
                 @if (profileVMs != null)
                 {
-                    if (filterHrVM.typeView == 1)
+                    if (filterVM.TypeView == 0)
                     {
                         <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
                             <thead>
@@ -1989,7 +1989,7 @@
                                     <th class="text-center">Ngày ký HĐ</th>
                                     <th class="text-center">Ngày hết hạn HĐ</th>
                                     <th class="text-center">Quản lý</th>
-                                    @if (filterHrVM.TypeProfile == 1)
+                                    @if (filterVM.TypeProfile == 1)
                                     {
                                         <th>Ngày nghỉ việc</th>
                                     }
@@ -2074,7 +2074,7 @@
                                                     }
                                                 </ul>
                                             </td>
-                                            @if (filterHrVM.TypeProfile == 1)
+                                            @if (filterVM.TypeProfile == 1)
                                             {
                                                 <td class="text-center">@(_profileVM.TerminateDate.HasValue ? _profileVM.TerminateDate.Value.ToString("dd/MM/yyyy") : "")</td>
                                             }
@@ -2093,7 +2093,7 @@
                         </table>
                     }
 
-                    if (filterHrVM.typeView == 2)
+                    if (filterVM.TypeView == 1)
                     {
                         <table class="table table-sm table-bordered table-head-fixed text-nowrap tblFontSizeMin">
                             <thead>
@@ -2101,7 +2101,7 @@
                                     <th class="text-center">Khối</th>
                                     <th class="text-center">Bộ phận</th>
 
-                                    @foreach (var _positionGrp in position_filter_list.Where(x => filterHrVM.arrPositionID.Contains(x.PositionGroupID) || filterHrVM.arrPositionID.Length == 0).Select(x => new { x.PositionGroupNo, x.PositionGroupID, x.PositionGroupName }).DistinctBy(x => x.PositionGroupID).OrderBy(x => x.PositionGroupNo))
+                                    @foreach (var _positionGrp in position_filter_list.Where(x => filterVM.arrPositionID.Contains(x.PositionGroupID) || filterVM.arrPositionID.Length == 0).Select(x => new { x.PositionGroupNo, x.PositionGroupID, x.PositionGroupName }).DistinctBy(x => x.PositionGroupID).OrderBy(x => x.PositionGroupNo))
                                     {
                                         <th class="text-center" colspan="2">
                                             @_positionGrp.PositionGroupName
@@ -2116,7 +2116,7 @@
                                         <td class="text-center">@_dept.DepartmentGroupName</td>
                                         <td class="text-center">@_dept.DepartmentName</td>
 
-                                        @foreach (var _positionGrp in position_filter_list.Where(x => filterHrVM.arrPositionID.Contains(x.PositionGroupID) || filterHrVM.arrPositionID.Length == 0).Select(x => new { x.PositionGroupNo, x.PositionGroupID, x.PositionGroupName }).DistinctBy(x => x.PositionGroupID).OrderBy(x => x.PositionGroupNo))
+                                        @foreach (var _positionGrp in position_filter_list.Where(x => filterVM.arrPositionID.Contains(x.PositionGroupID) || filterVM.arrPositionID.Length == 0).Select(x => new { x.PositionGroupNo, x.PositionGroupID, x.PositionGroupName }).DistinctBy(x => x.PositionGroupID).OrderBy(x => x.PositionGroupNo))
                                         {
                                             <td>
                                                 @foreach (var _empl in profileVMs.Where(x => x.PositionGroupID == _positionGrp.PositionGroupID && x.DepartmentID == _dept.DepartmentID))

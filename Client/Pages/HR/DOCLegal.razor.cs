@@ -22,16 +22,15 @@ namespace D69soft.Client.Pages.HR
         [Inject] OrganizationalChartService organizationalChartService { get; set; }
         [Inject] DocumentService documentService { get; set; }
 
-        protected string UserID;
-
         bool isLoading;
-
         bool isLoadingScreen = true;
 
+        //Log
         LogVM logVM = new();
 
         //Filter
-        FilterHrVM filterHrVM = new();
+        FilterVM filterVM = new();
+
         IEnumerable<DivisionVM> division_filter_list;
 
         DocumentTypeVM doctypeVM = new();
@@ -56,11 +55,11 @@ namespace D69soft.Client.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            filterHrVM.UserID = UserID = (await authenticationStateTask).User.GetUserId();
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "DOC_DOCLegal"))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, "DOC_DOCLegal"))
             {
-                logVM.LogUser = UserID;
+                logVM.LogUser = filterVM.UserID;
                 logVM.LogType = "FUNC";
                 logVM.LogName = "DOC_DOCLegal";
                 await sysService.InsertLog(logVM);
@@ -70,15 +69,15 @@ namespace D69soft.Client.Pages.HR
                 navigationManager.NavigateTo("/");
             }
 
-            DOC_DOCLegal_Update = await sysService.CheckAccessSubFunc(UserID, "DOC_DOCLegal_Update");
+            DOC_DOCLegal_Update = await sysService.CheckAccessSubFunc(filterVM.UserID, "DOC_DOCLegal_Update");
 
             //Initialize Filter
-            filterHrVM.GroupType = "DOCLegal";
+            filterVM.GroupType = "DOCLegal";
 
-            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterHrVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
+            division_filter_list = await organizationalChartService.GetDivisionList(filterVM);
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
 
-            doctype_filter_list = await documentService.GetDocTypes(filterHrVM);
+            doctype_filter_list = await documentService.GetDocTypes(filterVM);
 
             isLoadingScreen = false;
         }
@@ -87,7 +86,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DivisionID = value;
+            filterVM.DivisionID = value;
 
             documentVMs = null;
 
@@ -100,7 +99,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DocTypeID = value;
+            filterVM.DocTypeID = value;
 
             documentVMs = null;
 
@@ -113,7 +112,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.IsTypeSearch = int.Parse(args.Value.ToString());
+            filterVM.IsTypeSearch = int.Parse(args.Value.ToString());
 
             documentVMs = null;
 
@@ -126,7 +125,7 @@ namespace D69soft.Client.Pages.HR
 
             memoryStream = null;
 
-            documentVMs = await documentService.GetDocs(filterHrVM);
+            documentVMs = await documentService.GetDocs(filterVM);
 
             isLoading = false;
         }
@@ -139,7 +138,7 @@ namespace D69soft.Client.Pages.HR
             {
                 documentVM = new();
 
-                documentVM.DivisionID = filterHrVM.DivisionID;
+                documentVM.DivisionID = filterVM.DivisionID;
                 documentVM.GroupType = "DOCLegal";
                 documentVM.IsDelFileScan = true;
             }
@@ -289,7 +288,7 @@ namespace D69soft.Client.Pages.HR
                 logVM.LogDesc = "Cập nhật loại tài liệu thành công!";
                 await sysService.InsertLog(logVM);
 
-                doctype_filter_list = await documentService.GetDocTypes(filterHrVM);
+                doctype_filter_list = await documentService.GetDocTypes(filterVM);
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_DocType");
                 await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
@@ -306,7 +305,7 @@ namespace D69soft.Client.Pages.HR
                         await sysService.InsertLog(logVM);
 
                         documentVM.DocTypeID = 0;
-                        doctype_filter_list = await documentService.GetDocTypes(filterHrVM);
+                        doctype_filter_list = await documentService.GetDocTypes(filterVM);
 
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_DocType");
                         await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);

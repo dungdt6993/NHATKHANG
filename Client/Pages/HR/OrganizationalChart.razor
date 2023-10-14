@@ -571,7 +571,7 @@
                 <div class="card-header">
                     <h3 class="card-title">CÔNG TY</h3>
                     <div class="text-right">
-                        @if (String.IsNullOrEmpty(filterHrVM.DivisionID))
+                        @if (String.IsNullOrEmpty(filterVM.DivisionID))
                         {
                             <button type="button" class="btn btn-sm btn-success" title="Thêm mới" @onclick="(() => InitializeModalUpdate_Division(0))"><i class="fa-solid fa-plus"></i></button>
                         }
@@ -597,7 +597,7 @@
                             {
                                 @foreach (var _divisionVM in divisionVMs)
                                 {
-                                    <tr class="@(filterHrVM.DivisionID == _divisionVM.DivisionID? "selected":"")" @onclick="() => onclick_selectedDivision(_divisionVM)">
+                                    <tr class="@(filterVM.DivisionID == _divisionVM.DivisionID? "selected":"")" @onclick="() => onclick_selectedDivision(_divisionVM)">
                                         <td>@_divisionVM.DivisionID</td>
                                         <td>@_divisionVM.DivisionName</td>
                                         <td class="text-center">
@@ -623,7 +623,7 @@
                 <div class="card-header">
                     <h3 class="card-title">KHU VỰC</h3>
                     <div class="text-right">
-                        @if (String.IsNullOrEmpty(filterHrVM.SectionID))
+                        @if (String.IsNullOrEmpty(filterVM.SectionID))
                         {
                             <button type="button" class="btn btn-sm btn-success" title="Thêm mới" @onclick="(() => InitializeModalUpdate_Section(0))"><i class="fa-solid fa-plus"></i></button>
                         }
@@ -649,7 +649,7 @@
                             {
                                 @foreach (var _sectionVM in sectionVMs)
                                 {
-                                    <tr class="@(filterHrVM.SectionID == _sectionVM.SectionID? "selected":"")" @onclick="() => onclick_selectedSection(_sectionVM)">
+                                    <tr class="@(filterVM.SectionID == _sectionVM.SectionID? "selected":"")" @onclick="() => onclick_selectedSection(_sectionVM)">
                                         <td>@_sectionVM.SectionID</td>
                                         <td>@_sectionVM.SectionName</td>
                                         <td class="text-center">
@@ -675,9 +675,9 @@
                 <div class="card-header">
                     <h3 class="card-title">BỘ PHẬN</h3>
                     <div class="text-right">
-                        @if (!String.IsNullOrEmpty(filterHrVM.DivisionID))
+                        @if (!String.IsNullOrEmpty(filterVM.DivisionID))
                         {
-                            @if (String.IsNullOrEmpty(filterHrVM.DepartmentID))
+                            @if (String.IsNullOrEmpty(filterVM.DepartmentID))
                             {
                                 <button type="button" class="btn btn-sm btn-success" title="Thêm mới" @onclick="(() => InitializeModalUpdate_Department(0))"><i class="fa-solid fa-plus"></i></button>
                             }
@@ -691,7 +691,7 @@
 
                 <div class="card-body table-responsive p-0" style="height: calc(100vh - 148px); min-height: 500px;">
 
-                    @if ((filterHrVM.DivisionID ?? string.Empty) != string.Empty)
+                    @if ((filterVM.DivisionID ?? string.Empty) != string.Empty)
                     {
                         <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
                             <thead class="thead-light">
@@ -707,7 +707,7 @@
                                 {
                                     @foreach (var _departmentVM in departmentVMs)
                                     {
-                                        <tr class="@(filterHrVM.DepartmentID == _departmentVM.DepartmentID? "selected":"")" @onclick="() => onclick_selectedDepartment(_departmentVM)">
+                                        <tr class="@(filterVM.DepartmentID == _departmentVM.DepartmentID? "selected":"")" @onclick="() => onclick_selectedDepartment(_departmentVM)">
                                             <td>@_departmentVM.DepartmentID</td>
                                             <td>@_departmentVM.DepartmentName</td>
                                             <td>@_departmentVM.DepartmentGroupName</td>
@@ -739,7 +739,7 @@
                     <h3 class="card-title">VỊ TRÍ</h3>
                     <div class="input-group input-group-sm" style="width: auto;">
                         <input type="search" class="form-control form-control-sm form-control-border border-width-2" style="margin: 0 10px;" placeholder="Tìm kiếm vị trí..." @oninput="FilterPosition" />
-                        @if (String.IsNullOrEmpty(filterHrVM.PositionID))
+                        @if (String.IsNullOrEmpty(filterVM.PositionID))
                         {
                             <button type="button" class="btn btn-sm btn-success" title="Thêm mới" @onclick="(() => InitializeModalUpdate_Position(0))"><i class="fa-solid fa-plus"></i></button>
                         }
@@ -764,9 +764,9 @@
                         <tbody>
                             @if (positionVMs != null)
                             {
-                                @foreach (var _positionVM in positionVMs.Where(x => x.PositionName.ToLower().Contains(filterHrVM.searchValues.ToLower())))
+                                @foreach (var _positionVM in positionVMs.Where(x => x.PositionName.ToLower().Contains(filterVM.searchValues.ToLower())))
                                 {
-                                    <tr class="@(filterHrVM.PositionID == _positionVM.PositionID? "selected":"")" @onclick="() => onclick_selectedPosition(_positionVM)">
+                                    <tr class="@(filterVM.PositionID == _positionVM.PositionID? "selected":"")" @onclick="() => onclick_selectedPosition(_positionVM)">
                                         <td>@_positionVM.PositionID</td>
                                         <td>@_positionVM.PositionName</td>
                                         <td>@_positionVM.PositionGroupName</td>

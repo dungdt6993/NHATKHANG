@@ -14,25 +14,25 @@ namespace D69soft.Client.Services.HR
             _httpClient = httpClient;
         }
 
-        public async Task<IEnumerable<EserialVM>> GetEserialByID(FilterHrVM _filterHrVM, string _UserID)
+        public async Task<IEnumerable<EserialVM>> GetEserialByID(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetEserialByID/{_UserID}", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetEserialByID", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<EserialVM>>();
         }
 
-        public async Task<List<DutyRosterVM>> GetDutyRosterList(FilterHrVM _filterHrVM)
+        public async Task<List<DutyRosterVM>> GetDutyRosterList(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetDutyRosterList", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetDutyRosterList", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<List<DutyRosterVM>>();
         }
 
-        public async Task<DutyRosterVM> GetDutyRosterByDay(FilterHrVM _filterHrVM, DutyRosterVM _dutyRosterVM)
+        public async Task<DutyRosterVM> GetDutyRosterByDay(FilterVM _filterVM, DutyRosterVM _dutyRosterVM)
         {
             ArrayList arrayList = new ArrayList();
 
-            arrayList.Add(_filterHrVM);
+            arrayList.Add(_filterVM);
             arrayList.Add(_dutyRosterVM);
 
             var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetDutyRosterByDay", arrayList);
@@ -40,30 +40,30 @@ namespace D69soft.Client.Services.HR
             return await response.Content.ReadFromJsonAsync<DutyRosterVM>();
         }
 
-        public async Task<IEnumerable<LockDutyRosterVM>> GetLockDutyRoster(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<LockDutyRosterVM>> GetLockDutyRoster(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetLockDutyRoster", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetLockDutyRoster", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<LockDutyRosterVM>>();
         }
 
-        public async Task<bool> LockDutyRoster(LockDutyRosterVM _filterHrVM, string _UserID)
+        public async Task<bool> LockDutyRoster(LockDutyRosterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/LockDutyRoster/{_UserID}", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/LockDutyRoster", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<bool> InitializeAttendanceRecordDutyRoster(FilterHrVM _filterHrVM)
+        public async Task<bool> InitializeAttendanceRecordDutyRoster(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/InitializeAttendanceRecordDutyRoster", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/InitializeAttendanceRecordDutyRoster", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<string> UpdateShiftWork(DutyRosterVM _filterHrVM)
+        public async Task<string> UpdateShiftWork(DutyRosterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/UpdateShiftWork", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/UpdateShiftWork", _filterVM);
 
             return await response.Content.ReadAsStringAsync();
         }
@@ -92,16 +92,16 @@ namespace D69soft.Client.Services.HR
         }
 
         //Att
-        public async Task<ProfileVM> GetProfileUser(FilterHrVM _filterHrVM)
+        public async Task<ProfileVM> GetProfileUser(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetProfileUser", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetProfileUser", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<ProfileVM>();
         }
 
-        public async Task<IEnumerable<DutyRosterVM>> GetAttendanceRecordList(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<DutyRosterVM>> GetAttendanceRecordList(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetAttendanceRecordList", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetAttendanceRecordList", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<DutyRosterVM>>();
         }
@@ -141,17 +141,17 @@ namespace D69soft.Client.Services.HR
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<bool> CalcFingerData(FilterHrVM _filterHrVM)
+        public async Task<bool> CalcFingerData(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/CalcFingerData", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/CalcFingerData", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
         //EmplTrf
-        public async Task<IEnumerable<DutyRosterVM>> GetEmplTrfList(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<DutyRosterVM>> GetEmplTrfList(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetEmplTrfList", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetEmplTrfList", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<DutyRosterVM>>();
         }
@@ -163,9 +163,9 @@ namespace D69soft.Client.Services.HR
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<IEnumerable<DutyRosterVM>> GetDutyRosterNotes(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<DutyRosterVM>> GetDutyRosterNotes(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetDutyRosterNotes", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetDutyRosterNotes", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<DutyRosterVM>>();
         }
@@ -178,9 +178,9 @@ namespace D69soft.Client.Services.HR
         }
 
         //WorkPlan
-        public async Task<IEnumerable<DutyRosterVM>> GetWorkPlans(FilterHrVM _filterHrVM)
+        public async Task<IEnumerable<DutyRosterVM>> GetWorkPlans(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetWorkPlans", _filterHrVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/DutyRoster/GetWorkPlans", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<DutyRosterVM>>();
         }

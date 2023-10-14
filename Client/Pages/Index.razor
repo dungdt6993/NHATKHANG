@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using D69soft.Client.Pages.Auth
 @using D69soft.Client.Services;
+@using D69soft.Shared.Models.ViewModels.SYSTEM;
 @using Microsoft.AspNetCore.Components.Authorization;
 
 <div id="slider">
@@ -12,7 +13,7 @@
     </div>
 </div>
 
-<Modal_ChangePass UserID=@UserID></Modal_ChangePass>
+<Modal_ChangePass UserID=@filterVM.UserID></Modal_ChangePass>
 
 @code {
     [Inject] IJSRuntime js { get; set; }
@@ -20,13 +21,14 @@
 
     [Inject] AuthService authService { get; set; }
 
-    protected string UserID;
+    //Filter
+    FilterVM filterVM = new();
 
     protected override async Task OnInitializedAsync()
     {
-        UserID = (await authenticationStateTask).User.GetUserId();
+        filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-        if (!await authService.CheckChangePassDefault(UserID))
+        if (!await authService.CheckChangePassDefault(filterVM.UserID))
         {
             await js.InvokeAsync<object>("ShowModal", "#InitializeModal_ChangePass");
         }

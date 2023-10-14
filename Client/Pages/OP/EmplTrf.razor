@@ -235,7 +235,7 @@
 
 <section class="content-header">
 
-    <EditForm Model="@filterHrVM">
+    <EditForm Model="@filterVM">
         <div class="row">
 
             <div class="col-md-2">
@@ -246,7 +246,7 @@
                         <div class="input-group">
                             <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask"
                                              Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))"
-                                             @bind-StartDate="filterHrVM.dDate" OnRangeSelect="OnRangeSelect_dDate" />
+                                             @bind-StartDate="filterVM.dDate" OnRangeSelect="OnRangeSelect_dDate" />
 
                             <div class="input-group-append">
                                 <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
@@ -260,8 +260,8 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterHrVM.DivisionID)"
-                                 Value="@filterHrVM.DivisionID"
+                                 ValueExpression="@(()=>filterVM.DivisionID)"
+                                 Value="@filterVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
                         @if (division_filter_list != null)
                         {
@@ -320,7 +320,7 @@
             @if (dutyRosterVMs != null)
             {
                 <div class="card-header text-center">
-                    <h5><b>LỊCH ĐIỀU ĐỘNG NGÀY @filterHrVM.dDate.Value.ToString("dd/MM/yyyy")</b></h5>
+                    <h5><b>LỊCH ĐIỀU ĐỘNG NGÀY @filterVM.dDate.Value.ToString("dd/MM/yyyy")</b></h5>
                 </div>
 
                 <table class="table table-sm table-bordered text-nowrap tblFontSizeMin">

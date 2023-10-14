@@ -1,4 +1,5 @@
 ﻿using D69soft.Shared.Models.ViewModels.FIN;
+using D69soft.Shared.Models.ViewModels.SYSTEM;
 using System.Collections;
 using System.Net.Http.Json;
 
@@ -23,9 +24,9 @@ namespace D69soft.Client.Services.FIN
             return await _httpClient.GetFromJsonAsync<IEnumerable<VSubTypeVM>>($"api/Voucher/GetVSubTypeVMs/{_VTypeID}");
         }
 
-        public async Task<List<VoucherVM>> GetVouchers(FilterFinVM _filterFinVM)
+        public async Task<List<VoucherVM>> GetVouchers(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetVouchers", _filterFinVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetVouchers", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<List<VoucherVM>>();
         }
@@ -58,9 +59,9 @@ namespace D69soft.Client.Services.FIN
         {
             return await _httpClient.GetFromJsonAsync<IEnumerable<VATDefVM>>($"api/Voucher/GetVATDefs");
         }
-        public async Task<List<InvoiceVM>> GetInvoices(FilterFinVM _filterFinVM)
+        public async Task<List<InvoiceVM>> GetInvoices(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetInvoices", _filterFinVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetInvoices", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<List<InvoiceVM>>();
         }
@@ -72,16 +73,16 @@ namespace D69soft.Client.Services.FIN
         }
 
         //RPT
-        public async Task<List<VoucherDetailVM>> GetMoneyBooks(FilterFinVM _filterFinVM)
+        public async Task<List<VoucherDetailVM>> GetMoneyBooks(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetMoneyBooks", _filterFinVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetMoneyBooks", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<List<VoucherDetailVM>>();
         }
 
-        public async Task<List<InventoryVM>> GetInvoiceBooks(FilterFinVM _filterFinVM)
+        public async Task<List<InventoryVM>> GetInvoiceBooks(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetInvoiceBooks", _filterFinVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetInvoiceBooks", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<List<InventoryVM>>();
         }

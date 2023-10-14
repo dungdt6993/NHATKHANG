@@ -38,7 +38,7 @@
                         </div>
                     }
 
-                    @if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Deposit")
+                    @if (filterVM.FuncID != "FIN_Cash" && filterVM.FuncID != "FIN_Deposit")
                     {
                         <div class="col-sm-2 @(voucherVM.IsTypeUpdate==3 || voucherVM.IsTypeUpdate==6?"noClick":"")">
                             <select class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" @bind="onchange_ITypeCode">
@@ -225,7 +225,7 @@
                                 }
 
                                 <div class="form-group">
-                                    @if (filterFinVM.FuncID == "FIN_Cash" || filterFinVM.FuncID == "FIN_Deposit")
+                                    @if (filterVM.FuncID == "FIN_Cash" || filterVM.FuncID == "FIN_Deposit")
                                     {
                                         <label>Lý do</label>
                                     }
@@ -359,7 +359,7 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th class="text-center" style="width: 50px;">STT</th>
-                                    @if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Deposit")
+                                    @if (filterVM.FuncID != "FIN_Cash" && filterVM.FuncID != "FIN_Deposit")
                                     {
                                         <th>Tên hàng</th>
 
@@ -442,7 +442,7 @@
                                         foreach (var _voucherDetailVM in voucherDetailVMs)
                                         {
                                             <tr>
-                                                @if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Deposit")
+                                                @if (filterVM.FuncID != "FIN_Cash" && filterVM.FuncID != "FIN_Deposit")
                                                 {
                                                     <td class="text-center">@rowNum</td>
 
@@ -748,7 +748,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        @if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Deposit")
+                                        @if (filterVM.FuncID != "FIN_Cash" && filterVM.FuncID != "FIN_Deposit")
                                         {
                                             <th class="text-center">@voucherDetailVMs.Count()</th>
                                             <th></th>
@@ -813,7 +813,7 @@
 
                 </div>
 
-                @if (filterFinVM.FuncID != "FIN_Cash" && filterFinVM.FuncID != "FIN_Deposit")
+                @if (filterVM.FuncID != "FIN_Cash" && filterVM.FuncID != "FIN_Deposit")
                 {
                     @if (voucherVM.IsTypeUpdate == 0 || voucherVM.IsTypeUpdate == 1)
                     {
@@ -963,7 +963,7 @@
 
 <Modal_RptViewer ReportName=@ReportName></Modal_RptViewer>
 
-<EditForm Model="@filterFinVM">
+<EditForm Model="@filterVM">
     <section class="content-header">
         <div class="row">
 
@@ -973,8 +973,8 @@
                                  data-style="btn-selectpicker"
                                  data-live-search="true"
                                  data-container="body"
-                                 ValueExpression="@(()=>filterFinVM.DivisionID)"
-                                 Value="@filterFinVM.DivisionID"
+                                 ValueExpression="@(()=>filterVM.DivisionID)"
+                                 Value="@filterVM.DivisionID"
                                  ValueChanged="@((string value) =>onchange_DivisionID(value))">
 
                         @if (filter_divisionVMs != null)
@@ -993,8 +993,8 @@
                     <InputSelect class="selectpicker form-control form-control-sm"
                                  data-style="btn-selectpicker"
                                  data-container="body"
-                                 ValueExpression="@(()=>filterFinVM.VTypeID)"
-                                 Value="@filterFinVM.VTypeID"
+                                 ValueExpression="@(()=>filterVM.VTypeID)"
+                                 Value="@filterVM.VTypeID"
                                  ValueChanged="@((string value) =>onchange_VTypeID(value))">
                         <option value=@String.Empty>-----Loại chứng từ-----</option>
                         @if (filter_vTypeVMs != null)
@@ -1049,7 +1049,7 @@
 
             <div class="col-sm-2">
                 <div class="form-group">
-                    <input type="search" class="form-control form-control-sm" placeholder="Số chứng từ" @bind="filterFinVM.VNumber" />
+                    <input type="search" class="form-control form-control-sm" placeholder="Số chứng từ" @bind="filterVM.VNumber" />
                 </div>
             </div>
 
@@ -1074,17 +1074,17 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
 
-                        @if (filterFinVM.FuncID == "FIN_Deposit")
+                        @if (filterVM.FuncID == "FIN_Deposit")
                         {
                             <a class="dropdown-item" @onclick=@(() => ViewRPT("FIN_So_quy_tien"))>Sổ tiền gửi ngân hàng</a>
                         }
 
-                        @if (filterFinVM.FuncID == "FIN_Cash")
+                        @if (filterVM.FuncID == "FIN_Cash")
                         {
                             <a class="dropdown-item" @onclick=@(() => ViewRPT("FIN_So_quy_tien"))>Sổ quỹ tiền mặt</a>
                         }
 
-                        @if (filterFinVM.FuncID == "FIN_Purchasing" || filterFinVM.FuncID == "FIN_Sale" || filterFinVM.FuncID == "FIN_Inventory")
+                        @if (filterVM.FuncID == "FIN_Purchasing" || filterVM.FuncID == "FIN_Sale" || filterVM.FuncID == "FIN_Inventory")
                         {
                             <a class="dropdown-item" @onclick=@(() => ViewRPT("FIN_Tong_hop_ton_kho"))>Tổng hợp tồn kho</a>
                         }
@@ -1094,7 +1094,7 @@
 
                 @if (!String.IsNullOrEmpty(voucherVM.VNumber))
                 {
-                    @if (filterFinVM.FuncID == "FIN_Purchasing" || filterFinVM.FuncID == "FIN_Sale")
+                    @if (filterVM.FuncID == "FIN_Purchasing" || filterVM.FuncID == "FIN_Sale")
                     {
                         @if (voucherVM.VActive)
                         {
@@ -1109,7 +1109,7 @@
                         }
                     }
 
-                    @if (filterFinVM.FuncID == "FIN_Sale")
+                    @if (filterVM.FuncID == "FIN_Sale")
                     {
                         @if (voucherVM.VActive && voucherVM.PaymentAmount < voucherVM.TotalAmount)
                         {
@@ -1125,7 +1125,7 @@
                         }
                     }
 
-                    @if (filterFinVM.FuncID == "FIN_Purchasing")
+                    @if (filterVM.FuncID == "FIN_Purchasing")
                     {
                         @if (voucherVM.VActive && voucherVM.PaymentAmount < voucherVM.TotalAmount)
                         {
@@ -1161,17 +1161,17 @@
                 }
 
             </div>
-            @if (filterFinVM.TypeView == 1)
+            @if (filterVM.TypeView == 1)
             {
                 <div class="card-header text-center">
                     @if (ReportName == "FIN_So_quy_tien")
                     {
-                        @if (filterFinVM.FuncID == "FIN_Cash")
+                        @if (filterVM.FuncID == "FIN_Cash")
                         {
                             <h5><b>SỔ QUỸ TIỀN MẶT</b></h5>
                         }
 
-                        @if (filterFinVM.FuncID == "FIN_Deposit")
+                        @if (filterVM.FuncID == "FIN_Deposit")
                         {
                             <h5><b>SỔ TIỀN GỬI NGÂN HÀNG</b></h5>
                         }
@@ -1181,14 +1181,14 @@
                         <h5><b>TỔNG HỢP TỒN KHO</b></h5>
                     }
                     <i>
-                        @if (filterFinVM.StartDate.ToString("dd/MM/yyyy") == filterFinVM.EndDate.ToString("dd/MM/yyyy"))
+                        @if (filterVM.StartDate.ToString("dd/MM/yyyy") == filterVM.EndDate.ToString("dd/MM/yyyy"))
                         {
-                            <b>Ngày @filterFinVM.StartDate.ToString("dd/MM/yyyy")</b>
+                            <b>Ngày @filterVM.StartDate.ToString("dd/MM/yyyy")</b>
 
                         }
                         else
                         {
-                            <b>Từ ngày @filterFinVM.StartDate.ToString("dd/MM/yyyy") đến ngày @filterFinVM.EndDate.ToString("dd/MM/yyyy")</b>
+                            <b>Từ ngày @filterVM.StartDate.ToString("dd/MM/yyyy") đến ngày @filterVM.EndDate.ToString("dd/MM/yyyy")</b>
                         }
                     </i>
 
@@ -1230,7 +1230,7 @@
 
             <!-- /.card-header -->
             <div class="card-body table-responsive p-0" style="height: calc(100vh - 233px);">
-                @if (filterFinVM.TypeView == 0)
+                @if (filterVM.TypeView == 0)
                 {
                     @if (voucherVMs != null)
                     {
@@ -1240,11 +1240,11 @@
                                     <th class="text-center">Ngày chứng từ</th>
                                     <th class="text-center">Số chứng từ</th>
                                     <th class="text-center">Chứng từ gốc</th>
-                                    @if (filterFinVM.FuncID == "FIN_Purchasing" || filterFinVM.FuncID == "FIN_Sale")
+                                    @if (filterVM.FuncID == "FIN_Purchasing" || filterVM.FuncID == "FIN_Sale")
                                     {
                                         <th class="text-center">Hóa đơn</th>
                                     }
-                                    @if (filterFinVM.FuncID == "FIN_Cash" || filterFinVM.FuncID == "FIN_Deposit")
+                                    @if (filterVM.FuncID == "FIN_Cash" || filterVM.FuncID == "FIN_Deposit")
                                     {
                                         <th>Lý do</th>
                                     }
@@ -1252,11 +1252,11 @@
                                     {
                                         <th>Diễn giải</th>
                                     }
-                                    @if (filterFinVM.FuncID == "FIN_Cash" || filterFinVM.FuncID == "FIN_Deposit")
+                                    @if (filterVM.FuncID == "FIN_Cash" || filterVM.FuncID == "FIN_Deposit")
                                     {
                                         <th class="text-center">Số tiền</th>
                                     }
-                                    @if (filterFinVM.FuncID == "FIN_Purchasing" || filterFinVM.FuncID == "FIN_Sale")
+                                    @if (filterVM.FuncID == "FIN_Purchasing" || filterVM.FuncID == "FIN_Sale")
                                     {
                                         <th class="text-center">Tổng tiền thanh toán</th>
                                         <th class="text-center">Đã thanh toán</th>
@@ -1276,28 +1276,28 @@
                                         </td>
                                         <td class="text-center">@voucherVM.VNumber</td>
                                         <td class="text-center">@voucherVM.VReference</td>
-                                        @if (filterFinVM.FuncID == "FIN_Purchasing" || filterFinVM.FuncID == "FIN_Sale")
+                                        @if (filterVM.FuncID == "FIN_Purchasing" || filterVM.FuncID == "FIN_Sale")
                                         {
                                             @if (voucherVM.IsInvoice)
                                             {
                                                 @if (!String.IsNullOrEmpty(voucherVM.InvoiceNumber))
                                                 {
-                                                    @if (filterFinVM.FuncID == "FIN_Purchasing")
+                                                    @if (filterVM.FuncID == "FIN_Purchasing")
                                                     {
                                                         <td class="text-center"><span class="badge badge-success">Đã nhận hóa đơn số @voucherVM.InvoiceNumber</span></td>
                                                     }
-                                                    @if (filterFinVM.FuncID == "FIN_Sale")
+                                                    @if (filterVM.FuncID == "FIN_Sale")
                                                     {
                                                         <td class="text-center"><span class="badge badge-success">Đã xuất hóa đơn @voucherVM.InvoiceNumber</span></td>
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    @if (filterFinVM.FuncID == "FIN_Purchasing")
+                                                    @if (filterVM.FuncID == "FIN_Purchasing")
                                                     {
                                                         <td class="text-center"><span class="badge badge-danger">Chưa nhận hóa đơn</span></td>
                                                     }
-                                                    @if (filterFinVM.FuncID == "FIN_Sale")
+                                                    @if (filterVM.FuncID == "FIN_Sale")
                                                     {
                                                         <td class="text-center"><span class="badge badge-danger">Chưa xuất hóa đơn</span></td>
                                                     }
@@ -1309,11 +1309,11 @@
                                             }
                                         }
                                         <td>@voucherVM.VDesc</td>
-                                        @if (filterFinVM.FuncID == "FIN_Cash" || filterFinVM.FuncID == "FIN_Deposit")
+                                        @if (filterVM.FuncID == "FIN_Cash" || filterVM.FuncID == "FIN_Deposit")
                                         {
                                             <td class="text-right">@String.Format("{0:#,##0}",@voucherVM.TotalAmount)</td>
                                         }
-                                        @if (filterFinVM.FuncID == "FIN_Purchasing" || filterFinVM.FuncID == "FIN_Sale")
+                                        @if (filterVM.FuncID == "FIN_Purchasing" || filterVM.FuncID == "FIN_Sale")
                                         {
                                             <td class="text-right">@String.Format("{0:#,##0}",@voucherVM.TotalAmount)</td>
                                             <td class="text-right">@String.Format("{0:#,##0}",@voucherVM.PaymentAmount)</td>

@@ -23,18 +23,18 @@ namespace D69soft.Client.Pages.HR
         [Inject] DutyRosterService dutyRosterService { get; set; }
         [Inject] PayrollService payrollService { get; set; }
 
-        protected string UserID;
-
         bool isLoading;
         bool isLoadingScreen = true;
 
-		//PermisFunc
-		bool HR_Payroll_Calc;
-
+        //Log
 		LogVM logVM = new();
 
         //Filter
-        FilterHrVM filterHrVM = new();
+        FilterVM filterVM = new();
+
+        //PermisFunc
+        bool HR_Payroll_Calc;
+
         IEnumerable<PeriodVM> year_filter_list;
         IEnumerable<PeriodVM> month_filter_list;
         IEnumerable<DivisionVM> division_filter_list;
@@ -71,11 +71,11 @@ namespace D69soft.Client.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            UserID = (await authenticationStateTask).User.GetUserId();
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(UserID, "HR_Payroll"))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, "HR_Payroll"))
             {
-				logVM.LogUser = UserID;
+				logVM.LogUser = filterVM.UserID;
 				logVM.LogType = "FUNC";
                 logVM.LogName = "HR_Payroll";
                 await sysService.InsertLog(logVM);
@@ -85,38 +85,36 @@ namespace D69soft.Client.Pages.HR
                 navigationManager.NavigateTo("/");
             }
 
-            HR_Payroll_Calc = await sysService.CheckAccessSubFunc(UserID, "HR_Payroll_Calc");
+            HR_Payroll_Calc = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_Payroll_Calc");
 
 			//Initialize Filter
-			filterHrVM.UserID = UserID;
-
             year_filter_list = await sysService.GetYearFilter();
-            filterHrVM.Year = DateTime.Now.Year;
+            filterVM.Year = DateTime.Now.Year;
 
             month_filter_list = await sysService.GetMonthFilter();
-            filterHrVM.Month = DateTime.Now.Month;
+            filterVM.Month = DateTime.Now.Month;
 
-            filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
+            filterVM.Period = filterVM.Year * 100 + filterVM.Month;
 
-            division_filter_list = await organizationalChartService.GetDivisionList(filterHrVM);
-            filterHrVM.DivisionID = (await sysService.GetInfoUser(UserID)).DivisionID;
+            division_filter_list = await organizationalChartService.GetDivisionList(filterVM);
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
 
-            filterHrVM.SectionID = string.Empty;
+            filterVM.SectionID = string.Empty;
             section_filter_list = await organizationalChartService.GetSectionList();
 
-            filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
+            filterVM.DepartmentID = string.Empty;
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterVM);
 
-            filterHrVM.PositionGroupID = string.Empty;
+            filterVM.PositionGroupID = string.Empty;
             position_filter_list = await organizationalChartService.GetPositionList();
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             trngrp_filter_list = await payrollService.GetTrnGroupCodeList();
 
             //LockSal
-            lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
+            lockSalaryVM = await payrollService.GetLockSalary(filterVM);
 
             isLoadingScreen = false;
         }
@@ -125,18 +123,18 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.Month = value;
+            filterVM.Month = value;
 
-            filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
+            filterVM.Period = filterVM.Year * 100 + filterVM.Month;
 
             //LockSal
-            lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
+            lockSalaryVM = await payrollService.GetLockSalary(filterVM);
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
-            filterHrVM.TrnCode = 0;
-            filterHrVM.TrnSubCode = 0;
+            filterVM.TrnCode = 0;
+            filterVM.TrnSubCode = 0;
 
             dtPayroll = null;
 
@@ -149,18 +147,18 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.Year = value;
+            filterVM.Year = value;
 
-            filterHrVM.Period = filterHrVM.Year * 100 + filterHrVM.Month;
+            filterVM.Period = filterVM.Year * 100 + filterVM.Month;
 
             //LockSal
-            lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
+            lockSalaryVM = await payrollService.GetLockSalary(filterVM);
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
-            filterHrVM.TrnCode = 0;
-            filterHrVM.TrnSubCode = 0;
+            filterVM.TrnCode = 0;
+            filterVM.TrnSubCode = 0;
 
             dtPayroll = null;
 
@@ -173,22 +171,22 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DivisionID = value;
+            filterVM.DivisionID = value;
 
             //LockSal
-            lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
+            lockSalaryVM = await payrollService.GetLockSalary(filterVM);
 
-            filterHrVM.DepartmentID = string.Empty;
-            department_filter_list = await organizationalChartService.GetDepartmentList(filterHrVM);
+            filterVM.DepartmentID = string.Empty;
+            department_filter_list = await organizationalChartService.GetDepartmentList(filterVM);
 
-            filterHrVM.PositionGroupID = string.Empty;
-            filterHrVM.arrPositionID = new string[] { };
+            filterVM.PositionGroupID = string.Empty;
+            filterVM.arrPositionID = new string[] { };
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
-            filterHrVM.TrnCode = 0;
-            filterHrVM.TrnSubCode = 0;
+            filterVM.TrnCode = 0;
+            filterVM.TrnSubCode = 0;
 
             dtPayroll = null;
 
@@ -201,13 +199,13 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.DepartmentID = value;
+            filterVM.DepartmentID = value;
 
-            filterHrVM.PositionGroupID = string.Empty;
-            filterHrVM.arrPositionID = new string[] { };
+            filterVM.PositionGroupID = string.Empty;
+            filterVM.arrPositionID = new string[] { };
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             dtPayroll = null;
 
@@ -220,13 +218,13 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.SectionID = value;
+            filterVM.SectionID = value;
 
-            filterHrVM.PositionGroupID = string.Empty;
-            filterHrVM.arrPositionID = new string[] { };
+            filterVM.PositionGroupID = string.Empty;
+            filterVM.arrPositionID = new string[] { };
 
-            filterHrVM.Eserial = string.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             dtPayroll = null;
 
@@ -239,15 +237,15 @@ namespace D69soft.Client.Pages.HR
         {
             get
             {
-                return filterHrVM.arrPositionID;
+                return filterVM.arrPositionID;
             }
             set
             {
                 isLoading = true;
 
-                filterHrVM.arrPositionID = (string[])value;
+                filterVM.arrPositionID = (string[])value;
 
-                filterHrVM.PositionGroupID = string.Join(",", (string[])value);
+                filterVM.PositionGroupID = string.Join(",", (string[])value);
 
                 reload_filter_eserial();
 
@@ -259,8 +257,8 @@ namespace D69soft.Client.Pages.HR
 
         private async void reload_filter_eserial()
         {
-            filterHrVM.Eserial = String.Empty;
-            eserial_filter_list = await dutyRosterService.GetEserialByID(filterHrVM, UserID);
+            filterVM.Eserial = String.Empty;
+            eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
 
             StateHasChanged();
         }
@@ -269,7 +267,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.Eserial = value;
+            filterVM.Eserial = value;
 
             dtPayroll = null;
 
@@ -282,10 +280,10 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.TrnCode = value;
+            filterVM.TrnCode = value;
 
-            filterHrVM.TrnSubCode = 0;
-            trn_filter_list = await payrollService.GetTrnCodeList(filterHrVM.TrnCode);
+            filterVM.TrnSubCode = 0;
+            trn_filter_list = await payrollService.GetTrnCodeList(filterVM.TrnCode);
 
             dtPayroll = null;
 
@@ -298,7 +296,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            filterHrVM.TrnSubCode = value;
+            filterVM.TrnSubCode = value;
 
             dtPayroll = null;
 
@@ -311,7 +309,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            dtPayroll = await payrollService.GetPayrollList(filterHrVM);
+            dtPayroll = await payrollService.GetPayrollList(filterVM);
 
             var sqlCountShiftTypeCalc = "select Count(ShiftTypeID) + 3 as cShiftTypeID from HR.ShiftType where coalesce(PercentIncome,0) > 0";
             dtCountShiftTypeCalc = await sysService.ExecuteSQLQueryToDataTable(sqlCountShiftTypeCalc);
@@ -344,15 +342,15 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn tính lương Tháng " + filterHrVM.Month + " năm " + filterHrVM.Year + "?", SweetAlertMessageType.question))
+            if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn tính lương Tháng " + filterVM.Month + " năm " + filterVM.Year + "?", SweetAlertMessageType.question))
             {
-                await payrollService.CalcSalary(filterHrVM);
+                await payrollService.CalcSalary(filterVM);
 
                 await GetSalaryList();
 
-                lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
+                lockSalaryVM = await payrollService.GetLockSalary(filterVM);
 
-                logVM.LogDesc = "Tính lương " + "Tháng " + filterHrVM.Month + " năm " + filterHrVM.Year + "";
+                logVM.LogDesc = "Tính lương " + "Tháng " + filterVM.Month + " năm " + filterVM.Year + "";
                 await sysService.InsertLog(logVM);
 
                 await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
@@ -367,13 +365,13 @@ namespace D69soft.Client.Pages.HR
 
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn hủy tính lương?", SweetAlertMessageType.question))
             {
-                await payrollService.CancelCalcSalary(filterHrVM);
+                await payrollService.CancelCalcSalary(filterVM);
 
                 dtPayroll = null;
 
-                lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
+                lockSalaryVM = await payrollService.GetLockSalary(filterVM);
 
-                logVM.LogDesc = "Hủy tính lương " + "Tháng " + filterHrVM.Month + " năm " + filterHrVM.Year + "";
+                logVM.LogDesc = "Hủy tính lương " + "Tháng " + filterVM.Month + " năm " + filterVM.Year + "";
                 await sysService.InsertLog(logVM);
 
                 await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
@@ -386,13 +384,13 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn khóa lương Tháng " + filterHrVM.Month + " năm " + filterHrVM.Year + "?", SweetAlertMessageType.question))
+            if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn khóa lương Tháng " + filterVM.Month + " năm " + filterVM.Year + "?", SweetAlertMessageType.question))
             {
-                await payrollService.LockSalary(filterHrVM);
+                await payrollService.LockSalary(filterVM);
 
-                lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
+                lockSalaryVM = await payrollService.GetLockSalary(filterVM);
 
-                logVM.LogDesc = "Khóa lương " + "Tháng " + filterHrVM.Month + " năm " + filterHrVM.Year + "";
+                logVM.LogDesc = "Khóa lương " + "Tháng " + filterVM.Month + " năm " + filterVM.Year + "";
                 await sysService.InsertLog(logVM);
 
                 await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
@@ -407,11 +405,11 @@ namespace D69soft.Client.Pages.HR
 
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn hủy khóa lương?", SweetAlertMessageType.question))
             {
-                await payrollService.CancelLockSalary(filterHrVM);
+                await payrollService.CancelLockSalary(filterVM);
 
-                lockSalaryVM = await payrollService.GetLockSalary(filterHrVM);
+                lockSalaryVM = await payrollService.GetLockSalary(filterVM);
 
-                logVM.LogDesc = "Hủy khóa lương " + "Tháng " + filterHrVM.Month + " năm " + filterHrVM.Year + "";
+                logVM.LogDesc = "Hủy khóa lương " + "Tháng " + filterVM.Month + " năm " + filterVM.Year + "";
                 await sysService.InsertLog(logVM);
 
                 await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
@@ -627,7 +625,7 @@ namespace D69soft.Client.Pages.HR
         {
             isLoading = true;
 
-            wdDefaultVMs = await payrollService.GetWDDefautList(filterHrVM);
+            wdDefaultVMs = await payrollService.GetWDDefautList(filterVM);
 
             isLoading = false;
         }
