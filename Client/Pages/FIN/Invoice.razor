@@ -90,7 +90,7 @@
                 <!-- radio -->
                 <div class="form-group clearfix">
                     <div class="icheck-success d-inline">
-                        <input type="radio" id="TypeView1" name="TypeView" checked="@(filterVM.TypeView == 0)" @onchange="(() => filterVM.TypeView = 0)">
+                        <input type="radio" id="TypeView1" name="TypeView" checked="@(filterVM.TypeView == 0)" @onchange="(() => onchangeTypeView(0))">
                         <label for="TypeView1">
                             Tổng hợp
                         </label>
@@ -99,7 +99,7 @@
                         &nbsp;&nbsp;
                     </label>
                     <div class="icheck-success d-inline">
-                        <input type="radio" id="TypeView2" name="TypeView" checked="@(filterVM.TypeView == 1)" @onchange="(() => filterVM.TypeView = 1)">
+                        <input type="radio" id="TypeView2" name="TypeView" checked="@(filterVM.TypeView == 1)" @onchange="(() => onchangeTypeView(1))">
                         <label for="TypeView2">
                             Chi tiết
                         </label>
@@ -355,6 +355,30 @@
                     {
                         Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-1),
                         End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddTicks(-1)
+                    }
+                },
+             {"Quý 1", new DateRange
+                    {
+                        Start = new DateTime(DateTime.Now.Year, 1, 1),
+                        End = new DateTime(DateTime.Now.Year, 1, 1).AddMonths(3).AddTicks(-1)
+                    }
+                },
+             {"Quý 2", new DateRange
+                    {
+                        Start = new DateTime(DateTime.Now.Year, 4, 1),
+                        End = new DateTime(DateTime.Now.Year, 4, 1).AddMonths(3).AddTicks(-1)
+                    }
+                },
+             {"Quý 3", new DateRange
+                    {
+                        Start = new DateTime(DateTime.Now.Year, 7, 1),
+                        End = new DateTime(DateTime.Now.Year, 7, 1).AddMonths(3).AddTicks(-1)
+                    }
+                },
+             {"Quý 4", new DateRange
+                    {
+                        Start = new DateTime(DateTime.Now.Year, 9, 1),
+                        End = new DateTime(DateTime.Now.Year, 12, 31)
                     }
                 },
             };

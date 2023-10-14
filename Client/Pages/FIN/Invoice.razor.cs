@@ -111,6 +111,17 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
+        protected async Task onchangeTypeView(int _TypeView)
+        {
+            isLoading = true;
+
+            filterVM.TypeView = _TypeView;
+
+            invoiceVMs = await voucherService.GetInvoices(filterVM);
+
+            isLoading = false;
+        }
+
         //RPT
         protected async Task ViewRPT(string _ReportName)
         {
