@@ -15,10 +15,10 @@
     <Item4 Ref="10" Visible="false" Description="UserID" Name="UserID" />
   </Parameters>
   <Bands>
-    <Item1 Ref="11" ControlType="DetailBand" Name="Detail" HeightF="78.8051758" TextAlignment="TopLeft" Dpi="254" StyleName="DataField" Padding="0,0,0,0,254">
+    <Item1 Ref="11" ControlType="DetailBand" Name="Detail" HeightF="78.80518" TextAlignment="TopLeft" Dpi="254" StyleName="DataField" Padding="0,0,0,0,254">
       <HierarchyPrintOptions Ref="12" Indent="50.8" />
       <Controls>
-        <Item1 Ref="13" ControlType="XRTable" Name="xrTable1" TextAlignment="MiddleCenter" SizeF="2740.66,78.8051758" LocationFloat="0,0" Dpi="254" Font="Arial, 9pt" Borders="All" BorderDashStyle="Solid">
+        <Item1 Ref="13" ControlType="XRTable" Name="xrTable1" TextAlignment="MiddleCenter" SizeF="2740.66,78.80518" LocationFloat="0,0" Dpi="254" Font="Arial, 9pt" Borders="All" BorderDashStyle="Solid">
           <Rows>
             <Item1 Ref="14" ControlType="XRTableRow" Name="xrTableRow1" Weight="1" Dpi="254">
               <Cells>
@@ -128,24 +128,24 @@
       </Controls>
     </Item4>
     <Item5 Ref="69" ControlType="PageFooterBand" Name="pageFooterBand1" HeightF="0" Dpi="254" />
-    <Item6 Ref="70" ControlType="ReportHeaderBand" Name="reportHeaderBand1" HeightF="141.181686" Dpi="254">
+    <Item6 Ref="70" ControlType="ReportHeaderBand" Name="reportHeaderBand1" HeightF="141.1817" Dpi="254">
       <Controls>
         <Item1 Ref="71" ControlType="XRLabel" Name="xrLabel27" Text="BẢNG TỔNG HỢP CÁC KHOẢN THU NHẬP KHÁC" TextAlignment="MiddleCenter" SizeF="2740.66,82.76168" LocationFloat="0,0" Dpi="254" StyleName="Title" Font="Tahoma, 16pt, style=Bold" ForeColor="Black" Padding="5,5,0,0,254">
           <StylePriority Ref="72" UseFont="false" UseForeColor="false" UseBackColor="false" UseTextAlignment="false" />
         </Item1>
-        <Item2 Ref="73" ControlType="XRLabel" Name="xrLabel28" Text="Tháng:" TextAlignment="MiddleLeft" SizeF="185.208374,58.4200058" LocationFloat="1035.47339,82.76168" Dpi="254" Font="Times New Roman, 14pt, style=Bold" Padding="5,5,0,0,254">
+        <Item2 Ref="73" ControlType="XRLabel" Name="xrLabel28" Text="Tháng:" TextAlignment="MiddleLeft" SizeF="185.2084,58.42001" LocationFloat="1035.473,82.76168" Dpi="254" Font="Times New Roman, 14pt, style=Bold" Padding="5,5,0,0,254">
           <StylePriority Ref="74" UseFont="false" UseTextAlignment="false" />
         </Item2>
-        <Item3 Ref="75" ControlType="XRLabel" Name="xrLabel29" TextAlignment="MiddleLeft" SizeF="121.708374,58.4200058" LocationFloat="1220.68164,82.76168" Dpi="254" Font="Times New Roman, 14pt, style=Bold" Padding="5,5,0,0,254">
+        <Item3 Ref="75" ControlType="XRLabel" Name="xrLabel29" TextAlignment="MiddleLeft" SizeF="121.7084,58.42001" LocationFloat="1220.682,82.76168" Dpi="254" Font="Times New Roman, 14pt, style=Bold" Padding="5,5,0,0,254">
           <ExpressionBindings>
             <Item1 Ref="76" EventName="BeforePrint" PropertyName="Text" Expression="[M]" />
           </ExpressionBindings>
           <StylePriority Ref="77" UseFont="false" UseTextAlignment="false" />
         </Item3>
-        <Item4 Ref="78" ControlType="XRLabel" Name="xrLabel26" Text="Năm:" TextAlignment="MiddleLeft" SizeF="134.9375,58.4200058" LocationFloat="1342.39,82.76168" Dpi="254" Font="Times New Roman, 14pt, style=Bold" Padding="5,5,0,0,254">
+        <Item4 Ref="78" ControlType="XRLabel" Name="xrLabel26" Text="Năm:" TextAlignment="MiddleLeft" SizeF="134.9375,58.42001" LocationFloat="1342.39,82.76168" Dpi="254" Font="Times New Roman, 14pt, style=Bold" Padding="5,5,0,0,254">
           <StylePriority Ref="79" UseFont="false" UseTextAlignment="false" />
         </Item4>
-        <Item5 Ref="80" ControlType="XRLabel" Name="xrLabel25" TextAlignment="MiddleLeft" SizeF="203.72937,58.4200058" LocationFloat="1477.32776,82.76168" Dpi="254" Font="Times New Roman, 14pt, style=Bold" Padding="5,5,0,0,254">
+        <Item5 Ref="80" ControlType="XRLabel" Name="xrLabel25" TextAlignment="MiddleLeft" SizeF="203.7294,58.42001" LocationFloat="1477.328,82.76168" Dpi="254" Font="Times New Roman, 14pt, style=Bold" Padding="5,5,0,0,254">
           <ExpressionBindings>
             <Item1 Ref="81" EventName="BeforePrint" PropertyName="Text" Expression="[Y]" />
           </ExpressionBindings>
@@ -153,9 +153,9 @@
         </Item5>
       </Controls>
     </Item6>
-    <Item7 Ref="83" ControlType="ReportFooterBand" Name="ReportFooter" HeightF="201.34787" Dpi="254">
+    <Item7 Ref="83" ControlType="ReportFooterBand" Name="ReportFooter" HeightF="201.3479" Dpi="254">
       <Controls>
-        <Item1 Ref="84" ControlType="XRTable" Name="xrTable4" TextAlignment="TopCenter" SizeF="2740.66,63.5000153" LocationFloat="0,137.847855" Dpi="254" Font="Times New Roman, 9.75pt, style=Bold" Padding="5,5,0,0,254">
+        <Item1 Ref="84" ControlType="XRTable" Name="xrTable4" TextAlignment="TopCenter" SizeF="2740.66,63.50002" LocationFloat="0,137.8479" Dpi="254" Font="Times New Roman, 9.75pt, style=Bold" Padding="5,5,0,0,254">
           <Rows>
             <Item1 Ref="85" ControlType="XRTableRow" Name="xrTableRow4" Weight="1" Dpi="254">
               <Cells>
@@ -167,7 +167,7 @@
           </Rows>
           <StylePriority Ref="89" UseFont="false" UseTextAlignment="false" />
         </Item1>
-        <Item2 Ref="90" ControlType="XRTable" Name="xrTable3" TextAlignment="MiddleCenter" SizeF="244.9187,78.8051758" LocationFloat="2130.36,0" Dpi="254" Borders="All" BorderDashStyle="Solid">
+        <Item2 Ref="90" ControlType="XRTable" Name="xrTable3" TextAlignment="MiddleCenter" SizeF="244.9187,78.80518" LocationFloat="2130.36,0" Dpi="254" Borders="All" BorderDashStyle="Solid">
           <Rows>
             <Item1 Ref="91" ControlType="XRTableRow" Name="xrTableRow3" Weight="1" Dpi="254">
               <Cells>

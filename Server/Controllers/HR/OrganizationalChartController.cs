@@ -55,11 +55,11 @@ namespace D69soft.Server.Controllers.HR
             var sql = "";
             if (_divisionVM.IsTypeUpdate == 0)
             {
-                sql += "Insert into HR.Division (DivisionID,DivisionName,CodeDivs,isAutoEserial,is2625,INOUTNumber,isActive) Values (@DivisionID,@DivisionName,@CodeDivs,@isAutoEserial,@is2625,@INOUTNumber,@isActive)";
+                sql += "Insert into HR.Division (DivisionID,DivisionName,DivisionShortName,DivisionAddress,DivisionTaxCode,DivisionTel,DivisionHotline,CodeDivs,isAutoEserial,is2625,INOUTNumber,isActive) Values (@DivisionID,@DivisionName,@DivisionShortName,@DivisionAddress,@DivisionTaxCode,@DivisionTel,@DivisionHotline,@CodeDivs,@isAutoEserial,@is2625,@INOUTNumber,@isActive)";
             }
             if (_divisionVM.IsTypeUpdate == 1)
             {
-                sql += "Update HR.Division set DivisionName = @DivisionName, CodeDivs = @CodeDivs, isAutoEserial = @isAutoEserial, is2625 = @is2625, INOUTNumber = @INOUTNumber, isActive = @isActive where DivisionID = @DivisionID";
+                sql += "Update HR.Division set DivisionName = @DivisionName, DivisionShortName = @DivisionShortName, DivisionAddress = @DivisionAddress, DivisionTaxCode = @DivisionTaxCode, DivisionTel = @DivisionTel, DivisionHotline = @DivisionHotline, CodeDivs = @CodeDivs, isAutoEserial = @isAutoEserial, is2625 = @is2625, INOUTNumber = @INOUTNumber, isActive = @isActive where DivisionID = @DivisionID";
             }
             if (_divisionVM.IsTypeUpdate == 2)
             {
@@ -226,11 +226,11 @@ namespace D69soft.Server.Controllers.HR
             var sql = "";
             if (_sectionVM.IsTypeUpdate == 0)
             {
-                sql = "Insert into HR.Section (SectionID,SectionName,isActive) Values (@SectionID,@SectionName,@isActive)";
+                sql = "Insert into HR.Section (SectionID,SectionName,WorkingLocation,AgreementText_Signature_Name,AgreementText_Signature_Position,TimeAttMachine_SerialLog,isActive) Values (@SectionID,@SectionName,@WorkingLocation,@AgreementText_Signature_Name,@AgreementText_Signature_Position,@TimeAttMachine_SerialLog,@isActive)";
             }
             if (_sectionVM.IsTypeUpdate == 1)
             {
-                sql = "Update HR.Section set SectionName = @SectionName, isActive = @isActive where SectionID = @SectionID";
+                sql = "Update HR.Section set SectionName = @SectionName, WorkingLocation = @WorkingLocation, AgreementText_Signature_Name = @AgreementText_Signature_Name, AgreementText_Signature_Position = @AgreementText_Signature_Position, TimeAttMachine_SerialLog = @TimeAttMachine_SerialLog, isActive = @isActive where SectionID = @SectionID";
             }
             if (_sectionVM.IsTypeUpdate == 2)
             {

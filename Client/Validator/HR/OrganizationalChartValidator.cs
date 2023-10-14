@@ -23,6 +23,8 @@ namespace D69soft.Client.Validator.HR
 
             RuleFor(x => x.DivisionName).NotEmpty().WithMessage("Không được trống.");
 
+            RuleFor(x => x.DivisionShortName).NotEmpty().WithMessage("Không được trống.");
+
             RuleFor(x => x.CodeDivs).NotEmpty().When(x => x.isAutoEserial).WithMessage("Không được trống.")
                 .Matches(@"^[a-zA-Z]+$").WithMessage("Chỉ bao gồm ký tự chữ cái không dấu.");
         }

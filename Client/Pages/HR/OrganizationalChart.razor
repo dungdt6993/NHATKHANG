@@ -59,6 +59,35 @@
                     </div>
 
                     <div class="form-row">
+                        <div class="form-group col-md-8">
+                            <label>Tên viết tắt:</label>
+                            <InputText class="form-control form-control-sm" placeholder="Tên viết tắt" @bind-Value="@divisionVM.DivisionShortName" />
+                            <ValidationMessage For="@(() => divisionVM.DivisionShortName)" />
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Mã số thuế:</label>
+                            <InputText class="form-control form-control-sm" placeholder="Mã số thuế" @bind-Value="@divisionVM.DivisionTaxCode" />
+                            <ValidationMessage For="@(() => divisionVM.DivisionTaxCode)" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Địa chỉ:</label>
+                        <InputText class="form-control form-control-sm" placeholder="Địa chỉ" @bind-Value="@divisionVM.DivisionAddress" />
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Điện thoại:</label>
+                            <InputText class="form-control form-control-sm" placeholder="Số điện thoại" @bind-Value="@divisionVM.DivisionTel" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Hotline:</label>
+                            <InputText class="form-control form-control-sm" placeholder="Hotline" @bind-Value="@divisionVM.DivisionHotline" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
                         <div class="form-group clearfix">
                             <div class="icheck-success d-inline">
                                 <input type="radio" id="rAttType1" name="rAttType" value="true" checked="@(divisionVM.is2625 == 0)" @onchange="(() => divisionVM.is2625 = 0)">
@@ -157,7 +186,7 @@
                                 <InputSelect class="selectpicker form-control form-control-sm"
                                              data-style="btn-selectpicker" data-container="body"
                                              data-live-search="true" data-show-subtext="true"
-                                             @bind-Value="departmentVM.DepartmentGroupID">
+                                @bind-Value="departmentVM.DepartmentGroupID">
                                     <option value=@String.Empty>-----Chọn-----</option>
                                     @if (departmentGroupVMs != null)
                                     {
@@ -266,7 +295,6 @@
                         <ValidationMessage For="@(() => departmentGroupVM.DepartmentGroupName)" />
                     </div>
 
-
                 </div>
 
                 <div class="modal-footer justify-content-center">
@@ -304,7 +332,7 @@
                 <div class="modal-body">
 
                     <div class="form-row">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-3">
                             <label>Mã:</label>
                             @if (sectionVM.IsTypeUpdate == 0)
                             {
@@ -317,14 +345,34 @@
                             }
                         </div>
 
+                        <div class="form-group col-md-9">
+                            <label>Tên:</label>
+                            <InputText class="form-control form-control-sm" placeholder="Tên khu vực" @bind-Value="@sectionVM.SectionName" />
+                            <ValidationMessage For="@(() => sectionVM.SectionName)" />
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Tên:</label>
-                        <InputText class="form-control form-control-sm" placeholder="Tên khu vực" @bind-Value="@sectionVM.SectionName" />
-                        <ValidationMessage For="@(() => sectionVM.SectionName)" />
+                        <label>Địa điểm làm việc:</label>
+                        <InputText class="form-control form-control-sm" placeholder="Địa điểm làm việc" @bind-Value="@sectionVM.WorkingLocation" />
                     </div>
 
+                    <div class="form-row">
+                        <div class="form-group col-md-7">
+                            <label>Người ký văn bản:</label>
+                            <InputText class="form-control form-control-sm" placeholder="Người ký văn bản" @bind-Value="@sectionVM.AgreementText_Signature_Name" />
+                        </div>
+
+                        <div class="form-group col-md-5">
+                            <label>Chức danh:</label>
+                            <InputText class="form-control form-control-sm" placeholder="Chức danh" @bind-Value="@sectionVM.AgreementText_Signature_Position" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mã máy chấm công:</label>
+                        <InputText class="form-control form-control-sm" placeholder="Mã máy chấm công" @bind-Value="@sectionVM.TimeAttMachine_SerialLog" />
+                    </div>
 
                     <div class="form-row align-items-center">
                         <div class="icheck-success d-inline">
@@ -397,7 +445,7 @@
                                 <InputSelect class="selectpicker form-control form-control-sm"
                                              data-style="btn-selectpicker" data-container="body"
                                              data-live-search="true" data-show-subtext="true"
-                                             @bind-Value="positionVM.PositionGroupID">
+                                @bind-Value="positionVM.PositionGroupID">
                                     <option value=@String.Empty>-----Chọn-----</option>
                                     @if (positionGroups != null)
                                     {
