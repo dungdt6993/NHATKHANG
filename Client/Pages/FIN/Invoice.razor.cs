@@ -9,8 +9,6 @@ using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extensions;
-using D69soft.Client.XLS;
-using static System.Net.WebRequestMethods;
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -137,16 +135,6 @@ namespace D69soft.Client.Pages.FIN
             }
 
             isLoading = false;
-        }
-
-        //Export Excel
-        HttpClient Http;
-        private async void ClickTemplateXLS()
-        {
-            Stream streamTemplate = await Http.GetStreamAsync("xls/template.xlsx");
-
-            var xls = new Excel();
-            await xls.TemplateWeatherForecastAsync(js, streamTemplate, invoiceVMs, "template.xlsx");
         }
 
     }
