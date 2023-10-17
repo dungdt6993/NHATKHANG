@@ -145,7 +145,7 @@ namespace D69soft.Client.Pages.FIN
         {
             Stream streamTemplate = await Http.GetStreamAsync("xls/template.xlsx");
 
-            var xls = new Excel();
+            var xls = new Excel(); 
             await xls.TemplateWeatherForecastAsync(js, streamTemplate, invoiceVMs, "template.xlsx");
         }
 
