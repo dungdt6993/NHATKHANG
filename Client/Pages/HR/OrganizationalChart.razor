@@ -88,6 +88,33 @@
                     </div>
 
                     <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Email:</label>
+                            <InputText class="form-control form-control-sm" placeholder="Email" @bind-Value="@divisionVM.DivisionEmail" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Website:</label>
+                            <InputText class="form-control form-control-sm" placeholder="Website" @bind-Value="@divisionVM.DivisionWebsite" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label>Số TKNH:</label>
+                            <InputText class="form-control form-control-sm" placeholder="Số TKNH" @bind-Value="@divisionVM.DivisionBankAccount" />
+                        </div>
+                        <div class="form-group col-md-8">
+                            <label>Website:</label>
+                            <InputText class="form-control form-control-sm" placeholder="Website" @bind-Value="@divisionVM.DivisionBankName" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Logo:</label>
+                        <InputText class="form-control form-control-sm" placeholder="Logo" @bind-Value="@divisionVM.DivisionLogoUrl" />
+                    </div>
+
+                    <div class="form-row">
                         <div class="form-group clearfix">
                             <div class="icheck-success d-inline">
                                 <input type="radio" id="rAttType1" name="rAttType" value="true" checked="@(divisionVM.is2625 == 0)" @onchange="(() => divisionVM.is2625 = 0)">

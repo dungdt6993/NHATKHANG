@@ -55,11 +55,14 @@ namespace D69soft.Server.Controllers.HR
             var sql = "";
             if (_divisionVM.IsTypeUpdate == 0)
             {
-                sql += "Insert into HR.Division (DivisionID,DivisionName,DivisionShortName,DivisionAddress,DivisionTaxCode,DivisionTel,DivisionHotline,CodeDivs,isAutoEserial,is2625,INOUTNumber,isActive) Values (@DivisionID,@DivisionName,@DivisionShortName,@DivisionAddress,@DivisionTaxCode,@DivisionTel,@DivisionHotline,@CodeDivs,@isAutoEserial,@is2625,@INOUTNumber,@isActive)";
+                sql += "Insert into HR.Division (DivisionID,DivisionName,DivisionShortName,DivisionAddress,DivisionTaxCode,DivisionTel,DivisionHotline,DivisionEmail,DivisionWebsite,DivisionBankAccount,DivisionBankName,DivisionLogoUrl,CodeDivs,isAutoEserial,is2625,INOUTNumber,isActive) ";
+                sql += "Values (@DivisionID,@DivisionName,@DivisionShortName,@DivisionAddress,@DivisionTaxCode,@DivisionTel,@DivisionHotline,@DivisionEmail,@DivisionWebsite,@DivisionBankAccount,@DivisionBankName,@DivisionLogoUrl,@CodeDivs,@CodeDivs,@isAutoEserial,@is2625,@INOUTNumber,@isActive)";
             }
             if (_divisionVM.IsTypeUpdate == 1)
             {
-                sql += "Update HR.Division set DivisionName = @DivisionName, DivisionShortName = @DivisionShortName, DivisionAddress = @DivisionAddress, DivisionTaxCode = @DivisionTaxCode, DivisionTel = @DivisionTel, DivisionHotline = @DivisionHotline, CodeDivs = @CodeDivs, isAutoEserial = @isAutoEserial, is2625 = @is2625, INOUTNumber = @INOUTNumber, isActive = @isActive where DivisionID = @DivisionID";
+                sql += "Update HR.Division set DivisionName = @DivisionName, DivisionShortName = @DivisionShortName, DivisionAddress = @DivisionAddress, DivisionTaxCode = @DivisionTaxCode, DivisionTel = @DivisionTel, DivisionHotline = @DivisionHotline, ";
+                sql += "DivisionEmail = @DivisionEmail, DivisionWebsite = @DivisionWebsite, DivisionBankAccount = @DivisionBankAccount, DivisionBankName = @DivisionBankName, DivisionLogoUrl = @DivisionLogoUrl, ";
+                sql += "CodeDivs = @CodeDivs, isAutoEserial = @isAutoEserial, is2625 = @is2625, INOUTNumber = @INOUTNumber, isActive = @isActive where DivisionID = @DivisionID";
             }
             if (_divisionVM.IsTypeUpdate == 2)
             {

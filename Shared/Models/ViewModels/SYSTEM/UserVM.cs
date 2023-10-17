@@ -63,6 +63,11 @@ namespace D69soft.Shared.Models.ViewModels.SYSTEM
         public string DivisionAddress { get; set; }
         public string DivisionTel { get; set; }
         public string DivisionHotline { get; set; }
+        public string DivisionEmail { get; set; }
+        public string DivisionWebsite { get; set; }
+        public string DivisionBankAccount { get; set; }
+        public string DivisionBankName { get; set; }
+        public string DivisionLogoUrl { get; set; }
         public bool isAutoEserial { get; set; }
         public int is2625 { get; set; }
         public int INOUTNumber { get; set; }

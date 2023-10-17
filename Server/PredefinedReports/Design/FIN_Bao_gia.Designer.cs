@@ -699,7 +699,8 @@
             // pictureBox1
             // 
             this.pictureBox1.Dpi = 96F;
-            this.pictureBox1.ImageSource = new DevExpress.XtraPrinting.Drawing.ImageSource("img", resources.GetString("pictureBox1.ImageSource"));
+            this.pictureBox1.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "ImageUrl", "[DivisionLogoUrl]")});
             this.pictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.SizeF = new System.Drawing.SizeF(205.0787F, 130F);
@@ -939,7 +940,6 @@
         private DevExpress.XtraReports.UI.XRTableCell tableCell26;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell13;
         private DevExpress.XtraReports.UI.XRTableCell tableCell27;
-        private DevExpress.XtraReports.UI.XRPictureBox pictureBox1;
         private DevExpress.XtraReports.UI.XRRichText richText2;
         private DevExpress.XtraReports.UI.XRRichText richText1;
         private DevExpress.XtraReports.UI.XRTable xrTable3;
@@ -968,5 +968,6 @@
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell20;
         private DevExpress.XtraReports.UI.XRTableCell tableCell14;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell3;
+        private DevExpress.XtraReports.UI.XRPictureBox pictureBox1;
     }
 }
