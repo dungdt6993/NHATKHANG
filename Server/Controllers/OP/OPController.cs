@@ -57,7 +57,7 @@ namespace D69soft.Server.Controllers.OP
         [HttpGet("GetCruiseStatus")]
         public async Task<ActionResult<IEnumerable<CruiseStatusVM>>> GetCruiseStatus()
         {
-            var sql = "select * from OP.CruiseStatus order by NumDay ";
+            var sql = "select * from OP.CruiseStatus order by CruiseStatusCode ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)

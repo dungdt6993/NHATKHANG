@@ -700,7 +700,8 @@
             // 
             this.pictureBox1.Dpi = 96F;
             this.pictureBox1.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
-            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "ImageUrl", "[DivisionLogoUrl]")});
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "ImageUrl", "[DivisionLogoUrl]"),
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "ImageSource", "[DivisionLogoUrl]")});
             this.pictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.SizeF = new System.Drawing.SizeF(205.0787F, 130F);

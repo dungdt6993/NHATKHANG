@@ -615,10 +615,10 @@
                                                             {
                                                                 <td>
                                                                     <select class="selectpicker form-control form-control-sm"
-                                                                                 data-style="btn-selectpicker"
-                                                                                 data-container="body" data-live-search="true"
-                                                                                 data-show-subtext="true"
-                                                                                 @bind="_voucherDetailVM.TaxAccount">
+                                                                            data-style="btn-selectpicker"
+                                                                            data-container="body" data-live-search="true"
+                                                                            data-show-subtext="true"
+                                                                    @bind="_voucherDetailVM.TaxAccount">
 
                                                                         <option value=0>-----Chọn-----</option>
                                                                         @if (accountVMs != null)
@@ -1258,8 +1258,8 @@
                                     }
                                     @if (filterVM.FuncID == "FIN_Purchasing" || filterVM.FuncID == "FIN_Sale")
                                     {
-                                        <th class="text-center">Tổng tiền thanh toán</th>
-                                        <th class="text-center">Đã thanh toán</th>
+                                        <th class="text-right">Tổng tiền thanh toán</th>
+                                        <th class="text-right">Đã thanh toán</th>
                                         <th class="text-center">Tình trạng thanh toán</th>
                                     }
                                     <th>Loại chứng từ</th>
@@ -1335,6 +1335,29 @@
                                     </tr>
                                 </Virtualize>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    @if (filterVM.FuncID == "FIN_Purchasing" || filterVM.FuncID == "FIN_Sale")
+                                    {
+                                        <th></th>
+                                    }
+                                    <th></th>
+                                    @if (filterVM.FuncID == "FIN_Cash" || filterVM.FuncID == "FIN_Deposit")
+                                    {
+                                        <th class="text-right">@String.Format("{0:#,##0}",@voucherVMs.Select(x=>x.TotalAmount).Sum())</th>
+                                    }
+                                    @if (filterVM.FuncID == "FIN_Purchasing" || filterVM.FuncID == "FIN_Sale")
+                                    {
+                                        <th class="text-right">@String.Format("{0:#,##0}",@voucherVMs.Select(x=>x.TotalAmount).Sum())</th>
+                                        <th class="text-right">@String.Format("{0:#,##0}",@voucherVMs.Select(x=>x.PaymentAmount).Sum())</th>
+                                        <th></th>
+                                    }
+                                    <th></th>
+                                </tr>
+                            </tfoot>
                         </table>
                         if (voucherVMs.Count() <= 0)
                         {
@@ -1474,12 +1497,6 @@
                     {
                         Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),
                         End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)
-                    }
-                },
-            {"Ngày hôm qua", new DateRange
-                    {
-                        Start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(-1),
-                        End = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).AddDays(-1)
                     }
                 },
             {"Tháng này", new DateRange
