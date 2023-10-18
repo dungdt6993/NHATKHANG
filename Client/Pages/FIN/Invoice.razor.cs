@@ -137,15 +137,5 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
-        //Export Excel
-        HttpClient Http;
-        private async void ClickTemplateXLS()
-        {
-            Stream streamTemplate = await Http.GetStreamAsync("xls/template.xlsx");
-
-            var xls = new Excel();
-            await xls.TemplateWeatherForecastAsync(js, streamTemplate, invoiceVMs, "template.xlsx");
-        }
-
     }
 }
