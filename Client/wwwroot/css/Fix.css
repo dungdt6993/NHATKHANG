@@ -99,7 +99,11 @@
 }
 
 .layout-footer-fixed .wrapper .content-wrapper {
-    padding-bottom: calc(2.5rem + 1px);
+    padding-bottom: calc(3.5rem - 49px);
+}
+
+.wrapper .content-wrapper {
+    min-height: calc(100vh - calc(1.5rem + 1px) - calc(1.5rem + 1px));
 }
 
 /*blazored-typeahead*/
