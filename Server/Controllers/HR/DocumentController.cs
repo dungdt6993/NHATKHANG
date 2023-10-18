@@ -49,9 +49,9 @@ namespace D69soft.Server.Controllers.HR
                 sql += "where dot.GroupType = @GroupType and do.DivisionID=@DivisionID and (do.DepartmentID=@DepartmentID or coalesce(@DepartmentID,'')='') ";
             }
 
-            if (_filterVM.GroupType == "DocTender")
+            if (_filterVM.GroupType == "DocVehicle")
             {
-                sql += "join (select *, TenderName as DepartmentName from OP.Tender where TenderActive=1) cr on cr.TenderCode = do.DepartmentID ";
+                sql += "join (select *, VehicleName as DepartmentName from OP.Vehicle where VehicleActive=1) cr on cr.VehicleCode = do.DepartmentID ";
                 sql += "where dot.GroupType = @GroupType and do.DivisionID=@DivisionID and (do.DepartmentID=@DepartmentID or coalesce(@DepartmentID,'')='') ";
             }
 

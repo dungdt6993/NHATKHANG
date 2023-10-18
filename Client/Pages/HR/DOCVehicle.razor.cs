@@ -13,7 +13,7 @@ using D69soft.Client.Extensions;
 
 namespace D69soft.Client.Pages.HR
 {
-    partial class DOCTender
+    partial class DOCVehicle
     {
         [Inject] IJSRuntime js { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
@@ -34,7 +34,7 @@ namespace D69soft.Client.Pages.HR
         FilterVM filterVM = new();
 
         IEnumerable<DivisionVM> division_filter_list;
-        IEnumerable<TenderVM> tender_filter_list;
+        IEnumerable<VehicleVM> vehicle_filter_list;
 
         DocumentTypeVM doctypeVM = new();
         IEnumerable<DocumentTypeVM> doctype_filter_list;
@@ -43,7 +43,7 @@ namespace D69soft.Client.Pages.HR
         List<DocumentVM> documentVMs;
 
         //PermisFunc
-        bool DOC_DOCTender_Update;
+        bool DOC_DOCVehicle_Update;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -60,11 +60,11 @@ namespace D69soft.Client.Pages.HR
         {
             filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(filterVM.UserID, "DOC_DOCTender"))
+            if (await sysService.CheckAccessFunc(filterVM.UserID, "DOC_DOCVehicle"))
             {
                 logVM.LogUser = filterVM.UserID;
                 logVM.LogType = "FUNC";
-                logVM.LogName = "DOC_DOCTender";
+                logVM.LogName = "DOC_DOCVehicle";
                 await sysService.InsertLog(logVM);
             }
             else
@@ -72,16 +72,16 @@ namespace D69soft.Client.Pages.HR
                 navigationManager.NavigateTo("/");
             }
 
-            DOC_DOCTender_Update = await sysService.CheckAccessSubFunc(filterVM.UserID, "DOC_DOCTender_Update");
+            DOC_DOCVehicle_Update = await sysService.CheckAccessSubFunc(filterVM.UserID, "DOC_DOCVehicle_Update");
 
             //Initialize Filter
-            filterVM.GroupType = "DocTender";
+            filterVM.GroupType = "DocVehicle";
 
             division_filter_list = await organizationalChartService.GetDivisionList(filterVM);
             filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
 
-            filterVM.TenderCode = filterVM.DepartmentID = string.Empty;
-            tender_filter_list = await opServicesitory.GetTenders(filterVM);
+            filterVM.VehicleCode = filterVM.DepartmentID = string.Empty;
+            vehicle_filter_list = await opServicesitory.GetVehicles(filterVM);
 
             doctype_filter_list = await documentService.GetDocTypes(filterVM);
 
@@ -94,8 +94,8 @@ namespace D69soft.Client.Pages.HR
 
             filterVM.DivisionID = value;
 
-            filterVM.TenderCode = string.Empty;
-            tender_filter_list = await opServicesitory.GetTenders(filterVM);
+            filterVM.VehicleCode = string.Empty;
+            vehicle_filter_list = await opServicesitory.GetVehicles(filterVM);
 
             documentVMs = null;
 
@@ -104,11 +104,11 @@ namespace D69soft.Client.Pages.HR
             StateHasChanged();
         }
 
-        private void onchange_filter_tender(string value)
+        private void onchange_filter_vehicle(string value)
         {
             isLoading = true;
 
-            filterVM.TenderCode = filterVM.DepartmentID = value;
+            filterVM.VehicleCode = filterVM.DepartmentID = value;
 
             documentVMs = null;
 
@@ -141,7 +141,7 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        protected async Task GetDOCTenderList()
+        protected async Task GetDOCVehicleList()
         {
             isLoading = true;
 
@@ -162,7 +162,7 @@ namespace D69soft.Client.Pages.HR
                 documentVM = new();
 
                 documentVM.DivisionID = filterVM.DivisionID;
-                documentVM.GroupType = "DOCTender";
+                documentVM.GroupType = "DOCVehicle";
                 documentVM.IsDelFileScan = true;
             }
 
@@ -214,10 +214,10 @@ namespace D69soft.Client.Pages.HR
             {
                 await documentService.UpdateDocument(documentVM);
 
-                logVM.LogDesc = "Cập nhật giấy tờ xuồng thành công!";
+                logVM.LogDesc = "Cập nhật giấy tờ phương tiện thành công!";
                 await sysService.InsertLog(logVM);
 
-                await GetDOCTenderList();
+                await GetDOCVehicleList();
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Document");
                 await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
@@ -230,10 +230,10 @@ namespace D69soft.Client.Pages.HR
 
                     await documentService.UpdateDocument(documentVM);
 
-                    logVM.LogDesc = "Xoá giấy tờ xuồng thành công!";
+                    logVM.LogDesc = "Xoá giấy tờ phương tiện thành công!";
                     await sysService.InsertLog(logVM);
 
-                    await GetDOCTenderList();
+                    await GetDOCVehicleList();
 
                     await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Document");
                     await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
@@ -281,7 +281,7 @@ namespace D69soft.Client.Pages.HR
             if (_IsTypeUpdate == 0)
             {
                 doctypeVM = new();
-                doctypeVM.GroupType = "DOCTender";
+                doctypeVM.GroupType = "DOCVehicle";
             }
 
             if (_IsTypeUpdate == 1)

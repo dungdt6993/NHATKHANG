@@ -65,10 +65,6 @@ namespace D69soft.Client.Pages.FIN
         QuantitativeItemsVM quantitativeItemsVM = new();
         List<QuantitativeItemsVM> quantitativeItemsVMs;
 
-        //Sort table
-        private bool isSortedAscending;
-        private string activeSortColumn;
-
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)

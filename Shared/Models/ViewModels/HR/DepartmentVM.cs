@@ -3,7 +3,7 @@ using D69soft.Shared.Models.Entities.HR;
 
 namespace D69soft.Shared.Models.ViewModels.HR
 {
-    public class DepartmentVM : Department, DepartmentGroup, Division
+    public class DepartmentVM : Department, DepartmentGroup, Division, Shift
     {
         //Para
         public bool isActive { get; set; }
@@ -33,5 +33,12 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public int INOUTNumber { get; set; }
         public string DepartmentGroupID { get; set; }
         public string DepartmentGroupName { get; set; }
+        public string ShiftID { get; set; }
+        public string ShiftName { get; set; }
+        public DateTime? BeginTime { get; set; }
+        public DateTime? EndTime { get; set; }
+        public string ColorHEX { get; set; }
+        public bool isNight { get; set; }
+        public bool isSplit { get; set; }
     }
 }

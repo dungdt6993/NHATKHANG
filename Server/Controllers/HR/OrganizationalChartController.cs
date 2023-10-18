@@ -117,11 +117,11 @@ namespace D69soft.Server.Controllers.HR
             var sql = "";
             if (_departmentVM.IsTypeUpdate == 0)
             {
-                sql += "Insert into HR.Department (DepartmentID,DepartmentName,DepartmentGroupID,DivisionID,isActive) Values (@DepartmentID,@DepartmentName,@DepartmentGroupID,@DivisionID,@isActive) ";
+                sql += "Insert into HR.Department (DepartmentID,DepartmentName,DepartmentGroupID,ShiftID,DivisionID,isActive) Values (@DepartmentID,@DepartmentName,@DepartmentGroupID,@ShiftID,@DivisionID,@isActive) ";
             }
             if (_departmentVM.IsTypeUpdate == 1)
             {
-                sql += "Update HR.Department set DepartmentName = @DepartmentName,DepartmentGroupID = @DepartmentGroupID, isActive = @isActive where DepartmentID = @DepartmentID ";
+                sql += "Update HR.Department set DepartmentName = @DepartmentName,DepartmentGroupID = @DepartmentGroupID, ShiftID = @ShiftID, isActive = @isActive where DepartmentID = @DepartmentID ";
             }
             if (_departmentVM.IsTypeUpdate == 2)
             {

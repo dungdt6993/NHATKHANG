@@ -64,7 +64,7 @@ namespace D69soft.Shared.Models.ViewModels.SYSTEM
         public int TrnSubCode { get; set; }
 
         //OP
-        public string TenderCode { get; set; }
+        public string VehicleCode { get; set; }
 
         //RPT
         public string ReportName { get; set; }

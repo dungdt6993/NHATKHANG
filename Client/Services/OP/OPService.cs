@@ -15,13 +15,6 @@ namespace D69soft.Client.Services.OP
             _httpClient = httpClient;
         }
 
-        public async Task<IEnumerable<TenderVM>> GetTenders(FilterVM _filterVM)
-        {
-            var response = await _httpClient.PostAsJsonAsync($"api/OP/GetTenders", _filterVM);
-
-            return await response.Content.ReadFromJsonAsync<IEnumerable<TenderVM>>();
-        }
-
         //CruiseSchedule
         public async Task<List<CruiseScheduleVM>> GetCruiseSchedules(FilterVM _filterVM)
         {
@@ -42,24 +35,31 @@ namespace D69soft.Client.Services.OP
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        //TenderSchedule
-        public async Task<IEnumerable<TenderScheduleVM>> GetTenderSchedules(FilterVM _filterVM)
+        //VehicleSchedule
+        public async Task<IEnumerable<VehicleVM>> GetVehicles(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/OP/GetTenderSchedules", _filterVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/OP/GetVehicles", _filterVM);
 
-            return await response.Content.ReadFromJsonAsync<IEnumerable<TenderScheduleVM>>();
+            return await response.Content.ReadFromJsonAsync<IEnumerable<VehicleVM>>();
         }
 
-        public async Task<bool> UpdateTenderShift(TenderScheduleVM _tenderScheduleVM)
+        public async Task<IEnumerable<VehicleScheduleVM>> GetVehicleSchedules(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/OP/UpdateTenderShift", _tenderScheduleVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/OP/GetVehicleSchedules", _filterVM);
+
+            return await response.Content.ReadFromJsonAsync<IEnumerable<VehicleScheduleVM>>();
+        }
+
+        public async Task<bool> UpdateVehicleShift(VehicleScheduleVM _tenderScheduleVM)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/OP/UpdateVehicleShift", _tenderScheduleVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        public async Task<bool> UpdateTenderStatus(TenderScheduleVM _tenderScheduleVM)
+        public async Task<bool> UpdateVehicleStatus(VehicleScheduleVM _tenderScheduleVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/OP/UpdateTenderStatus", _tenderScheduleVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/OP/UpdateVehicleStatus", _tenderScheduleVM);
 
             return await response.Content.ReadFromJsonAsync<bool>();
         }

@@ -4,13 +4,13 @@ using Model.Entities.OP;
 
 namespace Model.ViewModels.OP
 {
-    public class TenderScheduleVM : Tender, TenderSchedule, Shift
+    public class VehicleScheduleVM : Vehicle, VehicleSchedule, Shift
     {
-        public string TenderCode { get; set; }
-        public string TenderName { get; set; }
-        public bool TenderActive { get; set; }
+        public string VehicleCode { get; set; }
+        public string VehicleName { get; set; }
+        public bool VehicleActive { get; set; }
         public DateTime dDate { get; set; }
-        public bool TenderStatus { get; set; }
+        public bool VehicleStatus { get; set; }
         public string ShiftID { get; set; }
         public string ShiftName { get; set; }
         public DateTime? BeginTime { get; set; }

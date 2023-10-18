@@ -64,12 +64,12 @@
                                                         else
                                                         {
                                                             <InputText type="text" class="form-control form-control-sm text-uppercase rounded-0 dutyroster-input"
-                                                           id="@dutyRosterVM.InputID"
-                                                           @attributes="@dutyRosterVM.InputAttributes"
-                                                           onClick="this.select();"
-                                                           ValueExpression="@(()=>dutyRosterVM.WorkShift)"
-                                                           Value="@dutyRosterVM.WorkShift"
-                                                           ValueChanged="@((string value) =>onchange_updateshift(value, dutyRosterVM))">
+                                                                       id="@dutyRosterVM.InputID"
+                                                            @attributes="@dutyRosterVM.InputAttributes"
+                                                                       onClick="this.select();"
+                                                                       ValueExpression="@(()=>dutyRosterVM.WorkShift)"
+                                                                       Value="@dutyRosterVM.WorkShift"
+                                                                       ValueChanged="@((string value) =>onchange_updateshift(value, dutyRosterVM))">
                                                             </InputText>
                                                         }
                                                     </td>
@@ -168,12 +168,12 @@
     </div>
 </div>
 
-<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_TenderTrf">
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_VehicleTrf">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <span style="color:#ffc107">@tenderScheduleVM.TenderName</span>
+                    <span style="color:#ffc107">@vehicleScheduleVM.VehicleName</span>
                 </h5>
 
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -181,16 +181,16 @@
                 </button>
             </div>
             <div class="modal-body">
-                <EditForm Model="tenderScheduleVM">
+                <EditForm Model="vehicleScheduleVM">
 
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label">Điều động:</label>
                         <div class="col-sm-9">
                             <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker"
                                          data-container="body" data-live-search="true"
-                                         ValueExpression="@(()=>tenderScheduleVM.ShiftID)"
-                                         Value="@tenderScheduleVM.ShiftID"
-                                         ValueChanged="@((string value) =>onchange_updateTenderShift(value))">
+                                         ValueExpression="@(()=>vehicleScheduleVM.ShiftID)"
+                                         Value="@vehicleScheduleVM.ShiftID"
+                                         ValueChanged="@((string value) =>onchange_updateVehicleShift(value))">
                                 @if (shiftVMs != null)
                                 {
                                     @foreach (var _shiftVM in shiftVMs)
@@ -206,8 +206,8 @@
                         <label class="col-sm-3 col-form-label"></label>
                         <div class="col-sm-9">
                             <div class="icheck-success d-inline">
-                                <input type="radio" id="TenderStatus1" name="TenderStatus" checked="@(tenderScheduleVM.TenderStatus == true)" @onchange="(() => onclick_TenderStatus(true))">
-                                <label for="TenderStatus1">
+                                <input type="radio" id="VehicleStatus1" name="VehicleStatus" checked="@(vehicleScheduleVM.VehicleStatus == true)" @onchange="(() => onclick_VehicleStatus(true))">
+                                <label for="VehicleStatus1">
                                     Hoạt động
                                 </label>
                             </div>
@@ -215,8 +215,8 @@
                                 &nbsp;&nbsp;
                             </label>
                             <div class="icheck-danger d-inline">
-                                <input type="radio" id="TenderStatus2" name="TenderStatus" checked="@(tenderScheduleVM.TenderStatus == false)" @onchange="(() => onclick_TenderStatus(false))">
-                                <label for="TenderStatus2">
+                                <input type="radio" id="VehicleStatus2" name="VehicleStatus" checked="@(vehicleScheduleVM.VehicleStatus == false)" @onchange="(() => onclick_VehicleStatus(false))">
+                                <label for="VehicleStatus2">
                                     Sửa chữa
                                 </label>
                             </div>
@@ -246,7 +246,7 @@
                         <div class="input-group">
                             <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask"
                                              Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))"
-                                             @bind-StartDate="filterVM.dDate" OnRangeSelect="OnRangeSelect_dDate" />
+                            @bind-StartDate="filterVM.dDate" OnRangeSelect="OnRangeSelect_dDate" />
 
                             <div class="input-group-append">
                                 <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
@@ -329,10 +329,8 @@
                             <th class="text-center" style="background-color: #E26C0A; color: white;">Ca làm việc</th>
                             <th class="text-center" style="background-color: #E26C0A; color: white;">Trạng thái</th>
                             <th class="text-center" style="background-color: #E26C0A; color: white;">Số khách</th>
-                            @if (dutyRosterVMs.Where(x => x.PositionGroupID == "LAI").Count() > 0)
-                            {
-                                <th class="text-center" style="background-color: #E26C0A; color: white;">Xuồng</th>
-                            }
+
+                            <th class="text-center" style="background-color: #E26C0A; color: white;">Xuồng</th>
 
                             @foreach (var _positionGrp in dutyRosterVMs.Select(x => new { x.PositionGroupID, x.PositionGroupName }).DistinctBy(x => x.PositionGroupID))
                             {
@@ -350,23 +348,20 @@
                                 <th class="text-center" style="background-color: @_shift.CruiseStatus_ColorHEX;">@(_shift.isCI ? _shift.CruiseStatusCode : string.Empty)</th>
                                 <th class="text-center" style="background-color: #FFE699;">@_shift.GuestNumber</th>
 
-                                @if (dutyRosterVMs.Where(x => x.PositionGroupID == "LAI").Count() > 0)
-                                {
-                                    <th class="text-center" style="background-color: #FFE699;">
-                                        @foreach (var _tender in tenderScheduleVMs.Where(x => x.ShiftID == _shift.ShiftID))
+                                <th class="text-center" style="background-color: #FFE699;">
+                                    @foreach (var _vehicle in vehicleScheduleVMs.Where(x => x.ShiftID == _shift.ShiftID))
+                                    {
+                                        @if (_vehicle.VehicleStatus)
                                         {
-                                            @if (_tender.TenderStatus)
-                                            {
-                                                <a style="cursor: pointer;" @onclick="(() => InitializeModalUpdate_TenderTrf(_tender))">
+                                            <a style="cursor: pointer;" @onclick="(() => InitializeModalUpdate_VehicleTrf(_vehicle))">
 
-                                                    <span>@_tender.TenderName</span>
+                                                <span>@_vehicle.VehicleName</span>
 
-                                                    <br />
-                                                </a>
-                                            }
+                                                <br />
+                                            </a>
                                         }
-                                    </th>
-                                }
+                                    }
+                                </th>
 
                                 @foreach (var _positionGrp in dutyRosterVMs.Select(x => new { x.PositionGroupNo, x.PositionGroupID, x.PositionGroupName }).DistinctBy(x => x.PositionGroupID).OrderBy(x => x.PositionGroupNo))
                                 {
@@ -414,54 +409,54 @@
                 </table>
 
                 <table class="table table-sm table-bordered text-nowrap tblFontSizeMin">
-                    <thead>
-                        <tr>
-                            <th class="text-center" style="background-color: #C00000; color: white;">Danh sách Xuồng</th>
-                            <th class="text-center" style="background-color: #C00000; color: white;">Điều động</th>
-                            <th class="text-center" style="background-color: #C00000; color: white;">Trạng thái</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var _tender in tenderScheduleVMs)
-                        {
+                        <thead>
                             <tr>
+                                <th class="text-center" style="background-color: #C00000; color: white;">Danh sách phương tiện</th>
+                                <th class="text-center" style="background-color: #C00000; color: white;">Điều động</th>
+                                <th class="text-center" style="background-color: #C00000; color: white;">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var _vehicle in vehicleScheduleVMs)
+                            {
+                                <tr>
 
-                                <th class="text-center" style="background-color: #FFE699;">
+                                    <th class="text-center" style="background-color: #FFE699;">
 
-                                    <a class="@(!_tender.TenderStatus?"text-danger":"")" style="cursor: pointer;" @onclick="(() => InitializeModalUpdate_TenderTrf(_tender))">
+                                        <a class="@(!_vehicle.VehicleStatus?"text-danger":"")" style="cursor: pointer;" @onclick="(() => InitializeModalUpdate_VehicleTrf(_vehicle))">
 
-                                        <span>@_tender.TenderName</span>
+                                            <span>@_vehicle.VehicleName</span>
 
-                                        @if (!_tender.TenderStatus)
+                                            @if (!_vehicle.VehicleStatus)
+                                            {
+                                                <i class="fa-solid fa-wrench text-danger"></i>
+                                            }
+
+                                        </a>
+
+                                    </th>
+
+                                    <th class="text-center" style="background-color: #FFE699;">
+                                        @_vehicle.ShiftID
+                                    </th>
+
+                                    <th class="text-center" style="background-color: #FFE699;">
+
+                                        @if (!_vehicle.VehicleStatus)
                                         {
-                                            <i class="fa-solid fa-wrench text-danger"></i>
+                                            <span class="text-danger">Sửa chữa</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-success">Hoạt động</span>
                                         }
 
-                                    </a>
+                                    </th>
 
-                                </th>
-
-                                <th class="text-center" style="background-color: #FFE699;">
-                                    @_tender.ShiftID
-                                </th>
-
-                                <th class="text-center" style="background-color: #FFE699;">
-
-                                    @if (!_tender.TenderStatus)
-                                    {
-                                        <span class="text-danger">Sửa chữa</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="text-success">Hoạt động</span>
-                                    }
-
-                                </th>
-
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
 
                 if (dutyRosterVMs.Count() <= 0)
                 {

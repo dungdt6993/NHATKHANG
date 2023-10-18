@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Model.ViewModels.OP
 {
-    public class TenderVM : Tender
+    public class VehicleVM : Vehicle
     {
-        public string TenderCode { get; set; }
-        public string TenderName { get; set; }
-        public bool TenderActive { get; set; }
+        public string VehicleCode { get; set; }
+        public string VehicleName { get; set; }
+        public bool VehicleActive { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿@page "/DOC/DOCTender"
+﻿@page "/DOC/DOCVehicle"
 
 <Loading isLoading="@isLoading"></Loading>
 <LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
@@ -24,18 +24,18 @@
                 <div class="modal-body">
 
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Xuồng</label>
+                        <label class="col-sm-2 col-form-label">Phương tiện</label>
                         <div class="col-sm-10">
                             <InputSelect class="selectpicker form-control form-control-sm"
                                          data-style="btn-selectpicker" data-container="body"
                                          data-live-search="true" data-show-subtext="true"
                                          @bind-Value="documentVM.DepartmentID">
                                 <option value=@String.Empty>-----Chọn-----</option>
-                                @if (tender_filter_list != null)
+                                @if (vehicle_filter_list != null)
                                 {
-                                    @foreach (var _tender_filter in tender_filter_list.Where(x => x.TenderActive))
+                                    @foreach (var _vehicle_filter in vehicle_filter_list.Where(x => x.VehicleActive))
                                     {
-                                        <option value="@_tender_filter.TenderCode">@_tender_filter.TenderName</option>
+                                        <option value="@_vehicle_filter.VehicleCode">@_vehicle_filter.VehicleName</option>
                                     }
                                 }
                             </InputSelect>
@@ -233,15 +233,15 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterVM.TenderCode)"
-                                 Value="@filterVM.TenderCode"
-                                 ValueChanged="@((string value) => onchange_filter_tender(value))">
-                        <option value=@string.Empty>-----Xuồng-----</option>
-                        @if (tender_filter_list != null)
+                                 ValueExpression="@(()=>filterVM.VehicleCode)"
+                                 Value="@filterVM.VehicleCode"
+                                 ValueChanged="@((string value) => onchange_filter_vehicle(value))">
+                        <option value=@string.Empty>-----Phương tiện-----</option>
+                        @if (vehicle_filter_list != null)
                         {
-                            @foreach (var _tender_filter in tender_filter_list.Where(x => x.TenderActive))
+                            @foreach (var _vehicle_filter in vehicle_filter_list.Where(x => x.VehicleActive))
                             {
-                                <option data-subtext="@_tender_filter.TenderCode" value="@_tender_filter.TenderCode">@_tender_filter.TenderName</option>
+                                <option data-subtext="@_vehicle_filter.VehicleCode" value="@_vehicle_filter.VehicleCode">@_vehicle_filter.VehicleName</option>
                             }
                         }
                     </InputSelect>
@@ -297,7 +297,7 @@
             </div>
 
             <div class="col-sm-1 col-md-1">
-                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetDOCTenderList())">
+                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetDOCVehicleList())">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -311,7 +311,7 @@
         <div class="card card-warning card-outline">
 
             <div class="card-header text-right">
-                @if (DOC_DOCTender_Update)
+                @if (DOC_DOCVehicle_Update)
                 {
                     <button type="button" class="btn btn-sm btn-success" @onclick="()=>InitializeModalUpdate_Document(0, documentVM)"><i class="fa-solid fa-xl fa-plus"></i> Thêm mới</button>
                 }
@@ -325,13 +325,13 @@
                         <thead class="thead-light">
                             <tr>
                                 <th class="text-center">File Scan</th>
-                                <th>Xuồng</th>
+                                <th>Phương tiện</th>
                                 <th>Loại tài liệu</th>
                                 <th class="text-center">Số hiệu</th>
                                 <th class="text-center">Ngày cấp</th>
                                 <th class="text-center">Ngày hết hạn</th>
                                 <th>Ghi chú</th>
-                                @if (DOC_DOCTender_Update)
+                                @if (DOC_DOCVehicle_Update)
                                 {
                                     <th></th>
                                 }
@@ -352,7 +352,7 @@
                                     <td class="text-center">@(_documentVM.DateOfIssue.HasValue ? _documentVM.DateOfIssue.Value.ToString("dd/MM/yyyy") : "")</td>
                                     <td class="text-center">@(_documentVM.ExpDate.HasValue ? _documentVM.ExpDate.Value.ToString("dd/MM/yyyy") : "")</td>
                                     <td>@_documentVM.DocNote</td>
-                                    @if (DOC_DOCTender_Update)
+                                    @if (DOC_DOCVehicle_Update)
                                     {
                                         <td class="text-center">
                                             <button class="btn btn-sm btn-default btn-xs" @onclick="(() => InitializeModalUpdate_Document(1, _documentVM))"><i class="fa-solid fa-pen"></i></button>

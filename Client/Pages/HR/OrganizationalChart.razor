@@ -246,6 +246,22 @@
                         <ValidationMessage For="@(() => departmentVM.DepartmentName)" />
                     </div>
 
+                    <div class="form-group">
+                        <label>Ca làm việc mặc định:</label>
+                        <InputSelect class="selectpicker form-control form-control-sm"
+                                     data-style="btn-selectpicker" data-container="body"
+                                     data-live-search="true" data-show-subtext="true"
+                        @bind-Value="departmentVM.ShiftID">
+                            <option value=@String.Empty>-----Chọn-----</option>
+                            @if (shiftVMs != null)
+                            {
+                                @foreach (var _shiftVM in shiftVMs.Where(x=>x.isOFF==0))
+                                {
+                                    <option data-subtext="@_shiftVM.ShiftID" value="@_shiftVM.ShiftID">@_shiftVM.ShiftName</option>
+                                }
+                            }
+                        </InputSelect>
+                    </div>
 
                     <div class="form-row align-items-center">
                         <div class="icheck-success d-inline">

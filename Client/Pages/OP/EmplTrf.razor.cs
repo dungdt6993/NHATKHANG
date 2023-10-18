@@ -42,9 +42,9 @@ namespace D69soft.Client.Pages.OP
 
         IEnumerable<DutyRosterVM> dutyRosterNotes;
 
-        //Tender
-        TenderScheduleVM tenderScheduleVM = new();
-        IEnumerable<TenderScheduleVM> tenderScheduleVMs;
+        //Vehicle
+        VehicleScheduleVM vehicleScheduleVM = new();
+        IEnumerable<VehicleScheduleVM> vehicleScheduleVMs;
 
         //Shift
         IEnumerable<ShiftVM> shiftVMs;
@@ -176,7 +176,7 @@ namespace D69soft.Client.Pages.OP
 
             dutyRosterNotes = await dutyRosterService.GetDutyRosterNotes(filterVM);
 
-            tenderScheduleVMs = await opService.GetTenderSchedules(filterVM);
+            vehicleScheduleVMs = await opService.GetVehicleSchedules(filterVM);
 
             isLoading = false;
         }
@@ -312,24 +312,24 @@ namespace D69soft.Client.Pages.OP
             StateHasChanged();
         }
 
-        private async Task InitializeModalUpdate_TenderTrf(TenderScheduleVM _tenderScheduleVM)
+        private async Task InitializeModalUpdate_VehicleTrf(VehicleScheduleVM _vehicleScheduleVM)
         {
             isLoading = true;
 
-            tenderScheduleVM = _tenderScheduleVM;
+            vehicleScheduleVM = _vehicleScheduleVM;
 
-            await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_TenderTrf");
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_VehicleTrf");
 
             isLoading = false;
         }
 
-        private async void onchange_updateTenderShift(string value)
+        private async void onchange_updateVehicleShift(string value)
         {
             isLoading = true;
 
-            tenderScheduleVM.ShiftID = value.Replace("/", ",").Trim().ToUpper();
+            vehicleScheduleVM.ShiftID = value.Replace("/", ",").Trim().ToUpper();
 
-            await opService.UpdateTenderShift(tenderScheduleVM);
+            await opService.UpdateVehicleShift(vehicleScheduleVM);
 
             await GetEmplTrfList();
 
@@ -340,13 +340,13 @@ namespace D69soft.Client.Pages.OP
             StateHasChanged();
         }
 
-        private async void onclick_TenderStatus(bool _tenderStatus)
+        private async void onclick_VehicleStatus(bool _vehicleStatus)
         {
             isLoading = true;
 
-            tenderScheduleVM.TenderStatus = _tenderStatus;
+            vehicleScheduleVM.VehicleStatus = _vehicleStatus;
 
-            await opService.UpdateTenderStatus(tenderScheduleVM);
+            await opService.UpdateVehicleStatus(vehicleScheduleVM);
 
             await GetEmplTrfList();
 

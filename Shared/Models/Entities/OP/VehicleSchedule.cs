@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace D69soft.Shared.Models.Entities.OP
 {
-    interface TenderSchedule
+    interface VehicleSchedule
     {
         public DateTime dDate { get; set; }
-        public bool TenderStatus { get; set; }
+        public bool VehicleStatus { get; set; }
     }
 }
