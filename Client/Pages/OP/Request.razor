@@ -12,7 +12,7 @@
 
             <div class="col-md-3">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterVM.DivisionID)"
                                  Value="@filterVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
@@ -29,7 +29,7 @@
 
             <div class="col-sm-4">
                 <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                  ValueExpression="@(()=>filterVM.DepartmentID)"
                                  Value="@filterVM.DepartmentID"
                                  ValueChanged="@((string value) => onchange_filter_department(value))">
@@ -49,7 +49,7 @@
                 <div class="form-group">
                     <DateRangePicker Ranges="DateRanges" Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))" ApplyLabel="Thực hiện" CancelLabel="Hủy" CustomRangeLabel="Chọn ngày" OnRangeSelect="OnRangeSelect">
                         <PickerTemplate Context="c">
-                            <div id="@c.Id" @onclick="c.Toggle" class="form-control" style="cursor: pointer;">
+                            <div id="@c.Id" @onclick="c.Toggle" class="form-control form-control-sm" style="cursor: pointer;">
                                 <i class="fa-solid fa-calendar-days"></i>&nbsp;
 
                                 <span>@c.FormattedRange @(string.IsNullOrEmpty(c.FormattedRange) ? "Chọn ngày..." : "")</span>
@@ -66,7 +66,7 @@
             <div class="col-sm-2">
                 @if (EA_Request_Create)
                 {
-                    <a href="/EA/Cart" class="btn btn-block btn-success"><i class="fa-solid fa-xl fa-plus"></i> Tạo mới yêu cầu</a>
+                    <a href="/EA/Cart" class="btn btn-sm btn-block btn-success"><i class="fa-solid fa-xl fa-plus"></i> Tạo mới yêu cầu</a>
                 }
             </div>
         </div>
@@ -85,7 +85,7 @@
                     <li class="nav-item"><a class="nav-link" href="#nothandover" data-toggle="tab" @onclick="@(() => FilterRequest("nothandover"))">Chưa bàn giao</a></li>
                 </ul>
             </div>
-            <div class="card-body table-responsive p-0" style="height: calc(100vh - 233px);">
+            <div class="card-body table-responsive p-0" style="height: calc(100vh - 192px);">
                 <div class="tab-content">
                     <div class="tab-pane active" id="all">
 
@@ -183,8 +183,8 @@
                                                             @if (!_requestVM.isSendApprove && (_requestVM.DirectManager_Eserial == filterVM.UserID || _requestVM.ControlDept_Eserial == filterVM.UserID || _requestVM.Approve_Eserial == filterVM.UserID))
                                                             {
                                                                 <input class="form-control text-center text-bold @(_requestVM_detail.QtyApproved>_requestVM_detail.Qty?"text-success":"") @(_requestVM_detail.QtyApproved<_requestVM_detail.Qty?"text-danger":"")"
-                                                           @onchange="@((ChangeEventArgs e) => onchange_QtyApproved(e, _requestVM_detail))" value="@_requestVM_detail.QtyApproved"
-                                                           onClick="this.select();" style="min-width: 50px;" />
+                                                                @onchange="@((ChangeEventArgs e) => onchange_QtyApproved(e, _requestVM_detail))" value="@_requestVM_detail.QtyApproved"
+                                                                       onClick="this.select();" style="min-width: 50px;" />
                                                             }
                                                             else
                                                             {
@@ -399,7 +399,11 @@
                                 </Placeholder>
                             </Virtualize>
 
-                            <a class="btn btn-block btn-outline-secondary" @onclick="(() => GetMoreRequests())"><i class="fa-solid fa-eye"></i> Hiển thị thêm...</a>
+                            @if (requestVMs.Count() >= 50)
+                            {
+                                <a class="btn btn-block btn-outline-secondary" @onclick="(() => GetMoreRequests())"><i class="fa-solid fa-eye"></i> Hiển thị thêm...</a>
+                            }
+
 
                             @if (requestVMs.Count() <= 0)
                             {

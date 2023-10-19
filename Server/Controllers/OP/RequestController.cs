@@ -168,7 +168,7 @@ namespace D69soft.Server.Controllers.OP
 
             if (_filterVM.RequestStatus == "nothandover")
             {
-                sql += "where sv.VActive = 0 ";
+                sql += "where v.VActive = 0 ";
             }
 
             sql += "order by r.DateOfRequest desc ";

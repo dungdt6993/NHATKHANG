@@ -72,7 +72,7 @@ namespace D69soft.Client.Pages.OP
                 navigationManager.NavigateTo("/");
             }
 
-            filterVM.DivisionID = "Bhaya";
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
 
             departments = await organizationalChartService.GetDepartmentList(filterVM);
 

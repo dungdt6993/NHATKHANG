@@ -82,7 +82,7 @@ namespace D69soft.Client.Pages.OP
             EA_Request_Create = await sysService.CheckAccessSubFunc(filterVM.UserID, "EA_Request_Create");
 
             division_filter_list = await organizationalChartService.GetDivisionList(filterVM);
-            filterVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
 
             filterVM.DepartmentID = filterVM.DepartmentID = string.Empty;
             department_filter_list = await organizationalChartService.GetDepartmentList(filterVM);

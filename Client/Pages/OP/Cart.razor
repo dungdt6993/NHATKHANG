@@ -62,7 +62,7 @@
         <div class="row">
 
             <div class="col-12 col-sm-8">
-                <div class="card card-purple card-outline">
+                <div class="card card-warning card-outline">
                     <div class="card-header">
                         <h3 class="card-title">
                             <i class="fa-solid fa-basket-shopping"></i> Giỏ hàng của bạn
@@ -74,7 +74,7 @@
                     @if (cartVMs != null)
                     {
                         <!-- /.card-header -->
-                        <div class="card-body table-responsive p-0" style="height: calc(100vh - 185px);">
+                        <div class="card-body table-responsive p-0" style="height: calc(100vh - 150px);">
                             @if (cartVMs != null)
                             {
                                 <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin">
@@ -128,12 +128,12 @@
             </div>
 
             <div class="col-12 col-sm-4">
-                <div class="card card-purple card-outline">
+                <div class="card card-warning card-outline">
                     <div class="card-header text-center">
                         <input type="search" style="font-size: 1.25rem;" class="form-control form-control-lg" placeholder="Tìm kiếm mặt hàng..." @bind="onchange_SearchValues" @bind:event="oninput">
                     </div>
                     <!-- /.card-header -->
-                    <div class="card-body p-0" style="overflow: auto; height: calc(100vh - 151px);">
+                    <div class="card-body p-0" style="overflow: auto; height: calc(100vh - 117px);">
                         @if (itemsVMs != null)
                         {
                             <ul class="products-list product-list-in-card pl-2 pr-2">
