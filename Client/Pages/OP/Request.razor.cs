@@ -245,13 +245,17 @@ namespace D69soft.Client.Pages.OP
                             voucherVM.DivisionID = _requestVM.DivisionID;
 
                             voucherVM.IsTypeUpdate = 0;
-                            voucherVM.VTypeID = "STOCK_Transfer";
-                            voucherVM.VSubTypeID = "STOCK_Transfer_Internal";
-                            voucherVM.VReference = _requestVM.RequestCode;
+                            voucherVM.VTypeID = "FIN_Output";
+                            voucherVM.ITypeCode = "HH";
+                            voucherVM.VCode = "XK";
                             voucherVM.VDesc = $"Xuất kho theo yêu cầu số {_requestVM.RequestCode} - {_requestVM.ReasonOfRequest} ";
                             voucherVM.VDate = _requestVM.TimeSendApprove;
 
-                            voucherDetailVMs = await requestService.GetRequestDetailToStockVoucherDetail(_requestVM.RequestCode);
+                            voucherVM.VReference = _requestVM.RequestCode;
+
+                            voucherVM.VActive = false;
+
+                            voucherDetailVMs = await requestService.GetRequestDetailVoucherDetail(_requestVM.RequestCode);
 
                             await voucherService.UpdateVoucher(voucherVM, voucherDetailVMs);
                         }
@@ -301,12 +305,6 @@ namespace D69soft.Client.Pages.OP
         protected async Task PrintRequest(String _requestCode)
         {
             ReportName = "EA_Request_PrintRequest?RequestCode=" + _requestCode + "";
-            await js.InvokeAsync<object>("ShowModal", "#InitializeModalView_Rpt");
-        }
-
-        protected async Task PrintHandover(String _requestCode)
-        {
-            ReportName = "EA_Request_PrintHandover?RequestCode=" + _requestCode + "";
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalView_Rpt");
         }
 

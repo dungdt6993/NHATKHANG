@@ -204,8 +204,8 @@ namespace D69soft.Server.Controllers.OP
 
                 if (!_requestVM.isSendApprove)
                 {
-                    sql += "delete FIN.StockVoucherDetail where VNumber in (select VNumber from FIN.StockVoucher where Reference_VNumber=@RequestCode and coalesce(VActive,0)=0) ";
-                    sql += "delete from FIN.StockVoucher where Reference_VNumber=@RequestCode and coalesce(VActive,0)=0 ";
+                    sql += "delete FIN.VoucherDetail where VNumber in (select VNumber from FIN.Voucher where VReference=@RequestCode and coalesce(VActive,0)=0) ";
+                    sql += "delete from FIN.Voucher where VReference=@RequestCode and coalesce(VActive,0)=0 ";
                 }
 
             }
@@ -258,7 +258,7 @@ namespace D69soft.Server.Controllers.OP
         }
 
         //Get RequestDetail to Stock
-        [HttpGet("GetRequestDetailToStockVoucherDetail/{_RequestCode}")]
+        [HttpGet("GetRequestDetailVoucherDetail/{_RequestCode}")]
         public async Task<ActionResult<List<VoucherDetailVM>>> GetRequestDetailToStockVoucherDetail(string _RequestCode)
         {
             var sql = "select rd.ICode, QtyApproved as Qty, INote + case when coalesce(RDNote,'') <> '' then ', ' + RDNote else '' end as VDNote, i.StockDefault as FromStockCode, 1 as IsReference from EA.RequestDetail rd ";

@@ -80,7 +80,7 @@ namespace D69soft.Client.Pages.OP
 
             filterVM.IActive = true;
 
-            search_itemsVMs = itemsVMs = await inventoryService.GetItemsList(filterVM);
+            search_itemsVMs = itemsVMs = (await inventoryService.GetItemsList(filterVM)).Where(x=>x.ITypeCode=="HH").ToList();
 
             isLoadingScreen = false;
         }

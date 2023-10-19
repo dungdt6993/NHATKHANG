@@ -21,6 +21,7 @@ namespace D69soft.Client.Services
             services.AddTransient<PurchasingService>();
             services.AddTransient<InventoryService>();
             services.AddTransient<VoucherService>();
+            services.AddTransient<CustomerService>();
 
             //HR
             services.AddTransient<ProfileService>();
