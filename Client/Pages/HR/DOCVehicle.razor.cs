@@ -34,6 +34,8 @@ namespace D69soft.Client.Pages.HR
         FilterVM filterVM = new();
 
         IEnumerable<DivisionVM> division_filter_list;
+
+        VehicleVM vehicleVM = new();
         IEnumerable<VehicleVM> vehicle_filter_list;
 
         DocumentTypeVM doctypeVM = new();
@@ -41,6 +43,8 @@ namespace D69soft.Client.Pages.HR
 
         DocumentVM documentVM = new();
         List<DocumentVM> documentVMs;
+
+        IEnumerable<DepartmentVM> departmentVMs;
 
         //PermisFunc
         bool DOC_DOCVehicle_Update;
@@ -341,6 +345,82 @@ namespace D69soft.Client.Pages.HR
                 else
                 {
                     doctypeVM.IsTypeUpdate = 1;
+                }
+            }
+
+            isLoading = false;
+        }
+
+        //Update Vehicle
+        private async Task InitializeModalUpdate_Vehicle(int _IsTypeUpdate)
+        {
+            isLoading = true;
+
+            departmentVMs = await organizationalChartService.GetDepartmentList(filterVM);
+
+            if (_IsTypeUpdate == 0)
+            {
+                vehicleVM = new();
+                vehicleVM.VehicleActive = true;
+            }
+
+            if (_IsTypeUpdate == 1)
+            {
+                vehicleVM = vehicle_filter_list.First(x => x.VehicleCode == documentVM.DepartmentID);
+            }
+
+            vehicleVM.IsTypeUpdate = _IsTypeUpdate;
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_Vehicle");
+
+            isLoading = false;
+        }
+        private async Task UpdateVehicle(EditContext _formVehicleVM, int _IsTypeUpdate)
+        {
+            vehicleVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formVehicleVM.Validate()) return;
+
+            isLoading = true;
+
+            if (vehicleVM.IsTypeUpdate != 2)
+            {
+                await opServicesitory.UpdateVehicle(vehicleVM);
+
+                logVM.LogDesc = "Cập nhật phương tiện thành công!";
+                await sysService.InsertLog(logVM);
+
+                vehicle_filter_list = await opServicesitory.GetVehicles(filterVM);
+
+                await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Vehicle");
+                await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
+            }
+            else
+            {
+                if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
+                {
+                    int affectedRows = await opServicesitory.UpdateVehicle(vehicleVM);
+
+                    if (affectedRows > 0)
+                    {
+                        logVM.LogDesc = "Xóa loại phương tiện thành công!";
+                        await sysService.InsertLog(logVM);
+
+                        documentVM.DepartmentID = String.Empty;
+                        vehicle_filter_list = await opServicesitory.GetVehicles(filterVM);
+
+                        await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Vehicle");
+                        await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
+                    }
+                    else
+                    {
+                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu liên quan.", SweetAlertMessageType.error);
+                        vehicleVM.IsTypeUpdate = 1;
+                    }
+                }
+                else
+                {
+                    vehicleVM.IsTypeUpdate = 1;
                 }
             }
 

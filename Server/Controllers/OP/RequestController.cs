@@ -157,7 +157,7 @@ namespace D69soft.Server.Controllers.OP
             sql += "join FIN.Items i on i.ICode = rdtl.ICode ";
             sql += "join FIN.ItemsUnit iu on iu.IUnitCode = i.IUnitCode ";
 
-            sql += "left join (select Reference_VNumber, VActive from FIN.StockVoucher) sv on sv.Reference_VNumber = r.RequestCode ";
+            sql += "left join (select VReference, VActive from FIN.Voucher) v on v.VReference = r.RequestCode ";
 
             sql += "join (select Eserial, LastName + ' ' + MiddleName + ' ' + FirstName as Request_FullName from HR.Profile) pRequest on pRequest.Eserial = r.EserialRequest ";
             sql += "left join (select DivisionID, DepartmentID, DepartmentName as Request_DepartmentName from HR.Department) de on de.DepartmentID = r.DeptRequest ";

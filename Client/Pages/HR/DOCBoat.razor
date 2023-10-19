@@ -239,7 +239,7 @@
                         <option value=@string.Empty>-----Tàu-----</option>
                         @if (department_filter_list != null)
                         {
-                            @foreach (var department_filter in department_filter_list.Where(x => x.DepartmentGroupID == "Boat"))
+                            @foreach (var department_filter in department_filter_list.Where(x => x.DepartmentGroupID == "CRUISE"))
                             {
                                 <option data-subtext="@department_filter.DepartmentID" value="@department_filter.DepartmentID">@department_filter.DepartmentName</option>
                             }

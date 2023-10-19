@@ -73,7 +73,7 @@ namespace D69soft.Server.Controllers.OP
             return true;
         }
 
-        //VehicleSchedule
+        //Vehicle
         [HttpPost("GetVehicles")]
         public async Task<ActionResult<IEnumerable<VehicleVM>>> GetVehicles(FilterVM _filterVM)
         {
@@ -88,6 +88,48 @@ namespace D69soft.Server.Controllers.OP
             }
         }
 
+        [HttpGet("CheckContainsVehicleCode/{id}")]
+        public async Task<bool> CheckContainsVehicleCode(string id)
+        {
+            var sql = "SELECT CAST(CASE WHEN EXISTS (SELECT 1 FROM OP.Vehicle where VehicleCode = @VehicleCode) THEN 0 ELSE 1 END as BIT)";
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                return await conn.ExecuteScalarAsync<bool>(sql, new { VehicleCode = id });
+            }
+        }
+
+        [HttpPost("UpdateVehicle")]
+        public async Task<ActionResult<int>> UpdateVehicle(VehicleVM _vehicleVM)
+        {
+            var sql = "";
+            if (_vehicleVM.IsTypeUpdate == 0)
+            {
+                sql = "Insert into OP.Vehicle (VehicleCode, VehicleName, DepartmentID, VehicleActive) Values (@VehicleCode,@VehicleName, @DepartmentID, @VehicleActive) ";
+            }
+            if (_vehicleVM.IsTypeUpdate == 1)
+            {
+                sql = "Update OP.Vehicle set VehicleName = @VehicleName, DepartmentID = @DepartmentID, VehicleActive = @VehicleActive where VehicleCode = @VehicleCode ";
+            }
+            if (_vehicleVM.IsTypeUpdate == 2)
+            {
+                sql = "if not exists (select * from DOC.Document where DepartmentID=@VehicleCode) ";
+                sql += "begin ";
+                sql += "delete from OP.Vehicle where VehicleCode = @VehicleCode ";
+                sql += "end ";
+            }
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                return await conn.ExecuteAsync(sql, _vehicleVM); ;
+            }
+        }
+
+        //VehicleSchedule
         [HttpPost("GetVehicleSchedules")]
         public async Task<ActionResult<IEnumerable<VehicleScheduleVM>>> GetVehicleSchedules(FilterVM _filterVM)
         {

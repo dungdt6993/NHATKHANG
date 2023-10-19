@@ -3,6 +3,7 @@ using D69soft.Shared.Models.ViewModels.HR;
 using D69soft.Shared.Models.ViewModels.OP;
 using System.Net.Http.Json;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using D69soft.Shared.Models.ViewModels.FIN;
 
 namespace D69soft.Client.Services.OP
 {
@@ -35,7 +36,7 @@ namespace D69soft.Client.Services.OP
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
-        //VehicleSchedule
+        //Vehicle
         public async Task<IEnumerable<VehicleVM>> GetVehicles(FilterVM _filterVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/OP/GetVehicles", _filterVM);
@@ -43,6 +44,19 @@ namespace D69soft.Client.Services.OP
             return await response.Content.ReadFromJsonAsync<IEnumerable<VehicleVM>>();
         }
 
+        public async Task<bool> CheckContainsVehicleCode(string id)
+        {
+            return await _httpClient.GetFromJsonAsync<bool>($"api/OP/CheckContainsVehicleCode/{id}");
+        }
+
+        public async Task<int> UpdateVehicle(VehicleVM _vehicleVM)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/OP/UpdateVehicle", _vehicleVM);
+
+            return await response.Content.ReadFromJsonAsync<int>();
+        }
+
+        //VehicleSchedule
         public async Task<IEnumerable<VehicleScheduleVM>> GetVehicleSchedules(FilterVM _filterVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/OP/GetVehicleSchedules", _filterVM);

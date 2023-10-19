@@ -23,20 +23,6 @@ namespace D69soft.Server.Controllers.HR
             _env = env;
         }
 
-        [HttpPost("GetDocTypes")]
-        public async Task<ActionResult<IEnumerable<DocumentTypeVM>>> GetDocTypes(FilterVM _filterVM)
-        {
-            var sql = "select * from DOC.DocumentType where GroupType = @GroupType order by DocTypeName ";
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                var result = await conn.QueryAsync<DocumentTypeVM>(sql, _filterVM);
-                return Ok(result);
-            }
-        }
-
         [HttpPost("GetDocs")]
         public async Task<ActionResult<List<DocumentVM>>> GetDocs(FilterVM _filterVM)
         {
@@ -139,6 +125,20 @@ namespace D69soft.Server.Controllers.HR
 
                 await conn.ExecuteAsync(sql, _documentVM);
                 return true;
+            }
+        }
+
+        [HttpPost("GetDocTypes")]
+        public async Task<ActionResult<IEnumerable<DocumentTypeVM>>> GetDocTypes(FilterVM _filterVM)
+        {
+            var sql = "select * from DOC.DocumentType where GroupType = @GroupType order by DocTypeName ";
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                var result = await conn.QueryAsync<DocumentTypeVM>(sql, _filterVM);
+                return Ok(result);
             }
         }
 

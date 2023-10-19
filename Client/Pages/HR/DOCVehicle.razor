@@ -26,20 +26,34 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Phương tiện</label>
                         <div class="col-sm-10">
-                            <InputSelect class="selectpicker form-control form-control-sm"
-                                         data-style="btn-selectpicker" data-container="body"
-                                         data-live-search="true" data-show-subtext="true"
-                                         @bind-Value="documentVM.DepartmentID">
-                                <option value=@String.Empty>-----Chọn-----</option>
-                                @if (vehicle_filter_list != null)
-                                {
-                                    @foreach (var _vehicle_filter in vehicle_filter_list.Where(x => x.VehicleActive))
+                            <div class="input-group">
+                                <InputSelect class="selectpicker form-control form-control-sm"
+                                             data-style="btn-selectpicker" data-container="body"
+                                             data-live-search="true" data-show-subtext="true"
+                                @bind-Value="documentVM.DepartmentID">
+                                    <option value=@String.Empty>-----Chọn-----</option>
+                                    @if (vehicle_filter_list != null)
                                     {
-                                        <option value="@_vehicle_filter.VehicleCode">@_vehicle_filter.VehicleName</option>
+                                        @foreach (var _vehicle_filter in vehicle_filter_list.Where(x => x.VehicleActive))
+                                        {
+                                            <option value="@_vehicle_filter.VehicleCode">@_vehicle_filter.VehicleName</option>
+                                        }
                                     }
+                                </InputSelect>
+                                @if (String.IsNullOrEmpty(documentVM.DepartmentID))
+                                {
+                                    <div class="input-group-append" data-toggle="modal" @onclick="(() => InitializeModalUpdate_Vehicle(0))">
+                                        <span class="input-group-text text-success"><i class="fa-solid fa-circle-plus"></i></span>
+                                    </div>
                                 }
-                            </InputSelect>
-                            <ValidationMessage For="@(() => documentVM.DepartmentID)" />
+                                else
+                                {
+                                    <div class="input-group-append" data-toggle="modal" @onclick="(() => InitializeModalUpdate_Vehicle(1))">
+                                        <span class="input-group-text"><i class="fas fa-pen"></i></span>
+                                    </div>
+                                }
+                                <ValidationMessage For="@(() => documentVM.DepartmentID)" />
+                            </div>
                         </div>
                     </div>
 
@@ -50,7 +64,7 @@
                                 <InputSelectNumber class="selectpicker form-control form-control-sm"
                                                    data-style="btn-selectpicker" data-container="body"
                                                    data-live-search="true" data-show-subtext="true"
-                                                   @bind-Value="documentVM.DocTypeID">
+                                @bind-Value="documentVM.DocTypeID">
                                     <option value=0>-----Chọn-----</option>
                                     @if (doctype_filter_list != null)
                                     {
@@ -139,6 +153,105 @@
                     @if (documentVM.IsTypeUpdate == 1)
                     {
                         <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateDocument(formDocumentVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                    }
+                </div>
+
+            </EditForm>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Vehicle">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <EditForm Model="@vehicleVM" Context="formVehicleVM">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>CẬP NHẬT PHƯƠNG TIỆN</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Mã</label>
+                        <div class="col-sm-9">
+                            @if (vehicleVM.IsTypeUpdate == 0)
+                            {
+                                <InputText class="form-control form-control-sm" placeholder="Mã phương tiện" @bind-Value:get="vehicleVM.VehicleCode" @bind-Value:set="(value) => {vehicleVM.VehicleCode = value.ToUpper();}" autofocus />
+                                <ValidationMessage For="@(() => vehicleVM.VehicleCode)" />
+                            }
+                            else
+                            {
+                                <input type="text" readonly class="form-control form-control-sm" value="@vehicleVM.VehicleCode" />
+                            }
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Tên</label>
+                        <div class="col-sm-9">
+                            <InputText class="form-control form-control-sm" placeholder="Tên phương tiện" @bind-Value="vehicleVM.VehicleName" autofocus />
+                            <ValidationMessage For="@(() => vehicleVM.VehicleName)" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Bộ phận quản lý</label>
+                        <div class="col-sm-9">
+                            <InputSelect class="selectpicker form-control form-control-sm"
+                                         data-style="btn-selectpicker" data-container="body"
+                                         data-live-search="true" data-show-subtext="true"
+                            @bind-Value="vehicleVM.DepartmentID">
+                                <option value=@String.Empty>-----Chọn-----</option>
+                                @if (departmentVMs != null)
+                                {
+                                    @foreach (var _departmentVM in departmentVMs)
+                                    {
+                                        <option value="@_departmentVM.DepartmentID">@_departmentVM.DepartmentName</option>
+                                    }
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => vehicleVM.DepartmentID)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row align-items-center">
+                        <div class="icheck-success d-inline">
+                            <input type="radio" id="vehicle_isActive1" name="vehicle_isActive" checked="@(vehicleVM.VehicleActive == true)" @onchange="(() => vehicleVM.VehicleActive = true)">
+                            <label for="vehicle_isActive1">
+                                Hoạt động
+                            </label>
+                        </div>
+                        <label>
+                            &nbsp;&nbsp;
+                        </label>
+                        <div class="icheck-danger d-inline">
+                            <input type="radio" id="vehicle_isActive2" name="vehicle_isActive" checked="@(vehicleVM.VehicleActive == false)" @onchange="(() => vehicleVM.VehicleActive = false)">
+                            <label for="vehicle_isActive2">
+                                Không hoạt động
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateVehicle(formVehicleVM, vehicleVM.IsTypeUpdate))><i class="fas fa-save"></i> Lưu</button>
+                    @if (vehicleVM.IsTypeUpdate == 1)
+                    {
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateVehicle(formVehicleVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
 
@@ -318,7 +431,7 @@
             </div>
 
             <!-- /.card-header -->
-            <div class="card-body table-responsive p-0" style="height: calc(100vh - 157px);">
+            <div class="card-body table-responsive p-0" style="height: calc(100vh - 188px);">
                 @if (documentVMs != null)
                 {
                     <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin">

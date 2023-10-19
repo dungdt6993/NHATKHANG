@@ -16,6 +16,12 @@ namespace D69soft.Client.Services
             //SYS
             services.AddTransient<SysService>();
 
+            //FIN
+            services.AddTransient<MoneyService>();
+            services.AddTransient<PurchasingService>();
+            services.AddTransient<InventoryService>();
+            services.AddTransient<VoucherService>();
+
             //HR
             services.AddTransient<ProfileService>();
             services.AddTransient<OrganizationalChartService>();
@@ -23,31 +29,16 @@ namespace D69soft.Client.Services
             services.AddTransient<DayOffService>();
             services.AddTransient<AgreementTextService>();
             services.AddTransient<PayrollService>();
+            services.AddTransient<DocumentService>();
+            services.AddTransient<KPIService>();
 
             //OP
             services.AddTransient<OPService>();
-
-            //DOC
-            services.AddTransient<DocumentService>();
-
-            //KPI
-            services.AddTransient<KPIService>();
-
-            //FIN
-            services.AddTransient<MoneyService>();
-            services.AddTransient<PurchasingService>();
-            services.AddTransient<InventoryService>();
-            services.AddTransient<VoucherService>();
-
-            //EA
             services.AddTransient<RequestService>();
-
-            //CRUISES
-            services.AddTransient<OccupancyService>();
 
             //POS
             services.AddTransient<CashierService>();
-            services.AddTransient<CustomerService>();
+
 
             return services;
         }
