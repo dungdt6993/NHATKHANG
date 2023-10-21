@@ -4,7 +4,7 @@ using D69soft.Shared.Models.Entities.SYSTEM;
 
 namespace D69soft.Shared.Models.ViewModels.HR
 {
-    public class ProfileVM : Profile, Staff, JobHistory, SalaryHistory, Division, Department, DepartmentGroup, Position, PositionGroup, Section, Country, Ethnic, Shift, ContractType, WorkType, PermissionUser, JobSalHistory, AdjustProfile, Rank
+    public class ProfileVM : Profile, Staff, JobHistory, SalaryHistory, Division, Department, DepartmentGroup, Position, PositionGroup, Section, Country, Ethnic, Shift, ContractType, WorkType, JobSalHistory, AdjustProfile, Rank
     {
         //Para
         public int ckContractExtension { get; set; }
@@ -112,6 +112,7 @@ namespace D69soft.Shared.Models.ViewModels.HR
 
         public string PositionID { get; set; }
         public string PositionName { get; set; }
+        public bool isLeader { get; set; }
         public string JobDesc { get; set; }
 
         public string SectionID { get; set; }
@@ -156,9 +157,6 @@ namespace D69soft.Shared.Models.ViewModels.HR
 
         public string WorkTypeID { get; set; }
         public string WorkTypeName { get; set; }
-
-        public int PermisId { get; set; }
-        public string Description { get; set; }
 
         public int isPrintLaborContract { get; set; }
         public string AdjustProfileID { get; set; }

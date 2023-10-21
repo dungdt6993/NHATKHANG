@@ -60,36 +60,6 @@ namespace D69soft.Server.Controllers
             return true;
         }
 
-        [HttpGet("GetRole/{_UserID}")]
-        public async Task<ActionResult<int>> GetRole(string _UserID)
-        {
-            var sql = "select User_Role from HR.Profile where Eserial=@UserID";
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                return await conn.ExecuteScalarAsync<int>(sql, new { UserID = _UserID });
-            }
-        }
-
-        [HttpGet("GetPermissionUser/{_UserID}")]
-        public async Task<ActionResult<IEnumerable<PermissionUserVM>>> GetPermissionUser(string _UserID)
-        {
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                DynamicParameters parm = new DynamicParameters();
-                parm.Add("@UserID", _UserID);
-
-                var result = await conn.QueryAsync<PermissionUserVM>("HR.Profile_viewPermission", parm, commandType: CommandType.StoredProcedure);
-
-                return Ok(result);
-            }
-        }
-
         //JWT
         [HttpPost("Login")]
         public async Task<ActionResult<LoginResponseVM>> Login([FromBody] UserVM _userVM)

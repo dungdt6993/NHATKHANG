@@ -203,7 +203,7 @@
                             }
                         </InputSelectNumber>
 
-                        @if (filterVM.Role <= 2)
+                        @if (filterVM.isLeader)
                         {
                             @if (filterVM.RptGrpID == 0)
                             {
@@ -240,7 +240,7 @@
                                 }
                             }
                         </InputSelectNumber>
-                        @if (filterVM.Role <= 2)
+                        @if (filterVM.isLeader)
                         {
                             @if (rptgrps.Count() > 0)
                             {
@@ -271,7 +271,7 @@
     <div class="container-fluid">
         <div class="card card-warning card-outline">
 
-            @if (filterVM.Role <= 2)
+            @if (filterVM.isLeader)
             {
                 <div class="card-header text-right">
 

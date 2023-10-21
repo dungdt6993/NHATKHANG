@@ -285,11 +285,11 @@ namespace D69soft.Server.Controllers.HR
             var sql = "";
             if (_positionVM.IsTypeUpdate == 0)
             {
-                sql += "Insert into HR.Position (PositionID,PositionName,PositionGroupID,JobDesc,isActive) Values (@PositionID,@PositionName,@PositionGroupID,@JobDesc,@isActive) ";
+                sql += "Insert into HR.Position (PositionID,PositionName,isLeader,PositionGroupID,JobDesc,isActive) Values (@PositionID,@PositionName,@isLeader,@PositionGroupID,@JobDesc,@isActive) ";
             }
             if (_positionVM.IsTypeUpdate == 1)
             {
-                sql += "Update HR.Position set PositionName = @PositionName, PositionGroupID=@PositionGroupID, JobDesc=@JobDesc, isActive = @isActive where PositionID = @PositionID ";
+                sql += "Update HR.Position set PositionName = @PositionName, isLeader = @isLeader, PositionGroupID=@PositionGroupID, JobDesc=@JobDesc, isActive = @isActive where PositionID = @PositionID ";
             }
             if (_positionVM.IsTypeUpdate == 2)
             {

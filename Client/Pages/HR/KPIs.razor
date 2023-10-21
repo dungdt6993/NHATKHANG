@@ -117,7 +117,7 @@
 
             <div class="col-md-1">
                 <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => onchange_filter_eserial(String.Empty))">
-                    <i class="fa-solid fa-list-check"></i> Bảng tổng hợp
+                    <i class="fa-solid fa-list-check"></i> Tổng hợp
                 </button>
             </div>
         </div>
@@ -326,7 +326,7 @@
                         </table>
                         <table class="table table-sm table-bordered" style="font-size: .8em;">
                             <thead>
-                                <tr style="background-color: #b3b0f7;">
+                                <tr style="background-color: #e9ecef;">
                                     <th class="text-center align-middle">Nhóm chỉ tiêu (Evaluation criteria)</th>
                                     <th class="text-center align-middle">Các nội dung/ nhiệm vụ được giao (Objectives/Tasks assigned in the appraisal period)</th>
                                     <th class="text-center align-middle">Tỷ lệ Portion</th>
@@ -406,8 +406,8 @@
                                                     <td class="text-center text-bold" style="min-width: 50px;" rowspan="@kPIVMs.Where(x => x.CriteriaGroupID == _kpi_0.CriteriaGroupID).Count()">@_kpi_0.Portion</td>
                                                 }
 
-                                                <td class="text-center" style="min-width: 50px;">@(_kpi.Score / _kpi_0.Portion * 100)%</td>
-                                                <td class="text-center text-bold" style="min-width: 70px; background-color: #b3b0f7;">@_kpi.Score</td>
+                                                <td class="text-center" style="min-width: 50px;">@Math.Round(_kpi.Score / _kpi_0.Portion * 100, 2, MidpointRounding.AwayFromZero)%</td>
+                                                <td class="text-center text-bold" style="min-width: 70px; background-color: #e9ecef;">@_kpi.Score</td>
                                                 <td style="min-width: 250px;">
                                                     @if (_kpi.isTarget)
                                                     {
@@ -434,7 +434,7 @@
                                           disabled="@disabled_manager">@_kpi.ManagerComment</textarea>
                                                 </td>
 
-                                                <td style="font-size: 14px; background-color: #b3b0f7;">
+                                                <td style="font-size: 14px; background-color: #e9ecef;">
                                                     <input class="form-control form-control-sm text-center text-bold @(_kpi.StaffScore>_kpi.Score?"text-success":"") @(_kpi.StaffScore<_kpi.Score?"text-danger":"")"
                                        @onchange="@((ChangeEventArgs e) => onchange_StaffScore(e, _kpi))" value="@_kpi.StaffScore"
                                        disabled="@disabled_staff" onClick="this.select();" />
@@ -451,15 +451,15 @@
                                         }
                                         i++;
                                     }
-                                    <tr style="background-color: #b3b0f7;">
+                                    <tr style="background-color: #e9ecef;">
                                         <th colspan="2"></th>
                                         <th></th>
-                                        <th class="text-center">@(kPIVMs.Where(x => x.CriteriaGroupID == _kpi_0.CriteriaGroupID).Select(x => x.Score).Sum() / _kpi_0.Portion * 100)%</th>
+                                        <th class="text-center">@Math.Round(kPIVMs.Where(x => x.CriteriaGroupID == _kpi_0.CriteriaGroupID).Select(x => x.Score).Sum() / _kpi_0.Portion * 100, 2, MidpointRounding.AwayFromZero)%</th>
                                         <th class="text-center">@kPIVMs.Where(x => x.CriteriaGroupID == _kpi_0.CriteriaGroupID).Select(x => x.Score).Sum()</th>
                                         <th></th>
                                         <th></th>
-                                        <th style="min-width: 70px; text-align: center; font-size: 14px; background: #b3b0f7;">@kPIVMs.Where(x => x.CriteriaGroupID == _kpi_0.CriteriaGroupID).Select(x => x.StaffScore).Sum()</th>
-                                        <th style="min-width: 70px; text-align: center; font-size: 14px; background: #b3b0f7;">@kPIVMs.Where(x => x.CriteriaGroupID == _kpi_0.CriteriaGroupID).Select(x => x.FinalScore).Sum()</th>
+                                        <th style="min-width: 70px; text-align: center; font-size: 14px; background: #e9ecef;">@kPIVMs.Where(x => x.CriteriaGroupID == _kpi_0.CriteriaGroupID).Select(x => x.StaffScore).Sum()</th>
+                                        <th style="min-width: 70px; text-align: center; font-size: 14px; background: #e9ecef;">@kPIVMs.Where(x => x.CriteriaGroupID == _kpi_0.CriteriaGroupID).Select(x => x.FinalScore).Sum()</th>
                                     </tr>
                                 }
 
@@ -477,7 +477,7 @@
                                 </tr>
                             </tbody>
                             <tfoot>
-                                <tr style="background-color: #b3b0f7;">
+                                <tr style="background-color: #e9ecef;">
                                     <th class="text-center" colspan="5">Ý kiến của nhân viên (đề xuất nguyện vọng để cải thiện công việc, đào tạo nâng cao kiến thức, quy trình làm việc…)/Staff's comments (suggestions for improving work, training, SOPs...)</th>
                                     <th class="text-center" colspan="4">Nhận xét của quản lý trực tiếp về các điểm mạnh và điểm cần cải thiện/Direct manager comments about the strength as the point need to be improved.</th>
                                 </tr>
@@ -502,7 +502,7 @@
             {
                 if (rankVMs != null)
                 {
-                    <div class="card-body table-responsive p-0" style="height: calc(100vh - 219px);">
+                    <div class="card-body table-responsive p-0" style="height: calc(100vh - 180px);">
                         <table class="table table-sm table-bordered table-head-fixed table-hover tblFontSizeMin">
                             <thead class="thead-light">
                                 <tr>

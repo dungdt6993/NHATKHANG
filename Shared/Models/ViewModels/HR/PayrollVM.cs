@@ -96,6 +96,7 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public string DepartmentName { get; set; }
         public string PositionID { get; set; }
         public string PositionName { get; set; }
+        public bool isLeader { get; set; }
         public string JobDesc { get; set; }
         public string SectionID { get; set; }
         public string SectionName { get; set; }

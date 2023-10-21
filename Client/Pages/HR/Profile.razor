@@ -504,39 +504,31 @@
                                     <table class="table no-border mb-0">
                                         <tbody>
                                             <tr>
-                                                <th style="width:10%">Quyền:</th>
-                                                <td style="width:30%">
+                                                @if (HR_Profile_User_Permis && profileVM.IsTypeUpdate == 1)
+                                                {
+                                                    <td style="width:20%">
 
-                                                    <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" @bind-Value="profileVM.PermisId">
-                                                        @if (permissionUserVMs != null)
-                                                        {
-                                                            @foreach (var permissionUser in permissionUserVMs)
-                                                            {
-                                                                <option value="@permissionUser.PermisId">@permissionUser.Description</option>
-                                                            }
-                                                        }
-                                                    </InputSelectNumber>
-                                                </td>
-                                                <td style="width:20%">
-                                                    @if (HR_Profile_User_Permis && profileVM.IsTypeUpdate == 1)
-                                                    {
                                                         <button type="button" class="btn btn-sm btn-block btn-secondary" data-target="#InitializeModal_Permis" data-toggle="modal" @onclick="()=>InitializeModal_Permis()"><i class="fas fa-wrench"></i> Phân quyền</button>
-                                                    }
-                                                </td>
-                                                <td style="width:20%">
-                                                    @if (HR_Profile_User_ResetPass && profileVM.IsTypeUpdate == 1)
-                                                    {
-                                                        if (profileVM.User_isChangePass == 1)
+
+                                                    </td>
+                                                }
+                                                @if (HR_Profile_User_ResetPass)
+                                                {
+                                                    <td style="width:20%">
+
+                                                        @if (profileVM.User_isChangePass == 1)
                                                         {
-                                                            <button type="button" class="btn btn-sm btn-block btn-danger" @onclick="(() => ResetPass())"><i class="fa fa-key"></i> Đặt lại mật khẩu</button>
+                                                        <button type="button" class="btn btn-sm btn-block btn-danger" @onclick="(() => ResetPass())"><i class="fa fa-key"></i> Đặt lại mật khẩu</button>
                                                         }
                                                         else
                                                         {
-                                                            <h5 class="text-danger"><i class="fa fa-key"></i> Mật khẩu: <strong>@profileVM.User_PassReset</strong></h5>
+                                                        <h5 class="text-danger"><i class="fa fa-key"></i> Mật khẩu: <strong>@profileVM.User_PassReset</strong></h5>
                                                         }
-                                                    }
 
-                                                </td>
+                                                    </td>
+                                                }
+                                                <th style="width:10%"></th>
+                                                <td style="width:30%"></td>
                                                 <th style="width:10%"></th>
                                                 <td style="width:15%"></td>
                                             </tr>
@@ -555,7 +547,7 @@
                                                     <option value=@string.Empty>-----Chọn-----</option>
                                                     @if (empls != null)
                                                     {
-                                                        @foreach (var _empl in empls.Where(x => x.PermisId < 4))
+                                                        @foreach (var _empl in empls.Where(x => x.isLeader))
                                                         {
                                                             <option data-subtext="@_empl.PositionName" value="@_empl.Eserial">@_empl.FullName</option>
                                                         }
@@ -570,7 +562,7 @@
                                                     <option value=@string.Empty>-----Chọn-----</option>
                                                     @if (empls != null)
                                                     {
-                                                        @foreach (var _empl in empls.Where(x => x.PermisId < 4))
+                                                        @foreach (var _empl in empls.Where(x => x.isLeader))
                                                         {
                                                             <option data-subtext="@_empl.PositionName" value="@_empl.Eserial">@_empl.FullName</option>
                                                         }
@@ -585,7 +577,7 @@
                                                     <option value=@string.Empty>-----Chọn-----</option>
                                                     @if (empls != null)
                                                     {
-                                                        @foreach (var _empl in empls.Where(x => x.PermisId < 4))
+                                                        @foreach (var _empl in empls.Where(x => x.isLeader))
                                                         {
                                                             <option data-subtext="@_empl.PositionName" value="@_empl.Eserial">@_empl.FullName</option>
                                                         }
@@ -600,7 +592,7 @@
                                                     <option value=@string.Empty>-----Chọn-----</option>
                                                     @if (empls != null)
                                                     {
-                                                        @foreach (var _empl in empls.Where(x => x.PermisId < 4))
+                                                        @foreach (var _empl in empls.Where(x => x.isLeader))
                                                         {
                                                             <option data-subtext="@_empl.PositionName" value="@_empl.Eserial">@_empl.FullName</option>
                                                         }
