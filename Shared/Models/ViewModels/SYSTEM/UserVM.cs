@@ -75,6 +75,7 @@ namespace D69soft.Shared.Models.ViewModels.SYSTEM
         public string DepartmentName { get; set; }
         public string PositionID { get; set; }
         public string PositionName { get; set; }
+        public bool isLeader { get; set; }
         public string JobDesc { get; set; }
     }
 }

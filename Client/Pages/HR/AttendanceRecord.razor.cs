@@ -63,19 +63,12 @@ namespace D69soft.Client.Pages.HR
         {
             filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(filterVM.UserID, "HR_AttendanceRecord"))
-            {
-                logVM.LogUser = filterVM.UserID;
-                logVM.LogType = "FUNC";
-                logVM.LogName = "HR_AttendanceRecord";
-                await sysService.InsertLog(logVM);
-            }
-            else
-            {
-                navigationManager.NavigateTo("/");
-            }
+            logVM.LogUser = filterVM.UserID;
+            logVM.LogType = "FUNC";
+            logVM.LogName = "HR_AttendanceRecord";
+            await sysService.InsertLog(logVM);
 
-            filterVM.Role = await authService.GetRole(filterVM.UserID);
+            filterVM.isLeader = (await sysService.GetInfoUser(filterVM.UserID)).isLeader;
 
             HR_AttendanceRecord_CalcFingerData = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_AttendanceRecord_CalcFingerData");
             HR_DutyRoster_Update = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_DutyRoster_Update");

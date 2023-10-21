@@ -60,18 +60,6 @@ namespace D69soft.Client.Pages.OP
         {
             filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(filterVM.UserID, "EA_Request"))
-            {
-                logVM.LogUser = filterVM.UserID;
-                logVM.LogType = "FUNC";
-                logVM.LogName = "EA_Cart";
-                await sysService.InsertLog(logVM);
-            }
-            else
-            {
-                navigationManager.NavigateTo("/");
-            }
-
             filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
 
             departments = await organizationalChartService.GetDepartmentList(filterVM);

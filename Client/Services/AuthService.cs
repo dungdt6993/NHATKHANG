@@ -35,16 +35,6 @@ namespace D69soft.Client.Services
             return await _httpClient.GetFromJsonAsync<bool>($"api/Auth/CheckChangePassDefault/{_UserID}");
         }
 
-        public async Task<int> GetRole(string _UserID)
-        {
-            return await _httpClient.GetFromJsonAsync<int>($"api/Auth/GetRole/{_UserID}");
-        }
-
-        public async Task<IEnumerable<PermissionUserVM>> GetPermissionUser(string _UserID)
-        {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<PermissionUserVM>>($"api/Auth/GetPermissionUser/{_UserID}");
-        }
-
         //JWT
         public async Task<LoginResponseVM> Login(UserVM _userVM)
         {

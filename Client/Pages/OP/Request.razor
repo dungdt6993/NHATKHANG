@@ -64,10 +64,7 @@
             </div>
 
             <div class="col-sm-2">
-                @if (EA_Request_Create)
-                {
-                    <a href="/EA/Cart" class="btn btn-sm btn-block btn-success"><i class="fa-solid fa-xl fa-plus"></i> Tạo mới yêu cầu</a>
-                }
+                <a href="/EA/Cart" class="btn btn-sm btn-block btn-success"><i class="fa-solid fa-xl fa-plus"></i> Tạo mới yêu cầu</a>
             </div>
         </div>
     </section>
@@ -269,7 +266,7 @@
                                                 <tr>
                                                     <th class="text-center">
                                                         @_requestVM.EserialRequest - @_requestVM.Request_FullName<br />
-                                                        @if (_requestVM.EserialRequest == filterVM.UserID || userRoleAdmin)
+                                                        @if (_requestVM.EserialRequest == filterVM.UserID)
                                                         {
                                                             if ((_requestVM.isSendApprove ? 1 : 0) == 0)
                                                             {

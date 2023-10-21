@@ -77,6 +77,7 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public string DepartmentName { get; set; }
         public string PositionID { get; set; }
         public string PositionName { get; set; }
+        public bool isLeader { get; set; }
         public string JobDesc { get; set; }
         public int ALCurrentYear { get; set; }
         public int NumMonthAL { get; set; }

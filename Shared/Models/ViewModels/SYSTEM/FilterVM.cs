@@ -11,7 +11,7 @@ namespace D69soft.Shared.Models.ViewModels.SYSTEM
         //SYS
         public string UserID { get; set; }
         public string FuncID { get; set; }
-        public int Role { get; set; }
+        public bool isLeader { get; set; }
         public bool IsOpenFunc { get; set; }
 
         public int Month { get; set; }

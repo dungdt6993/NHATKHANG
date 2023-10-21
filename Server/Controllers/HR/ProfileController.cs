@@ -232,7 +232,6 @@ namespace D69soft.Server.Controllers.HR
                 parm.Add("@reason", _profileVM.Reason);
                 parm.Add("@approvedby", _profileVM.ApprovedBy);
                 parm.Add("@imageurl", _profileVM.UrlAvatar == null ? UrlDirectory.Default_Avatar : _profileVM.UrlAvatar);
-                parm.Add("@role", _profileVM.PermisId);
                 parm.Add("@pass", _profileVM.User_Password);
                 parm.Add("@passreset", _profileVM.User_PassReset);
 

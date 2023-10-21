@@ -48,10 +48,7 @@ namespace D69soft.Client.Pages.OP
         List<VoucherDetailVM> voucherDetailVMs;
 
         //PermisFunc
-        bool EA_Request_Create;
-        bool permisSubFunc_EA_Request_Handover;
-
-        bool userRoleAdmin;
+        bool permisFunc_FIN_Stock;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -67,19 +64,12 @@ namespace D69soft.Client.Pages.OP
         {
             filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(filterVM.UserID, "EA_Request"))
-            {
-                logVM.LogUser = filterVM.UserID;
-                logVM.LogType = "FUNC";
-                logVM.LogName = "EA_Request";
-                await sysService.InsertLog(logVM);
-            }
-            else
-            {
-                navigationManager.NavigateTo("/");
-            }
+            logVM.LogUser = filterVM.UserID;
+            logVM.LogType = "FUNC";
+            logVM.LogName = "EA_Request";
+            await sysService.InsertLog(logVM);
 
-            EA_Request_Create = await sysService.CheckAccessSubFunc(filterVM.UserID, "EA_Request_Create");
+            permisFunc_FIN_Stock = await sysService.CheckAccessFunc(filterVM.UserID, "FIN_Stock");
 
             division_filter_list = await organizationalChartService.GetDivisionList(filterVM);
             filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
@@ -89,14 +79,7 @@ namespace D69soft.Client.Pages.OP
 
             filterVM.EndDate = new DateTime(DateTime.MaxValue.Year, DateTime.MaxValue.Month, DateTime.MaxValue.Day);
 
-            permisSubFunc_EA_Request_Handover = await sysService.CheckAccessSubFunc(filterVM.UserID, "EA_Request_Handover");
-
-            if (await authService.GetRole(filterVM.UserID) <= 2)
-            {
-                userRoleAdmin = true;
-            }
-
-            if (permisSubFunc_EA_Request_Handover)
+            if (permisFunc_FIN_Stock)
             {
                 filterVM.isHandover = true;
             }

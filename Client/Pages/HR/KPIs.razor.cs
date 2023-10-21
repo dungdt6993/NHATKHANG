@@ -60,17 +60,10 @@ namespace D69soft.Client.Pages.HR
         {
             filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-            if (await sysService.CheckAccessFunc(filterVM.UserID, "KPI_KPIs"))
-            {
-                logVM.LogUser = filterVM.UserID;
-                logVM.LogType = "FUNC";
-                logVM.LogName = "KPI_KPIs";
-                await sysService.InsertLog(logVM);
-            }
-            else
-            {
-                navigationManager.NavigateTo("/");
-            }
+            logVM.LogUser = filterVM.UserID;
+            logVM.LogType = "FUNC";
+            logVM.LogName = "KPI_KPIs";
+            await sysService.InsertLog(logVM);
 
             KPI_KPIs_Management = await sysService.CheckAccessSubFunc(filterVM.UserID, "KPI_KPIs_Management");
 
@@ -84,7 +77,7 @@ namespace D69soft.Client.Pages.HR
             filterVM.Period = filterVM.Year * 100 + filterVM.Month;
 
             division_filter_list = await kpiService.GetDivisions(filterVM);
-            filterVM.DivisionID = division_filter_list.Count() > 0 ? division_filter_list.ElementAt(0).DivisionID : string.Empty;
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
 
             filterVM.DepartmentID = string.Empty;
             department_filter_list = await kpiService.GetDepartments(filterVM);
@@ -94,6 +87,8 @@ namespace D69soft.Client.Pages.HR
 
             filterVM.Eserial = string.Empty;
             eserial_filter_list = await kpiService.GetEserials(filterVM);
+
+            filterVM.isLeader = (await sysService.GetInfoUser(filterVM.UserID)).isLeader;
 
             await GetKPIs();
 

@@ -75,7 +75,7 @@ namespace D69soft.Server.Controllers
         [HttpGet("GetInfoUser/{_UserID}")]
         public async Task<ActionResult<UserVM>> GetInfoUser(string _UserID)
         {
-            var sql = "Select p.Eserial, LastName, MiddleName, FirstName, UrlAvatar, di.DivisionID, di.DivisionName, di.DivisionShortName, de.DepartmentName, po.PositionName, s.JoinDate from HR.Profile p ";
+            var sql = "Select p.Eserial, LastName, MiddleName, FirstName, UrlAvatar, di.DivisionID, di.DivisionName, di.DivisionShortName, de.DepartmentName, po.PositionName, po.isLeader, s.JoinDate from HR.Profile p ";
             sql += "left join HR.Staff s on s.Eserial = p.Eserial ";
             sql += "left join (select * from HR.JobHistory where CurrentJobID=1) jh on jh.Eserial = p.Eserial ";
             sql += "left join HR.Division di on di.DivisionID = jh.DivisionID ";

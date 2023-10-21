@@ -64,7 +64,7 @@ namespace D69soft.Client.Pages.SYS
                 navigationManager.NavigateTo("/");
             }
 
-            filterVM.Role = await authService.GetRole(filterVM.UserID);
+            filterVM.isLeader = (await sysService.GetInfoUser(filterVM.UserID)).isLeader;
 
             modules = await sysService.GetModuleRpt(filterVM.UserID);
             filterVM.ModuleID = modules.First().ModuleID;

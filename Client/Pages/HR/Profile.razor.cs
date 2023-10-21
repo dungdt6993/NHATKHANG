@@ -80,7 +80,6 @@ namespace D69soft.Client.Pages.HR
 
         IEnumerable<CountryVM> countryVMs;
         IEnumerable<EthnicVM> ethnicVMs;
-        IEnumerable<PermissionUserVM> permissionUserVMs;
         List<ProfileVM> profileHistorys;
         List<SalaryDefVM> salaryDefVMs;
 
@@ -794,8 +793,6 @@ namespace D69soft.Client.Pages.HR
 
             bankVMs = (await moneyService.GetBankList()).ToList();
 
-            permissionUserVMs = await authService.GetPermissionUser(filterVM.UserID);
-
             salaryDefVMs = await profileService.GetSalaryDef();
 
             if (profileVM.IsTypeUpdate == 0)
@@ -812,8 +809,6 @@ namespace D69soft.Client.Pages.HR
                     profileVM.EthnicID = 1;
 
                     profileVM.DivisionID = filterVM.DivisionID;
-
-                    profileVM.PermisId = 4;
 
                     profileVM.IsPayByMonth = 1;
 

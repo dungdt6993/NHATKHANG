@@ -9,6 +9,7 @@ namespace D69soft.Shared.Models.Entities.HR
         public string PositionID { get; set; }
 
         public string PositionName { get; set; }
+        public bool isLeader { get; set; }
         public string JobDesc { get; set; }
 
     }
