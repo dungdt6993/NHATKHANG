@@ -3,6 +3,7 @@ using D69soft.Server.Hubs.POS;
 using Data.Infrastructure;
 using DevExpress.AspNetCore;
 using DevExpress.AspNetCore.Reporting;
+using DevExpress.Security.Resources;
 using DevExpress.XtraCharts;
 using DevExpress.XtraReports.Web.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

@@ -7,53 +7,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Remove="Files\Upload\POS\**" />
-		<Content Remove="Files\Upload\POS\**" />
-		<EmbeddedResource Remove="Files\Upload\POS\**" />
-		<None Remove="Files\Upload\POS\**" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Compile Remove="Files\Reports\Phieu_xuat_kho_ban_hang.cs" />
-		<Compile Remove="Files\Reports\Phieu_xuat_kho_ban_hang.Designer.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<EmbeddedResource Remove="Files\Reports\Phieu_xuat_kho_ban_hang.resx" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Remove="Files\Reports\Bang_cham_cong.repx" />
-		<None Remove="Files\Reports\Bang_ke_ban_hang_NCC.repx" />
-		<None Remove="Files\Reports\Phieu_xuat_chuyen_kho_noi_bo.repx" />
-		<None Remove="Files\Reports\Phieu_xuat_kho_ban_hang.repx" />
-		<None Remove="Files\Trademark\dashboard.png" />
-		<None Remove="Files\Trademark\favicon.png" />
-		<None Remove="Files\Trademark\logo-default.png" />
-		<None Remove="Files\Trademark\logo-login.png" />
-		<None Remove="PredefinedReports\CustomNewReport.vsrepx" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Include="Files\Trademark\dashboard.png">
-	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-	  </Content>
-	  <Content Include="Files\Trademark\favicon.png">
-	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-	  </Content>
-	  <Content Include="Files\Trademark\logo-default.png">
-	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-	  </Content>
-	  <Content Include="Files\Trademark\logo-login.png">
-	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-	  </Content>
-	</ItemGroup>
-
-	<ItemGroup>
 		<EmbeddedResource Include="PredefinedReports\CustomNewReport.vsrepx" />
 	</ItemGroup>
 
@@ -73,39 +26,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Files\Export\" />
-		<Folder Include="Files\Upload\DOC\" />
-		<Folder Include="Files\Upload\FIN\Images\Items\" />
-		<Folder Include="Files\Upload\HR\Images\Profile\" />
-		<Folder Include="Hubs\" />
+	  <Compile Update="PredefinedReports\CustomNewReport.cs">
+	    <DependentUpon>CustomNewReport.vsrepx</DependentUpon>
+	  </Compile>
+	  <Compile Update="PredefinedReports\CustomNewReport.Designer.cs">
+	    <DependentUpon>CustomNewReport.vsrepx</DependentUpon>
+	  </Compile>
 	</ItemGroup>
-
-	<ItemGroup>
-		<Compile Update="DataProtection\Reports\Bang_cham_cong.cs">
-			<DependentUpon>Bang_cham_cong.repx</DependentUpon>
-		</Compile>
-		<Compile Update="DataProtection\Reports\Bang_cham_cong.Designer.cs">
-			<DependentUpon>Bang_cham_cong.repx</DependentUpon>
-		</Compile>
-		<Compile Update="DataProtection\Reports\Bang_ke_ban_hang_NCC.cs">
-			<DependentUpon>Bang_ke_ban_hang_NCC.repx</DependentUpon>
-		</Compile>
-		<Compile Update="DataProtection\Reports\Bang_ke_ban_hang_NCC.Designer.cs">
-			<DependentUpon>Bang_ke_ban_hang_NCC.repx</DependentUpon>
-		</Compile>
-		<Compile Update="DataProtection\Reports\Phieu_xuat_chuyen_kho_noi_bo.cs">
-			<DependentUpon>Phieu_xuat_chuyen_kho_noi_bo.repx</DependentUpon>
-		</Compile>
-		<Compile Update="DataProtection\Reports\Phieu_xuat_chuyen_kho_noi_bo.Designer.cs">
-			<DependentUpon>Phieu_xuat_chuyen_kho_noi_bo.repx</DependentUpon>
-		</Compile>
-		<Compile Update="PredefinedReports\CustomNewReport.cs">
-			<DependentUpon>CustomNewReport.vsrepx</DependentUpon>
-		</Compile>
-		<Compile Update="PredefinedReports\CustomNewReport.Designer.cs">
-			<DependentUpon>CustomNewReport.vsrepx</DependentUpon>
-		</Compile>
-	</ItemGroup>
-
 
 </Project>

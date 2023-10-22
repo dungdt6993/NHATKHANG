@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<XtraReportsLayoutSerializer SerializerVersion="23.1.4.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v23.1, Version=23.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="FIN_Bao_gia" SnapGridSize="9.448819" ReportUnit="Pixels" Margins="9, 9.448819, 9.448819, 9.448819" PageWidth="816" PageHeight="1056" Version="23.1" DataMember="RPT_Phieu_thu_chi_mua_ban_nhap_xuat" DataSource="#Ref-0" Dpi="96">
+<XtraReportsLayoutSerializer SerializerVersion="23.1.5.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v23.1, Version=23.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="FIN_Bao_gia" SnapGridSize="9.448819" ReportUnit="Pixels" Margins="9, 9.448819, 9.448819, 9.448819" PageWidth="816" PageHeight="1056" Version="23.1" DataMember="RPT_Phieu_thu_chi_mua_ban_nhap_xuat" DataSource="#Ref-0" Dpi="96">
   <Parameters>
     <Item1 Ref="3" Visible="false" Description="VNumber" Name="VNumber" />
   </Parameters>
@@ -186,7 +186,7 @@
           </Rows>
           <StylePriority Ref="94" UsePadding="false" UseBorders="false" UseBorderDashStyle="false" UseTextAlignment="false" />
         </Item1>
-        <Item2 Ref="95" ControlType="XRPictureBox" Name="pictureBox1" Sizing="ZoomImage" SizeF="205.0787,130" LocationFloat="0,0" Dpi="96">
+        <Item2 Ref="95" ControlType="XRPictureBox" Name="pictureBox1" ImageUrl="[DivisionLogoUrl]" Sizing="ZoomImage" SizeF="205.0787,130" LocationFloat="0,0" Dpi="96">
           <ExpressionBindings>
             <Item1 Ref="96" EventName="BeforePrint" PropertyName="ImageUrl" Expression="[DivisionLogoUrl]" />
             <Item2 Ref="97" EventName="BeforePrint" PropertyName="ImageSource" Expression="[DivisionLogoUrl]" />
