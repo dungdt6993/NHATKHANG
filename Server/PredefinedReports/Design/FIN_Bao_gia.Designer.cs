@@ -94,6 +94,7 @@
             this.ReportHeader = new DevExpress.XtraReports.UI.ReportHeaderBand();
             this.sqlDataSource1 = new DevExpress.DataAccess.Sql.SqlDataSource(this.components);
             this.VNumber = new DevExpress.XtraReports.Parameters.Parameter();
+            this.xrLabel1 = new DevExpress.XtraReports.UI.XRLabel();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText1)).BeginInit();
@@ -485,6 +486,7 @@
             // GroupHeader1
             // 
             this.GroupHeader1.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
+            this.xrLabel1,
             this.table2,
             this.pictureBox1,
             this.richText2,
@@ -700,11 +702,10 @@
             // 
             this.pictureBox1.Dpi = 96F;
             this.pictureBox1.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
-            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "ImageUrl", "[DivisionLogoUrl]"),
-            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "ImageSource", "[DivisionLogoUrl]")});
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "ImageUrl", "[DivisionLogoUrl]")});
             this.pictureBox1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.SizeF = new System.Drawing.SizeF(205.0787F, 130F);
+            this.pictureBox1.SizeF = new System.Drawing.SizeF(205.0787F, 78F);
             this.pictureBox1.Sizing = DevExpress.XtraPrinting.ImageSizeMode.ZoomImage;
             // 
             // richText2
@@ -872,6 +873,18 @@
             this.VNumber.Name = "VNumber";
             this.VNumber.Visible = false;
             // 
+            // xrLabel1
+            // 
+            this.xrLabel1.Dpi = 96F;
+            this.xrLabel1.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[DivisionLogoUrl]")});
+            this.xrLabel1.LocationFloat = new DevExpress.Utils.PointFloat(0.0003662109F, 93.95999F);
+            this.xrLabel1.Multiline = true;
+            this.xrLabel1.Name = "xrLabel1";
+            this.xrLabel1.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 96F);
+            this.xrLabel1.SizeF = new System.Drawing.SizeF(205.0784F, 22.08F);
+            this.xrLabel1.Text = "xrLabel1";
+            // 
             // FIN_Bao_gia
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -970,5 +983,6 @@
         private DevExpress.XtraReports.UI.XRTableCell tableCell14;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell3;
         private DevExpress.XtraReports.UI.XRPictureBox pictureBox1;
+        private DevExpress.XtraReports.UI.XRLabel xrLabel1;
     }
 }

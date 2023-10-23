@@ -21,7 +21,7 @@
                         string str = string.Empty;
                         str = (profileVM.Eserial ?? string.Empty) != string.Empty ? "-" : string.Empty;
                     }
-                    <h5 class="modal-title">Hồ sơ nhân viên <strong style="color:#ffc107">@profileVM.Eserial @str @profileVM.LastName @profileVM.MiddleName @profileVM.FirstName</strong></h5>
+                    <h5 class="modal-title">Hồ sơ nhân viên <strong style="color:#DBC277">@profileVM.Eserial @str @profileVM.LastName @profileVM.MiddleName @profileVM.FirstName</strong></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="()=> GetProfileList()">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -875,7 +875,7 @@
                 <FluentValidationValidator />
 
                 <div class="modal-header">
-                    <h5 class="modal-title">Chấm dứt hợp đồng <strong style="color:#ffc107">@profileVM.Eserial</strong></h5>
+                    <h5 class="modal-title">Chấm dứt hợp đồng <strong style="color:#DBC277">@profileVM.Eserial</strong></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
