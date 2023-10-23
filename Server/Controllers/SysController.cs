@@ -60,7 +60,7 @@ namespace D69soft.Server.Controllers
         [HttpGet("GetLog")]
         public async Task<ActionResult<List<LogVM>>> GetLog()
         {
-            var sql = "select * from SYSTEM.Log order by LogTime desc ";
+            var sql = "select top 100 * from SYSTEM.Log order by LogTime desc ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)

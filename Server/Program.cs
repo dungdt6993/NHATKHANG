@@ -4,7 +4,6 @@ using Data.Infrastructure;
 using DevExpress.AspNetCore;
 using DevExpress.AspNetCore.Reporting;
 using DevExpress.Security.Resources;
-using DevExpress.XtraCharts;
 using DevExpress.XtraReports.Web.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Localization;
@@ -131,7 +130,7 @@ namespace D69soft
             app.MapFallbackToFile("index.html");
 
             string contentPath = app.Environment.ContentRootPath;
-            AppDomain.CurrentDomain.SetData("DXResourceDirectory", contentPath);
+            AccessSettings.StaticResources.TrySetRules(DirectoryAccessRule.Allow(contentPath));
 
             app.Run();
         }

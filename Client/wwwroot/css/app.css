@@ -80,15 +80,15 @@
     transform: rotate(-90deg);
 }
 
-.loading-progress circle:last-child {
-    stroke: #ffc107;
-    stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
-    transition: stroke-dasharray 0.05s ease-in-out;
-}
+    .loading-progress circle:last-child {
+        stroke: #DBC277;
+        stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
+        transition: stroke-dasharray 0.05s ease-in-out;
+    }
 
 .loading-progress-text {
     position: absolute;
-    color: #ffc107;
+    color: #DBC277;
     text-align: center;
     font-weight: bold;
     inset: calc(0vh + 3.25rem) 0 auto 0.2rem;

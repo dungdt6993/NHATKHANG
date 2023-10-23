@@ -1,10 +1,10 @@
 ﻿a {
-    color: #ffc107;
+    color: #343C40;
     cursor: pointer;
 }
 
 .nav-pills .nav-link.active {
-    background-color: #ffc107;
+    background-color: #DBC277;
 }
 
 .card-body.p-0 .table tbody > tr > td:first-of-type, .card-body.p-0 .table tbody > tr > th:first-of-type, .card-body.p-0 .table tfoot > tr > td:first-of-type, .card-body.p-0 .table tfoot > tr > th:first-of-type, .card-body.p-0 .table thead > tr > td:first-of-type, .card-body.p-0 .table thead > tr > th:first-of-type {
@@ -61,7 +61,7 @@
 }
 
     .form-control:focus {
-        border-color: #ffc107;
+        border-color: #DBC277;
     }
 
 .input-group [data-toggle=modal] {
@@ -81,12 +81,12 @@
 }
 
 .page-item.active .page-link {
-    background-color: #ffc107;
-    border-color: #ffc107;
+    background-color: #DBC277;
+    border-color: #DBC277;
 }
 
 .page-link {
-    color: #ffc107;
+    color: #DBC277;
 }
 
 .modal-xxl {
@@ -112,9 +112,9 @@
 }
 
 .blazored-typeahead__active-item, .blazored-typeahead__result:hover, .blazored-typeahead__result:focus {
-    background-color: #ffc107;
-    border-top: 1px solid #ffc107;
-    border-bottom: 1px solid #ffc107;
+    background-color: #DBC277;
+    border-top: 1px solid #DBC277;
+    border-bottom: 1px solid #DBC277;
 }
 
 /*Table*/
@@ -185,7 +185,7 @@ label {
 }
 
 .dropdown-item.active, .dropdown-item:active {
-    background-color: #ffc107;
+    background-color: #DBC277;
 }
 
 .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
@@ -194,15 +194,15 @@ label {
 
 /*daterangepicker*/
 .daterangepicker .ranges li.active {
-    background-color: #ffc107;
+    background-color: #DBC277;
 }
 
 .daterangepicker td.active, .daterangepicker td.active:hover {
-    background-color: #ffc107;
+    background-color: #DBC277;
 }
 
 .applyBtn {
-    background-color: #ffc107;
+    background-color: #DBC277;
 }
 
 .daterangepicker .ranges li {
