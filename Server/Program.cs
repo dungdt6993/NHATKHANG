@@ -129,12 +129,6 @@ namespace D69soft
 
             app.MapFallbackToFile("index.html");
 
-<<<<<<< HEAD
-=======
-            string contentPath = app.Environment.ContentRootPath;
-            AccessSettings.StaticResources.TrySetRules(DirectoryAccessRule.Allow(contentPath));
-
->>>>>>> 39a1826812327dfc264af91bfb3d7789be57deb5
             app.Run();
         }
     }
