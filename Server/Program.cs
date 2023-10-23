@@ -130,9 +130,6 @@ namespace D69soft
 
             app.MapFallbackToFile("index.html");
 
-            string contentPath = app.Environment.ContentRootPath;
-            AppDomain.CurrentDomain.SetData("DXResourceDirectory", contentPath);
-
             app.Run();
         }
     }
