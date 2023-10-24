@@ -72,7 +72,7 @@
     </div>
     <!-- Body Wrapper End Here -->
 
-    <script src="_framework/blazor.webassembly.js"></script>
+    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
 
     <!-- jQuery-V1.12.4 -->
@@ -115,11 +115,18 @@
     <script src="js/jquery.nice-select.min.js"></script>
     <!-- ScrollUp js -->
     <script src="js/scrollUp.min.js"></script>
+    <!-- Modernizr js -->
+    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
     <!-- Main/Activator js -->
     <script src="js/main.js"></script>
 
-    <!-- Modernizr js -->
-    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+    <script>
+        Blazor.start().then(function () {
+            var customScript = document.createElement('script');
+            customScript.setAttribute('src', 'js/main.js');
+            document.head.appendChild(customScript);
+        });
+    </script>
 
 </body>
 
