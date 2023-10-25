@@ -42,7 +42,7 @@ namespace D69soft.Server.Controllers.FIN
         [HttpGet("GetItemsClassList")]
         public async Task<ActionResult<IEnumerable<ItemsClassVM>>> GetItemsClassList()
         {
-            var sql = "select * from FIN.ItemsClass order by IClsName ";
+            var sql = "select * from FIN.ItemsClass order by IClsNo ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)
@@ -173,9 +173,14 @@ namespace D69soft.Server.Controllers.FIN
             sql += "left join FIN.ItemsGroup ig on ig.IGrpCode = i.IGrpCode ";
             sql += "left join FIN.VATDef vat on vat.VATCode = i.VATDefault ";
             sql += "where IActive=@IActive ";
+            if(_filterVM.IsSale)
+            {
+                sql += "and i.IsSale=@IsSale ";
+            }
             sql += "and (i.IClsCode=@IClsCode or coalesce(@IClsCode,'') = '') ";
             sql += "and (i.IGrpCode=@IGrpCode or coalesce(@IGrpCode,'') = '') ";
             sql += "and (i.ICode LIKE CONCAT('%',@searchText,'%') or i.IName LIKE CONCAT('%',@searchText,'%')) ";
+            sql += "order by ic.IClsNo ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)

@@ -42,6 +42,7 @@ namespace D69soft.Shared.Models.ViewModels.SYSTEM
         public int Period { get; set; }
         public string RequestStatus { get; set; }
         public bool isHandover { get; set; }
+        public bool IsSale { get; set; }
 
         //HR
         public string DivisionID { get; set; }

@@ -19,5 +19,13 @@ namespace D69soft.Client.Services.FIN
             return await _httpClient.GetFromJsonAsync<IEnumerable<ItemsClassVM>>($"api/Inventory/GetItemsClassList");
         }
 
+
+        public async Task<List<ItemsVM>> GetItemsList(FilterVM _filterVM)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/Inventory/GetItemsList", _filterVM);
+
+            return await response.Content.ReadFromJsonAsync<List<ItemsVM>>();
+        }
+
     }
 }
