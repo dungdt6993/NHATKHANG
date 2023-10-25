@@ -9,6 +9,8 @@ namespace eCommerce.Pages
     partial class Index
     {
         [Inject] IJSRuntime js { get; set; }
+        [Inject] NavigationManager navigationManager { get; set; }
+        [Inject] HttpClient httpClient { get; set; }
         [Inject] eCommerceService eCommerceService { get; set; }
 
         //Filter
@@ -18,7 +20,15 @@ namespace eCommerce.Pages
         IEnumerable<ItemsClassVM> itemsClassVMs;
 
         //Items
+        ItemsVM itemsVM = new();
         List<ItemsVM> itemsVMs;
+
+        string urlAPI = "http://nhatkhang.vn";
+
+        protected async override Task OnAfterRenderAsync(bool firstRender)
+        {
+            await js.InvokeAsync<object>("fixJSFunctions");
+        }
 
         protected override async Task OnInitializedAsync()
         {
@@ -37,5 +47,6 @@ namespace eCommerce.Pages
             filterVM.IsSale = true;
             itemsVMs = await eCommerceService.GetItemsList(filterVM);
         }
+
     }
 }
