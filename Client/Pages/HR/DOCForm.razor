@@ -203,7 +203,7 @@
             </div>
 
             <div class="col-sm-1 col-md-1">
-                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetDOCFormList())">
+                <button type="button" class="btn btn-sm btn-block btn-primary" @onclick="(() => GetDOCFormList())">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -214,7 +214,7 @@
 
 <section class="content">
     <div class="container-fluid">
-        <div class="card card-warning card-outline">
+        <div class="card card-primary card-outline">
 
             <div class="card-header text-right">
                 @if (DOC_DOCForm_Update)
@@ -255,22 +255,22 @@
 
                                                     if (ext == ".pdf")
                                                     {
-                                                        <i class="fa-regular fa-file-pdf fa-2xl text-danger"></i>
+                                                        <i class="fa-regular fa-file-pdf fa-2xl"></i>
                                                     }
 
                                                     if (ext == ".doc" || ext == ".docx")
                                                     {
-                                                        <i class="fa-regular fa-2xl fa-file-word text-primary"></i>
+                                                        <i class="fa-regular fa-2xl fa-file-word"></i>
                                                     }
 
                                                     if (ext == ".xls" || ext == ".xlsx")
                                                     {
-                                                        <i class="fa-regular fa-2xl fa-file-excel text-success"></i>
+                                                        <i class="fa-regular fa-2xl fa-file-excel"></i>
                                                     }
 
                                                     if (ext == ".ppt" || ext == ".pptx")
                                                     {
-                                                        <i class="fa-regular fa-2xl fa-file-powerpoint text-danger"></i>
+                                                        <i class="fa-regular fa-2xl fa-file-powerpoint"></i>
                                                     }
                                                 }
 

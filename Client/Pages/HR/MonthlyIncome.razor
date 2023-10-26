@@ -236,7 +236,7 @@
             </div>
 
             <div class="col-md-1">
-                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetMonthlyIncomeTrnOtherList(0))">
+                <button type="button" class="btn btn-sm btn-block btn-primary" @onclick="(() => GetMonthlyIncomeTrnOtherList(0))">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -246,7 +246,7 @@
 
 <section class="content">
     <div class="container-fluid">
-        <div class="card card-warning card-outline">
+        <div class="card card-primary card-outline">
 
             <div class="card-header text-right">
                 @if (IsOpenFunc)
@@ -256,7 +256,7 @@
                             <div class="input-group">
                                 <input type="text" class="form-control form-control-sm form-control-border border-width-2" @bind="filterVM.strDataFromExcel" placeholder="Dữ liệu từ Excel...">
                                 <button type="button" class="btn btn-sm btn-success" @onclick="()=>GetDataPayrollFromExcel()" data-title="Đẩy dữ liệu từ Excel"><i class="fas fa-upload"></i></button>
-                                <button type="button" class="btn btn-sm bg-warning" @onclick="()=>GetMonthlyIncomeTrnOtherList(1)"><i class="fas fa-search"></i> <i class="fa-solid fa-file-excel"></i></button>
+                                <button type="button" class="btn btn-sm btn-primary" @onclick="()=>GetMonthlyIncomeTrnOtherList(1)"><i class="fas fa-search"></i> <i class="fa-solid fa-file-excel"></i></button>
                             </div>
                         </div>
 
@@ -288,7 +288,7 @@
                                     @if (monthlyIncomeTrnOtherVMs != null)
                                     {
                                         <div class="custom-control custom-checkbox">
-                                            <input class="custom-control-input custom-control-input-warning" type="checkbox" id="ckAll" @onchange="EventArgs => { CheckAll(EventArgs.Value); }" checked="@filterVM.IsChecked">
+                                            <input class="custom-control-input custom-control-input-primary" type="checkbox" id="ckAll" @onchange="EventArgs => { CheckAll(EventArgs.Value); }" checked="@filterVM.IsChecked">
                                             <label for="ckAll" class="custom-control-label"></label>
                                         </div>
                                     }
@@ -311,7 +311,7 @@
                                 <tr>
                                     <td class="text-center">
                                         <div class="custom-control custom-checkbox">
-                                            <input class="custom-control-input custom-control-input-warning custom-control-input-outline" id="@_monthlyIncomeTrnOtherVM.SeqMITrnOther" type="checkbox" @bind="_monthlyIncomeTrnOtherVM.IsChecked">
+                                            <input class="custom-control-input custom-control-input-primary custom-control-input-outline" id="@_monthlyIncomeTrnOtherVM.SeqMITrnOther" type="checkbox" @bind="_monthlyIncomeTrnOtherVM.IsChecked">
                                             <label for="@_monthlyIncomeTrnOtherVM.SeqMITrnOther" class="custom-control-label"></label>
                                         </div>
                                     </td>

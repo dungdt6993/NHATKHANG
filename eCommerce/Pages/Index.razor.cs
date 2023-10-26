@@ -3,6 +3,7 @@ using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using static System.Net.WebRequestMethods;
 
 namespace eCommerce.Pages
 {
@@ -22,8 +23,6 @@ namespace eCommerce.Pages
         //Items
         ItemsVM itemsVM = new();
         List<ItemsVM> itemsVMs;
-
-        string urlAPI = "http://nhatkhang.vn";
 
         protected async override Task OnAfterRenderAsync(bool firstRender)
         {

@@ -279,7 +279,7 @@
             </div>
 
             <div class="col-sm-1 col-md-1">
-                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetAgreementTextList())">
+                <button type="button" class="btn btn-sm btn-block btn-primary" @onclick="(() => GetAgreementTextList())">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -289,7 +289,7 @@
 
 <section class="content">
     <div class="container-fluid">
-        <div class="card card-warning card-outline">
+        <div class="card card-primary card-outline">
 
             <div class="card-header text-right">
                 <button type="button" class="btn btn-sm btn-secondary" data-target="#InitializeModal_AgreementText" data-toggle="modal" @onclick="()=>InitializeModal_AgreementText()"><i class="fa-solid fa-file-pen"></i> Cấu hình văn bản thỏa thuận</button>
@@ -297,7 +297,7 @@
                 {
                     if (agreementTextVMs.Where(x => x.IsChecked).Count() > 0)
                     {
-                        <button type="button" class="btn bg-warning" @onclick="(() => PrintAgreementText())"><i class="fas fa-print"></i></button>
+                        <button type="button" class="btn btn-primary" @onclick="(() => PrintAgreementText())"><i class="fas fa-print"></i></button>
                     }
                 }
             </div>
@@ -312,7 +312,7 @@
                                     @if (agreementTextVMs != null)
                                     {
                                         <div class="custom-control custom-checkbox">
-                                            <input class="custom-control-input custom-control-input-warning" type="checkbox" id="ckAll" @onchange="EventArgs => { CheckAll(EventArgs.Value); }" checked="@filterVM.IsChecked">
+                                            <input class="custom-control-input custom-control-input-primary" type="checkbox" id="ckAll" @onchange="EventArgs => { CheckAll(EventArgs.Value); }" checked="@filterVM.IsChecked">
                                             <label for="ckAll" class="custom-control-label"></label>
                                         </div>
                                     }
@@ -332,7 +332,7 @@
                                 <tr>
                                     <td class="text-center">
                                         <div class="custom-control custom-checkbox">
-                                            <input class="custom-control-input custom-control-input-warning custom-control-input-outline" id="@agreementText.Seq" type="checkbox" @bind="agreementText.IsChecked">
+                                            <input class="custom-control-input custom-control-input-primary custom-control-input-outline" id="@agreementText.Seq" type="checkbox" @bind="agreementText.IsChecked">
                                             <label for="@agreementText.Seq" class="custom-control-label"></label>
                                         </div>
                                     </td>

@@ -164,7 +164,7 @@
 <section class="content">
     <div class="container-fluid">
 
-        <div class="card card-warning card-outline table-responsive p-0">
+        <div class="card card-primary card-outline table-responsive p-0">
             <!-- /.card-header -->
             @if (workPlanVMs != null)
             {
@@ -183,7 +183,7 @@
                     <table class="table table-sm table-bordered tblFontSizeMin">
                         <thead>
                             <tr>
-                                <th class="text-center text-white bg-warning">@_positionGroup.PositionGroupName</th>
+                                <th class="text-center text-white bg-primary">@_positionGroup.PositionGroupName</th>
                                 <th class="text-center text-white bg-secondary">Đầu mục công việc <button class="btn btn-xs btn-success" @onclick="@(() => InitializeModalUpdate_WorkPlan(0,_positionGroup.PositionGroupID, workPlanVM))"><i class="fa-solid fa-plus"></i></button></th>
                                 <th class="text-center text-white bg-secondary">Mô tả công việc</th>
                                 <th class="text-center text-white bg-secondary">Bắt đầu</th>

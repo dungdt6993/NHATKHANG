@@ -200,7 +200,7 @@
                                         <div class="single-product-wrap">
                                             <div class="product-image">
                                                 <a href="single-product.html">
-                                                    <img src="images/product/large-size/2.jpg" alt="Li's Product Image">
+                                                    <img src="https://localhost:7113/@_itemsVM.IURLPicture1" alt="Li's Product Image">
                                                 </a>
                                                 <span class="sticker">Mới</span>
                                             </div>
@@ -264,14 +264,11 @@
                         <div class="product-details-left">
                             <div class="product-details-images slider-navigation-1">
                                 <div class="lg-image">
-                                    @{
-                                        var url = $"{urlAPI}/{itemsVM.IURLPicture1}";
-                                    }
-                                    <img src="data:image/gif;base64,@Convert.ToBase64String(httpClient.GetByteArrayAsync(url).Result)" alt="product image">
+                                    <img src="https://localhost:7113/@itemsVM.IURLPicture1" alt="product image" />
                                 </div>
                             </div>
                             <div class="product-details-thumbs slider-thumbs-1">
-                                <div class="sm-image"><img src="@itemsVM.IURLPicture1" alt="product image thumb"></div>
+                                <div class="sm-image"><img src="https://localhost:7113/@itemsVM.IURLPicture1" alt="product image thumb"></div>
                             </div>
                         </div>
                         <!--// Product Details Left -->

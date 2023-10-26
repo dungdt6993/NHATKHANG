@@ -1,5 +1,6 @@
 using D69soft.Client.Services.FIN;
 using eCommerce;
+using eCommerce.Extensions;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -16,4 +17,6 @@ builder.Services.AddScoped(sp => new HttpClient
 });
 
 
-await builder.Build().RunAsync();
+var host = builder.Build();
+await host.SetDefaultCulture();
+await host.RunAsync();

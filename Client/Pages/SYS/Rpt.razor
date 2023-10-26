@@ -269,7 +269,7 @@
 
 <section class="content">
     <div class="container-fluid">
-        <div class="card card-warning card-outline">
+        <div class="card card-primary card-outline">
 
             @if (filterVM.isLeader)
             {
@@ -277,11 +277,11 @@
 
                     @if (IsEditRpt)
                     {
-                        <button type="button" class="btn bg-warning" @onclick="(() => EditReport())"><i class="far fa-arrow-alt-circle-left"></i> Trở lại</button>
+                        <button type="button" class="btn btn-primary" @onclick="(() => EditReport())"><i class="far fa-arrow-alt-circle-left"></i> Trở lại</button>
                     }
                     else
                     {
-                        <button type="button" class="btn bg-warning" @onclick="(() => EditReport())"><i class="fa-solid fa-palette"></i> Thiết kế</button>
+                        <button type="button" class="btn btn-primary" @onclick="(() => EditReport())"><i class="fa-solid fa-palette"></i> Thiết kế</button>
                     }
 
                 </div>

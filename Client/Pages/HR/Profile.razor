@@ -259,7 +259,7 @@
                                 <div class="@hidden_adjustProfile">
 
                                     <div class="form-group clearfix">
-                                        <div class="icheck-warning d-inline">
+                                        <div class="icheck-primary d-inline">
                                             <input type="radio" id="ckContractExtension1" name="ckContractExtension" value="1" @onchange="onchange_ckContractExtension" checked="@(profileVM.ckContractExtension == 1? true: false)" disabled="@disable_ckContractExtension">
                                             <label for="ckContractExtension1">
                                                 Gia hạn hợp đồng
@@ -268,7 +268,7 @@
                                         <label>
                                             &nbsp;&nbsp;
                                         </label>
-                                        <div class="icheck-warning d-inline">
+                                        <div class="icheck-primary d-inline">
                                             <input type="radio" id="ckContractExtension2" name="ckContractExtension" value="2" @onchange="onchange_ckContractExtension" checked="@(profileVM.ckContractExtension == 2? true: false)" disabled="@disable_ckContractExtension">
                                             <label for="ckContractExtension2">
                                                 Gia hạn hợp đồng trước thời hạn
@@ -277,7 +277,7 @@
                                     </div>
 
                                     <div class="form-group clearfix">
-                                        @*                                        <div class="icheck-warning d-inline">
+                                        @*                                        <div class="icheck-primary d-inline">
                                         <input type="radio" id="ckJob1" name="ckJob" value="1" @onchange="onchange_ckJob" checked="@(profileVM.ckJob == 1? true: false)" disabled="@disable_ckJob">
                                         <label for="ckJob1">
                                         Thay đổi công việc
@@ -286,7 +286,7 @@
                                         <label>
                                         &nbsp;&nbsp;
                                         </label>*@
-                                        <div class="icheck-warning d-inline">
+                                        <div class="icheck-primary d-inline">
                                             <input type="radio" id="ckJob2" name="ckJob" value="2" @onchange="onchange_ckJob" checked="@(profileVM.ckJob == 2? true: false)" disabled="@disable_ckJob">
                                             <label for="ckJob2">
                                                 Điều chuyển công việc
@@ -295,7 +295,7 @@
                                         <label>
                                             &nbsp;&nbsp;
                                         </label>
-                                        <div class="icheck-warning d-inline">
+                                        <div class="icheck-primary d-inline">
                                             <input type="radio" id="ckJob3" name="ckJob" value="3" @onchange="onchange_ckJob" checked="@(profileVM.ckJob == 3? true: false)" disabled="@disable_ckJob">
                                             <label for="ckJob3">
                                                 Bổ nhiệm
@@ -609,7 +609,7 @@
 
                                 <div class="@hidden_adjustProfile">
                                     <div class="form-group clearfix">
-                                        <div class="icheck-warning d-inline">
+                                        <div class="icheck-primary d-inline">
                                             <input type="radio" id="ckSal" name="ckSal" value="1" @onchange="onchange_ckSal" checked="@(profileVM.ckSal == 1? true: false)" disabled="@disable_ckSal">
                                             <label for="ckSal">
                                                 Điều chỉnh lương
@@ -955,7 +955,7 @@
                                     {
                                         <li>
                                             <div class="custom-control custom-checkbox">
-                                                <input class="custom-control-input custom-control-input-warning" type="checkbox" id="@permis_funcGroup.FuncGrpID" @onchange="EventArgs => { CheckAll_GrpFunc(EventArgs.Value, permis_funcGroup.FuncGrpID); }" checked="@permis_funcGroup.IsChecked">
+                                                <input class="custom-control-input custom-control-input-primary" type="checkbox" id="@permis_funcGroup.FuncGrpID" @onchange="EventArgs => { CheckAll_GrpFunc(EventArgs.Value, permis_funcGroup.FuncGrpID); }" checked="@permis_funcGroup.IsChecked">
                                                 <label for="@permis_funcGroup.FuncGrpID" class="custom-control-label">@permis_funcGroup.FuncGrpName</label>
                                             </div>
                                             <ul>
@@ -965,7 +965,7 @@
                                                     {
                                                         <li>
                                                             <div class="custom-control custom-checkbox">
-                                                                <input class="custom-control-input custom-control-input-warning custom-control-input-outline" type="checkbox" id="@permis_func.FuncID" @onchange="EventArgs => { CheckAll_Func(EventArgs.Value, permis_func, permis_funcGroup); }" checked="@permis_func.IsChecked">
+                                                                <input class="custom-control-input custom-control-input-primary custom-control-input-outline" type="checkbox" id="@permis_func.FuncID" @onchange="EventArgs => { CheckAll_Func(EventArgs.Value, permis_func, permis_funcGroup); }" checked="@permis_func.IsChecked">
                                                                 <label for="@permis_func.FuncID" class="custom-control-label">@permis_func.FuncName</label>
                                                             </div>
                                                             <ul>
@@ -973,7 +973,7 @@
                                                                 {
                                                                     <li>
                                                                         <div class="custom-control custom-checkbox">
-                                                                            <input class="custom-control-input custom-control-input-warning custom-control-input-outline" type="checkbox" id="@permis_subFunc.SubFuncID" @onchange="EventArgs => { Check_SubFunc(EventArgs.Value, permis_subFunc, permis_func, permis_funcGroup); }" checked="@permis_subFunc.IsChecked">
+                                                                            <input class="custom-control-input custom-control-input-primary custom-control-input-outline" type="checkbox" id="@permis_subFunc.SubFuncID" @onchange="EventArgs => { Check_SubFunc(EventArgs.Value, permis_subFunc, permis_func, permis_funcGroup); }" checked="@permis_subFunc.IsChecked">
                                                                             <label for="@permis_subFunc.SubFuncID" class="custom-control-label">@permis_subFunc.SubFuncName</label>
                                                                         </div>
                                                                     </li>
@@ -999,7 +999,7 @@
                                         {
                                             <li>
                                                 <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input custom-control-input-warning" type="checkbox" id="@permis_div.DivisionID" @onchange="EventArgs => { CheckAll_Division(EventArgs.Value, permis_div.DivisionID); }" checked="@permis_div.IsChecked">
+                                                    <input class="custom-control-input custom-control-input-primary" type="checkbox" id="@permis_div.DivisionID" @onchange="EventArgs => { CheckAll_Division(EventArgs.Value, permis_div.DivisionID); }" checked="@permis_div.IsChecked">
                                                     <label for="@permis_div.DivisionID" class="custom-control-label">@permis_div.DivisionID - @permis_div.DivisionName</label>
                                                 </div>
                                                 <ul>
@@ -1008,7 +1008,7 @@
                                                         {
                                                             <li>
                                                                 <div class="custom-control custom-checkbox">
-                                                                    <input class="custom-control-input custom-control-input-warning custom-control-input-outline" type="checkbox" id="@permis_dept.DepartmentID" @onchange="EventArgs => { Check_Department(EventArgs.Value, permis_dept, permis_div); }" checked="@permis_dept.IsChecked">
+                                                                    <input class="custom-control-input custom-control-input-primary custom-control-input-outline" type="checkbox" id="@permis_dept.DepartmentID" @onchange="EventArgs => { Check_Department(EventArgs.Value, permis_dept, permis_div); }" checked="@permis_dept.IsChecked">
                                                                     <label for="@permis_dept.DepartmentID" class="custom-control-label">@permis_dept.DepartmentID - @permis_dept.DepartmentName</label>
                                                                 </div>
                                                             </li>
@@ -1030,7 +1030,7 @@
                                         {
                                             <li>
                                                 <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input custom-control-input-warning" type="checkbox" id="RG_@permis_rptgrp.RptGrpID" @onchange="EventArgs => { CheckAll_RptGrp(EventArgs.Value, permis_rptgrp.RptGrpID); }" checked="@permis_rptgrp.IsChecked">
+                                                    <input class="custom-control-input custom-control-input-primary" type="checkbox" id="RG_@permis_rptgrp.RptGrpID" @onchange="EventArgs => { CheckAll_RptGrp(EventArgs.Value, permis_rptgrp.RptGrpID); }" checked="@permis_rptgrp.IsChecked">
                                                     <label for="RG_@permis_rptgrp.RptGrpID" class="custom-control-label">@permis_rptgrp.RptGrpName</label>
                                                 </div>
                                                 <ul>
@@ -1039,7 +1039,7 @@
                                                         {
                                                             <li>
                                                                 <div class="custom-control custom-checkbox">
-                                                                    <input class="custom-control-input custom-control-input-warning custom-control-input-outline" type="checkbox" id="R_@permis_rpt.RptID" @onchange="EventArgs => { Check_Rpt(EventArgs.Value, permis_rpt, permis_rptgrp); }" checked="@permis_rpt.IsChecked">
+                                                                    <input class="custom-control-input custom-control-input-primary custom-control-input-outline" type="checkbox" id="R_@permis_rpt.RptID" @onchange="EventArgs => { Check_Rpt(EventArgs.Value, permis_rpt, permis_rptgrp); }" checked="@permis_rpt.IsChecked">
                                                                     <label for="R_@permis_rpt.RptID" class="custom-control-label">@permis_rpt.RptName</label>
                                                                 </div>
                                                             </li>
@@ -1090,7 +1090,7 @@
                                 {
                                     <li>
                                         <div class="custom-control custom-checkbox">
-                                            <input class="custom-control-input custom-control-input-warning" type="checkbox" id="@_salTrnGrp.TrnGroupCode" @onchange="EventArgs => { CheckAll_EmplTrn(EventArgs.Value, _salTrnGrp.TrnGroupCode); }" checked="@_salTrnGrp.IsChecked">
+                                            <input class="custom-control-input custom-control-input-primary" type="checkbox" id="@_salTrnGrp.TrnGroupCode" @onchange="EventArgs => { CheckAll_EmplTrn(EventArgs.Value, _salTrnGrp.TrnGroupCode); }" checked="@_salTrnGrp.IsChecked">
                                             <label for="@_salTrnGrp.TrnGroupCode" class="custom-control-label"><span>[</span>@_salTrnGrp.TrnGroupCode<span>] </span>@_salTrnGrp.TrnGroupName</label>
                                         </div>
                                         <ul>
@@ -1099,7 +1099,7 @@
                                                 {
                                                     <li>
                                                         <div class="custom-control custom-checkbox">
-                                                            <input class="custom-control-input custom-control-input-warning custom-control-input-outline" type="checkbox" id="SalTrn@_salTrnCode.SalTrnID" @onchange="EventArgs => { Check_EmplTrn(EventArgs.Value, _salTrnGrp, _salTrnCode); }" checked="@_salTrnCode.IsChecked">
+                                                            <input class="custom-control-input custom-control-input-primary custom-control-input-outline" type="checkbox" id="SalTrn@_salTrnCode.SalTrnID" @onchange="EventArgs => { Check_EmplTrn(EventArgs.Value, _salTrnGrp, _salTrnCode); }" checked="@_salTrnCode.IsChecked">
                                                             <label for="SalTrn@_salTrnCode.SalTrnID" class="custom-control-label"><span>[</span>@_salTrnCode.TrnCode<span> - </span>@_salTrnCode.TrnSubCode<span>] </span>@_salTrnCode.TrnName</label>
                                                         </div>
                                                     </li>
@@ -1895,7 +1895,7 @@
             </div>
 
             <div class="col-md-1">
-                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => GetProfileList())">
+                <button type="button" class="btn btn-sm btn-block btn-primary" @onclick="(() => GetProfileList())">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -1906,7 +1906,7 @@
 
 <section class="content">
     <div class="container-fluid">
-        <div class="card card-warning card-outline">
+        <div class="card card-primary card-outline">
 
             <div class="card-header text-right">
 

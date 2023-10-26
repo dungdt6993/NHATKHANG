@@ -78,7 +78,7 @@
 
                 @if (userInfo != null)
                 {
-                    <div class="card card-warning card-outline">
+                    <div class="card card-primary card-outline">
                         <div class="card-body box-profile">
                             <div class="text-center">
                                 <img class="profile-user-img img-fluid img-circle"
@@ -105,7 +105,7 @@
                                 </li>
                             </ul>
 
-                            <a class="btn bg-warning btn-block" data-target="#InitializeModal_ChangePass" data-toggle="modal"><b>Đổi mật khẩu</b></a>
+                            <a class="btn btn-primary btn-block" data-target="#InitializeModal_ChangePass" data-toggle="modal"><b>Đổi mật khẩu</b></a>
                         </div>
                     </div>
                 }
@@ -132,7 +132,7 @@
                                         @foreach (var _periodPayroll in payslipUsers.Select(x => new { x.Period }).Distinct())
                                         {
                                             <div class="time-label">
-                                                <span class="bg-warning">
+                                                <span class="bg-primary">
                                                     <i class="fa-solid fa-calendar-days"></i> Tháng @_periodPayroll.Period.ToString().Substring(4, 2) năm @_periodPayroll.Period.ToString().Substring(0, 4)
                                                 </span>
                                             </div>

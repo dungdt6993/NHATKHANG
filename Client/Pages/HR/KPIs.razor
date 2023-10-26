@@ -116,7 +116,7 @@
             </div>
 
             <div class="col-md-1">
-                <button type="button" class="btn btn-sm btn-block bg-warning" @onclick="(() => onchange_filter_eserial(String.Empty))">
+                <button type="button" class="btn btn-sm btn-block btn-primary" @onclick="(() => onchange_filter_eserial(String.Empty))">
                     <i class="fa-solid fa-list-check"></i> Tổng hợp
                 </button>
             </div>
@@ -126,7 +126,7 @@
 
 <section class="content">
     <div class="container-fluid">
-        <div class="card card-warning card-outline">
+        <div class="card card-primary card-outline">
 
             <div class="card-header text-right">
             </div>
@@ -518,7 +518,7 @@
                                     @if (KPI_KPIs_Management)
                                     {
                                         <th class="text-center">
-                                            <button type="button" class="btn btn-sm btn-warning" @onclick="(() => InitializeKPI(String.Empty))"><i class="fa-solid fa-retweet"></i></button>
+                                            <button type="button" class="btn btn-sm btn-primary" @onclick="(() => InitializeKPI(String.Empty))"><i class="fa-solid fa-retweet"></i></button>
                                         </th>
                                     }
                                 </tr>
@@ -599,7 +599,7 @@
                                             @if (KPI_KPIs_Management)
                                             {
                                                 <td class="text-center">
-                                                    <button type="button" class="btn btn-sm btn-sm btn-warning" @onclick="(() => InitializeKPI(_rankVM.Eserial))"><i class="fa-solid fa-retweet"></i></button>
+                                                    <button type="button" class="btn btn-sm btn-sm btn-primary" @onclick="(() => InitializeKPI(_rankVM.Eserial))"><i class="fa-solid fa-retweet"></i></button>
                                                 </td>
                                             }
 
