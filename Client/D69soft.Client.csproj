@@ -9,22 +9,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Content Remove="wwwroot\images\Trademark\dashboard.png" />
-	  <Content Remove="wwwroot\images\Trademark\favicon.png" />
-	  <Content Remove="wwwroot\images\Trademark\logo-default.png" />
-	  <Content Remove="wwwroot\images\Trademark\logo-login.png" />
-	  <Content Remove="wwwroot\images\Trademark\NhatKhangLogo.ai" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="wwwroot\images\Trademark\dashboard.png" />
-	  <None Include="wwwroot\images\Trademark\favicon.png" />
-	  <None Include="wwwroot\images\Trademark\logo-default.png" />
-	  <None Include="wwwroot\images\Trademark\logo-login.png" />
-	  <None Include="wwwroot\images\Trademark\NhatKhangLogo.ai" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="BlazorDateRangePicker" Version="4.4.0" />
 		<PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
 		<PackageReference Include="Blazored.LocalStorage" Version="4.4.0" />
@@ -32,10 +16,10 @@
 		<PackageReference Include="Blazored.Typeahead" Version="4.7.0" />
 		<PackageReference Include="ClosedXML.Report" Version="0.2.8" />
 		<PackageReference Include="DevExpress.Blazor.Reporting.JSBasedControls.WebAssembly" Version="23.1.4" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.12" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.12" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.12" PrivateAssets="all" />
-		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.12" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.13" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.13" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.13" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.13" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 
