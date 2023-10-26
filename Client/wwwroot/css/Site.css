@@ -15,7 +15,7 @@
     .dashboard-content:before {
         content: '';
         display: block;
-        background: url("/Data/trademark/dashboard.png") no-repeat center center;
+        background: url("/images/Trademark/dashboard.png") no-repeat center center;
         background-size: 60%;
         position: absolute;
         top: 0;
