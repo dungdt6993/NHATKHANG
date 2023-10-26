@@ -1,4 +1,6 @@
-﻿        <!-- Begin Header Area -->
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+<!-- Begin Header Area -->
 <header>
     <!-- Begin Header Top Area -->
     <div class="header-top">
@@ -22,7 +24,7 @@
                                 <div class="ht-setting-trigger"><span>Tài khoản</span></div>
                                 <div class="setting ht-setting">
                                     <ul class="ht-setting-list">
-                                        <li><a href="#">Đăng nhập</a></li>
+                                        <li><a href="@Configuration["ApiUrl"]">Đăng nhập</a></li>
                                     </ul>
                                 </div>
                             </li>

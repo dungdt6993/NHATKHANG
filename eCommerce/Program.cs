@@ -13,7 +13,7 @@ builder.Services.AddTransient<eCommerceService>();
 //API
 builder.Services.AddScoped(sp => new HttpClient
 {
-    BaseAddress = new Uri(builder.Configuration["BaseAddress"])
+    BaseAddress = new Uri(builder.Configuration["ApiUrl"])
 });
 
 

@@ -1,6 +1,6 @@
 {
-  "name": "NKsoft",
-  "short_name": "NKsoft",
+  "name": "Nhat Khang Soft",
+  "short_name": "Nhat Khang Soft",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -8,12 +8,12 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "icon-512.png",
+      "src": "images/Trademark/icon-512.png",
       "type": "image/png",
       "sizes": "512x512"
     },
     {
-      "src": "icon-192.png",
+      "src": "images/Trademark/icon-192.png",
       "type": "image/png",
       "sizes": "192x192"
     }
