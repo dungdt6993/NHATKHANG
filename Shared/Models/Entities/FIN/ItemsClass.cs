@@ -10,7 +10,7 @@ namespace D69soft.Shared.Models.Entities.FIN
     {
         public string IClsCode { get; set; }
         public string IClsName { get; set; }
-        public string IClsDesc { get; set; }
+        public int IClsNo { get; set; }
         public bool IClsActive { get; set; }
     }
 }

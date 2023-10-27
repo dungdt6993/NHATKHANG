@@ -2205,11 +2205,11 @@ textarea:focus {
 .product-review {
 	border-bottom: 1px solid #ebebeb;
 }
-.manufacturer {
+.instock {
 	font-size: 13px;
 	font-weight: 400;
 	display: inline-block;
-	color: #a4a4a4;
+	color: #2cc067;
 	margin-bottom: 11px;
 	line-height: 16px;
 }

@@ -17,56 +17,38 @@
                         <ul>
                             @if (itemsClassVMs != null)
                             {
-                                @foreach (var _itemsClassVM in itemsClassVMs)
+                                int numShowICls = itemsClassVMs.Count() > 9 ? 8 : 9;
+
+                                @foreach (var _itemsClassVM in itemsClassVMs.Where(x => x.IClsNo <= numShowICls))
                                 {
-                                    <li class="right-menu">
-                                        <a href="shop-left-sidebar.html">@_itemsClassVM.IClsName</a>
-                                        <ul class="cat-mega-menu">
-                                            <li class="right-menu cat-mega-title">
-                                                <a href="shop-left-sidebar.html">Prime Video</a>
-                                                <ul>
-                                                    <li><a href="#">All Videos</a></li>
-                                                    <li><a href="#">Blouses</a></li>
-                                                    <li><a href="#">Evening Dresses</a></li>
-                                                    <li><a href="#">Summer Dresses</a></li>
-                                                    <li><a href="#">T-shirts</a></li>
-                                                    <li><a href="#">Rent or Buy</a></li>
-                                                    <li><a href="#">Your Watchlist</a></li>
-                                                    <li><a href="#">Watch Anywhere</a></li>
-                                                    <li><a href="#">Getting Started</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="right-menu cat-mega-title">
-                                                <a href="shop-left-sidebar.html">Computers</a>
-                                                <ul>
-                                                    <li><a href="#">More to Explore</a></li>
-                                                    <li><a href="#">TV & Video</a></li>
-                                                    <li><a href="#">Audio & Theater</a></li>
-                                                    <li><a href="#">Camera, Photo</a></li>
-                                                    <li><a href="#">Cell Phones</a></li>
-                                                    <li><a href="#">Headphones</a></li>
-                                                    <li><a href="#">Video Games</a></li>
-                                                    <li><a href="#">Wireless Speakers</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="right-menu cat-mega-title">
-                                                <a href="shop-left-sidebar.html">Electronics</a>
-                                                <ul>
-                                                    <li><a href="#">Amazon Home</a></li>
-                                                    <li><a href="#">Kitchen & Dining</a></li>
-                                                    <li><a href="#">Furniture</a></li>
-                                                    <li><a href="#">Bed & Bath</a></li>
-                                                    <li><a href="#">Appliances</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
+                                    <li class="@(itemsGroupVMs.Where(x => x.IClsCode == _itemsClassVM.IClsCode).Count()>0?"right-menu":"")">
+                                        <a href="/Items">@_itemsClassVM.IClsName</a>
+                                        @if (itemsGroupVMs.Where(x => x.IClsCode == _itemsClassVM.IClsCode).Count() > 0)
+                                        {
+                                            <ul class="cat-mega-menu">
+                                                @foreach (var _itemsGroupVM in itemsGroupVMs.Where(x => x.IClsCode == _itemsClassVM.IClsCode))
+                                                {
+                                                    <li class="right-menu cat-mega-title">
+                                                        <a href="/Items">@_itemsGroupVM.IGrpName</a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        }
                                     </li>
                                 }
-                                <li class="rx-child"><a href="#">Danh mục ẩn thứ 9...</a></li>
-                                <li class="rx-parent">
-                                    <a class="rx-default">Hiển thị thêm</a>
-                                    <a class="rx-show">Thu gọn</a>
-                                </li>
+                                @if (itemsClassVMs.Count() > 9)
+                                {
+                                    @foreach (var _itemsClassVM in itemsClassVMs.Where(x => x.IClsNo > 8))
+                                    {
+                                        <li class="rx-child"><a href="#">@_itemsClassVM.IClsName</a></li>
+                                    }
+
+                                    <li class="rx-parent">
+                                        <a class="rx-default">Hiển thị thêm</a>
+                                        <a class="rx-show">Thu gọn</a>
+                                    </li>
+                                }
+
                             }
                         </ul>
                     </div>
@@ -82,11 +64,11 @@
                         <div class="single-slide align-center-left animation-style-01 bg-7">
                             <div class="slider-progress"></div>
                             <div class="slider-content">
-                                <h5>Sale Offer <span>-20% Off</span> This Week</h5>
-                                <h2>Chamcham Galaxy S9 | S9+</h2>
-                                <h3>Starting at <span>$589.00</span></h3>
+                                <h5><span>Giải pháp công nghệ thông tin</span></h5>
+                                <h2>Khảo sát, tư vấn, thiết kế hệ thống</h2>
+                                <h3><span>Tư vấn miễn phí</span></h3>
                                 <div class="default-btn slide-btn">
-                                    <a class="links" href="tel:0362428369">Hotline: 036.242.8369</a>
+                                    <a class="links" href="https://zalo.me/0362428369" target="_blank"><i class="fa fa-phone" aria-hidden="true"></i> 036.242.8369</a>
                                 </div>
                             </div>
                         </div>
@@ -95,11 +77,11 @@
                         <div class="single-slide align-center-left animation-style-02 bg-8">
                             <div class="slider-progress"></div>
                             <div class="slider-content">
-                                <h5>Sale Offer <span>Black Friday</span> This Week</h5>
-                                <h2>Work Desk Surface Studio 2018</h2>
-                                <h3>Starting at <span>$1599.00</span></h3>
+                                <h5><span>Giải pháp công nghệ thông tin</span></h5>
+                                <h2>Đề xuất phương án thiết bị phù hợp với doanh nghiệp</h2>
+                                <h3><span>Tư vấn miễn phí</span></h3>
                                 <div class="default-btn slide-btn">
-                                    <a class="links" href="tel:0362428369">Hotline: 036.242.8369</a>
+                                    <a class="links" href="https://zalo.me/0362428369" target="_blank"><i class="fa fa-phone" aria-hidden="true"></i> 036.242.8369</a>
                                 </div>
                             </div>
                         </div>
@@ -108,11 +90,11 @@
                         <div class="single-slide align-center-left animation-style-01 bg-9">
                             <div class="slider-progress"></div>
                             <div class="slider-content">
-                                <h5>Sale Offer <span>-10% Off</span> This Week</h5>
-                                <h2>Phantom 4 Pro+ Obsidian</h2>
-                                <h3>Starting at <span>$809.00</span></h3>
+                                <h5><span>Giải pháp công nghệ thông tin</span></h5>
+                                <h2>Phần mềm quản trị tối ưu theo đặc thù doanh nghiệp</h2>
+                                <h3><span>Tư vấn miễn phí</span></h3>
                                 <div class="default-btn slide-btn">
-                                    <a class="links" href="tel:0362428369">Hotline: 036.242.8369</a>
+                                    <a class="links" href="https://zalo.me/0362428369" target="_blank"><i class="fa fa-phone" aria-hidden="true"></i> 036.242.8369</a>
                                 </div>
                             </div>
                         </div>
@@ -201,7 +183,7 @@
                                         <!-- single-product-wrap start -->
                                         <div class="single-product-wrap">
                                             <div class="product-image">
-                                                <a href="single-product.html">
+                                                <a href="#" data-toggle="modal" data-target="#modalQuicViewProduct" @onclick="() => itemsVM = _itemsVM">
                                                     <img src="@(Configuration["ApiUrl"]+_itemsVM.IURLPicture1)" alt="Li's Product Image">
                                                 </a>
                                                 <span class="sticker">Mới</span>
@@ -209,23 +191,23 @@
                                             <div class="product_desc">
                                                 <div class="product_desc_info">
                                                     <div class="product-review">
-                                                        <h5 class="manufacturer">
-                                                            <a href="shop-left-sidebar.html">@_itemsVM.IGrpName</a>
+                                                        <h5 class="instock">
+                                                            <i class="fa fa-check" aria-hidden="true"></i> Sẵn hàng
                                                         </h5>
                                                         <div class="rating-box">
                                                             <ul class="rating">
                                                                 <li><i class="fa fa-star-o"></i></li>
                                                                 <li><i class="fa fa-star-o"></i></li>
                                                                 <li><i class="fa fa-star-o"></i></li>
-                                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
+                                                                <li><i class="fa fa-star-o"></i></li>
+                                                                <li><i class="fa fa-star-o"></i></li>
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <h4><a class="product_name" href="single-product.html">@_itemsVM.IName</a></h4>
+                                                    <h4><a class="product_name" href="#" data-toggle="modal" data-target="#modalQuicViewProduct" @onclick="() => itemsVM = _itemsVM">@_itemsVM.IName</a></h4>
                                                     <div class="price-box">
-                                                        <span class="new-price new-price-2">@String.Format("{0:#,##0}",_itemsVM.IPrice) đ</span>
-                                                        <span class="old-price">@String.Format("{0:#,##0}",_itemsVM.IPrice) đ</span>
+                                                        <span class="new-price new-price-2">@String.Format("{0:#,##0}", _itemsVM.IPrice) đ</span>
+                                                        <span class="old-price">@String.Format("{0:#,##0}", _itemsVM.IPrice) đ</span>
                                                         <span class="discount-percentage">-0%</span>
                                                     </div>
                                                 </div>
@@ -233,7 +215,7 @@
                                                     <ul class="add-actions-link">
                                                         <li class="add-cart active"><a href="#">Thêm vào giỏ</a></li>
                                                         <li><a class="links-details" href="single-product.html"><i class="fa fa-heart-o"></i></a></li>
-                                                        <li><a class="quick-view" data-toggle="modal" data-target="#modalQuicViewProduct" href="#" @onclick="() => itemsVM = _itemsVM"><i class="fa fa-eye"></i></a></li>
+                                                        <li><a class="quick-view" href="#" data-toggle="modal" data-target="#modalQuicViewProduct" @onclick="() => itemsVM = _itemsVM"><i class="fa fa-eye"></i></a></li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -285,12 +267,12 @@
                                         <li><i class="fa fa-star-o"></i></li>
                                         <li><i class="fa fa-star-o"></i></li>
                                         <li><i class="fa fa-star-o"></i></li>
-                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
+                                        <li><i class="fa fa-star-o"></i></li>
+                                        <li><i class="fa fa-star-o"></i></li>
                                     </ul>
                                 </div>
                                 <div class="price-box pt-20">
-                                    <span class="new-price new-price-2">@String.Format("{0:#,##0}",itemsVM.IPrice) đ</span>
+                                    <span class="new-price new-price-2">@String.Format("{0:#,##0}", itemsVM.IPrice) đ</span>
                                 </div>
                                 <div class="product-desc">
                                     <p>
@@ -317,9 +299,7 @@
                                     <div class="product-social-sharing pt-25">
                                         <ul>
                                             <li class="facebook"><a href="#"><i class="fa fa-facebook"></i>Facebook</a></li>
-                                            <li class="twitter"><a href="#"><i class="fa fa-twitter"></i>Twitter</a></li>
-                                            <li class="google-plus"><a href="#"><i class="fa fa-google-plus"></i>Google +</a></li>
-                                            <li class="instagram"><a href="#"><i class="fa fa-instagram"></i>Instagram</a></li>
+                                            <li class="youtube"><a href="#"><i class="fa fa-youtube"></i>Youtube</a></li>
                                         </ul>
                                     </div>
                                 </div>

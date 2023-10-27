@@ -32,7 +32,7 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public bool IsSale { get; set; }
         public string IClsCode { get; set; }
         public string IClsName { get; set; }
-        public string IClsDesc { get; set; }
+        public int IClsNo { get; set; }
         public bool IClsActive { get; set; }
         public string IGrpCode { get; set; }
         public string IGrpName { get; set; }

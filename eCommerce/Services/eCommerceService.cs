@@ -18,7 +18,10 @@ namespace D69soft.Client.Services.FIN
         {
             return await _httpClient.GetFromJsonAsync<IEnumerable<ItemsClassVM>>($"api/Inventory/GetItemsClassList");
         }
-
+        public async Task<IEnumerable<ItemsGroupVM>> GetItemsGroupList()
+        {
+            return await _httpClient.GetFromJsonAsync<IEnumerable<ItemsGroupVM>>($"api/Inventory/GetItemsGroupList");
+        }
 
         public async Task<List<ItemsVM>> GetItemsList(FilterVM _filterVM)
         {

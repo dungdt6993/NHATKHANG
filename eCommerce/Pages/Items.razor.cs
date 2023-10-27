@@ -3,11 +3,10 @@ using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using static System.Net.WebRequestMethods;
 
 namespace eCommerce.Pages
 {
-    partial class Index
+    partial class Items
     {
         [Inject] IJSRuntime js { get; set; }
         [Inject] NavigationManager navigationManager { get; set; }
@@ -27,21 +26,10 @@ namespace eCommerce.Pages
         ItemsVM itemsVM = new();
         List<ItemsVM> itemsVMs;
 
-        protected async override Task OnAfterRenderAsync(bool firstRender)
-        {
-            await js.InvokeAsync<object>("fixJSFunctions");
-        }
-
         protected override async Task OnInitializedAsync()
         {
-            await GetItemsClassList();
             await GetItemsList();
             await GetItemsGroupList();
-        }
-
-        private async Task GetItemsClassList()
-        {
-            itemsClassVMs = await eCommerceService.GetItemsClassList();
         }
 
         private async Task GetItemsGroupList()
@@ -55,6 +43,5 @@ namespace eCommerce.Pages
             filterVM.IsSale = true;
             itemsVMs = await eCommerceService.GetItemsList(filterVM);
         }
-
     }
 }
