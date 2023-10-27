@@ -4782,7 +4782,6 @@ span.required {
 	padding: 5px;
 	-webkit-transition: all 0.3s ease-in-out 0s;
 	transition: all 0.3s ease-in-out 0s;
-	margin-top: 30px;
 }
 .btn-clear-all::before {
 	content: "\f00d";

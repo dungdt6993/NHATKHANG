@@ -26,10 +26,21 @@ namespace eCommerce.Pages
         ItemsVM itemsVM = new();
         List<ItemsVM> itemsVMs;
 
+        protected async override Task OnAfterRenderAsync(bool firstRender)
+        {
+            await js.InvokeAsync<object>("fixJSFunctions");
+        }
+
         protected override async Task OnInitializedAsync()
         {
+            await GetItemsClassList();
             await GetItemsList();
             await GetItemsGroupList();
+        }
+
+        private async Task GetItemsClassList()
+        {
+            itemsClassVMs = await eCommerceService.GetItemsClassList();
         }
 
         private async Task GetItemsGroupList()
