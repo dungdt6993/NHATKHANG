@@ -238,22 +238,22 @@ namespace D69soft.Server.Controllers.FIN
                     sql = "Create table #tmpAuto_Code_ID (Code_ID varchar(50)) ";
                     sql += "Insert #tmpAuto_Code_ID ";
                     sql += "exec SYSTEM.AUTO_CODE_ID 'FIN.Items','ICode',@ITypeCode,'0000' ";
-                    sql += "Insert into FIN.Items (ICode,IName,IUnitCode,ITypeCode,IClsCode,IGrpCode,ICost,IPrice,VATDefault,StockDefault,VendorDefault,IActive,IsSale) ";
-                    sql += "select Code_ID, @IName,@IUnitCode,@ITypeCode,@IClsCode,@IGrpCode,@ICost,@IPrice,@VATDefault,@StockDefault,@VendorDefault,@IActive,@IsSale from #tmpAuto_Code_ID ";
+                    sql += "Insert into FIN.Items (ICode,IName,IDetail,IUnitCode,ITypeCode,IClsCode,IGrpCode,ICost,IPrice,VATDefault,StockDefault,VendorDefault,IActive,IsSale) ";
+                    sql += "select Code_ID, @IName,@IDetail,@IUnitCode,@ITypeCode,@IClsCode,@IGrpCode,@ICost,@IPrice,@VATDefault,@StockDefault,@VendorDefault,@IActive,@IsSale from #tmpAuto_Code_ID ";
 
                     sql += "select Code_ID from #tmpAuto_Code_ID";
                 }
                 else
                 {
-                    sql = "Insert into FIN.Items (ICode,IName,IUnitCode,ITypeCode,IClsCode,IGrpCode,ICost,IPrice,VATDefault,StockDefault,VendorDefault,IActive,IsSale) ";
-                    sql += "Values (@ICode,@IName,@IUnitCode,@ITypeCode,@IClsCode,@IGrpCode,@ICost,@IPrice,@VATDefault,@StockDefault,@VendorDefault,@IActive,@IsSale) ";
+                    sql = "Insert into FIN.Items (ICode,IName,IDetail,IUnitCode,ITypeCode,IClsCode,IGrpCode,ICost,IPrice,VATDefault,StockDefault,VendorDefault,IActive,IsSale) ";
+                    sql += "Values (@ICode,@IName,@IDetail,@IUnitCode,@ITypeCode,@IClsCode,@IGrpCode,@ICost,@IPrice,@VATDefault,@StockDefault,@VendorDefault,@IActive,@IsSale) ";
 
                     sql += "select @ICode";
                 }
             }
             if (_itemsVM.IsTypeUpdate == 1)
             {
-                sql = "Update FIN.Items set IName = @IName, IUnitCode = @IUnitCode,ITypeCode=@ITypeCode, IClsCode = @IClsCode, IGrpCode = @IGrpCode, ";
+                sql = "Update FIN.Items set IName = @IName, IDetail = @IDetail, IUnitCode = @IUnitCode,ITypeCode=@ITypeCode, IClsCode = @IClsCode, IGrpCode = @IGrpCode, ";
                 sql += "ICost = @ICost, IPrice = @IPrice, VATDefault = @VATDefault, StockDefault = @StockDefault, VendorDefault = @VendorDefault, IActive = @IActive, IsSale = @IsSale ";
                 sql += "where ICode = @ICode ";
 

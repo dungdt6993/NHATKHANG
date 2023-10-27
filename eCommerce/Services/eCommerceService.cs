@@ -14,6 +14,12 @@ namespace D69soft.Client.Services.FIN
             _httpClient = httpClient;
         }
 
+        //Log
+        public async Task InsertLog(LogVM _logVM)
+        {
+            await _httpClient.PostAsJsonAsync($"api/Sys/InsertLog", _logVM);
+        }
+
         public async Task<IEnumerable<ItemsClassVM>> GetItemsClassList()
         {
             return await _httpClient.GetFromJsonAsync<IEnumerable<ItemsClassVM>>($"api/Inventory/GetItemsClassList");

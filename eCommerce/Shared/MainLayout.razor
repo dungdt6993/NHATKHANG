@@ -1,7 +1,16 @@
-﻿@inherits LayoutComponentBase
+﻿@using eCommerce.Extensions
+@using eCommerce.Pages
+@inherits LayoutComponentBase
 
 <Header />
 <main>
-    @Body
+    <CustomErrorBoundary Context="_exception">
+        <ChildContent>
+            @Body
+        </ChildContent>
+        <ErrorContent>
+            <Error exception="@_exception"></Error>
+        </ErrorContent>
+    </CustomErrorBoundary>
 </main>
 <Footer />

@@ -10,6 +10,7 @@ using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extensions;
 using D69soft.Shared.Models.ViewModels.HR;
 using Newtonsoft.Json.Linq;
+using Blazored.TextEditor;
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -46,6 +47,8 @@ namespace D69soft.Client.Pages.FIN
         //Items
         ItemsVM itemsVM = new();
         List<ItemsVM> itemsVMs;
+
+        BlazoredTextEditor QuillHtml = new BlazoredTextEditor();
 
         //Unit
         ItemsUnitVM itemsUnitVM = new();
@@ -271,6 +274,11 @@ namespace D69soft.Client.Pages.FIN
 
             if (_IsTypeUpdate == 1)
             {
+                if (!String.IsNullOrEmpty(itemsVM.IDetail))
+                {
+                    await QuillHtml.LoadHTMLContent(itemsVM.IDetail);
+                }
+
                 quantitativeItemsVMs = await inventoryService.GetQuantitativeItems(itemsVM.ICode);
             }
 
@@ -378,6 +386,8 @@ namespace D69soft.Client.Pages.FIN
                     }
 
                 }
+
+                itemsVM.IDetail = await QuillHtml.GetHTML();
 
                 itemsVM.ICode = await inventoryService.UpdateItems(itemsVM, quantitativeItemsVMs);
                 itemsVM.IsTypeUpdate = 1;

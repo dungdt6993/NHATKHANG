@@ -1,28 +1,18 @@
 ﻿@page "/Error"
+@using D69soft.Client.Services.FIN;
+@using D69soft.Shared.Models.ViewModels.SYSTEM;
 @inject NavigationManager navigationManager
 
-<!-- Begin Li's Breadcrumb Area -->
-<div class="breadcrumb-area">
-    <div class="container">
-        <div class="breadcrumb-content">
-            <ul>
-                <li><a href="/">Trang chủ</a></li>
-                <li class="active">404 Error</li>
-            </ul>
-        </div>
-    </div>
-</div>
-<!-- Li's Breadcrumb Area End Here -->
 <!-- Error 404 Area Start -->
-<div class="error404-area pt-30 pb-60">
+<div class="error500-area pt-30 pb-60">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 <div class="error-wrapper text-center ptb-50 pt-xs-20">
                     <div class="error-text">
-                        <h1>404</h1>
-                        <h2>Opps! PAGE NOT BE FOUND</h2>
-                        <p>Sorry but the page you are looking for does not exist, have been removed, <br> name changed or is temporarity unavailable.</p>
+                        <h1>500</h1>
+                        <h2>Opps! SOMETHING WENT WRONG</h2>
+                        <p>We will work on fixing that right away.</p>
                     </div>
                     <div class="search-error">
                         <form id="search-form" action="#">
@@ -31,7 +21,7 @@
                         </form>
                     </div>
                     <div class="error-button">
-                        <a href="/" @onclick="@(()=>RefreshApp())">Back to home page</a>
+                        <a href="/" @onclick="@(()=>RefreshApp())">Reload App</a>
                     </div>
                 </div>
             </div>
@@ -41,6 +31,24 @@
 <!-- Error 404 Area End -->
 
 @code {
+    [Inject] eCommerceService eCommerceService { get; set; }
+
+    [Parameter]
+    public Exception exception { get; set; }
+
+    LogVM logVM = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (exception is not null)
+        {
+            logVM.LogType = "ERR";
+            logVM.LogName = exception.GetType().ToString();
+            logVM.LogDesc = exception.Message;
+            await eCommerceService.InsertLog(logVM);
+        }
+    }
+
     private void RefreshApp()
     {
         navigationManager.NavigateTo("/", true);

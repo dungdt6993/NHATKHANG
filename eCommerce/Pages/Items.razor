@@ -64,7 +64,7 @@
                                                 <!-- single-product-wrap start -->
                                                 <div class="single-product-wrap">
                                                     <div class="product-image">
-                                                        <a href="#" data-toggle="modal" data-target="#modalQuicViewProduct" @onclick="() => itemsVM = _itemsVM">
+                                                        <a href="#" data-toggle="modal" data-target="#modalQuickViewProduct" @onclick="() => itemsVM = _itemsVM">
                                                             <img src="@(Configuration["ApiUrl"]+_itemsVM.IURLPicture1)" alt="Li's Product Image">
                                                         </a>
                                                         <span class="sticker">Mới</span>
@@ -85,7 +85,7 @@
                                                                     </ul>
                                                                 </div>
                                                             </div>
-                                                            <h4><a class="product_name" href="#" data-toggle="modal" data-target="#modalQuicViewProduct" @onclick="() => itemsVM = _itemsVM">@_itemsVM.IName</a></h4>
+                                                            <h4><a class="product_name" href="#" data-toggle="modal" data-target="#modalQuickViewProduct" @onclick="() => itemsVM = _itemsVM">@_itemsVM.IName</a></h4>
                                                             <div class="price-box">
                                                                 <span class="new-price new-price-2">@String.Format("{0:#,##0}", _itemsVM.IPrice) đ</span>
                                                                 <span class="old-price">@String.Format("{0:#,##0}", _itemsVM.IPrice) đ</span>
@@ -96,7 +96,7 @@
                                                             <ul class="add-actions-link">
                                                                 <li class="add-cart active"><a href="#">Thêm vào giỏ</a></li>
                                                                 <li><a class="links-details" href="single-product.html"><i class="fa fa-heart-o"></i></a></li>
-                                                                <li><a class="quick-view" href="#" data-toggle="modal" data-target="#modalQuicViewProduct" @onclick="() => itemsVM = _itemsVM"><i class="fa fa-eye"></i></a></li>
+                                                                <li><a class="quick-view" href="#" data-toggle="modal" data-target="#modalQuickViewProduct" @onclick="() => itemsVM = _itemsVM"><i class="fa fa-eye"></i></a></li>
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -112,10 +112,10 @@
                                     <div class="col">
                                         @foreach (var _itemsVM in itemsVMs)
                                         {
-                                            <div class="row product-layout-list">
+                                            <div class="row product-layout-list @(_itemsVM.Equals(itemsVMs.Last())?"last-child":"")">
                                                 <div class="col-lg-3 col-md-5 ">
                                                     <div class="product-image">
-                                                        <a href="#" data-toggle="modal" data-target="#modalQuicViewProduct" @onclick="() => itemsVM = _itemsVM">
+                                                        <a href="#" data-toggle="modal" data-target="#modalQuickViewProduct" @onclick="() => itemsVM = _itemsVM">
                                                             <img src="@(Configuration["ApiUrl"]+_itemsVM.IURLPicture1)" alt="Li's Product Image">
                                                         </a>
                                                         <span class="sticker">Mới</span>
@@ -138,7 +138,7 @@
                                                                     </ul>
                                                                 </div>
                                                             </div>
-                                                            <h4><a class="product_name" href="#" data-toggle="modal" data-target="#modalQuicViewProduct" @onclick="() => itemsVM = _itemsVM">@_itemsVM.IName</a></h4>
+                                                            <h4><a class="product_name" href="#" data-toggle="modal" data-target="#modalQuickViewProduct" @onclick="() => itemsVM = _itemsVM">@_itemsVM.IName</a></h4>
                                                             <div class="price-box">
                                                                 <span class="new-price new-price-2">@String.Format("{0:#,##0}", _itemsVM.IPrice) đ</span>
                                                                 <span class="old-price">@String.Format("{0:#,##0}", _itemsVM.IPrice) đ</span>
@@ -152,8 +152,8 @@
                                                     <div class="shop-add-action mb-xs-30">
                                                         <ul class="add-actions-link">
                                                             <li class="add-cart"><a href="#">Thêm vào giỏ</a></li>
-                                                            <li class="wishlist"><a href="wishlist.html"><i class="fa fa-heart-o"></i>Yêu thích</a></li>
-                                                            <li><a class="quick-view" href="#" data-toggle="modal" data-target="#modalQuicViewProduct" @onclick="() => itemsVM = _itemsVM"><i class="fa fa-eye"></i> Xem chi tiết</a></li>
+                                                            <li class="wishlist"><a href="#"><i class="fa fa-heart-o"></i>Yêu thích</a></li>
+                                                            <li><a class="quick-view" href="#" data-toggle="modal" data-target="#modalQuickViewProduct" @onclick="() => itemsVM = _itemsVM"><i class="fa fa-eye"></i> Xem chi tiết</a></li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -189,28 +189,6 @@
                 </div>
                 <div class="col-lg-3 order-2 order-lg-1">
                     <!--sidebar-categores-box start  -->
-                    <div class="sidebar-categores-box mt-sm-30 mt-xs-30">
-                        <div class="sidebar-title">
-                            <h2>@itemsClassVMs.Select(x=>x.IClsName).FirstOrDefault()</h2>
-                        </div>
-                        <!-- category-sub-menu start -->
-                        <div class="category-sub-menu">
-                            <ul>
-                                @foreach (var _itemsGroupVM in itemsGroupVMs)
-                                {
-                                    <li class="has-sub">
-                                        <a href="# ">@_itemsGroupVM.IGrpName</a>
-                                        <ul>
-                                            <li><a href="#">@_itemsGroupVM.IGrpName</a></li>
-                                        </ul>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-                        <!-- category-sub-menu end -->
-                    </div>
-                    <!--sidebar-categores-box end  -->
-                    <!--sidebar-categores-box start  -->
                     <div class="sidebar-categores-box">
                         <!-- btn-clear-all start -->
                         <button class="btn-clear-all mb-sm-30 mb-xs-30">Xóa lọc</button>
@@ -223,7 +201,9 @@
                                     <ul>
                                         @foreach (var _itemsGroupVM in itemsGroupVMs)
                                         {
-                                            <li><input type="checkbox" name="product-categori"><a href="#">@_itemsGroupVM.IGrpName</a></li>
+                                            <li>
+                                                <input type="checkbox" name="ckIGrp@_itemsGroupVM.IGrpCode" id="ckIGrp@_itemsGroupVM.IGrpCode"><label for="ckIGrp@_itemsGroupVM.IGrpCode"><a>@_itemsGroupVM.IGrpName</a></label>
+                                            </li>
                                         }
                                     </ul>
                                 </form>
@@ -238,3 +218,5 @@
     </div>
 }
 <!-- Content Wraper Area End Here -->
+
+<ModalQuickViewProduct itemsVM=@itemsVM></ModalQuickViewProduct>
