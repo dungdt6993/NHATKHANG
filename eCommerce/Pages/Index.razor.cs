@@ -10,8 +10,6 @@ namespace eCommerce.Pages
     partial class Index
     {
         [Inject] IJSRuntime js { get; set; }
-        [Inject] NavigationManager navigationManager { get; set; }
-        [Inject] HttpClient httpClient { get; set; }
         [Inject] eCommerceService eCommerceService { get; set; }
 
         //Filter

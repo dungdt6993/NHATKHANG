@@ -28,7 +28,10 @@ namespace eCommerce.Pages
 
         protected async override Task OnAfterRenderAsync(bool firstRender)
         {
-            await js.InvokeAsync<object>("fixJSFunctions");
+            if (firstRender)
+            {
+                await js.InvokeAsync<object>("fixJSFunctions");
+            }
         }
 
         protected override async Task OnInitializedAsync()

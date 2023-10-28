@@ -524,7 +524,7 @@ Note: main.js, All Default Scripting Languages For This Theme Included In This F
 /*----------------------------------------*/
     $('.venobox').venobox({
         spinner:'wave',
-        spinColor:'#cb9a00',
+		spinColor:'#DBC277',
     });
 /*----------------------------------------*/
 /* 26. WOW

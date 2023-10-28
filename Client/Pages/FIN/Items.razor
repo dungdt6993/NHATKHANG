@@ -53,7 +53,7 @@
                             <InputSelect class="selectpicker form-control form-control-sm"
                                          data-style="btn-selectpicker" data-container="body"
                                          data-live-search="true" data-show-subtext="true"
-                            @bind-Value="itemsGroupVM.IClsCode">
+                                         @bind-Value="itemsGroupVM.IClsCode">
                                 <option value=@String.Empty>-----Tất cả-----</option>
                                 @if (itemsClassVMs != null)
                                 {
@@ -125,170 +125,133 @@
                         <div class="card-body">
                             <div class="tab-content" id="custom-tabs-tabContent">
                                 <div class="tab-pane fade active show" id="custom-tabs-info" role="tabpanel" aria-labelledby="custom-tabs-info-tab">
-                                    <div class="row">
-                                        <div class="col-12 col-sm-7">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Mã hàng hóa</label>
-                                                <div class="col-sm-9">
-                                                    @if (itemsVM.IsTypeUpdate == 0)
-                                                    {
-                                                        <InputText class="form-control form-control-sm" placeholder="Mã mặc định" @bind-Value="itemsVM.ICode" disabled />
-                                                        <ValidationMessage For="@(() => itemsVM.ICode)" />
-                                                    }
-                                                    else
-                                                    {
-                                                        <input type="text" readonly class="form-control form-control-sm" value="@itemsVM.ICode" />
-                                                    }
-                                                </div>
-                                            </div>
 
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Tên hàng</label>
-                                                <div class="col-sm-9">
-                                                    <InputText class="form-control form-control-sm" placeholder="Tên hàng" @bind-Value="itemsVM.IName" autofocus />
-                                                    <ValidationMessage For="@(() => itemsVM.IName)" />
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Loại hàng</label>
-                                                <div class="col-sm-9">
-                                                    <InputSelect class="selectpicker form-control form-control-sm"
-                                                                 data-style="btn-selectpicker" data-container="body"
-                                                                 data-live-search="true" data-show-subtext="true"
-                                                    @bind-Value="itemsVM.ITypeCode">
-                                                        <option value=@String.Empty>-----Tất cả-----</option>
-                                                        @if (itemsTypeVMs != null)
-                                                        {
-                                                            @foreach (var _itemsTypeVM in itemsTypeVMs)
-                                                            {
-                                                                <option value="@_itemsTypeVM.ITypeCode">@_itemsTypeVM.ITypeName</option>
-                                                            }
-                                                        }
-                                                    </InputSelect>
-                                                    <ValidationMessage For="@(() => itemsVM.ITypeCode)" />
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Lớp hàng</label>
-                                                <div class="col-sm-9">
-                                                    <InputSelect class="selectpicker form-control form-control-sm"
-                                                                 data-style="btn-selectpicker" data-container="body"
-                                                                 data-live-search="true" data-show-subtext="true"
-                                                    @bind-Value="onchange_IClsCode">
-                                                        <option value=@String.Empty>-----Tất cả-----</option>
-                                                        @if (itemsClassVMs != null)
-                                                        {
-                                                            @foreach (var _itemsClassVM in itemsClassVMs.Where(x => x.IClsActive))
-                                                            {
-                                                                <option data-subtext="@_itemsClassVM.IClsCode" value="@_itemsClassVM.IClsCode">@_itemsClassVM.IClsName</option>
-                                                            }
-                                                        }
-                                                    </InputSelect>
-                                                    <ValidationMessage For="@(() => itemsVM.IClsCode)" />
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">Nhóm hàng</label>
-                                                <div class="col-sm-9">
-                                                    <InputSelect class="selectpicker form-control form-control-sm"
-                                                                 data-style="btn-selectpicker" data-container="body"
-                                                                 data-live-search="true" data-show-subtext="true"
-                                                    @bind-Value="itemsVM.IGrpCode">
-                                                        <option value=@String.Empty>-----Tất cả-----</option>
-                                                        @if (itemsGroupVMs != null)
-                                                        {
-                                                            @foreach (var _itemsGroupVM in itemsGroupVMs.Where(x => x.IGrpActive && (x.IClsCode == itemsVM.IClsCode || String.IsNullOrEmpty(itemsVM.IClsCode))))
-                                                            {
-                                                                <option data-subtext="@_itemsGroupVM.IGrpCode" value="@_itemsGroupVM.IGrpCode">@_itemsGroupVM.IGrpName</option>
-                                                            }
-                                                        }
-                                                    </InputSelect>
-                                                    <ValidationMessage For="@(() => itemsVM.IGrpCode)" />
-                                                </div>
-                                            </div>
-
-                                            <div class="col-12 product-image-thumbs">
-
-                                                <div class="product-image-thumb active">
-                                                    <label>
-                                                        <InputFile OnChange="OnInputFileChange" style="display:none;" accept="image/*" />
-                                                        <img src="@itemsVM.IURLPicture1">
-                                                    </label>
-                                                </div>
-                                                @if (itemsVM.IsTypeUpdate == 1 || itemsVM.IURLPicture1 != "/images/_default/no-image.png")
-                                                {
-                                                    <a href="@itemsVM.IURLPicture1" download><i class="fa-solid fa-download"></i></a>
-                                                    <span>&nbsp;</span>
-                                                    <a href="javascript:void(0)" @onclick="(() => FileDefault())"><i class="fa-solid fa-trash-can"></i></a>
-                                                }
-                                            </div>
-
+                                    <div class="form-row">
+                                        <div class="form-group col-md-2">
+                                            <label>Mã hàng hóa</label>
+                                            @if (itemsVM.IsTypeUpdate == 0)
+                                            {
+                                                <InputText class="form-control form-control-sm" placeholder="Mã mặc định" @bind-Value="itemsVM.ICode" disabled />
+                                                <ValidationMessage For="@(() => itemsVM.ICode)" />
+                                            }
+                                            else
+                                            {
+                                                <input type="text" readonly class="form-control form-control-sm" value="@itemsVM.ICode" />
+                                            }
                                         </div>
-
-                                        <div class="col-12 col-sm-5">
-
-                                            <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Đơn vị tính</label>
-                                                <div class="col-sm-8">
-                                                    <div class="input-group">
-                                                        <InputSelect class="selectpicker form-control form-control-sm"
-                                                                     data-style="btn-selectpicker" data-container="body"
-                                                                     data-live-search="true" data-show-subtext="true"
-                                                        @bind-Value="itemsVM.IUnitCode">
-                                                            <option value=@String.Empty>-----Tất cả-----</option>
-                                                            @if (itemsUnitVMs != null)
-                                                            {
-                                                                @foreach (var _itemsUnitVM in itemsUnitVMs)
-                                                                {
-                                                                    <option value="@_itemsUnitVM.IUnitCode">@_itemsUnitVM.IUnitName</option>
-                                                                }
-                                                            }
-                                                        </InputSelect>
-                                                        @if (String.IsNullOrEmpty(itemsVM.IUnitCode))
+                                        <div class="form-group col-md-8">
+                                            <label>Tên hàng</label>
+                                            <InputText class="form-control form-control-sm" placeholder="Tên hàng" @bind-Value="itemsVM.IName" autofocus />
+                                            <ValidationMessage For="@(() => itemsVM.IName)" />
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label>Đơn vị tính</label>
+                                            <div class="input-group">
+                                                <InputSelect class="selectpicker form-control form-control-sm"
+                                                             data-style="btn-selectpicker" data-container="body"
+                                                             data-live-search="true" data-show-subtext="true"
+                                                             @bind-Value="itemsVM.IUnitCode">
+                                                    <option value=@String.Empty>--Tất cả--</option>
+                                                    @if (itemsUnitVMs != null)
+                                                    {
+                                                        @foreach (var _itemsUnitVM in itemsUnitVMs)
                                                         {
-                                                            <div class="input-group-append">
-                                                                <a class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_ItemsUnit(0))"><i class="fa-solid fa-plus"></i></a>
-                                                            </div>
+                                                            <option value="@_itemsUnitVM.IUnitCode">@_itemsUnitVM.IUnitName</option>
                                                         }
-                                                        else
-                                                        {
-                                                            <div class="input-group-append">
-                                                                <a class="btn btn-sm btn-secondary" @onclick="(() => InitializeModalUpdate_ItemsUnit(1))"><i class="fa-solid fa-pencil"></i></a>
-                                                            </div>
-                                                        }
-                                                        <ValidationMessage For="@(() => itemsVM.IUnitCode)" />
+                                                    }
+                                                </InputSelect>
+                                                @if (String.IsNullOrEmpty(itemsVM.IUnitCode))
+                                                {
+                                                    <div class="input-group-append">
+                                                        <a class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_ItemsUnit(0))"><i class="fa-solid fa-plus"></i></a>
                                                     </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="input-group-append">
+                                                        <a class="btn btn-sm btn-secondary" @onclick="(() => InitializeModalUpdate_ItemsUnit(1))"><i class="fa-solid fa-pencil"></i></a>
+                                                    </div>
+                                                }
+                                                <ValidationMessage For="@(() => itemsVM.IUnitCode)" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label>Loại hàng</label>
+                                            <InputSelect class="selectpicker form-control form-control-sm"
+                                                         data-style="btn-selectpicker" data-container="body"
+                                                         data-live-search="true" data-show-subtext="true"
+                                                         @bind-Value="itemsVM.ITypeCode">
+                                                <option value=@String.Empty>-----Tất cả-----</option>
+                                                @if (itemsTypeVMs != null)
+                                                {
+                                                    @foreach (var _itemsTypeVM in itemsTypeVMs)
+                                                    {
+                                                        <option value="@_itemsTypeVM.ITypeCode">@_itemsTypeVM.ITypeName</option>
+                                                    }
+                                                }
+                                            </InputSelect>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Lớp hàng</label>
+                                            <InputSelect class="selectpicker form-control form-control-sm"
+                                                         data-style="btn-selectpicker" data-container="body"
+                                                         data-live-search="true" data-show-subtext="true"
+                                                         @bind-Value="onchange_IClsCode">
+                                                <option value=@String.Empty>-----Tất cả-----</option>
+                                                @if (itemsClassVMs != null)
+                                                {
+                                                    @foreach (var _itemsClassVM in itemsClassVMs.Where(x => x.IClsActive))
+                                                    {
+                                                        <option data-subtext="@_itemsClassVM.IClsCode" value="@_itemsClassVM.IClsCode">@_itemsClassVM.IClsName</option>
+                                                    }
+                                                }
+                                            </InputSelect>
+                                            <ValidationMessage For="@(() => itemsVM.IClsCode)" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Nhóm hàng</label>
+                                            <InputSelect class="selectpicker form-control form-control-sm"
+                                                         data-style="btn-selectpicker" data-container="body"
+                                                         data-live-search="true" data-show-subtext="true"
+                                                         @bind-Value="itemsVM.IGrpCode">
+                                                <option value=@String.Empty>-----Tất cả-----</option>
+                                                @if (itemsGroupVMs != null)
+                                                {
+                                                    @foreach (var _itemsGroupVM in itemsGroupVMs.Where(x => x.IGrpActive && (x.IClsCode == itemsVM.IClsCode || String.IsNullOrEmpty(itemsVM.IClsCode))))
+                                                    {
+                                                        <option data-subtext="@_itemsGroupVM.IGrpCode" value="@_itemsGroupVM.IGrpCode">@_itemsGroupVM.IGrpName</option>
+                                                    }
+                                                }
+                                            </InputSelect>
+                                            <ValidationMessage For="@(() => itemsVM.IGrpCode)" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label>Giá mua</label>
+                                            <div class="input-group input-group-sm">
+                                                <input class="form-control form-control-sm" name="currency-mask" @bind="itemsVM.ICost" onClick="this.select();" />
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">đ</span>
                                                 </div>
                                             </div>
-
-                                            <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Giá mua</label>
-                                                <div class="col-sm-8">
-                                                    <div class="input-group input-group-sm">
-                                                        <input class="form-control form-control-sm" name="currency-mask" @bind="itemsVM.ICost" onClick="this.select();" />
-                                                        <div class="input-group-append">
-                                                            <span class="input-group-text">đ</span>
-                                                        </div>
-                                                    </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Giá bán</label>
+                                            <div class="input-group input-group-sm">
+                                                <input class="form-control form-control-sm" name="currency-mask" @bind="itemsVM.IPrice" onClick="this.select();" />
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">đ</span>
                                                 </div>
                                             </div>
-
-                                            <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label">Giá bán</label>
-                                                <div class="col-sm-8">
-                                                    <div class="input-group input-group-sm">
-                                                        <input class="form-control form-control-sm" name="currency-mask" @bind="itemsVM.IPrice" onClick="this.select();" />
-                                                        <div class="input-group-append">
-                                                            <span class="input-group-text">đ</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row clearfix" style="padding-top: 18px;">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label></label>
+                                            <div class="form-group clearfix">
                                                 <div class="icheck-success d-inline">
                                                     <input type="checkbox" id="ckIsSale" @bind="itemsVM.IsSale">
                                                     <label for="ckIsSale">
@@ -296,25 +259,6 @@
                                                     </label>
                                                 </div>
                                             </div>
-
-                                            <div class="form-group clearfix">
-                                                <div class="icheck-success d-inline">
-                                                    <input type="radio" id="isActive1" name="isActive" checked="@(itemsVM.IActive == true)" @onchange="(() => itemsVM.IActive = true)">
-                                                    <label for="isActive1">
-                                                        Hoạt động
-                                                    </label>
-                                                </div>
-                                                <label>
-                                                    &nbsp;&nbsp;
-                                                </label>
-                                                <div class="icheck-danger d-inline">
-                                                    <input type="radio" id="isActive2" name="isActive" checked="@(itemsVM.IActive == false)" @onchange="(() => itemsVM.IActive = false)">
-                                                    <label for="isActive2">
-                                                        Không hoạt động
-                                                    </label>
-                                                </div>
-                                            </div>
-
                                         </div>
                                     </div>
 
@@ -349,6 +293,27 @@
                                             </ToolbarContent>
                                         </BlazoredTextEditor>
                                     </div>
+
+                                    <div class="form-group">
+                                        <div class="form-group clearfix">
+                                            <div class="icheck-success d-inline">
+                                                <input type="radio" id="isActive1" name="isActive" checked="@(itemsVM.IActive == true)" @onchange="(() => itemsVM.IActive = true)">
+                                                <label for="isActive1">
+                                                    Hoạt động
+                                                </label>
+                                            </div>
+                                            <label>
+                                                &nbsp;&nbsp;
+                                            </label>
+                                            <div class="icheck-danger d-inline">
+                                                <input type="radio" id="isActive2" name="isActive" checked="@(itemsVM.IActive == false)" @onchange="(() => itemsVM.IActive = false)">
+                                                <label for="isActive2">
+                                                    Không hoạt động
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <div class="tab-pane fade" id="custom-tabs-default" role="tabpanel" aria-labelledby="custom-tabs-default">
 
@@ -358,7 +323,7 @@
                                             <select class="selectpicker form-control form-control-sm"
                                                     data-style="btn-selectpicker" data-container="body"
                                                     data-live-search="true" data-show-subtext="true"
-                                            @bind="itemsVM.StockDefault">
+                                                    @bind="itemsVM.StockDefault">
                                                 <option value=@String.Empty>-----Tất cả-----</option>
                                                 @if (stockVMs != null)
                                                 {
@@ -374,7 +339,7 @@
                                             <select class="selectpicker form-control form-control-sm"
                                                     data-style="btn-selectpicker" data-container="body"
                                                     data-live-search="true" data-show-subtext="true"
-                                            @bind="itemsVM.VendorDefault">
+                                                    @bind="itemsVM.VendorDefault">
                                                 <option value=@String.Empty>-----Tất cả-----</option>
                                                 @if (vendorVMs != null)
                                                 {
@@ -393,7 +358,7 @@
                                             <InputSelect class="selectpicker form-control form-control-sm"
                                                          data-style="btn-selectpicker"
                                                          data-container="body"
-                                            @bind-Value="itemsVM.VATDefault">
+                                                         @bind-Value="itemsVM.VATDefault">
 
                                                 <option value=@String.Empty>-----Chọn-----</option>
                                                 @if (vatDefVMs != null)
