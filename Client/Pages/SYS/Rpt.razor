@@ -3,167 +3,6 @@
 <Loading isLoading="@isLoading"></Loading>
 <LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 
-<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_GrtRpt">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <span>CẬP NHẬT NHÓM BÁO CÁO</span>
-                </h5>
-
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            <div class="modal-body">
-
-                <EditForm Model="@rptGrpVM" OnValidSubmit="@UpdateGrtRpt">
-
-                    <FluentValidationValidator />
-
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Tên nhóm</label>
-                        <div class="col-sm-10">
-                            <InputText class="form-control form-control-border border-width-2" @bind-Value="rptGrpVM.RptGrpName" />
-                            <ValidationMessage For="@(() => rptGrpVM.RptGrpName)" />
-                        </div>
-                    </div>
-
-                    <div class="modal-footer justify-content-center">
-                        <button type="button" class="btn btn-default btn-lg" data-dismiss="modal"><i class="fas fa-times"></i> Thoát</button>
-
-                        <button class="btn btn-success btn-lg">
-                            <i class="fas fa-save"></i>
-                            Cập nhật
-                        </button>
-
-                        @if (rptGrpVM.IsTypeUpdate != 0 && rpts.Count() == 0)
-                        {
-                            <button class="btn btn-danger btn-lg" @onclick=@(()=>rptGrpVM.IsTypeUpdate = 2)>
-                                <i class="fas fa-trash"></i>
-                                Xóa
-                            </button>
-                        }
-
-
-                    </div>
-                </EditForm>
-
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-</div>
-
-<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_Rpt">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <span>CẬP NHẬT BÁO CÁO</span>
-                </h5>
-
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            <div class="modal-body">
-
-                <EditForm Model="rptVM" OnValidSubmit="@UpdateRpt">
-
-                    <FluentValidationValidator />
-
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Nhóm báo cáo</label>
-                        <div class="col-sm-9">
-                            <InputSelectNumber class="selectpicker form-control"
-                                               data-style="btn-selectpicker form-control form-control-border border-width-2"
-                                               data-container="body"
-                                               data-live-search="true"
-                            @bind-Value="rptVM.RptGrpID">
-                                @if (rptgrps != null)
-                                {
-                                    @foreach (var rptgrp in rptgrps)
-                                    {
-                                        <option value="@rptgrp.RptGrpID">@rptgrp.RptGrpName</option>
-                                    }
-                                }
-                            </InputSelectNumber>
-                            <ValidationMessage For="@(() => rptVM.RptGrpID)" />
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Tên báo cáo</label>
-                        <div class="col-sm-9">
-                            <InputText class="form-control form-control-border border-width-2" @bind-Value="rptVM.RptName" />
-                            <ValidationMessage For="@(() => rptVM.RptName)" />
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">File báo cáo</label>
-                        <div class="col-sm-9">
-                            <InputSelectNumber class="selectpicker form-control"
-                                               data-style="btn-selectpicker form-control form-control-border border-width-2"
-                                               data-container="body"
-                                               data-live-search="true"
-                            @bind-Value="rptVM.RptUrl">
-                                @if (rptUrls != null)
-                                {
-                                    @for (int i = 0; i < rptUrls.Length; i++)
-                                    {
-                                        <option value="@rptUrls[i]">@rptUrls[i]</option>
-                                    }
-                                }
-                            </InputSelectNumber>
-                            <ValidationMessage For="@(() => rptVM.RptUrl)" />
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <div class="form-group clearfix">
-                            <div class="icheck-success d-inline">
-                                <input type="checkbox" id="permisUser" @bind="rptVM.PassUserID">
-                                <label for="permisUser">
-                                    Phân quyền người dùng (UserID)
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer justify-content-center">
-                        <button type="button" class="btn btn-default btn-lg" data-dismiss="modal"><i class="fas fa-times"></i> Thoát</button>
-
-                        <button class="btn btn-success btn-lg">
-                            <i class="fas fa-save"></i>
-                            Cập nhật
-                        </button>
-
-                        @if (rptVM.IsTypeUpdate != 0)
-                        {
-                            <button class="btn btn-danger btn-lg" @onclick=@(()=>rptVM.IsTypeUpdate = 2)>
-                                <i class="fas fa-trash"></i>
-                                Xóa
-                            </button>
-                        }
-
-                    </div>
-                </EditForm>
-
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-</div>
-
 <section class="content-header">
     <EditForm Model="@filterVM">
         <div class="row">
@@ -174,9 +13,9 @@
                                  ValueExpression="@(()=>filterVM.ModuleID)"
                                  Value="@filterVM.ModuleID"
                                  ValueChanged="@((string value) => onchange_filter_module(value))">
-                        @if (modules != null)
+                        @if (rpts != null)
                         {
-                            @foreach (var module in modules)
+                            @foreach (var module in rpts.Select(x => new { x.ModuleID, x.ModuleName }).Distinct())
                             {
                                 <option value="@module.ModuleID">@module.ModuleName</option>
                             }
@@ -194,30 +33,14 @@
                                            Value="@filterVM.RptGrpID"
                                            ValueChanged="@((int value) => onchange_filter_rptgrp(value))">
                             <option value="0">-----Chọn nhóm báo cáo-----</option>
-                            @if (rptgrps != null)
+                            @if (rpts != null)
                             {
-                                @foreach (var rptgrp in rptgrps)
+                                @foreach (var rptgrp in rpts.Select(x => new { x.RptGrpID, x.RptGrpName }).Distinct())
                                 {
                                     <option value="@rptgrp.RptGrpID">@rptgrp.RptGrpName</option>
                                 }
                             }
                         </InputSelectNumber>
-
-                        @if (filterVM.isLeader)
-                        {
-                            @if (filterVM.RptGrpID == 0)
-                            {
-                                <div class="input-group-append" data-target="#InitializeModal_GrtRpt" data-toggle="modal" @onclick=@(()=>InitializeModal_GrtRpt(0))>
-                                    <span class="input-group-text"><i class="fa-solid fa-circle-plus"></i></span>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="input-group-append" data-target="#InitializeModal_GrtRpt" data-toggle="modal" @onclick=@(()=>InitializeModal_GrtRpt(1))>
-                                    <span class="input-group-text"><i class="fas fa-pen"></i></span>
-                                </div>
-                            }
-                        }
                     </div>
                 </div>
 
@@ -240,24 +63,6 @@
                                 }
                             }
                         </InputSelectNumber>
-                        @if (filterVM.isLeader)
-                        {
-                            @if (rptgrps.Count() > 0)
-                            {
-                                @if (filterVM.RptID == 0)
-                                {
-                                    <div class="input-group-append" data-target="#InitializeModal_Rpt" data-toggle="modal" @onclick=@(()=>InitializeModal_Rpt(0))>
-                                        <span class="input-group-text"><i class="fa-solid fa-circle-plus"></i></span>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="input-group-append" data-target="#InitializeModal_Rpt" data-toggle="modal" @onclick=@(()=>InitializeModal_Rpt(1))>
-                                        <span class="input-group-text"><i class="fas fa-pen"></i></span>
-                                    </div>
-                                }
-                            }
-                        }
                     </div>
                 </div>
 
@@ -271,47 +76,18 @@
     <div class="container-fluid">
         <div class="card card-primary card-outline">
 
-            @if (filterVM.isLeader)
-            {
-                <div class="card-header text-right">
-
-                    @if (IsEditRpt)
-                    {
-                        <button type="button" class="btn btn-primary" @onclick="(() => EditReport())"><i class="far fa-arrow-alt-circle-left"></i> Trở lại</button>
-                    }
-                    else
-                    {
-                        <button type="button" class="btn btn-primary" @onclick="(() => EditReport())"><i class="fa-solid fa-palette"></i> Thiết kế</button>
-                    }
-
-                </div>
-            }
-
             <!-- /.card-header -->
             <div class="card-body">
 
-                @if (IsEditRpt)
+                @if (filterVM.RptID != 0)
                 {
-                    <DxWasmReportDesigner ReportName="@ReportName" Height="calc(100vh - 205px)" Width="100%" DevelopmentMode=true>
-                        <DxWasmReportDesignerRequestOptions GetDesignerModelAction="DXXRD/GetReportDesignerModel">
-                        </DxWasmReportDesignerRequestOptions>
-                        <DxReportDesignerModelSettings AllowMDI=true>
-                            <DxReportDesignerWizardSettings UseFullscreenWizard=true />
-                        </DxReportDesignerModelSettings>
-                    </DxWasmReportDesigner>
-                }
-                else
-                {
-                    if (filterVM.RptID != 0)
-                    {
-                        <DxWasmDocumentViewer ReportName="@ReportName" Height="calc(100vh - 239px)" Width="100%">
-                            <DxDocumentViewerExportSettings ShowPrintNotificationDialog="false" />
-                            <DxDocumentViewerTabPanelSettings Width="340" />
-                            <DxWasmDocumentViewerRequestOptions InvokeAction="DXXRDV"></DxWasmDocumentViewerRequestOptions>
-                            <DxDocumentViewerCallbacks BeforeRender="ReportingViewerCustomization.onBeforeRender"
-                                                       CustomizeParameterEditors="ReportingViewerCustomization.onCustomizeParameterEditors" />
-                        </DxWasmDocumentViewer>
-                    }
+                    <DxWasmDocumentViewer ReportName="@ReportName" Height="calc(100vh - 239px)" Width="100%">
+                        <DxDocumentViewerExportSettings ShowPrintNotificationDialog="false" />
+                        <DxDocumentViewerTabPanelSettings Width="340" />
+                        <DxWasmDocumentViewerRequestOptions InvokeAction="DXXRDV"></DxWasmDocumentViewerRequestOptions>
+                        <DxDocumentViewerCallbacks BeforeRender="ReportingViewerCustomization.onBeforeRender"
+                                                   CustomizeParameterEditors="ReportingViewerCustomization.onCustomizeParameterEditors" />
+                    </DxWasmDocumentViewer>
                 }
 
             </div>

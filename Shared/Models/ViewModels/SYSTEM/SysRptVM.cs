@@ -19,6 +19,7 @@ namespace D69soft.Shared.Models.ViewModels.SYSTEM
         public string RptGrpName { get; set; }
 
         //Bien 
+        public int IsTypeUpdate { get; set; }
         public bool IsChecked { get; set; }
     }
 }

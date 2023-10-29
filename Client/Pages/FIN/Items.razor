@@ -263,6 +263,22 @@
                                     </div>
 
                                     <div class="form-group">
+
+                                        <div class="product-image-thumb active">
+                                            <label>
+                                                <InputFile OnChange="OnInputFileChange" style="display:none;" accept="image/*" />
+                                                <img src="@itemsVM.IURLPicture1">
+                                            </label>
+                                        </div>
+                                        @if (itemsVM.IsTypeUpdate == 1 || itemsVM.IURLPicture1 != "/images/_default/no-image.png")
+                                        {
+                                            <a href="@itemsVM.IURLPicture1" download><i class="fa-solid fa-download"></i></a>
+                                            <span>&nbsp;</span>
+                                            <a href="javascript:void(0)" @onclick="(() => FileDefault())"><i class="fa-solid fa-trash-can"></i></a>
+                                        }
+                                    </div>
+
+                                    <div class="form-group">
                                         <BlazoredTextEditor @ref="QuillHtml" Placeholder="Mô tả chi tiết hàng hóa, dịch vụ...">
                                             <ToolbarContent>
                                                 <select class="ql-header">

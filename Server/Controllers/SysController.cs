@@ -286,195 +286,21 @@ namespace D69soft.Server.Controllers
         }
 
         //RPT
-        [HttpGet("GetModuleRpt/{_UserID}")]
-        public async Task<ActionResult<List<SysRptVM>>> GetModuleRpt(string _UserID)
-        {
-            var sql = "Declare @roleUser int ";
-            sql += "select @roleUser = User_Role from HR.Profile where Eserial=@UserID ";
-            sql += "if (@roleUser>2) ";
-            sql += "begin ";
-
-            sql += "select distinct mo.ModuleID, mo.ModuleName from SYSTEM.Rpt r ";
-            sql += "join SYSTEM.RptGrp rg on rg.RptGrpID = r.RptGrpID ";
-            sql += "join (select * from SYSTEM.PermissionRpt where UserID=@UserID) pr on pr.RptID = r.RptID ";
-            sql += "join SYSTEM.Module mo on mo.ModuleID = rg.ModuleID ";
-            sql += "order by mo.ModuleName ";
-
-            sql += "end ";
-
-            sql += "begin ";
-
-            sql += "select * from SYSTEM.Module order by ModuleName ";
-
-            sql += "end ";
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                var result = await conn.QueryAsync<SysRptVM>(sql, new { UserID = _UserID });
-                return result.ToList();
-            }
-        }
-
-        [HttpGet("GetRptGrpByID/{_ModuleID}/{_UserID}")]
-        public async Task<ActionResult<List<SysRptVM>>> GetRptGrpByID(string _ModuleID, string _UserID)
-        {
-            var sql = "Declare @roleUser int ";
-            sql += "select @roleUser = User_Role from HR.Profile where Eserial=@UserID ";
-            sql += "if (@roleUser>2) ";
-            sql += "begin ";
-
-            sql += "select distinct rg.RptGrpID,rg.RptGrpName from SYSTEM.Rpt r ";
-            sql += "join (select * from SYSTEM.RptGrp where ModuleID=@ModuleID) rg on rg.RptGrpID = r.RptGrpID ";
-            sql += "join (select * from SYSTEM.PermissionRpt where UserID=@UserID) pr on pr.RptID = r.RptID ";
-            sql += "order by RptGrpName ";
-
-            sql += "end ";
-
-            sql += "begin ";
-
-            sql += "select * from SYSTEM.RptGrp where ModuleID=@ModuleID order by RptGrpName ";
-
-            sql += "end ";
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                var result = await conn.QueryAsync<SysRptVM>(sql, new { UserID = _UserID, ModuleID = _ModuleID });
-                return result.ToList();
-            }
-        }
-
-        [HttpGet("GetRptList/{_ModuleID}/{_RptGrptID}/{_UserID}")]
-        public async Task<ActionResult<IEnumerable<SysRptVM>>> GetRptList(string _ModuleID, int _RptGrptID, string _UserID)
+        [HttpGet("GetRptList/{_RptID}/{_UserID}")]
+        public async Task<ActionResult<IEnumerable<SysRptVM>>> GetRptList(int _RptID, string _UserID)
         {
             var sql = "select r.RptID, r.RptName, r.RptUrl, rg.RptGrpID, rg.RptGrpName from SYSTEM.Rpt r ";
             sql += "join SYSTEM.RptGrp rg on rg.RptGrpID = r.RptGrpID  ";
             sql += "join SYSTEM.PermissionRpt pr on pr.RptID = r.RptID ";
-            sql += "where UserID=@UserID and rg.ModuleID=@ModuleID ";
-            if (_RptGrptID != 0)
-            {
-                sql += " and rg.RptGrpID=@RptGrpID ";
-            }
+            sql += "where UserID=@UserID and (r.RptID=@RptID or @RptID=0) ";
             sql += "order by rg.RptGrpID, r.RptName";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<SysRptVM>(sql, new { UserID = _UserID, ModuleID = _ModuleID, RptGrpID = _RptGrptID });
+                var result = await conn.QueryAsync<SysRptVM>(sql, new { RptID = _RptID, UserID = _UserID});
                 return Ok(result);
-            }
-        }
-
-        [HttpGet("GetRpt/{_RptID}")]
-        public async Task<ActionResult<RptVM>> GetRpt(int _RptID)
-        {
-            var sql = "select rg.RptGrpID, rg.RptGrpName, r.RptID, r.RptName, r.RptUrl, r.PassUserID from SYSTEM.Rpt r ";
-            sql += "join SYSTEM.RptGrp rg on rg.RptGrpID = r.RptGrpID ";
-            sql += "where r.RptID=@RptID ";
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                var result = await conn.QueryFirstAsync<RptVM>(sql, new { RptID = _RptID });
-                return result;
-            }
-        }
-
-        [HttpPost("UpdateRpt")]
-        public async Task<ActionResult<bool>> UpdateRpt(RptVM _rptVM)
-        {
-            var sql = "";
-            if (_rptVM.IsTypeUpdate == 0)
-            {
-                sql += "Insert into SYSTEM.Rpt (RptGrpID, RptName, RptUrl, PassUserID) Values (@RptGrpID,@RptName,@RptUrl,@PassUserID) ";
-                sql += "Insert into SYSTEM.PermissionRpt (UserID, RptID) select @UserID, MAX(RptID) from SYSTEM.Rpt ";
-            }
-            else
-            {
-                sql += "Update SYSTEM.Rpt set RptGrpID = @RptGrpID, ";
-                sql += "RptName = @RptName, RptUrl = @RptUrl, PassUserID = @PassUserID ";
-                sql += "where RptID = @RptID ";
-            }
-
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                await conn.ExecuteAsync(sql, _rptVM);
-                return true;
-            }
-        }
-
-        [HttpGet("DelRpt/{_RptID}")]
-        public async Task<ActionResult<bool>> DelRpt(int _RptID)
-        {
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                var sql = "delete from SYSTEM.Rpt where RptID=@RptID ";
-                await conn.ExecuteAsync(sql, new { RptID = _RptID });
-                return true;
-            }
-        }
-
-        [HttpGet("GetRptGrp/{_RptGrpID}")]
-        public async Task<ActionResult<RptGrpVM>> GetRptGrp(int _RptGrpID)
-        {
-            var sql = "select * from SYSTEM.RptGrp ";
-            sql += "where RptGrpID=@RptGrpID ";
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                var result = await conn.QueryFirstAsync<RptGrpVM>(sql, new { RptGrpID = _RptGrpID });
-                return result;
-            }
-        }
-
-        [HttpPost("UpdateRptGrp")]
-        public async Task<ActionResult<string>> UpdateRptGrp(RptGrpVM _rptGrpVM)
-        {
-            var sql = "";
-            if (_rptGrpVM.IsTypeUpdate == 0)
-            {
-                sql += "Insert into SYSTEM.RptGrp (RptGrpName, ModuleID) Values (@RptGrpName,@ModuleID) ";
-            }
-            else
-            {
-                sql += "Update SYSTEM.RptGrp set RptGrpName = @RptGrpName, ModuleID = @ModuleID ";
-                sql += "where RptGrpID = @RptGrpID ";
-            }
-
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                return await conn.ExecuteScalarAsync<string>(sql, _rptGrpVM);
-            }
-        }
-
-        [HttpGet("DelRptGrp/{_RptGrpID}")]
-        public async Task<ActionResult<bool>> DelRptGrp(int _RptGrpID)
-        {
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                var sql = "delete from SYSTEM.RptGrp where RptGrpID=@RptGrpID ";
-                await conn.ExecuteAsync(sql, new { RptGrpID = _RptGrpID });
-
-                return true;
             }
         }
 

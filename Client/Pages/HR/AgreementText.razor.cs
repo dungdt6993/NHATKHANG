@@ -304,7 +304,7 @@ namespace D69soft.Client.Pages.HR
 
             adjustProfileVM = _adjustProfileVM;
 
-            sysRptVMs = await sysService.GetRptList("HR",0, filterVM.UserID);
+            sysRptVMs = await sysService.GetRptList(0, filterVM.UserID);
 
             adjustProfileVM.arrRptID = adjustProfileRptVMs.Where(x => x.AdjustProfileID == _adjustProfileVM.AdjustProfileID).Select(x => x.RptID).ToArray();
             adjustProfileVM.strRpt = string.Join(",", (int[])adjustProfileVM.arrRptID);
