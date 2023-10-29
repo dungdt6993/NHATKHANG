@@ -2188,7 +2188,7 @@ textarea:focus {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 }
 .product-image > span.sticker {
-	background: #0363cd;
+	background: #e80f0f;
 	border-radius: 100%;
 	color: #fff;
 	right: 15px;

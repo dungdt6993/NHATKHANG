@@ -231,7 +231,7 @@
                                     </div>
 
                                     <div class="form-row">
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-3">
                                             <label>Giá mua</label>
                                             <div class="input-group input-group-sm">
                                                 <input class="form-control form-control-sm" name="currency-mask" @bind="itemsVM.ICost" onClick="this.select();" />
@@ -240,7 +240,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-3">
                                             <label>Giá bán</label>
                                             <div class="input-group input-group-sm">
                                                 <input class="form-control form-control-sm" name="currency-mask" @bind="itemsVM.IPrice" onClick="this.select();" />
@@ -249,7 +249,16 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-3">
+                                            <label>Giá bán cũ</label>
+                                            <div class="input-group input-group-sm">
+                                                <input class="form-control form-control-sm" name="currency-mask" @bind="itemsVM.IOldPrice" onClick="this.select();" />
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">đ</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-3">
                                             <label></label>
                                             <div class="form-group clearfix">
                                                 <div class="icheck-success d-inline">

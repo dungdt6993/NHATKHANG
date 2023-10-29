@@ -8,7 +8,10 @@
         <div class="breadcrumb-content">
             <ul>
                 <li><a href="/">Trang chủ</a></li>
-                <li class="active">Shop Left Sidebar</li>
+                @if (itemsClassVMs != null)
+                {
+                    <li class="active">@itemsClassVMs.Select(x=>x.IClsName).FirstOrDefault()</li>
+                }
             </ul>
         </div>
     </div>
@@ -67,7 +70,10 @@
                                                         <a href="#" data-toggle="modal" data-target="#modalQuickViewProduct" @onclick="() => itemsVM = _itemsVM">
                                                             <img src="@(Configuration["ApiUrl"]+_itemsVM.IURLPicture1)" alt="Li's Product Image">
                                                         </a>
-                                                        <span class="sticker">Mới</span>
+                                                        @if (_itemsVM.IOldPrice != 0 && _itemsVM.IOldPrice > _itemsVM.IPrice)
+                                                        {
+                                                            <span class="sticker">-@Math.Round((_itemsVM.IOldPrice / _itemsVM.IPrice - 1)*100, 0, MidpointRounding.AwayFromZero)%</span>
+                                                        }
                                                     </div>
                                                     <div class="product_desc">
                                                         <div class="product_desc_info">
@@ -88,8 +94,10 @@
                                                             <h4><a class="product_name" href="#" data-toggle="modal" data-target="#modalQuickViewProduct" @onclick="() => itemsVM = _itemsVM">@_itemsVM.IName</a></h4>
                                                             <div class="price-box">
                                                                 <span class="new-price new-price-2">@String.Format("{0:#,##0}", _itemsVM.IPrice) đ</span>
-                                                                <span class="old-price">@String.Format("{0:#,##0}", _itemsVM.IPrice) đ</span>
-                                                                <span class="discount-percentage">-0%</span>
+                                                                @if (_itemsVM.IOldPrice != 0 && _itemsVM.IOldPrice > _itemsVM.IPrice)
+                                                                {
+                                                                    <span class="old-price">@String.Format("{0:#,##0}", _itemsVM.IOldPrice) đ</span>
+                                                                }
                                                             </div>
                                                         </div>
                                                         <div class="add-actions">
@@ -118,7 +126,10 @@
                                                         <a href="#" data-toggle="modal" data-target="#modalQuickViewProduct" @onclick="() => itemsVM = _itemsVM">
                                                             <img src="@(Configuration["ApiUrl"]+_itemsVM.IURLPicture1)" alt="Li's Product Image">
                                                         </a>
-                                                        <span class="sticker">Mới</span>
+                                                        @if (_itemsVM.IOldPrice != 0 && _itemsVM.IOldPrice > _itemsVM.IPrice)
+                                                        {
+                                                            <span class="sticker">-@Math.Round((_itemsVM.IOldPrice / _itemsVM.IPrice - 1)*100, 0, MidpointRounding.AwayFromZero)%</span>
+                                                        }
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-5 col-md-7">
@@ -141,8 +152,10 @@
                                                             <h4><a class="product_name" href="#" data-toggle="modal" data-target="#modalQuickViewProduct" @onclick="() => itemsVM = _itemsVM">@_itemsVM.IName</a></h4>
                                                             <div class="price-box">
                                                                 <span class="new-price new-price-2">@String.Format("{0:#,##0}", _itemsVM.IPrice) đ</span>
-                                                                <span class="old-price">@String.Format("{0:#,##0}", _itemsVM.IPrice) đ</span>
-                                                                <span class="discount-percentage">-0%</span>
+                                                                @if (_itemsVM.IOldPrice != 0 && _itemsVM.IOldPrice > _itemsVM.IPrice)
+                                                                {
+                                                                    <span class="old-price">@String.Format("{0:#,##0}", _itemsVM.IOldPrice) đ</span>
+                                                                }
                                                             </div>
                                                         </div>
                                                     </div>
