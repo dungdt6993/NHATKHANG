@@ -53,7 +53,7 @@
 }
 
 .form-group {
-    margin-bottom: 0.5rem !important;
+    margin-bottom: 0.4rem !important;
 }
 
 .form-control {
@@ -172,7 +172,11 @@ label:not(.form-check-label):not(.custom-file-label) {
 }
 
 label {
-    margin-bottom: 0.1rem;
+    margin-bottom: 0.1rem!important;
+}
+
+.col-form-label {
+    padding-bottom: 0px!important;
 }
 
 /*bootstrap-select*/

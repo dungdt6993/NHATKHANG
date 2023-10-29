@@ -31,7 +31,6 @@
                                 <!-- shop-item-filter-list start -->
                                 <ul class="nav shop-item-filter-list" role="tablist">
                                     <li class="active" role="presentation"><a aria-selected="true" class="active show" data-toggle="tab" role="tab" aria-controls="grid-view" href="#grid-view"><i class="fa fa-th"></i></a></li>
-                                    <li role="presentation"><a data-toggle="tab" role="tab" aria-controls="list-view" href="#list-view"><i class="fa fa-th-list"></i></a></li>
                                 </ul>
                                 <!-- shop-item-filter-list end -->
                             </div>
@@ -112,66 +111,6 @@
                                                 <!-- single-product-wrap end -->
                                             </div>
                                         }
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="list-view" class="tab-pane fade product-list-view" role="tabpanel">
-                                <div class="row">
-                                    <div class="col">
-                                        @foreach (var _itemsVM in itemsVMs)
-                                        {
-                                            <div class="row product-layout-list @(_itemsVM.Equals(itemsVMs.Last())?"last-child":"")">
-                                                <div class="col-lg-3 col-md-5 ">
-                                                    <div class="product-image">
-                                                        <a href="#" data-toggle="modal" data-target="#modalQuickViewProduct" @onclick="() => itemsVM = _itemsVM">
-                                                            <img src="@(Configuration["ApiUrl"]+_itemsVM.IURLPicture1)" alt="Li's Product Image">
-                                                        </a>
-                                                        @if (_itemsVM.IOldPrice != 0 && _itemsVM.IOldPrice > _itemsVM.IPrice)
-                                                        {
-                                                            <span class="sticker">-@Math.Round((_itemsVM.IOldPrice / _itemsVM.IPrice - 1)*100, 0, MidpointRounding.AwayFromZero)%</span>
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-5 col-md-7">
-                                                    <div class="product_desc">
-                                                        <div class="product_desc_info">
-                                                            <div class="product-review">
-                                                                <h5 class="instock">
-                                                                    <i class="fa fa-check" aria-hidden="true"></i> Sẵn hàng
-                                                                </h5>
-                                                                <div class="rating-box">
-                                                                    <ul class="rating">
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                        <li><i class="fa fa-star-o"></i></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <h4><a class="product_name" href="#" data-toggle="modal" data-target="#modalQuickViewProduct" @onclick="() => itemsVM = _itemsVM">@_itemsVM.IName</a></h4>
-                                                            <div class="price-box">
-                                                                <span class="new-price new-price-2">@String.Format("{0:#,##0}", _itemsVM.IPrice) đ</span>
-                                                                @if (_itemsVM.IOldPrice != 0 && _itemsVM.IOldPrice > _itemsVM.IPrice)
-                                                                {
-                                                                    <span class="old-price">@String.Format("{0:#,##0}", _itemsVM.IOldPrice) đ</span>
-                                                                }
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <div class="shop-add-action mb-xs-30">
-                                                        <ul class="add-actions-link">
-                                                            <li class="add-cart"><a href="#">Thêm vào giỏ</a></li>
-                                                            <li class="wishlist"><a href="#"><i class="fa fa-heart-o"></i>Yêu thích</a></li>
-                                                            <li><a class="quick-view" href="#" data-toggle="modal" data-target="#modalQuickViewProduct" @onclick="() => itemsVM = _itemsVM"><i class="fa fa-eye"></i> Xem chi tiết</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        }
-
                                     </div>
                                 </div>
                             </div>
