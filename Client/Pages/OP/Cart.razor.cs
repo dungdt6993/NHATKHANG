@@ -157,9 +157,6 @@ namespace D69soft.Client.Pages.OP
             logVM.LogDesc = "Gửi yêu cầu cấp hàng";
             await sysService.InsertLog(logVM);
 
-            await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Request");
-            await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
-
             navigationManager.NavigateTo("/EA/Request", false);
 
             isLoading = false;
