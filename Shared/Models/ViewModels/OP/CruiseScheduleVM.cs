@@ -4,6 +4,10 @@ namespace D69soft.Shared.Models.ViewModels.OP
 {
     public class CruiseScheduleVM : Cruise, CruiseStatus, CruiseSchedule
     {
+        //Para
+        public decimal sumAmount { get; set; }
+        public decimal FoodCostPercentage { get; set; }
+
         public string CruiseCode { get; set; }
         public string CruiseName { get; set; }
         public bool CruiseActive { get; set; }

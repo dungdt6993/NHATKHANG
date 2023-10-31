@@ -10,7 +10,7 @@ namespace D69soft.Shared.Models.Entities.HR
     {
         public int SeqPrRela { get; set; }
         public string Rela_FullName { get; set; }
-        public DateTime? Rela_Birthday { get; set; }
+        public DateTimeOffset? Rela_Birthday { get; set; }
         public string Rela_ValidTo { get; set; }
         public string Rela_TaxCode { get; set; }
         public bool isEmployeeTax { get; set; }

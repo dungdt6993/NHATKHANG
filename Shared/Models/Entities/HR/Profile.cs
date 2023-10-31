@@ -37,7 +37,7 @@ namespace D69soft.Shared.Models.Entities.HR
 
         public string VisaNumber { get; set; }
 
-        public DateTime? VisaExpDate { get; set; }
+        public DateTimeOffset? VisaExpDate { get; set; }
 
         public string Image { get; set; }
 

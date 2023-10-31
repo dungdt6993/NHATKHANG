@@ -21,7 +21,6 @@ namespace D69soft.Client.Pages.FIN
         [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
         [Inject] SysService sysService { get; set; }
-        [Inject] OrganizationalChartService organizationalChartService { get; set; }
         [Inject] InventoryService inventoryService { get; set; }
 
         bool isLoading;

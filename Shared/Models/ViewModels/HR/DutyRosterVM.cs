@@ -65,7 +65,7 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public string Email { get; set; }
         public string PITTaxCode { get; set; }
         public string VisaNumber { get; set; }
-        public DateTime? VisaExpDate { get; set; }
+        public DateTimeOffset? VisaExpDate { get; set; }
         public string Image { get; set; }
         public string Hometown { get; set; }
         public string UrlAvatar { get; set; }
@@ -86,14 +86,14 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public string JobDesc { get; set; }
         public string ShiftID { get; set; }
         public string ShiftName { get; set; }
-        public DateTime? BeginTime { get; set; }
-        public DateTime? EndTime { get; set; }
+        public DateTimeOffset? BeginTime { get; set; }
+        public DateTimeOffset? EndTime { get; set; }
         public string ColorHEX { get; set; }
         public bool isNight { get; set; }
         public bool isSplit { get; set; }
 
-        public DateTime? LockFrom { get; set; }
-        public DateTime? LockTo { get; set; }
+        public DateTimeOffset? LockFrom { get; set; }
+        public DateTimeOffset? LockTo { get; set; }
         public string EserialLock { get; set; }
         public DateTime TimeLock { get; set; }
         public int ARID { get; set; }
@@ -135,8 +135,8 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public int WorkPlanSeq { get; set; }
         public string WorkPlanName { get; set; }
         public string WorkPlanDesc { get; set; }
-        public DateTime? WorkPlanStartDate { get; set; }
-        public DateTime? WorkPlanDeadline { get; set; }
+        public DateTimeOffset? WorkPlanStartDate { get; set; }
+        public DateTimeOffset? WorkPlanDeadline { get; set; }
         public string WorkPlanNote { get; set; }
         public bool WorkPlanIsDone { get; set; }
         public DateTime? WorkPlanDoneDate { get; set; }

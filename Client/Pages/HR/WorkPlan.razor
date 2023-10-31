@@ -61,7 +61,9 @@
                         <label class="col-sm-2 col-form-label">Ngày bắt đầu</label>
                         <div class="col-sm-3">
                             <div class="input-group date">
-                                <input type="text" class="form-control form-control-sm" name="date-mask" @bind="onchange_WorkPlanStartDate" onClick="this.select();"></input>
+                                <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask"
+                                @bind-StartDate="workPlanVM.WorkPlanStartDate"
+                                                 onClick="this.select();" />
                                 <div class="input-group-append">
                                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -71,7 +73,9 @@
                         <label class="col-sm-2 col-form-label">Thời hạn</label>
                         <div class="col-sm-3">
                             <div class="input-group date">
-                                <input type="text" class="form-control form-control-sm" name="date-mask" @bind="onchange_WorkPlanDeadline" onClick="this.select();"></input>
+                                <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask"
+                                @bind-StartDate="workPlanVM.WorkPlanDeadline"
+                                                 onClick="this.select();" />
                                 <div class="input-group-append">
                                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -111,7 +115,6 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Ngày:</label>
                     <div class="col-sm-9">
-
                         <div class="input-group">
                             <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask"
                                              @bind-StartDate="filterVM.dDate" OnRangeSelect="OnRangeSelect_dDate" />
@@ -120,7 +123,6 @@
                                 <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>

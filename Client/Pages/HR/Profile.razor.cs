@@ -13,6 +13,7 @@ using D69soft.Shared.Utilities;
 using D69soft.Client.Extensions;
 using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Client.Services.FIN;
+using BlazorDateRangePicker;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -298,7 +299,7 @@ namespace D69soft.Client.Pages.HR
             //Load profiles
             profileVMs = await profileService.GetProfileList(filterVM);
 
-            if(empls == null)
+            if (empls == null)
             {
                 empls = profileVMs;
             }
@@ -320,6 +321,24 @@ namespace D69soft.Client.Pages.HR
         private void onclick_selectedEserial(ProfileVM _profileVM)
         {
             profileVM = _profileVM == profileVM ? new() : _profileVM;
+        }
+        public async Task onchange_StartContractDate(DateRange _range)
+        {
+            isLoading = true;
+
+            if (profileVM.StartContractDate == null)
+            {
+                disabled_ContractTypeID = true;
+                disabled_EndContractDate = true;
+            }
+            else
+            {
+                disabled_ContractTypeID = false;
+            }
+            profileVM.ContractTypeID = string.Empty;
+            profileVM.EndContractDate = null;
+
+            isLoading = false;
         }
 
         private async Task onchange_ContractType(string value)
@@ -1304,32 +1323,22 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        public string onchange_Rela_Birthday
+        public async Task onchange_Rela_Birthday(DateRange _range)
         {
-            get
+            if (profileRelationshipVM.Rela_Birthday != null)
             {
-                return profileRelationshipVM.Rela_Birthday.HasValue ? profileRelationshipVM.Rela_Birthday.Value.ToString("dd/MM/yyyy") : "";
-            }
-            set
-            {
-                profileRelationshipVM.Rela_Birthday = LibraryFunc.FormatDateDDMMYYYY(value, profileRelationshipVM.Rela_Birthday);
-
-                if (profileRelationshipVM.Rela_Birthday != null)
+                if (profileRelationshipVM.RelationshipID == 9)
                 {
-                    if (profileRelationshipVM.RelationshipID == 9)
-                    {
-                        profileRelationshipVM.Rela_ValidTo = ((profileRelationshipVM.Rela_Birthday.Value.Year + 18) * 100 + profileRelationshipVM.Rela_Birthday.Value.Month).ToString();
-                    }
-                    else
-                    {
-                        profileRelationshipVM.Rela_ValidTo = "299912";
-                    }
+                    profileRelationshipVM.Rela_ValidTo = ((profileRelationshipVM.Rela_Birthday.Value.Year + 18) * 100 + profileRelationshipVM.Rela_Birthday.Value.Month).ToString();
                 }
                 else
                 {
-                    profileRelationshipVM.Rela_ValidTo = String.Empty;
+                    profileRelationshipVM.Rela_ValidTo = "299912";
                 }
-
+            }
+            else
+            {
+                profileRelationshipVM.Rela_ValidTo = String.Empty;
             }
         }
 

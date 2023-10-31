@@ -1,9 +1,10 @@
 ﻿using System;
+using D69soft.Shared.Models.Entities.FIN;
 using D69soft.Shared.Models.Entities.HR;
 
 namespace D69soft.Shared.Models.ViewModels.HR
 {
-    public class DepartmentVM : Department, DepartmentGroup, Division, Shift
+    public class DepartmentVM : Department, DepartmentGroup, Division, Shift, Stock
     {
         //Para
         public bool isActive { get; set; }
@@ -35,10 +36,14 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public string DepartmentGroupName { get; set; }
         public string ShiftID { get; set; }
         public string ShiftName { get; set; }
-        public DateTime? BeginTime { get; set; }
-        public DateTime? EndTime { get; set; }
+        public DateTimeOffset? BeginTime { get; set; }
+        public DateTimeOffset? EndTime { get; set; }
         public string ColorHEX { get; set; }
         public bool isNight { get; set; }
         public bool isSplit { get; set; }
+        public string StockCode { get; set; }
+        public string StockName { get; set; }
+        public string StockAddress { get; set; }
+        public bool StockActive { get; set; }
     }
 }

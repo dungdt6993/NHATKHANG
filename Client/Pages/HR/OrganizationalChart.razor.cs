@@ -9,6 +9,8 @@ using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extensions;
 using Microsoft.AspNetCore.Components.Forms;
 using D69soft.Shared.Models.Entities.HR;
+using D69soft.Client.Services.FIN;
+using D69soft.Shared.Models.ViewModels.FIN;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -21,6 +23,7 @@ namespace D69soft.Client.Pages.HR
         [Inject] SysService sysService { get; set; }
         [Inject] OrganizationalChartService organizationalChartService { get; set; }
         [Inject] DutyRosterService dutyRosterService { get; set; }
+        [Inject] InventoryService inventoryService { get; set; }
 
         bool isLoading;
         bool isLoadingScreen = true;
@@ -53,6 +56,9 @@ namespace D69soft.Client.Pages.HR
 
         //Shift
         IEnumerable<ShiftVM> shiftVMs;
+
+        //Stock
+        List<StockVM> stockVMs;
 
         BlazoredTextEditor QuillHtml = new BlazoredTextEditor();
 
@@ -95,6 +101,8 @@ namespace D69soft.Client.Pages.HR
             positionGroups = await organizationalChartService.GetPositionGroupList();
 
             shiftVMs = await dutyRosterService.GetShiftList();
+
+            stockVMs = (await inventoryService.GetStockList()).ToList();
 
             isLoadingScreen = false;
         }

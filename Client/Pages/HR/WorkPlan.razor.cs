@@ -92,10 +92,7 @@ namespace D69soft.Client.Pages.HR
 
         public async Task OnRangeSelect_dDate(DateRange _range)
         {
-            filterVM.dDate = _range.Start;
-
             await GetWorkPlans();
-
         }
 
         private async void onchange_filter_division(string value)
@@ -167,30 +164,6 @@ namespace D69soft.Client.Pages.HR
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_WorkPlan");
 
             isLoading = false;
-        }
-
-        public string onchange_WorkPlanStartDate
-        {
-            get
-            {
-                return workPlanVM.WorkPlanStartDate.HasValue ? workPlanVM.WorkPlanStartDate.Value.ToString("dd/MM/yyyy") : "";
-            }
-            set
-            {
-                workPlanVM.WorkPlanStartDate = LibraryFunc.FormatDateDDMMYYYY(value, workPlanVM.WorkPlanStartDate);
-            }
-        }
-
-        public string onchange_WorkPlanDeadline
-        {
-            get
-            {
-                return workPlanVM.WorkPlanDeadline.HasValue ? workPlanVM.WorkPlanDeadline.Value.ToString("dd/MM/yyyy") : "";
-            }
-            set
-            {
-                workPlanVM.WorkPlanDeadline = LibraryFunc.FormatDateDDMMYYYY(value, workPlanVM.WorkPlanDeadline);
-            }
         }
 
         private async Task UpdateWorkPlan(EditContext _formWorkPlanVM, int _IsTypeUpdate)

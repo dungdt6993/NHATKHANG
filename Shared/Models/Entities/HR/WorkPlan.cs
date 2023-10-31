@@ -11,8 +11,8 @@ namespace D69soft.Shared.Models.Entities.HR
         public int WorkPlanSeq { get; set; }
         public string WorkPlanName { get; set; }
         public string WorkPlanDesc { get; set; }
-        public DateTime? WorkPlanStartDate { get; set; }
-        public DateTime? WorkPlanDeadline { get; set; }
+        public DateTimeOffset? WorkPlanStartDate { get; set; }
+        public DateTimeOffset? WorkPlanDeadline { get; set; }
         public string WorkPlanNote { get; set; }
         public bool WorkPlanIsDone { get; set; }
         public DateTime? WorkPlanDoneDate { get; set; }

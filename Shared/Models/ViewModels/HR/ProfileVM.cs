@@ -58,7 +58,7 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public string Email { get; set; }
         public string PITTaxCode { get; set; }
         public string VisaNumber { get; set; }
-        public DateTime? VisaExpDate { get; set; }
+        public DateTimeOffset? VisaExpDate { get; set; }
         public string Image { get; set; }
         public string Hometown { get; set; }
         public string UrlAvatar { get; set; }
@@ -145,8 +145,8 @@ namespace D69soft.Shared.Models.ViewModels.HR
 
         public string ShiftID { get; set; }
         public string ShiftName { get; set; }
-        public DateTime? BeginTime { get; set; }
-        public DateTime? EndTime { get; set; }
+        public DateTimeOffset? BeginTime { get; set; }
+        public DateTimeOffset? EndTime { get; set; }
         public string ColorHEX { get; set; }
         public bool isNight { get; set; }
         public bool isSplit { get; set; }

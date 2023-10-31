@@ -10,6 +10,7 @@ using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extensions;
 using Microsoft.AspNetCore.Components.Forms;
 using D69soft.Shared.Models.Entities.HR;
+using BlazorDateRangePicker;
 
 namespace D69soft.Client.Pages.HR
 {
@@ -140,7 +141,7 @@ namespace D69soft.Client.Pages.HR
             await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterVM);
 
             //Initialize DODefault
-            await dayOffService.DayOff_calcDODefault(filterVM,0);
+            await dayOffService.DayOff_calcDODefault(filterVM, 0);
 
             filterVM.Eserial = string.Empty;
             eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
@@ -166,7 +167,7 @@ namespace D69soft.Client.Pages.HR
             await dutyRosterService.InitializeAttendanceRecordDutyRoster(filterVM);
 
             //Initialize DODefault
-            await dayOffService.DayOff_calcDODefault(filterVM,0);
+            await dayOffService.DayOff_calcDODefault(filterVM, 0);
 
             filterVM.Eserial = string.Empty;
             eserial_filter_list = await dutyRosterService.GetEserialByID(filterVM);
@@ -301,7 +302,7 @@ namespace D69soft.Client.Pages.HR
         {
             curPage = currentPage;
 
-            search_dutyRosterVMs = dutyRosterVMs.Where(x=>x.dDate.Day==1).Skip((curPage - 1) * pageSize).Take(pageSize).ToList();
+            search_dutyRosterVMs = dutyRosterVMs.Where(x => x.dDate.Day == 1).Skip((curPage - 1) * pageSize).Take(pageSize).ToList();
         }
 
         public void SetPagerSize(string direction)
@@ -470,161 +471,153 @@ namespace D69soft.Client.Pages.HR
 
             isLoading = false;
         }
-        public string onchange_LockTo
+
+        public async Task onchange_LockTo(DateRange _range)
         {
-            get
+            DateTime fDate;
+            DateTime tDate;
+            if (filterVM.is2625 == 1)
             {
-                return lockDutyRosterVM.LockTo.HasValue ? lockDutyRosterVM.LockTo.Value.ToString("dd/MM/yyyy") : "";
-            }
-            set
-            {
-                lockDutyRosterVM.LockTo = LibraryFunc.FormatDateDDMMYYYY(value, lockDutyRosterVM.LockTo);
-
-                DateTime fDate;
-                DateTime tDate;
-                if (filterVM.is2625 == 1)
-                {
-                    fDate = new DateTime(filterVM.Year, filterVM.Month, 26).AddMonths(-1);
-                    tDate = new DateTime(filterVM.Year, filterVM.Month, 25);
-                }
-                else
-                {
-                    fDate = new DateTime(filterVM.Year, filterVM.Month, 1);
-                    tDate = new DateTime(filterVM.Year, filterVM.Month, DateTime.DaysInMonth(filterVM.Year, filterVM.Month));
-                }
-                lockDutyRosterVM.LockTo = lockDutyRosterVM.LockTo < fDate ? fDate : lockDutyRosterVM.LockTo;
-                lockDutyRosterVM.LockTo = lockDutyRosterVM.LockTo > tDate ? tDate : lockDutyRosterVM.LockTo;
-            }
-        }
-
-        private async Task LockDutyRoster()
-        {
-            isLoading = true;
-
-            lockDutyRosterVM.Period = filterVM.Year * 100 + filterVM.Month;
-            lockDutyRosterVM.DivisionID = filterVM.DivisionID;
-            lockDutyRosterVM.DepartmentID = filterVM.DepartmentID;
-
-            if (await dutyRosterService.LockDutyRoster(lockDutyRosterVM))
-            {
-                await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
-
-                lockDutyRosterVMs = await dutyRosterService.GetLockDutyRoster(filterVM);
-
-                dutyRosterVMs = search_dutyRosterVMs = null;
-            }
-
-            isLoading = false;
-        }
-
-        //Shift
-        ShiftVM shiftVM = new();
-        IEnumerable<ShiftVM> shiftVMs;
-        IEnumerable<ShiftTypeVM> shiftTypeVMs;
-
-        private async Task InitializeModal_Shift()
-        {
-            isLoading = true;
-
-            shiftVMs = await dutyRosterService.GetShiftList();
-
-            isLoading = false;
-        }
-        private async Task InitializeModalUpdate_Shift(int _IsTypeUpdate, ShiftVM _shiftVM)
-        {
-            isLoading = true;
-
-            shiftVM = new();
-            shiftTypeVMs = await dutyRosterService.GetShiftTypeList();
-
-            if (_IsTypeUpdate == 0)
-            {
-                shiftVM.ColorHEX = "#ffffff";
-                shiftVM.isActive = true;
-            }
-
-            if (_IsTypeUpdate == 1)
-            {
-                shiftVM = _shiftVM;
-            }
-
-            shiftVM.IsTypeUpdate = _IsTypeUpdate;
-
-            isLoading = false;
-        }
-
-        private async Task UpdateShift(EditContext _formShiftVM, int _IsTypeUpdate)
-        {
-            shiftVM.IsTypeUpdate = _IsTypeUpdate;
-
-            if (!_formShiftVM.Validate()) return;
-
-            isLoading = true;
-
-            if (shiftVM.IsTypeUpdate != 2)
-            {
-                await dutyRosterService.UpdateShift(shiftVM);
-                shiftVM.IsTypeUpdate = 1;
-
-                await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+                fDate = new DateTime(filterVM.Year, filterVM.Month, 26).AddMonths(-1);
+                tDate = new DateTime(filterVM.Year, filterVM.Month, 25);
             }
             else
             {
-                if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
+                fDate = new DateTime(filterVM.Year, filterVM.Month, 1);
+                tDate = new DateTime(filterVM.Year, filterVM.Month, DateTime.DaysInMonth(filterVM.Year, filterVM.Month));
+            }
+            lockDutyRosterVM.LockTo = lockDutyRosterVM.LockTo < fDate ? fDate : lockDutyRosterVM.LockTo;
+            lockDutyRosterVM.LockTo = lockDutyRosterVM.LockTo > tDate ? tDate : lockDutyRosterVM.LockTo;
+    }
+
+    private async Task LockDutyRoster()
+    {
+        isLoading = true;
+
+        lockDutyRosterVM.Period = filterVM.Year * 100 + filterVM.Month;
+        lockDutyRosterVM.DivisionID = filterVM.DivisionID;
+        lockDutyRosterVM.DepartmentID = filterVM.DepartmentID;
+
+        if (await dutyRosterService.LockDutyRoster(lockDutyRosterVM))
+        {
+            await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+
+            lockDutyRosterVMs = await dutyRosterService.GetLockDutyRoster(filterVM);
+
+            dutyRosterVMs = search_dutyRosterVMs = null;
+        }
+
+        isLoading = false;
+    }
+
+    //Shift
+    ShiftVM shiftVM = new();
+    IEnumerable<ShiftVM> shiftVMs;
+    IEnumerable<ShiftTypeVM> shiftTypeVMs;
+
+    private async Task InitializeModal_Shift()
+    {
+        isLoading = true;
+
+        shiftVMs = await dutyRosterService.GetShiftList();
+
+        isLoading = false;
+    }
+    private async Task InitializeModalUpdate_Shift(int _IsTypeUpdate, ShiftVM _shiftVM)
+    {
+        isLoading = true;
+
+        shiftVM = new();
+        shiftTypeVMs = await dutyRosterService.GetShiftTypeList();
+
+        if (_IsTypeUpdate == 0)
+        {
+            shiftVM.ColorHEX = "#ffffff";
+            shiftVM.isActive = true;
+        }
+
+        if (_IsTypeUpdate == 1)
+        {
+            shiftVM = _shiftVM;
+        }
+
+        shiftVM.IsTypeUpdate = _IsTypeUpdate;
+
+        isLoading = false;
+    }
+
+    private async Task UpdateShift(EditContext _formShiftVM, int _IsTypeUpdate)
+    {
+        shiftVM.IsTypeUpdate = _IsTypeUpdate;
+
+        if (!_formShiftVM.Validate()) return;
+
+        isLoading = true;
+
+        if (shiftVM.IsTypeUpdate != 2)
+        {
+            await dutyRosterService.UpdateShift(shiftVM);
+            shiftVM.IsTypeUpdate = 1;
+
+            await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+        }
+        else
+        {
+            if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
+            {
+                int affectedRows = await dutyRosterService.UpdateShift(shiftVM);
+
+                if (affectedRows > 0)
                 {
-                    int affectedRows = await dutyRosterService.UpdateShift(shiftVM);
+                    await InitializeModal_Shift();
 
-                    if (affectedRows > 0)
-                    {
-                        await InitializeModal_Shift();
-
-                        await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Shift");
-                        await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
-                    }
-                    else
-                    {
-                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu chấm công liên quan.", SweetAlertMessageType.error);
-                        shiftVM.IsTypeUpdate = 1;
-                    }
+                    await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Shift");
+                    await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
                 }
                 else
                 {
+                    await js.Swal_Message("Xóa không thành công!", "Có dữ liệu chấm công liên quan.", SweetAlertMessageType.error);
                     shiftVM.IsTypeUpdate = 1;
                 }
             }
-
-            isLoading = false;
-        }
-
-        private async Task CalcControlDAYOFF()
-        {
-            isLoading = true;
-
-            if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn kiểm soát ngày nghỉ Tháng "+filterVM.Month+" năm "+filterVM.Year+"?", SweetAlertMessageType.question))
+            else
             {
-                await dayOffService.DayOff_calcControlDAYOFF(filterVM);
-
-                await GetDutyRosterList();
-
-                await js.Swal_Message("Thông báo.", "Kiểm soát ngày nghỉ thành công!", SweetAlertMessageType.success);
+                shiftVM.IsTypeUpdate = 1;
             }
-
-            isLoading = false;
         }
 
-        //DayOffDetail
-        IEnumerable<DayOffVM> dayOffVMs;
-        private async Task InitializeModal_DayOffDetail(string _eserial)
-        {
-            isLoading = true;
-
-            dayOffVMs = await dayOffService.GetDayOffDetail(filterVM.Period, _eserial);
-
-            await js.InvokeAsync<object>("ShowModal", "#InitializeModal_DayOffDetail");
-
-            isLoading = false;
-        }
-
+        isLoading = false;
     }
+
+    private async Task CalcControlDAYOFF()
+    {
+        isLoading = true;
+
+        if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn kiểm soát ngày nghỉ Tháng " + filterVM.Month + " năm " + filterVM.Year + "?", SweetAlertMessageType.question))
+        {
+            await dayOffService.DayOff_calcControlDAYOFF(filterVM);
+
+            await GetDutyRosterList();
+
+            await js.Swal_Message("Thông báo.", "Kiểm soát ngày nghỉ thành công!", SweetAlertMessageType.success);
+        }
+
+        isLoading = false;
+    }
+
+    //DayOffDetail
+    IEnumerable<DayOffVM> dayOffVMs;
+    private async Task InitializeModal_DayOffDetail(string _eserial)
+    {
+        isLoading = true;
+
+        dayOffVMs = await dayOffService.GetDayOffDetail(filterVM.Period, _eserial);
+
+        await js.InvokeAsync<object>("ShowModal", "#InitializeModal_DayOffDetail");
+
+        isLoading = false;
+    }
+
+}
 }
 

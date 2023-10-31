@@ -246,21 +246,39 @@
                         <ValidationMessage For="@(() => departmentVM.DepartmentName)" />
                     </div>
 
-                    <div class="form-group">
-                        <label>Ca làm việc mặc định:</label>
-                        <InputSelect class="selectpicker form-control form-control-sm"
-                                     data-style="btn-selectpicker" data-container="body"
-                                     data-live-search="true" data-show-subtext="true"
-                        @bind-Value="departmentVM.ShiftID">
-                            <option value=@String.Empty>-----Chọn-----</option>
-                            @if (shiftVMs != null)
-                            {
-                                @foreach (var _shiftVM in shiftVMs.Where(x => x.isOFF == 0))
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Ca làm việc mặc định:</label>
+                            <InputSelect class="selectpicker form-control form-control-sm"
+                                         data-style="btn-selectpicker" data-container="body"
+                                         data-live-search="true" data-show-subtext="true"
+                            @bind-Value="departmentVM.ShiftID">
+                                <option value=@String.Empty>-----Chọn-----</option>
+                                @if (shiftVMs != null)
                                 {
-                                    <option data-subtext="@_shiftVM.ShiftID" value="@_shiftVM.ShiftID">@_shiftVM.ShiftName</option>
+                                    @foreach (var _shiftVM in shiftVMs.Where(x => x.isOFF == 0))
+                                    {
+                                        <option data-subtext="@_shiftVM.ShiftID" value="@_shiftVM.ShiftID">@_shiftVM.ShiftName</option>
+                                    }
                                 }
-                            }
-                        </InputSelect>
+                            </InputSelect>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Kho mặc định:</label>
+                            <InputSelect class="selectpicker form-control form-control-sm"
+                                         data-style="btn-selectpicker" data-container="body"
+                                         data-live-search="true" data-show-subtext="true"
+                            @bind-Value="departmentVM.StockCode">
+                                <option value=@String.Empty>-----Chọn-----</option>
+                                @if (stockVMs != null)
+                                {
+                                    @foreach (var _stockVM in stockVMs)
+                                    {
+                                        <option data-subtext="@_stockVM.StockCode" value="@_stockVM.StockCode">@_stockVM.StockName</option>
+                                    }
+                                }
+                            </InputSelect>
+                        </div>
                     </div>
 
                     <div class="form-row align-items-center">

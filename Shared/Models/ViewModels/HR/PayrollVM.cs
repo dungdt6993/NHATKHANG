@@ -37,7 +37,7 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public string Email { get; set; }
         public string PITTaxCode { get; set; }
         public string VisaNumber { get; set; }
-        public DateTime? VisaExpDate { get; set; }
+        public DateTimeOffset? VisaExpDate { get; set; }
         public string Image { get; set; }
         public string Hometown { get; set; }
         public string UrlAvatar { get; set; }

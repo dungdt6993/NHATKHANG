@@ -8,8 +8,8 @@ namespace D69soft.Shared.Models.Entities.HR
 {
     public interface LockDutyRoster
     {
-        public DateTime? LockFrom { get; set; }
-        public DateTime? LockTo { get; set; }
+        public DateTimeOffset? LockFrom { get; set; }
+        public DateTimeOffset? LockTo { get; set; }
         public string EserialLock { get; set; }
         public DateTime TimeLock { get; set; }
     }

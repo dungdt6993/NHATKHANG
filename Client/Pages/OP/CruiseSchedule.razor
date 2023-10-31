@@ -156,7 +156,7 @@
                     <table class="table table-sm table-bordered table-head-fixed table-hover-cursor text-nowrap tblFontSizeMin tblDutyRoster">
                         <thead>
                             <tr>
-                                <th>Tàu</th>
+                                <th>Trạng thái tàu</th>
                                 @foreach (var _day in cruiseScheduleVMs.Select(x => new { x.dDate }).Distinct())
                                 {
                                     <th class="text-center">
@@ -198,6 +198,38 @@
                                     </td>
                                 }
                             </tr>
+
+                        </tbody>
+                    </table>
+
+                    <table class="table table-sm table-bordered table-head-fixed table-hover-cursor text-nowrap tblFontSizeMin">
+                        <thead>
+                            <tr>
+                                <th>Chi phí thực phẩm</th>
+                                @foreach (var _day in cruiseScheduleVMs.Select(x => new { x.dDate }).Distinct())
+                                {
+                                    <th class="text-center">
+                                        @_day.dDate.Day
+                                    </th>
+                                }
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var _cruise in cruiseScheduleVMs.Select(x => new { x.CruiseCode, x.CruiseName }).Distinct())
+                            {
+                                <tr>
+                                    <th>@_cruise.CruiseName</th>
+                                    @foreach (var _cruisestatus in cruiseScheduleVMs.Where(x => x.CruiseCode == _cruise.CruiseCode))
+                                    {
+                                        <td class="text-center">
+                                            <span>@String.Format("{0:#,##0}",_cruisestatus.sumAmount)</span><br />
+                                            <span class="@(_cruisestatus.FoodCostPercentage>100?"text-danger":"text-success")">@Math.Round(_cruisestatus.FoodCostPercentage, 2, MidpointRounding.AwayFromZero)%</span>
+                                        </td>
+                                    }
+                                </tr>
+                            }
 
                         </tbody>
                     </table>

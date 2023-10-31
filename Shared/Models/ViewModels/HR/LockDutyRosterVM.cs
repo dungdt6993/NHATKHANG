@@ -32,8 +32,8 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public int INOUTNumber { get; set; }
         public string DepartmentID { get; set; }
         public string DepartmentName { get; set; }
-        public DateTime? LockFrom { get; set; }
-        public DateTime? LockTo { get; set; }
+        public DateTimeOffset? LockFrom { get; set; }
+        public DateTimeOffset? LockTo { get; set; }
         public string EserialLock { get; set; }
         public DateTime TimeLock { get; set; }
 

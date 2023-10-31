@@ -193,10 +193,9 @@
                             <div class="col-sm-4">
 
                                 <div class="input-group">
-                                    <input class="form-control form-control-sm"
-                                       name="time-mask"
-                                       onClick="this.select();"
-                                       @bind="onchange_BeginTime">
+                                    <DateRangePicker SingleDatePicker="true" TimePicker="true" TimePicker24Hour="true" class="form-control form-control-sm" name="time-mask"
+                                    @bind-StartDate="shiftVM.BeginTime" DateFormat="HH:mm"
+                                                     onClick="this.select();" />
                                     <div class="input-group-append">
                                         <div class="input-group-text"><i class="fa-solid fa-clock"></i></div>
                                     </div>
@@ -208,10 +207,9 @@
                             <label class="col-sm-2 col-form-label">Giờ ra</label>
                             <div class="col-sm-4">
                                 <div class="input-group">
-                                    <input class="form-control form-control-sm"
-                                       name="time-mask"
-                                       onClick="this.select();"
-                                       @bind="onchange_EndTime">
+                                    <DateRangePicker SingleDatePicker="true" TimePicker="true" TimePicker24Hour="true" class="form-control form-control-sm" name="time-mask"
+                                    @bind-StartDate="shiftVM.EndTime" DateFormat="HH:mm"
+                                                     onClick="this.select();" />
                                     <div class="input-group-append">
                                         <div class="input-group-text"><i class="fa-solid fa-clock"></i></div>
                                     </div>
@@ -323,10 +321,9 @@
                         <label class="col-sm-3 col-form-label">Đến ngày:</label>
                         <div class="col-sm-9">
                             <div class="input-group">
-                                <input class="form-control form-control-sm"
-                                       data-inputmask="'alias': 'datetime', 'inputFormat': 'dd/mm/yyyy', 'yearrange': { 'minyear': '1900', 'maxyear': '2999' }"
-                                       onClick="this.select();"
-                                       @bind="onchange_LockTo">
+                                <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask"
+                                @bind-StartDate="lockDutyRosterVM.LockTo" OnRangeSelect="onchange_LockTo"
+                                                 onClick="this.select();" />
                                 <div class="input-group-append">
                                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                 </div>
