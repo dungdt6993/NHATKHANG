@@ -4,13 +4,13 @@ namespace D69soft.Shared.Models.Entities.HR
 {
     public interface Staff
     {
-        public DateTime? JoinDate { get; set; }
+        public DateTimeOffset? JoinDate { get; set; }
 
-        public DateTime? TerminateDate { get; set; }
+        public DateTimeOffset? TerminateDate { get; set; }
 
         public int Terminated { get; set; }
 
-        public DateTime? StartDayAL { get; set; }
+        public DateTimeOffset? StartDayAL { get; set; }
 
         public int SalaryByBank { get; set; }
 

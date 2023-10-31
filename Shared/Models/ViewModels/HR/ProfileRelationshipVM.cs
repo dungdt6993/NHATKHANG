@@ -27,9 +27,9 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public string MiddleName { get; set; }
         public string FirstName { get; set; }
         public string IDCard { get; set; }
-        public DateTime? DateOfIssue { get; set; }
+        public DateTimeOffset? DateOfIssue { get; set; }
         public string PlaceOfIssue { get; set; }
-        public DateTime? Birthday { get; set; }
+        public DateTimeOffset? Birthday { get; set; }
         public string PlaceOfBirth { get; set; }
         public int Gender { get; set; }
         public string Resident { get; set; }

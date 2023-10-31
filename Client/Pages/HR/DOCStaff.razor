@@ -90,7 +90,7 @@
                         <label class="col-sm-2 col-form-label">Ngày cấp</label>
                         <div class="col-sm-3">
                             <div class="input-group date">
-                                <input type="text" class="form-control form-control-sm" name="date-mask" @bind="onchange_DateOfIssue" onClick="this.select();"></input>
+                                <DateRangePicker SingleDatePicker="true" type="text" class="form-control form-control-sm" name="date-mask" @bind-StartDate="documentVM.DateOfIssue" onClick="this.select();" />
                                 <div class="input-group-append">
                                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                 </div>
@@ -100,7 +100,7 @@
                         <label class="col-sm-2 col-form-label">Ngày hết hạn</label>
                         <div class="col-sm-3">
                             <div class="input-group date">
-                                <input type="text" class="form-control form-control-sm" name="date-mask" @bind="onchange_ExpDate" onClick="this.select();"></input>
+                                <DateRangePicker SingleDatePicker="true" type="text" class="form-control form-control-sm" name="date-mask" @bind-StartDate="documentVM.ExpDate" onClick="this.select();" />
                                 <div class="input-group-append">
                                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                 </div>

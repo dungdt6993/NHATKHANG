@@ -553,30 +553,6 @@ namespace D69soft.Client.Pages.HR
             isLoading = false;
         }
 
-        public string onchange_BeginTime
-        {
-            get
-            {
-                return shiftVM.BeginTime.HasValue ? shiftVM.BeginTime.Value.ToString("HH:mm") : "";
-            }
-            set
-            {
-                shiftVM.BeginTime = LibraryFunc.FormatTimeHHMM(value, shiftVM.BeginTime);
-            }
-        }
-
-        public string onchange_EndTime
-        {
-            get
-            {
-                return shiftVM.EndTime.HasValue ? shiftVM.EndTime.Value.ToString("HH:mm") : "";
-            }
-            set
-            {
-                shiftVM.EndTime = LibraryFunc.FormatTimeHHMM(value, shiftVM.EndTime);
-            }
-        }
-
         private async Task UpdateShift(EditContext _formShiftVM, int _IsTypeUpdate)
         {
             shiftVM.IsTypeUpdate = _IsTypeUpdate;

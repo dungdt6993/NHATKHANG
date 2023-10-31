@@ -47,7 +47,7 @@
 
             <div class="col-sm-3">
                 <div class="form-group">
-                    <DateRangePicker Ranges="DateRanges" Culture="@(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))" ApplyLabel="Thực hiện" CancelLabel="Hủy" CustomRangeLabel="Chọn ngày" OnRangeSelect="OnRangeSelect">
+                    <DateRangePicker Ranges="DateRanges" ApplyLabel="Thực hiện" CancelLabel="Hủy" CustomRangeLabel="Chọn ngày" OnRangeSelect="OnRangeSelect">
                         <PickerTemplate Context="c">
                             <div id="@c.Id" @onclick="c.Toggle" class="form-control form-control-sm" style="cursor: pointer;">
                                 <i class="fa-solid fa-calendar-days"></i>&nbsp;

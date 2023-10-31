@@ -10,9 +10,9 @@ namespace D69soft.Shared.Models.ViewModels.SYSTEM
         public string MiddleName { get; set; }
         public string FirstName { get; set; }
         public string IDCard { get; set; }
-        public DateTime? DateOfIssue { get; set; }
+        public DateTimeOffset? DateOfIssue { get; set; }
         public string PlaceOfIssue { get; set; }
-        public DateTime? Birthday { get; set; }
+        public DateTimeOffset? Birthday { get; set; }
         public string PlaceOfBirth { get; set; }
         public int Gender { get; set; }
         public string Resident { get; set; }
@@ -35,10 +35,10 @@ namespace D69soft.Shared.Models.ViewModels.SYSTEM
         public string Contact_Rela { get; set; }
         public string Contact_Tel { get; set; }
         public string Contact_Address { get; set; }
-        public DateTime? JoinDate { get; set; }
-        public DateTime? TerminateDate { get; set; }
+        public DateTimeOffset? JoinDate { get; set; }
+        public DateTimeOffset? TerminateDate { get; set; }
         public int Terminated { get; set; }
-        public DateTime? StartDayAL { get; set; }
+        public DateTimeOffset? StartDayAL { get; set; }
         public int SalaryByBank { get; set; }
         public string BankAccount { get; set; }
         public int IsPayByMonth { get; set; }
@@ -52,9 +52,9 @@ namespace D69soft.Shared.Models.ViewModels.SYSTEM
         public string EmailCompany { get; set; }
         public int JobID { get; set; }
         public int SalaryID { get; set; }
-        public DateTime? JobStartDate { get; set; }
-        public DateTime? StartContractDate { get; set; }
-        public DateTime? EndContractDate { get; set; }
+        public DateTimeOffset? JobStartDate { get; set; }
+        public DateTimeOffset? StartContractDate { get; set; }
+        public DateTimeOffset? EndContractDate { get; set; }
         public string DivisionID { get; set; }
         public string DivisionName { get; set; }
         public string DivisionShortName { get; set; }

@@ -8,10 +8,10 @@ namespace D69soft.Shared.Models.Entities.HR
 
         public int SalaryID { get; set; }
 
-        public DateTime? JobStartDate { get; set; }
+        public DateTimeOffset? JobStartDate { get; set; }
 
-        public DateTime? StartContractDate { get; set; }
+        public DateTimeOffset? StartContractDate { get; set; }
 
-        public DateTime? EndContractDate { get; set; }
+        public DateTimeOffset? EndContractDate { get; set; }
     }
 }

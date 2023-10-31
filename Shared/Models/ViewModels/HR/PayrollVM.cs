@@ -25,9 +25,9 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public string MiddleName { get; set; }
         public string FirstName { get; set; }
         public string IDCard { get; set; }
-        public DateTime? DateOfIssue { get; set; }
+        public DateTimeOffset? DateOfIssue { get; set; }
         public string PlaceOfIssue { get; set; }
-        public DateTime? Birthday { get; set; }
+        public DateTimeOffset? Birthday { get; set; }
         public string PlaceOfBirth { get; set; }
         public int Gender { get; set; }
         public string Resident { get; set; }
@@ -50,10 +50,10 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public string Contact_Rela { get; set; }
         public string Contact_Tel { get; set; }
         public string Contact_Address { get; set; }
-        public DateTime? JoinDate { get; set; }
-        public DateTime? TerminateDate { get; set; }
+        public DateTimeOffset? JoinDate { get; set; }
+        public DateTimeOffset? TerminateDate { get; set; }
         public int Terminated { get; set; }
-        public DateTime? StartDayAL { get; set; }
+        public DateTimeOffset? StartDayAL { get; set; }
         public int SalaryByBank { get; set; }
         public string BankAccount { get; set; }
         public int IsPayByMonth { get; set; }
@@ -66,9 +66,9 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public string EmailCompany { get; set; }
         public int JobID { get; set; }
         public int SalaryID { get; set; }
-        public DateTime? JobStartDate { get; set; }
-        public DateTime? StartContractDate { get; set; }
-        public DateTime? EndContractDate { get; set; }
+        public DateTimeOffset? JobStartDate { get; set; }
+        public DateTimeOffset? StartContractDate { get; set; }
+        public DateTimeOffset? EndContractDate { get; set; }
         public string WorkTypeID { get; set; }
         public decimal DODefaultNum { get; set; }
         public decimal WTDefault { get; set; }
@@ -131,7 +131,7 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public decimal Benefit6 { get; set; }
         public decimal Benefit7 { get; set; }
         public decimal Benefit8 { get; set; }
-        public DateTime? BeginSalaryDate { get; set; }
+        public DateTimeOffset? BeginSalaryDate { get; set; }
         public string Reason { get; set; }
         public string ApprovedBy { get; set; }
     }

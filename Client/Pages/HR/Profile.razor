@@ -113,7 +113,7 @@
                                                     <th class="text-danger">Ngày sinh:</th>
                                                     <td style="width:30%">
                                                         <div class="input-group date">
-                                                            <input type="text" class="form-control form-control-sm" name="date-mask" @bind="onchange_Birthday" onClick="this.select();"></input>
+                                                            <DateRangePicker SingleDatePicker="true" type="text" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.Birthday" onClick="this.select();" />
                                                             <div class="input-group-append">
                                                                 <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                                             </div>
@@ -140,7 +140,7 @@
                                                     <th>Ngày cấp:</th>
                                                     <td style="width:30%">
                                                         <div class="input-group date">
-                                                            <input type="text" class="form-control form-control-sm" name="date-mask" @bind="onchange_DateOfIssue" onClick="this.select();"></input>
+                                                            <DateRangePicker SingleDatePicker="true" type="text" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.DateOfIssue" onClick="this.select();" />
                                                             <div class="input-group-append">
                                                                 <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                                             </div>
@@ -234,7 +234,7 @@
                                                 <th style="width:10%">Ngày hết hạn visa:</th>
                                                 <td style="width:20%">
                                                     <div class="input-group date">
-                                                        <input type="text" class="form-control form-control-sm" name="date-mask" @bind="onchange_VisaExpDate" onClick="this.select();"></input>
+                                                            <DateRangePicker SingleDatePicker="true" type="text" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.VisaExpDate" onClick="this.select();" />
                                                         <div class="input-group-append">
                                                             <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                                         </div>
@@ -312,7 +312,7 @@
                                                 <th style="width:10%" class="text-danger">Ngày vào làm:</th>
                                                 <td style="width:20%">
                                                     <div class="input-group date">
-                                                        <input type="text" class="form-control form-control-sm" name="date-mask" @bind="onchange_JoinDate" onClick="this.select();" disabled="@disabled_JoinDate"></input>
+                                                        <DateRangePicker SingleDatePicker="true" type="text" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.JoinDate" onClick="this.select();" disabled="@disabled_JoinDate" />
                                                         <div class="input-group-append">
                                                             <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                                         </div>
@@ -327,7 +327,7 @@
                                                 <th style="width:10%" class="text-danger">Ngày ký HĐ:</th>
                                                 <td style="width:20%">
                                                     <div class="input-group date">
-                                                        <input type="text" class="form-control form-control-sm" name="date-mask" @bind="onchange_StartContractDate" onClick="this.select();" disabled="@disabled_StartContractDate"></input>
+                                                        <DateRangePicker SingleDatePicker="true" type="text" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.StartContractDate" onClick="this.select();" disabled="@disabled_StartContractDate"/>
                                                         <div class="input-group-append">
                                                             <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                                         </div>
@@ -343,7 +343,7 @@
                                                 <th style="width:10%">Ngày tính phép năm:</th>
                                                 <td style="width:20%">
                                                     <div class="input-group date">
-                                                        <input type="text" class="form-control form-control-sm" name="date-mask" @bind="onchange_StartDayAL" onClick="this.select();"></input>
+                                                        <DateRangePicker SingleDatePicker="true" type="text" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.StartDayAL" onClick="this.select();"/>
                                                         <div class="input-group-append">
                                                             <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                                         </div>
@@ -421,7 +421,7 @@
                                                 <th style="width:10%;">Ngày hết hạn HĐ:</th>
                                                 <td style="width:20%">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control form-control-sm" name="date-mask" @bind="@onchange_EndContractDate" onClick="this.select();" disabled="@disabled_EndContractDate" />
+                                                        <DateRangePicker SingleDatePicker="true" type="text" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.EndContractDate" onClick="this.select();" disabled="@disabled_EndContractDate" />
                                                         <div class="input-group-append">
                                                             <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                                                         </div>
@@ -454,7 +454,7 @@
                                                 <th style="width:10%;" class="text-danger">Ngày bắt đầu CV:</th>
                                                 <td style="width:20%">
                                                     <div class="input-group date">
-                                                        <input type="text" class="form-control form-control-sm" name="date-mask" @bind="onchange_JobStartDate" onClick="this.select();" disabled="@disabled_JobStartDate"></input>
+                                                        <DateRangePicker SingleDatePicker="true" type="text" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.JobStartDate" onClick="this.select();" disabled="@disabled_JobStartDate" />
                                                         <div class="input-group-append">
                                                             <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                                         </div>
@@ -719,7 +719,7 @@
                                                     <div class="col-sm-7">
                                                         <div class="form-group">
                                                             <div class="input-group date">
-                                                                <input type="text" class="form-control form-control-sm" name="date-mask" @bind="onchange_BeginSalaryDate" onClick="this.select();" disabled="@disabled_BeginSalaryDate"></input>
+                                                                <DateRangePicker SingleDatePicker="true" type="text" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.BeginSalaryDate" onClick="this.select();" disabled="@disabled_BeginSalaryDate"/>
                                                                 <div class="input-group-append">
                                                                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                                                 </div>
@@ -886,7 +886,7 @@
                         <label class="col-sm-3 col-form-label">Ngày nghỉ việc:</label>
                         <div class="col-sm-5">
                             <div class="input-group date" name="datepicker">
-                                <input type="text" class="form-control form-control-sm" name="date-mask" @bind="onchange_TerminateDate" onClick="this.select();"></input>
+                                <DateRangePicker SingleDatePicker="true" type="text" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.TerminateDate" onClick="this.select();" />
                                 <div class="input-group-append">
                                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                 </div>

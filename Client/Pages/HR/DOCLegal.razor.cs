@@ -156,29 +156,6 @@ namespace D69soft.Client.Pages.HR
         }
 
         //Update Document
-        public string onchange_DateOfIssue
-        {
-            get
-            {
-                return documentVM.DateOfIssue.HasValue ? documentVM.DateOfIssue.Value.ToString("dd/MM/yyyy") : "";
-            }
-            set
-            {
-                documentVM.DateOfIssue = LibraryFunc.FormatDateDDMMYYYY(value, documentVM.DateOfIssue);
-            }
-        }
-
-        public string onchange_ExpDate
-        {
-            get
-            {
-                return documentVM.ExpDate.HasValue ? documentVM.ExpDate.Value.ToString("dd/MM/yyyy") : "";
-            }
-            set
-            {
-                documentVM.ExpDate = LibraryFunc.FormatDateDDMMYYYY(value, documentVM.ExpDate);
-            }
-        }
 
         private async Task UpdateDocument(EditContext _formDocumentVM, int _IsTypeUpdate)
         {

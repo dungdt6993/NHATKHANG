@@ -13,11 +13,11 @@ namespace D69soft.Shared.Models.Entities.HR
         public string FirstName { get; set; }
 
         public string IDCard { get; set; }
-        public DateTime? DateOfIssue { get; set; }
+        public DateTimeOffset? DateOfIssue { get; set; }
 
         public string PlaceOfIssue { get; set; }
 
-        public DateTime? Birthday { get; set; }
+        public DateTimeOffset? Birthday { get; set; }
 
         public string PlaceOfBirth { get; set; }
 

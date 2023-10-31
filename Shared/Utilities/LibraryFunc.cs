@@ -119,32 +119,6 @@ namespace D69soft.Shared.Utilities
             return dayName;
         }
 
-        //Hàm format date time
-        public static DateTime? FormatDateDDMMYYYY(string _newDate, DateTime? _oldDate)
-        {
-            DateTime? date;
-
-            if(_newDate == String.Empty)
-            {
-                date = null;
-            }
-            else
-            {
-                var dateToParse = _newDate;
-                DateTime parsedDate;
-
-                if (DateTime.TryParseExact(dateToParse, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out parsedDate))
-                {
-                    date = parsedDate;
-                }
-                else
-                {
-                    date = _oldDate;
-                }
-            }
-            return date;
-        }
-
         public static DateTime? FormatTimeHHMM(string _newTime, DateTime? _oldTime)
         {
             DateTime? time;
