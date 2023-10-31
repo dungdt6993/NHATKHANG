@@ -241,7 +241,7 @@ namespace D69soft.Server.Controllers.FIN
 
             if (_filterVM.TypeView == 1)
             {
-                sql += "i.Iname, vd.VDAmount, vd.VDDiscountAmount, vat.VATName, vd.VATAmount, vd.VDAmount - vd.VDDiscountAmount + vd.VATAmount as TotalAmount, vd.TaxAccount ";
+                sql += "i.IName, vat.VATName, sum(vd.VDAmount) as sumVDAmount, sum(vd.VDDiscountAmount) as sumVDDiscountAmount, sum(vd.VATAmount) as sumVATAmount, sum(vd.VDAmount-vd.VDDiscountAmount+vd.VATAmount) as sumTotalAmount ";
             }
 
             sql += "from FIN.Voucher v join FIN.VoucherDetail vd on vd.VNumber = v.VNumber ";
@@ -257,6 +257,10 @@ namespace D69soft.Server.Controllers.FIN
             if (_filterVM.TypeView == 0)
             {
                 sql += "group by v.InvoiceDate, v.InvoiceNumber, coalesce(vendor.VendorName,'') + coalesce(cus.CustomerName,''), coalesce(vendor.VendorTaxCode,'') + coalesce(cus.CustomerTaxCode,'') ";
+            }
+            if (_filterVM.TypeView == 1)
+            {
+                sql += "group by v.InvoiceDate, v.InvoiceNumber, coalesce(vendor.VendorName,'') + coalesce(cus.CustomerName,''), coalesce(vendor.VendorTaxCode,'') + coalesce(cus.CustomerTaxCode,''), i.IName, vat.VATName ";
             }
             sql += "order by v.InvoiceDate desc ";
             using (var conn = new SqlConnection(_connConfig.Value))

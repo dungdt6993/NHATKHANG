@@ -230,7 +230,6 @@
                                     <th class="text-center">Thuế suất</th>
                                     <th class="text-right">Thuế GTGT</th>
                                     <th class="text-right">Cộng</th>
-                                    <th class="text-center">TK thuế</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -243,12 +242,11 @@
                                         <td>@invoiceVM.ObjectName</td>
                                         <td class="text-center">@invoiceVM.TaxCode</td>
                                         <td>@invoiceVM.IName</td>
-                                        <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.VDAmount)</td>
-                                        <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.VDDiscountAmount)</td>
+                                        <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.sumVDAmount)</td>
+                                        <td class="text-right">@String.Format("{0:#,##0}", @invoiceVM.sumVDDiscountAmount)</td>
                                         <td class="text-center">@invoiceVM.VATName</td>
-                                        <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.VATAmount)</td>
-                                        <td class="text-right">@String.Format("{0:#,##0}",@invoiceVM.TotalAmount)</td>
-                                        <td class="text-center">@invoiceVM.TaxAccount</td>
+                                        <td class="text-right">@String.Format("{0:#,##0}", @invoiceVM.sumVATAmount)</td>
+                                        <td class="text-right">@String.Format("{0:#,##0}", @invoiceVM.sumTotalAmount)</td>
                                     </tr>
                                 </Virtualize>
                             </tbody>
@@ -259,12 +257,11 @@
                                     <th></th>
                                     <th class="text-center"></th>
                                     <th></th>
-                                    <th class="text-right">@String.Format("{0:#,##0}",@invoiceVMs.Select(x=>x.VDAmount).Sum())</th>
-                                    <th class="text-right">@String.Format("{0:#,##0}",@invoiceVMs.Select(x=>x.VDDiscountAmount).Sum())</th>
+                                    <th class="text-right">@String.Format("{0:#,##0}", @invoiceVMs.Select(x => x.sumVDAmount).Sum())</th>
+                                    <th class="text-right">@String.Format("{0:#,##0}", @invoiceVMs.Select(x => x.sumVDDiscountAmount).Sum())</th>
                                     <th class="text-center"></th>
-                                    <th class="text-right">@String.Format("{0:#,##0}",@invoiceVMs.Select(x=>x.VATAmount).Sum())</th>
-                                    <th class="text-right">@String.Format("{0:#,##0}",@invoiceVMs.Select(x=>x.TotalAmount).Sum())</th>
-                                    <th></th>
+                                    <th class="text-right">@String.Format("{0:#,##0}", @invoiceVMs.Select(x => x.sumVATAmount).Sum())</th>
+                                    <th class="text-right">@String.Format("{0:#,##0}", @invoiceVMs.Select(x => x.sumTotalAmount).Sum())</th>
                                 </tr>
                             </tfoot>
                         </table>
