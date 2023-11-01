@@ -246,9 +246,8 @@
                         <ValidationMessage For="@(() => departmentVM.DepartmentName)" />
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label>Ca làm việc mặc định:</label>
+                    <div class="form-group">
+                            <label>Ca làm việc ngầm định:</label>
                             <InputSelect class="selectpicker form-control form-control-sm"
                                          data-style="btn-selectpicker" data-container="body"
                                          data-live-search="true" data-show-subtext="true"
@@ -262,23 +261,6 @@
                                     }
                                 }
                             </InputSelect>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label>Kho mặc định:</label>
-                            <InputSelect class="selectpicker form-control form-control-sm"
-                                         data-style="btn-selectpicker" data-container="body"
-                                         data-live-search="true" data-show-subtext="true"
-                            @bind-Value="departmentVM.StockCode">
-                                <option value=@String.Empty>-----Chọn-----</option>
-                                @if (stockVMs != null)
-                                {
-                                    @foreach (var _stockVM in stockVMs)
-                                    {
-                                        <option data-subtext="@_stockVM.StockCode" value="@_stockVM.StockCode">@_stockVM.StockName</option>
-                                    }
-                                }
-                            </InputSelect>
-                        </div>
                     </div>
 
                     <div class="form-row align-items-center">
@@ -821,7 +803,7 @@
                                 <tr>
                                     <th>Mã</th>
                                     <th>Tên</th>
-                                    <th>Nhóm</th>
+                                    <th>Khối</th>
                                     <th class="text-center">Trạng thái</th>
                                 </tr>
                             </thead>

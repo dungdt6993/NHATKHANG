@@ -355,11 +355,11 @@ namespace D69soft.Server.Controllers.FIN
             var sql = "";
             if (_stockVM.IsTypeUpdate == 0)
             {
-                sql = "Insert into FIN.Stock (StockCode,StockName,StockAddress,DivisionID,StockActive) Values (@StockCode,@StockName,@StockAddress,@DivisionID,@StockActive)";
+                sql = "Insert into FIN.Stock (StockCode,StockName,StockAddress,DivisionID,DepartmentID,StockActive) Values (@StockCode,@StockName,@StockAddress,@DivisionID,@DepartmentID,@StockActive)";
             }
             if (_stockVM.IsTypeUpdate == 1)
             {
-                sql = "Update FIN.Stock set StockName = @StockName, StockAddress = @StockAddress, StockActive = @StockActive where StockCode = @StockCode";
+                sql = "Update FIN.Stock set StockName = @StockName, StockAddress = @StockAddress, DepartmentID = @DepartmentID, StockActive = @StockActive where StockCode = @StockCode";
             }
             if (_stockVM.IsTypeUpdate == 2)
             {

@@ -151,12 +151,12 @@
                 </div>
                 <!-- /.card-header -->
 
-                <div class="card-body table-responsive p-0" style="height: calc(100vh - 151px);">
+                <div class="card-body table-responsive p-0" style="height: calc(100vh - 149px);">
 
-                    <table class="table table-sm table-bordered table-head-fixed table-hover-cursor text-nowrap tblFontSizeMin tblDutyRoster">
+                    <table class="table table-sm table-bordered table-head-fixed table-hover-cursor text-nowrap tblFontSizeMin tblDayOff">
                         <thead>
                             <tr>
-                                <th>Trạng thái tàu</th>
+                                <th></th>
                                 @foreach (var _day in cruiseScheduleVMs.Select(x => new { x.dDate }).Distinct())
                                 {
                                     <th class="text-center">
@@ -171,12 +171,12 @@
                             @foreach (var _cruise in cruiseScheduleVMs.Select(x => new { x.CruiseCode, x.CruiseName }).Distinct())
                             {
                                 <tr>
-                                    <th>@_cruise.CruiseName</th>
-                                    @foreach (var _cruisestatus in cruiseScheduleVMs.Where(x => x.CruiseCode == _cruise.CruiseCode))
+                                    <th><i class="fa-solid fa-ship"></i> @_cruise.CruiseName</th>
+                                    @foreach (var _cruisestatus in cruiseScheduleVMs.Select(x => new { x.dDate, x.CruiseCode, x.ColorHEX, x.GuestNumber, x.isCI }).Where(x => x.CruiseCode == _cruise.CruiseCode).Distinct())
                                     {
                                         @if (_cruisestatus.isCI)
                                         {
-                                            <td class="text-center dutyroster-td" style="background-color: @_cruisestatus.ColorHEX;" @onclick="(() => InitializeModalUpdate_CruiseSchedule(_cruisestatus))">
+                                            <td class="text-center dutyroster-td" style="background-color: @_cruisestatus.ColorHEX;" @onclick="(() => InitializeModalUpdate_CruiseSchedule(cruiseScheduleVMs.Where(x=>x.dDate == _cruisestatus.dDate && x.CruiseCode == _cruisestatus.CruiseCode).FirstOrDefault()))">
                                                 <span>@_cruisestatus.GuestNumber</span>
                                             </td>
                                         }
@@ -187,6 +187,25 @@
                                         }
                                     }
                                 </tr>
+
+                                @foreach (var _stock in cruiseScheduleVMs.Select(x=> new {x.CruiseCode, x.StockCode, x.StockName}).Where(x => x.CruiseCode == _cruise.CruiseCode).Distinct())
+                                {
+                                    <tr>
+                                        <th> <i class="fa-solid fa-arrow-right"></i> <i class="fa-solid fa-sack-dollar"></i> @_stock.StockName</th>
+                                        @foreach (var _cost in cruiseScheduleVMs.Where(x => x.CruiseCode == _cruise.CruiseCode && x.StockCode == _stock.StockCode))
+                                        {
+                                            <td class="text-center">
+                                                @if (_cost.sumAmount != 0)
+                                                {
+                                                    <span>@String.Format("{0:#,##0}",_cost.sumAmount) đ</span>
+
+                                                    <br />
+                                                    <span class="@(_cost.FoodCostPercentage>100?"text-danger":"text-success")">@Math.Round(_cost.FoodCostPercentage, 2, MidpointRounding.AwayFromZero)%</span>
+                                                }
+                                            </td>
+                                        }
+                                    </tr>
+                                }
                             }
 
                             <tr>
@@ -198,38 +217,6 @@
                                     </td>
                                 }
                             </tr>
-
-                        </tbody>
-                    </table>
-
-                    <table class="table table-sm table-bordered table-head-fixed table-hover-cursor text-nowrap tblFontSizeMin tblDayOff">
-                        <thead>
-                            <tr>
-                                <th>Chi phí thực phẩm</th>
-                                @foreach (var _day in cruiseScheduleVMs.Select(x => new { x.dDate }).Distinct())
-                                {
-                                    <th class="text-center">
-                                        @_day.dDate.Day
-                                    </th>
-                                }
-                            </tr>
-                        </thead>
-
-                        <tbody>
-
-                            @foreach (var _cruise in cruiseScheduleVMs.Select(x => new { x.CruiseCode, x.CruiseName }).Distinct())
-                            {
-                                <tr>
-                                    <th>@_cruise.CruiseName</th>
-                                    @foreach (var _cruisestatus in cruiseScheduleVMs.Where(x => x.CruiseCode == _cruise.CruiseCode))
-                                    {
-                                        <td class="text-center">
-                                            <span>@String.Format("{0:#,##0}",_cruisestatus.sumAmount)</span><br />
-                                            <span class="@(_cruisestatus.FoodCostPercentage>100?"text-danger":"text-success")">@Math.Round(_cruisestatus.FoodCostPercentage, 2, MidpointRounding.AwayFromZero)%</span>
-                                        </td>
-                                    }
-                                </tr>
-                            }
 
                         </tbody>
                     </table>

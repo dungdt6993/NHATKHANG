@@ -1,8 +1,9 @@
-﻿using D69soft.Shared.Models.Entities.OP;
+﻿using D69soft.Shared.Models.Entities.FIN;
+using D69soft.Shared.Models.Entities.OP;
 
 namespace D69soft.Shared.Models.ViewModels.OP
 {
-    public class CruiseScheduleVM : Cruise, CruiseStatus, CruiseSchedule
+    public class CruiseScheduleVM : Cruise, CruiseStatus, CruiseSchedule, Stock
     {
         //Para
         public decimal sumAmount { get; set; }
@@ -22,5 +23,9 @@ namespace D69soft.Shared.Models.ViewModels.OP
         public bool isUpdateFoodCost { get; set; }
         public string ReasonUpdateFoodCost { get; set; }
         public string CruiseScheduleNote { get; set; }
+        public string StockCode { get; set; }
+        public string StockName { get; set; }
+        public string StockAddress { get; set; }
+        public bool StockActive { get; set; }
     }
 }

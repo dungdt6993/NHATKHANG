@@ -23,7 +23,6 @@ namespace D69soft.Client.Pages.HR
         [Inject] SysService sysService { get; set; }
         [Inject] OrganizationalChartService organizationalChartService { get; set; }
         [Inject] DutyRosterService dutyRosterService { get; set; }
-        [Inject] InventoryService inventoryService { get; set; }
 
         bool isLoading;
         bool isLoadingScreen = true;
@@ -56,9 +55,6 @@ namespace D69soft.Client.Pages.HR
 
         //Shift
         IEnumerable<ShiftVM> shiftVMs;
-
-        //Stock
-        List<StockVM> stockVMs;
 
         BlazoredTextEditor QuillHtml = new BlazoredTextEditor();
 
@@ -101,8 +97,6 @@ namespace D69soft.Client.Pages.HR
             positionGroups = await organizationalChartService.GetPositionGroupList();
 
             shiftVMs = await dutyRosterService.GetShiftList();
-
-            stockVMs = (await inventoryService.GetStockList()).ToList();
 
             isLoadingScreen = false;
         }

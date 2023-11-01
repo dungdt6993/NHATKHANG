@@ -49,6 +49,23 @@
                         <InputTextArea class="form-control form-control-sm" @bind-Value="@stockVM.StockAddress" />
                     </div>
 
+                    <div class="form-group">
+                        <label>Bộ phận ngầm định:</label>
+                        <InputSelect class="selectpicker form-control form-control-sm"
+                                     data-style="btn-selectpicker" data-container="body"
+                                     data-live-search="true" data-show-subtext="true"
+                        @bind-Value="stockVM.DepartmentID">
+                            <option value=@String.Empty>-----Chọn-----</option>
+                            @if (departmentVMs != null)
+                            {
+                                @foreach (var _departmentVM in departmentVMs)
+                                {
+                                    <option data-subtext="@_departmentVM.DepartmentID" value="@_departmentVM.DepartmentID">@_departmentVM.DepartmentName</option>
+                                }
+                            }
+                        </InputSelect>
+                    </div>
+
                     <div class="form-row align-items-center">
                         <div class="icheck-success d-inline">
                             <input type="radio" id="isActive1" name="isActive" checked="@(stockVM.StockActive == true)" @onchange="(() => stockVM.StockActive = true)">
@@ -84,6 +101,35 @@
     </div>
 </div>
 
+<EditForm Model="@filterVM">
+    <section class="content-header">
+        <div class="row">
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <InputSelect class="selectpicker form-control form-control-sm"
+                                 data-style="btn-selectpicker"
+                                 data-live-search="true"
+                                 data-container="body"
+                                 ValueExpression="@(()=>filterVM.DivisionID)"
+                                 Value="@filterVM.DivisionID"
+                                 ValueChanged="@((string value) =>onchange_DivisionID(value))">
+
+                        @if (filter_divisionVMs != null)
+                        {
+                            @foreach (var _filter_divisionVM in filter_divisionVMs)
+                            {
+                                <option data-subtext="@_filter_divisionVM.DivisionID" value="@_filter_divisionVM.DivisionID">@_filter_divisionVM.DivisionName</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</EditForm>
+
 <section class="content">
     <div class="container-fluid">
         <div class="card card-primary card-outline">
@@ -99,7 +145,7 @@
 
             </div>
             <!-- /.card-header -->
-            <div class="card-body table-responsive p-0" style="height: calc(100vh - 132px);">
+            <div class="card-body table-responsive p-0" style="height: calc(100vh - 190px);">
 
                 @if (stockVMs != null)
                 {

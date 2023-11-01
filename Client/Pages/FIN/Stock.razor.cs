@@ -22,6 +22,7 @@ namespace D69soft.Client.Pages.FIN
 
         [Inject] SysService sysService { get; set; }
         [Inject] InventoryService inventoryService { get; set; }
+        [Inject] OrganizationalChartService organizationalChartService { get; set; }
 
         bool isLoading;
         bool isLoadingScreen = true;
@@ -32,9 +33,15 @@ namespace D69soft.Client.Pages.FIN
         //Filter
         FilterVM filterVM = new();
 
+        //Division
+        IEnumerable<DivisionVM> filter_divisionVMs;
+
         //Stock
         StockVM stockVM = new();
         List<StockVM> stockVMs;
+
+        //Department
+        IEnumerable<DepartmentVM> departmentVMs;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -61,9 +68,28 @@ namespace D69soft.Client.Pages.FIN
                 navigationManager.NavigateTo("/");
             }
 
+            filter_divisionVMs = await organizationalChartService.GetDivisionList(filterVM);
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
+
+            filterVM.UserID = String.Empty;
+            departmentVMs = await organizationalChartService.GetDepartmentList(filterVM);
+
             await GetStocks();
 
             isLoadingScreen = false;
+        }
+
+        private async void onchange_DivisionID(string value)
+        {
+            isLoading = true;
+
+            filterVM.DivisionID = value;
+
+            await GetStocks();
+
+            isLoading = false;
+
+            StateHasChanged();
         }
 
         private async Task GetStocks()
@@ -99,6 +125,8 @@ namespace D69soft.Client.Pages.FIN
             if (_IsTypeUpdate == 0)
             {
                 stockVM = new();
+
+                stockVM.DivisionID = filterVM.DivisionID;
                 stockVM.StockActive = true;
             }
 

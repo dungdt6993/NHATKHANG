@@ -4,7 +4,7 @@ using D69soft.Shared.Models.Entities.HR;
 
 namespace D69soft.Shared.Models.ViewModels.HR
 {
-    public class DepartmentVM : Department, DepartmentGroup, Division, Shift, Stock
+    public class DepartmentVM : Department, DepartmentGroup, Division, Shift
     {
         //Para
         public bool isActive { get; set; }
@@ -41,9 +41,5 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public string ColorHEX { get; set; }
         public bool isNight { get; set; }
         public bool isSplit { get; set; }
-        public string StockCode { get; set; }
-        public string StockName { get; set; }
-        public string StockAddress { get; set; }
-        public bool StockActive { get; set; }
     }
 }

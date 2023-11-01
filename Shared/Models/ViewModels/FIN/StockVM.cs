@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace D69soft.Shared.Models.ViewModels.FIN
 {
-    public class StockVM : Stock, Division
+    public class StockVM : Stock, Division, Department
     {
         public int IsTypeUpdate { get; set; }
 
@@ -32,5 +32,7 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public bool isAutoEserial { get; set; }
         public int is2625 { get; set; }
         public int INOUTNumber { get; set; }
+        public string DepartmentID { get; set; }
+        public string DepartmentName { get; set; }
     }
 }
