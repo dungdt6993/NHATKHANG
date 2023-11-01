@@ -322,6 +322,7 @@ namespace D69soft.Client.Pages.FIN
                 voucherVM.VSubTypeID = value;
 
                 voucherDetailVMs = new();
+                voucherVM.TotalAmount = 0;
 
                 voucherVM.VDesc = vSubTypeVMs.Where(x => x.VSubTypeID == voucherVM.VSubTypeID).Select(x => x.VSubTypeDesc).FirstOrDefault() + " ngày " + DateTime.Now.ToString("dd/MM/yyyy");
             }
@@ -335,6 +336,7 @@ namespace D69soft.Client.Pages.FIN
                 voucherVM.ITypeCode = value;
 
                 voucherDetailVMs = new();
+                voucherVM.TotalAmount = 0;
             }
         }
 
@@ -634,7 +636,7 @@ namespace D69soft.Client.Pages.FIN
 
             try
             {
-                var str = LibraryFunc.RepalceWhiteSpace(voucherVM.DataFromExcel.Trim()).Replace(" \t", "\t").Replace("\t ", "\t").Replace(",", string.Empty).Replace(" ", "\n");
+                var str = LibraryFunc.RepalceWhiteSpace(voucherVM.DataFromExcel.Trim()).Replace(" \t", "\t").Replace("\t ", "\t").Replace(".", ",").Replace(" ", "\n");
                 var lines = Regex.Split(str, "\n");
 
                 foreach (var itemfinger in lines)
