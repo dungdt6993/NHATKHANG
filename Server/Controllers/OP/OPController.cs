@@ -59,8 +59,8 @@ namespace D69soft.Server.Controllers.OP
         {
             var sql = "Declare @sNumDay int ";
             sql += "select @sNumDay = NumDay from OP.CruiseStatus where CruiseStatusCode=@CruiseStatusCode ";
-            sql += "Update OP.CruiseSchedule set isCI = 1, CruiseStatusCode = 'NC', GuestNumber=0, BudgetFoodCost=0 where CruiseCode=@CruiseCode and dDate>@dDate and dDate<DATEADD(d,@NumDay-1,format(@dDate,'yyyy-MM-dd')) ";
-            sql += "Update OP.CruiseSchedule set isCI = 1, CruiseStatusCode = @CruiseStatusCode, GuestNumber=@GuestNumber, BudgetFoodCost=@BudgetFoodCost where CruiseCode=@CruiseCode and dDate=@dDate ";
+            sql += "Update OP.CruiseSchedule set isCI = 1, CruiseStatusCode = 'NC', GuestNumber=0 where CruiseCode=@CruiseCode and dDate>@dDate and dDate<DATEADD(d,@NumDay-1,format(@dDate,'yyyy-MM-dd')) ";
+            sql += "Update OP.CruiseSchedule set isCI = 1, CruiseStatusCode = @CruiseStatusCode, GuestNumber=@GuestNumber, where CruiseCode=@CruiseCode and dDate=@dDate ";
             sql += "Update OP.CruiseSchedule set isCI = 0, CruiseStatusCode = @CruiseStatusCode, GuestNumber=@GuestNumber where CruiseCode=@CruiseCode and dDate>@dDate and dDate<DATEADD(d,@sNumDay-1,format(@dDate,'yyyy-MM-dd')) ";
 
             using (var conn = new SqlConnection(_connConfig.Value))

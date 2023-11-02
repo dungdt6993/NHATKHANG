@@ -41,18 +41,6 @@
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-sm-6 col-form-label">Chi phí thực phẩm/1 khách:</label>
-                        <div class="col-sm-6">
-                            <div class="input-group">
-                                <input type="text" class="form-control form-control-sm text-right" name="currency-mask" @bind="@cruiseScheduleVM.BudgetFoodCost" onClick="this.select();" />
-                                <div class="input-group-append">
-                                    <div class="input-group-text"><i class="fa-solid fa-dong-sign"></i></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Ghi chú:</label>
                         <div class="col-sm-10">
                             <textarea class="form-control form-control-sm" @bind="cruiseScheduleVM.CruiseScheduleNote" />
@@ -199,8 +187,8 @@
                                                 {
                                                     <span>@String.Format("{0:#,##0}",_cost.sumAmount) đ</span>
 
-                                                    <br />
-                                                    <span class="@(_cost.FoodCostPercentage>100?"text-danger":"text-success")">@Math.Round(_cost.FoodCostPercentage, 2, MidpointRounding.AwayFromZero)%</span>
+@*                                                     <br />
+                                                    <span class="@(_cost.FoodCostPercentage>100?"text-danger":"text-success")">@Math.Round(_cost.FoodCostPercentage, 2, MidpointRounding.AwayFromZero)%</span> *@
                                                 }
                                             </td>
                                         }
