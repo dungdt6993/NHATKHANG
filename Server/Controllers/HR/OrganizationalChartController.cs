@@ -56,7 +56,7 @@ namespace D69soft.Server.Controllers.HR
             if (_divisionVM.IsTypeUpdate == 0)
             {
                 sql += "Insert into HR.Division (DivisionID,DivisionName,DivisionShortName,DivisionAddress,DivisionTaxCode,DivisionTel,DivisionHotline,DivisionEmail,DivisionWebsite,DivisionBankAccount,DivisionBankName,DivisionLogoUrl,CodeDivs,isAutoEserial,is2625,INOUTNumber,isActive) ";
-                sql += "Values (@DivisionID,@DivisionName,@DivisionShortName,@DivisionAddress,@DivisionTaxCode,@DivisionTel,@DivisionHotline,@DivisionEmail,@DivisionWebsite,@DivisionBankAccount,@DivisionBankName,@DivisionLogoUrl,@CodeDivs,@CodeDivs,@isAutoEserial,@is2625,@INOUTNumber,@isActive)";
+                sql += "Values (@DivisionID,@DivisionName,@DivisionShortName,@DivisionAddress,@DivisionTaxCode,@DivisionTel,@DivisionHotline,@DivisionEmail,@DivisionWebsite,@DivisionBankAccount,@DivisionBankName,@DivisionLogoUrl,@CodeDivs,@isAutoEserial,@is2625,@INOUTNumber,@isActive)";
             }
             if (_divisionVM.IsTypeUpdate == 1)
             {

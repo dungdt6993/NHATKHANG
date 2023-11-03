@@ -88,7 +88,7 @@ namespace D69soft.Client.Pages.HR
             HR_DutyRoster_Update = await sysService.CheckAccessSubFunc(filterVM.UserID, "HR_DutyRoster_Update");
 
             //Initialize Filter
-            dutyRosterVM.UserID = filterVM.UserID;
+            dutyRosterVM.UserID = lockDutyRosterVM.UserID = filterVM.UserID;
 
             year_filter_list = await sysService.GetYearFilter();
             filterVM.Year = DateTime.Now.Year;

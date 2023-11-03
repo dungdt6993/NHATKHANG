@@ -350,7 +350,7 @@ namespace D69soft.Client.Pages.HR
             int NumMonth = await profileService.GetNumMonthLC(profileVM.ContractTypeID);
             if (NumMonth != 0)
             {
-                profileVM.EndContractDate = Convert.ToDateTime(profileVM.StartContractDate).AddMonths(NumMonth).AddDays(-1);
+                profileVM.EndContractDate = profileVM.StartContractDate.Value.AddMonths(NumMonth).AddDays(-1);
                 disabled_EndContractDate = true;
             }
             else
