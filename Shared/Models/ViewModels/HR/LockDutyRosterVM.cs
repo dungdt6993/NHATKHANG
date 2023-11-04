@@ -10,8 +10,6 @@ namespace D69soft.Shared.Models.ViewModels.HR
 {
     public class LockDutyRosterVM : Period, Division, Department, LockDutyRoster
     {
-        public string UserID { get; set; }
-
         public int Period { get; set; }
         public int Year { get; set; }
         public int Month { get; set; }

@@ -116,7 +116,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("LockDutyRoster")]
-        public async Task<ActionResult<bool>> LockDutyRoster(LockDutyRosterVM _filterVM)
+        public async Task<ActionResult<bool>> LockDutyRoster(LockDutyRosterVM _lockDutyRosterVM)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -124,29 +124,29 @@ namespace D69soft.Server.Controllers.HR
                     conn.Open();
 
                 var sqlDel = "Delete from HR.LockDutyRoster where Period=@Period and DivisionID=@DivisionID ";
-                if (_filterVM.DepartmentID != string.Empty)
+                if (_lockDutyRosterVM.DepartmentID != string.Empty)
                 {
                     sqlDel += " and DepartmentID=@DepartmentID ";
                 }
                 else
                 {
-                    sqlDel += " and DepartmentID in (select DepartmentID from SYSTEM.PermissionDepartment where UserID=@UserID and DivisionID=@DivisionID) ";
+                    sqlDel += " and DepartmentID in (select DepartmentID from SYSTEM.PermissionDepartment where UserID=@EserialLock and DivisionID=@DivisionID) ";
                 }
 
-                await conn.ExecuteAsync(sqlDel, _filterVM);
+                await conn.ExecuteAsync(sqlDel, _lockDutyRosterVM);
 
-                if (_filterVM.IsTypeUpdate == 1)
+                if (_lockDutyRosterVM.IsTypeUpdate == 1)
                 {
-                    var sqlInsert = string.Empty;
-                    if (_filterVM.DepartmentID != string.Empty)
+                    var sqlInsert = "Insert into HR.LockDutyRoster(Period, DivisionID, DepartmentID, LockFrom, LockTo, EserialLock, TimeLock) ";
+                    if (_lockDutyRosterVM.DepartmentID != string.Empty)
                     {
-                        sqlInsert += "Insert into HR.LockDutyRoster values(@Period,@DivisionID,@DepartmentID,@LockFrom,@LockTo,@UserID,GETDATE()) ";
+                        sqlInsert += "Values (@Period,@DivisionID,@DepartmentID,@LockFrom,@LockTo,@EserialLock,GETDATE()) ";
                     }
                     else
                     {
-                        sqlInsert += "Insert into HR.LockDutyRoster select @Period,DivisionID, DepartmentID,@LockFrom,@LockTo,@UserID,GETDATE() from SYSTEM.PermissionDepartment where UserID=@UserID and DivisionID=@DivisionID ";
+                        sqlInsert += "select @Period,DivisionID,DepartmentID,@LockFrom,@LockTo,@EserialLock,GETDATE() from SYSTEM.PermissionDepartment where UserID=@EserialLock and DivisionID=@DivisionID ";
                     }
-                    await conn.ExecuteAsync(sqlInsert, _filterVM);
+                    await conn.ExecuteAsync(sqlInsert, _lockDutyRosterVM);
                 }
             }
             return true;
