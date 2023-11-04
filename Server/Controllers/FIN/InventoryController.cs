@@ -325,7 +325,7 @@ namespace D69soft.Server.Controllers.FIN
         [HttpGet("GetStockList")]
         public async Task<ActionResult<IEnumerable<StockVM>>> GetStockList()
         {
-            var sql = "select * from FIN.Stock order by StockName ";
+            var sql = "select * from FIN.Stock where DivisionID=@DivisionID order by StockName ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)
