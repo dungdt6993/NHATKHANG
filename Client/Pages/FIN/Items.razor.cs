@@ -257,7 +257,7 @@ namespace D69soft.Client.Pages.FIN
 
             itemsUnitVMs = await inventoryService.GetItemsUnitList();
 
-            stockVMs = await inventoryService.GetStockList();
+            stockVMs = await inventoryService.GetStockList(filterVM);
 
             vendorVMs = await purchasingService.GetVendorList();
 

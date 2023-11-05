@@ -101,12 +101,12 @@
                         <label class="col-sm-3 col-form-label">Báo cáo</label>
                         <div class="col-sm-9">
                             <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="Chọn báo cáo nhân sự..." @bind="onchange_rpt">
-                                @if (sysRptVMs != null)
+                                @if (rptVMs != null)
                                 {
-                                    @foreach (var _sysRptVM_0 in sysRptVMs.Select(x => new { x.RptGrpID, x.RptGrpName }).Distinct())
+                                    @foreach (var _rptVM_0 in rptVMs.Select(x => new { x.FuncGrpID, x.FuncGrpName }).Distinct())
                                     {
-                                        <optgroup label="@_sysRptVM_0.RptGrpName">
-                                            @foreach (var _sysRptVM_1 in sysRptVMs.Where(x => x.RptGrpID == _sysRptVM_0.RptGrpID))
+                                        <optgroup label="@_rptVM_0.FuncGrpName">
+                                            @foreach (var _sysRptVM_1 in rptVMs.Where(x => x.FuncGrpID == _rptVM_0.FuncGrpID))
                                             {
                                                 <option value="@_sysRptVM_1.RptID">@_sysRptVM_1.RptName</option>
                                             }

@@ -983,8 +983,8 @@ namespace D69soft.Client.Pages.HR
         IEnumerable<DepartmentVM> permis_divs;
         IEnumerable<DepartmentVM> permis_depts;
 
-        IEnumerable<SysRptVM> permis_rptgrps;
-        IEnumerable<SysRptVM> permis_rpts;
+        IEnumerable<RptVM> permis_rptgrps;
+        IEnumerable<RptVM> permis_rpts;
 
         private async Task InitializeModal_Permis()
         {
@@ -1050,21 +1050,20 @@ namespace D69soft.Client.Pages.HR
 
         }
 
-        private void CheckAll_RptGrp(object checkValue, int rptgrpID)
+        private void CheckAll_RptGrp(object checkValue, string rptgrpID)
         {
             bool isChecked = (bool)checkValue;
 
-            permis_rpts.Where(x => x.RptGrpID == rptgrpID).ToList().ForEach(e => e.IsChecked = isChecked);
+            permis_rpts.Where(x => x.FuncGrpID == rptgrpID).ToList().ForEach(e => e.IsChecked = isChecked);
         }
 
-        private void Check_Rpt(object checkValue, SysRptVM rpt, SysRptVM rptVM)
+        private void Check_Rpt(object checkValue, RptVM rpt, RptVM rptVM)
         {
             bool isChecked = (bool)checkValue;
 
             rpt.IsChecked = isChecked;
 
-            rptVM.IsChecked = permis_rpts.Where(x => x.RptGrpID == rptVM.RptGrpID && x.IsChecked).Count() > 0 ? true : false;
-
+            rptVM.IsChecked = permis_rpts.Where(x => x.FuncGrpID == rptVM.FuncGrpID && x.IsChecked).Count() > 0 ? true : false;
         }
 
         private async Task UpdatePermis()

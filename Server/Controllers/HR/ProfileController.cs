@@ -569,34 +569,37 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpGet("GetSysReportGroupPermis/{_Eserial}")]
-        public async Task<ActionResult<IEnumerable<SysRptVM>>> GetSysReportGroupPermis(string _Eserial)
+        public async Task<ActionResult<IEnumerable<RptVM>>> GetSysReportGroupPermis(string _Eserial)
         {
-            var sql = "select rg.RptGrpID, rg.RptGrpName, case when sum(case when coalesce(pr.RptID,'') != '' then 1 else 0 end) > 0 then 1 else 0 end as IsChecked from SYSTEM.RptGrp rg ";
-            sql += "join (select * from SYSTEM.Rpt) r on rg.RptGrpID = r.RptGrpID ";
-            sql += "left join (select * from SYSTEM.PermissionRpt where UserID=@Eserial) pr on pr.RptID = r.RptID ";
-            sql += "group by rg.ModuleID, rg.RptGrpID, rg.RptGrpName order by rg.ModuleID, rg.RptGrpID ";
+            var sql = "select mo.ModuleID, fg.FGNo, fg.FuncGrpID, fg.FuncGrpName, case when sum(case when coalesce(pr.RptID,'') != '' then 1 else 0 end) > 0 then 1 else 0 end as IsChecked from SYSTEM.FuncGrp fg ";
+            sql += "join SYSTEM.Module mo on mo.ModuleID = fg.ModuleID ";
+            sql += "join SYSTEM.Rpt r on r.FuncGrpID = fg.FuncGrpID ";
+            sql += "left join (select * from SYSTEM.PermissionRpt where UserID=@Eserial) pr on pr.RptID = r.RptID  ";
+            sql += "group by mo.ModuleID, fg.FGNo, fg.FuncGrpID, fg.FuncGrpName order by mo.ModuleID, fg.FGNo ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<SysRptVM>(sql, new { Eserial = _Eserial });
+                var result = await conn.QueryAsync<RptVM>(sql, new { Eserial = _Eserial });
                 return Ok(result);
             }
         }
 
         [HttpGet("GetSysReportPermis/{_Eserial}")]
-        public async Task<ActionResult<IEnumerable<SysRptVM>>> GetSysReportPermis(string _Eserial)
+        public async Task<ActionResult<IEnumerable<RptVM>>> GetSysReportPermis(string _Eserial)
         {
-            var sql = "select r.RptGrpID, r.RptID, r.RptName, case when coalesce(pr.RptID,'') != '' then 1 else 0 end as IsChecked from SYSTEM.Rpt r ";
+            var sql = "select r.FuncGrpID, r.RptID, r.RptName, case when coalesce(pr.RptID,0) != 0 then 1 else 0 end as IsChecked from SYSTEM.Rpt r ";
+            sql += "join SYSTEM.FuncGrp fg on fg.FuncGrpID = r.FuncGrpID ";
+            sql += "join SYSTEM.Module mo on mo.ModuleID = fg.ModuleID ";
             sql += "left join (select * from SYSTEM.PermissionRpt where UserID=@Eserial) pr on pr.RptID = r.RptID  ";
-            sql += "order by r.RptGrpID, r.RptName ";
+            sql += "order by mo.ModuleID, fg.FGNo, r.RptName ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<SysRptVM>(sql, new { Eserial = _Eserial });
+                var result = await conn.QueryAsync<RptVM>(sql, new { Eserial = _Eserial });
                 return Ok(result);
             }
         }
@@ -607,7 +610,7 @@ namespace D69soft.Server.Controllers.HR
             IEnumerable<FuncVM> _funcVMs = JsonConvert.DeserializeObject<IEnumerable<FuncVM>>(_arrayList[0].ToString());
             IEnumerable<FuncVM> _subFuncVMs = JsonConvert.DeserializeObject<IEnumerable<FuncVM>>(_arrayList[1].ToString());
             IEnumerable<DepartmentVM> _departmentVMs = JsonConvert.DeserializeObject<IEnumerable<DepartmentVM>>(_arrayList[2].ToString());
-            IEnumerable<SysRptVM> _sysRptVMs = JsonConvert.DeserializeObject<IEnumerable<SysRptVM>>(_arrayList[3].ToString());
+            IEnumerable<RptVM> _sysRptVMs = JsonConvert.DeserializeObject<IEnumerable<RptVM>>(_arrayList[3].ToString());
 
             using (var conn = new SqlConnection(_connConfig.Value))
             {

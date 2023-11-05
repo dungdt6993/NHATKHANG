@@ -73,6 +73,7 @@ namespace D69soft.Client.Pages.FIN
 
             filterVM.UserID = String.Empty;
             departmentVMs = await organizationalChartService.GetDepartmentList(filterVM);
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
             await GetStocks();
 
@@ -84,6 +85,10 @@ namespace D69soft.Client.Pages.FIN
             isLoading = true;
 
             filterVM.DivisionID = value;
+
+            filterVM.UserID = String.Empty;
+            departmentVMs = await organizationalChartService.GetDepartmentList(filterVM);
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
             await GetStocks();
 
@@ -99,7 +104,7 @@ namespace D69soft.Client.Pages.FIN
             stockVM = new();
 
             filterVM.searchText = String.Empty;
-            stockVMs = (await inventoryService.GetStockList()).ToList();
+            stockVMs = (await inventoryService.GetStockList(filterVM)).ToList();
 
             isLoading = false;
         }

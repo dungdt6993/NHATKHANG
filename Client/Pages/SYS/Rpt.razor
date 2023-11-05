@@ -3,71 +3,31 @@
 <Loading isLoading="@isLoading"></Loading>
 <LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 
+<Modal_RptViewer ReportName=@ReportName></Modal_RptViewer>
+
 <section class="content-header">
     <EditForm Model="@filterVM">
         <div class="row">
-
-            <div class="col-sm-2 col-md-2">
-                <div class="form-group">
-                    <InputSelect class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                 ValueExpression="@(()=>filterVM.ModuleID)"
-                                 Value="@filterVM.ModuleID"
-                                 ValueChanged="@((string value) => onchange_filter_module(value))">
-                        @if (rpts != null)
-                        {
-                            @foreach (var module in rpts.Select(x => new { x.ModuleID, x.ModuleName }).Distinct())
-                            {
-                                <option value="@module.ModuleID">@module.ModuleName</option>
-                            }
-                        }
-                    </InputSelect>
-                </div>
-            </div>
-
-            <div class="col-sm-3 col-md-3">
-
-                <div class="form-group">
-                    <div class="input-group">
-                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                           ValueExpression="@(()=>filterVM.RptGrpID)"
-                                           Value="@filterVM.RptGrpID"
-                                           ValueChanged="@((int value) => onchange_filter_rptgrp(value))">
-                            <option value="0">-----Chọn nhóm báo cáo-----</option>
-                            @if (rpts != null)
-                            {
-                                @foreach (var rptgrp in rpts.Select(x => new { x.RptGrpID, x.RptGrpName }).Distinct())
-                                {
-                                    <option value="@rptgrp.RptGrpID">@rptgrp.RptGrpName</option>
-                                }
-                            }
-                        </InputSelectNumber>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="col-sm-7 col-md-7">
-
-                <div class="form-group">
-                    <div class="input-group">
-                        <InputSelectNumber class="selectpicker form-control" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">SỔ SÁCH - BÁO CÁO</label>
+                    <div class="col-sm-4">
+                        <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
                                            ValueExpression="@(()=>filterVM.RptID)"
                                            Value="@filterVM.RptID"
-                                           ValueChanged="@((int value) => onchange_filter_rpt(value))">
-                            <option value="0">-----Chọn báo cáo-----</option>
+                                           ValueChanged="@((int value) => ViewRPT(value))">
+                            <option value=0>-----Tìm kiếm theo sổ sách, báo cáo-----</option>
                             @if (rpts != null)
                             {
-                                @foreach (var sysrpt in rpts)
+                                @foreach (var _rpt in rpts)
                                 {
-                                    <option value="@sysrpt.RptID">@sysrpt.RptName</option>
+                                    <option value="@_rpt.RptID">@_rpt.RptName</option>
                                 }
                             }
                         </InputSelectNumber>
                     </div>
                 </div>
-
             </div>
-
         </div>
     </EditForm>
 </section>
@@ -78,16 +38,41 @@
 
             <!-- /.card-header -->
             <div class="card-body">
-
-                @if (filterVM.RptID != 0)
+                @if (rpts != null)
                 {
-                    <DxWasmDocumentViewer ReportName="@ReportName" Height="calc(100vh - 159px)" Width="100%">
-                        <DxDocumentViewerExportSettings ShowPrintNotificationDialog="false" />
-                        <DxDocumentViewerTabPanelSettings Width="340" />
-                        <DxWasmDocumentViewerRequestOptions InvokeAction="DXXRDV"></DxWasmDocumentViewerRequestOptions>
-                        <DxDocumentViewerCallbacks BeforeRender="ReportingViewerCustomization.onBeforeRender"
-                                                   CustomizeParameterEditors="ReportingViewerCustomization.onCustomizeParameterEditors" />
-                    </DxWasmDocumentViewer>
+                    <div class="row">
+                        @foreach (var _rptGrp in rpts.Select(x => new { x.FuncGrpID, x.FuncGrpName, x.FuncGrpIcon }).Distinct())
+                        {
+                            <div class="col-md-6 mb-3">
+
+                                <div class="card">
+
+                                    <div class="info-box m-0">
+                                        <span class="info-box-icon bg-primary"><i class="@_rptGrp.FuncGrpIcon"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text text-bold">@_rptGrp.FuncGrpName</span>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="card-footer p-0">
+                                        <ul class="nav flex-column">
+                                            @foreach (var _rpt in rpts.Where(x=>x.FuncGrpID == _rptGrp.FuncGrpID))
+                                            {
+                                                <li class="nav-item">
+                                                    <a href="javascript:void(0)" @onclick="(() => ViewRPT(_rpt.RptID))" class="nav-link">
+                                                        <i class="fa-regular fa-star"></i> @_rpt.RptName
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
                 }
 
             </div>

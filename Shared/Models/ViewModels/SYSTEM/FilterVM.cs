@@ -69,8 +69,6 @@ namespace D69soft.Shared.Models.ViewModels.SYSTEM
 
         //RPT
         public string ReportName { get; set; }
-        public string ModuleID { get; set; }
         public int RptID { get; set; }
-        public int RptGrpID { get; set; }
     }
 }

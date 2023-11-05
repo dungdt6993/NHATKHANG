@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace D69soft.Shared.Models.ViewModels.HR
 {
-    public class PermissionVM : FuncGrp, Func, SubFunc, Division, Department, RptGrp, Rpt
+    public class PermissionVM : FuncGrp, Func, SubFunc, Division, Department, Rpt
     {
         public int FGNo { get; set; }
         public string FuncGrpID { get; set; }
@@ -40,8 +40,6 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public int INOUTNumber { get; set; }
         public string DepartmentID { get; set; }
         public string DepartmentName { get; set; }
-        public int RptGrpID { get; set; }
-        public string RptGrpName { get; set; }
         public int RptID { get; set; }
         public string RptName { get; set; }
         public string RptUrl { get; set; }

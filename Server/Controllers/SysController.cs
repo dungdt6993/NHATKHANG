@@ -287,19 +287,20 @@ namespace D69soft.Server.Controllers
 
         //RPT
         [HttpGet("GetRptList/{_RptID}/{_UserID}")]
-        public async Task<ActionResult<IEnumerable<SysRptVM>>> GetRptList(int _RptID, string _UserID)
+        public async Task<ActionResult<IEnumerable<RptVM>>> GetRptList(int _RptID, string _UserID)
         {
-            var sql = "select r.RptID, r.RptName, r.RptUrl, rg.RptGrpID, rg.RptGrpName from SYSTEM.Rpt r ";
-            sql += "join SYSTEM.RptGrp rg on rg.RptGrpID = r.RptGrpID  ";
+            var sql = "select mo.ModuleID, mo.ModuleName, fg.FuncGrpIcon, fg.FuncGrpID, fg.FuncGrpName, r.RptID, r.RptName, r.RptUrl from SYSTEM.Rpt r ";
+            sql += "join SYSTEM.FuncGrp fg on fg.FuncGrpID = r.FuncGrpID ";
+            sql += "join SYSTEM.Module mo on mo.ModuleID = fg.ModuleID ";
             sql += "join SYSTEM.PermissionRpt pr on pr.RptID = r.RptID ";
             sql += "where UserID=@UserID and (r.RptID=@RptID or @RptID=0) ";
-            sql += "order by rg.RptGrpID, r.RptName";
+            sql += "order by mo.ModuleID, fg.FGNo, r.RptName ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<SysRptVM>(sql, new { RptID = _RptID, UserID = _UserID});
+                var result = await conn.QueryAsync<RptVM>(sql, new { RptID = _RptID, UserID = _UserID});
                 return Ok(result);
             }
         }

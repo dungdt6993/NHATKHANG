@@ -28,9 +28,8 @@ namespace D69soft.Client.Pages.SYS
 
         [Parameter] public string ReportName { get; set; }
 
-        IEnumerable<SysRptVM> rpts;
-        SysRptVM rptVM = new();
-        String[] rptUrls;
+        IEnumerable<RptVM> rpts;
+        RptVM rptVM = new();
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -62,58 +61,31 @@ namespace D69soft.Client.Pages.SYS
             isLoadingScreen = false;
         }
 
-        private async void onchange_filter_module(string value)
+        protected async Task ViewRPT(int value)
         {
             isLoading = true;
-
-            filterVM.ModuleID = value;
-
-            filterVM.RptGrpID = 0;
-
-            filterVM.RptID = 0;
-
-            rpts = await sysService.GetRptList(filterVM.RptID, filterVM.UserID);
-
-            isLoading = false;
-
-            StateHasChanged();
-        }
-
-        private async void onchange_filter_rptgrp(int value)
-        {
-            isLoading = true;
-
-            filterVM.RptGrpID = value;
-
-            filterVM.RptID = 0;
-
-            rpts = await sysService.GetRptList(filterVM.RptID, filterVM.UserID);
-
-            isLoading = false;
-
-            StateHasChanged();
-        }
-
-        private async void onchange_filter_rpt(int value)
-        {
-            isLoading = true;
-
-            rptVM = value == 0 ? new() : (await sysService.GetRptList(value, filterVM.UserID)).FirstOrDefault();
-
-            if (rptVM.PassUserID)
-            {
-                ReportName = rptVM.RptUrl + "?UserID=" + filterVM.UserID + "";
-            }
-            else
-            {
-                ReportName = rptVM.RptUrl;
-            }
 
             filterVM.RptID = value;
 
-            isLoading = false;
+            if(filterVM.RptID != 0)
+            {
+                rptVM = (await sysService.GetRptList(value, filterVM.UserID)).First();
 
-            StateHasChanged();
+                if (rptVM.PassUserID)
+                {
+                    ReportName = rptVM.RptUrl + "?UserID=" + filterVM.UserID + "";
+                }
+                else
+                {
+                    ReportName = rptVM.RptUrl;
+                }
+
+                await js.InvokeAsync<object>("ShowModal", "#InitializeModalView_Rpt");
+            }
+
+            filterVM.RptID = 0;
+
+            isLoading = false;
         }
     }
 }

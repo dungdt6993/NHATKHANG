@@ -47,7 +47,7 @@ namespace D69soft.Client.Pages.HR
         IEnumerable<AdjustProfileRptVM> adjustProfileRptVMs;
         AdjustProfileVM adjustProfileVM = new();
 
-        IEnumerable<SysRptVM> sysRptVMs;
+        IEnumerable<RptVM> rptVMs;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -274,7 +274,7 @@ namespace D69soft.Client.Pages.HR
 
         private async Task PrintAgreementText()
         {
-            IEnumerable<SysRptVM> sysRptVMs = await agreementTextService.PrintAgreementText(agreementTextVMs.Where(x => x.IsChecked == true), filterVM.UserID);
+            IEnumerable<RptVM> sysRptVMs = await agreementTextService.PrintAgreementText(agreementTextVMs.Where(x => x.IsChecked == true), filterVM.UserID);
 
             foreach (var sysReport in sysRptVMs)
             {
@@ -304,7 +304,7 @@ namespace D69soft.Client.Pages.HR
 
             adjustProfileVM = _adjustProfileVM;
 
-            sysRptVMs = await sysService.GetRptList(0, filterVM.UserID);
+            rptVMs = await sysService.GetRptList(0, filterVM.UserID);
 
             adjustProfileVM.arrRptID = adjustProfileRptVMs.Where(x => x.AdjustProfileID == _adjustProfileVM.AdjustProfileID).Select(x => x.RptID).ToArray();
             adjustProfileVM.strRpt = string.Join(",", (int[])adjustProfileVM.arrRptID);

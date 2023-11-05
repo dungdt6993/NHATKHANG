@@ -238,7 +238,7 @@ namespace D69soft.Client.Pages.FIN
 
             customerVMs = await customerService.GetCustomers();
 
-            stockVMs = await inventoryService.GetStockList();
+            stockVMs = await inventoryService.GetStockList(filterVM);
 
             bankAccountVMs = (await moneyService.GetBankAccountList()).ToList();
 

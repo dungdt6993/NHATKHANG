@@ -25,11 +25,11 @@ namespace D69soft.Client.Services.HR
             return await response.Content.ReadFromJsonAsync<List<AgreementTextVM>>();
         }
 
-        public async Task<IEnumerable<SysRptVM>> PrintAgreementText(IEnumerable<AgreementTextVM> _agreementTexts, string _UserID)
+        public async Task<IEnumerable<RptVM>> PrintAgreementText(IEnumerable<AgreementTextVM> _agreementTexts, string _UserID)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/AgreementText/PrintAgreementText/{_UserID}", _agreementTexts);
 
-            return await response.Content.ReadFromJsonAsync<IEnumerable<SysRptVM>>();
+            return await response.Content.ReadFromJsonAsync<IEnumerable<RptVM>>();
         }
 
         public async Task<IEnumerable<AdjustProfileVM>> GetAdjustProfileList()

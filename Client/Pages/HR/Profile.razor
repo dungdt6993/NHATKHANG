@@ -1032,12 +1032,12 @@
                                         {
                                             <li>
                                                 <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input custom-control-input-primary" type="checkbox" id="RG_@permis_rptgrp.RptGrpID" @onchange="EventArgs => { CheckAll_RptGrp(EventArgs.Value, permis_rptgrp.RptGrpID); }" checked="@permis_rptgrp.IsChecked">
-                                                    <label for="RG_@permis_rptgrp.RptGrpID" class="custom-control-label">@permis_rptgrp.RptGrpName</label>
+                                                    <input class="custom-control-input custom-control-input-primary" type="checkbox" id="RG_@permis_rptgrp.FuncGrpID" @onchange="EventArgs => { CheckAll_RptGrp(EventArgs.Value, permis_rptgrp.FuncGrpID); }" checked="@permis_rptgrp.IsChecked">
+                                                    <label for="RG_@permis_rptgrp.FuncGrpID" class="custom-control-label">@permis_rptgrp.FuncGrpName</label>
                                                 </div>
                                                 <ul>
                                                     @{
-                                                        foreach (var permis_rpt in permis_rpts.Where(x => x.RptGrpID == permis_rptgrp.RptGrpID))
+                                                        foreach (var permis_rpt in permis_rpts.Where(x => x.FuncGrpID == permis_rptgrp.FuncGrpID))
                                                         {
                                                             <li>
                                                                 <div class="custom-control custom-checkbox">

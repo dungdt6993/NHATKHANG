@@ -56,7 +56,7 @@ namespace D69soft.Server.Controllers.HR
         }
 
         [HttpPost("PrintAgreementText/{_UserID}")]
-        public async Task<ActionResult<IEnumerable<SysRptVM>>> PrintAgreementText([FromBody] IEnumerable<AgreementTextVM> _agreementTexts, string _UserID)
+        public async Task<ActionResult<IEnumerable<RptVM>>> PrintAgreementText([FromBody] IEnumerable<AgreementTextVM> _agreementTexts, string _UserID)
         {
             using (var conn = new SqlConnection(_connConfig.Value))
             {
@@ -75,7 +75,7 @@ namespace D69soft.Server.Controllers.HR
 
                 var sql = "select distinct r.RptID ,r.RptUrl from SYSTEM.Rpt r join HR.LogPrintAgreementText lpat on lpat.RptID = r.RptID where Seq in (select SeqLog from HR.tmpPrintLaborContract) ";
 
-                var result = await conn.QueryAsync<SysRptVM>(sql);
+                var result = await conn.QueryAsync<RptVM>(sql);
                 return Ok(result);
             }
         }

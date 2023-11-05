@@ -35,7 +35,7 @@ namespace D69soft.Client.Shared
 
             userVM = await sysService.GetInfoUser(filterVM.UserID);
 
-            if (userVM.Eserial == null)
+            if (String.IsNullOrEmpty(userVM.Eserial))
             {
                 navigationManager.NavigateTo("/Auth/Login");
             }

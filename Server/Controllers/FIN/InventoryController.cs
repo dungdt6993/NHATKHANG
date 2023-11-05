@@ -322,8 +322,8 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
-        [HttpGet("GetStockList")]
-        public async Task<ActionResult<IEnumerable<StockVM>>> GetStockList()
+        [HttpPost("GetStockList")]
+        public async Task<ActionResult<IEnumerable<StockVM>>> GetStockList(FilterVM _filterVM)
         {
             var sql = "select * from FIN.Stock where DivisionID=@DivisionID order by StockName ";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -331,7 +331,7 @@ namespace D69soft.Server.Controllers.FIN
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<StockVM>(sql);
+                var result = await conn.QueryAsync<StockVM>(sql, _filterVM);
                 return Ok(result);
             }
         }

@@ -150,17 +150,17 @@ namespace D69soft.Server.Services.HR
             return await _httpClient.GetFromJsonAsync<IEnumerable<DepartmentVM>>($"api/Profile/GetDepartmentPermis/{_Eserial}");
         }
 
-        public async Task<IEnumerable<SysRptVM>> GetSysReportGroupPermis(string _Eserial)
+        public async Task<IEnumerable<RptVM>> GetSysReportGroupPermis(string _Eserial)
         {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<SysRptVM>>($"api/Profile/GetSysReportGroupPermis/{_Eserial}");
+            return await _httpClient.GetFromJsonAsync<IEnumerable<RptVM>>($"api/Profile/GetSysReportGroupPermis/{_Eserial}");
         }
 
-        public async Task<IEnumerable<SysRptVM>> GetSysReportPermis(string _Eserial)
+        public async Task<IEnumerable<RptVM>> GetSysReportPermis(string _Eserial)
         {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<SysRptVM>>($"api/Profile/GetSysReportPermis/{_Eserial}");
+            return await _httpClient.GetFromJsonAsync<IEnumerable<RptVM>>($"api/Profile/GetSysReportPermis/{_Eserial}");
         }
 
-        public async Task<bool> UpdatePermis(IEnumerable<FuncVM> _funcVMs, IEnumerable<FuncVM> _subFuncVMs, IEnumerable<DepartmentVM> _departmentVMs, IEnumerable<SysRptVM> _sysRptVMs, string _Eserial)
+        public async Task<bool> UpdatePermis(IEnumerable<FuncVM> _funcVMs, IEnumerable<FuncVM> _subFuncVMs, IEnumerable<DepartmentVM> _departmentVMs, IEnumerable<RptVM> _sysRptVMs, string _Eserial)
         {
             ArrayList arrayList = new ArrayList();
 

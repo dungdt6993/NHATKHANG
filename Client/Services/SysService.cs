@@ -111,9 +111,9 @@ namespace D69soft.Client.Services
         }
 
         //RPT
-        public async Task<IEnumerable<SysRptVM>> GetRptList(int _RptID, string _UserID)
+        public async Task<IEnumerable<RptVM>> GetRptList(int _RptID, string _UserID)
         {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<SysRptVM>>($"api/Sys/GetRptList/{_RptID}/{_UserID}");
+            return await _httpClient.GetFromJsonAsync<IEnumerable<RptVM>>($"api/Sys/GetRptList/{_RptID}/{_UserID}");
         }
 
         public async Task<bool> CheckPermisRpt(string _UserID)
