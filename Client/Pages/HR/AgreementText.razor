@@ -103,14 +103,9 @@
                             <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="Chọn báo cáo nhân sự..." @bind="onchange_rpt">
                                 @if (rptVMs != null)
                                 {
-                                    @foreach (var _rptVM_0 in rptVMs.Select(x => new { x.FuncGrpID, x.FuncGrpName }).Distinct())
+                                    @foreach (var _rptVM in rptVMs)
                                     {
-                                        <optgroup label="@_rptVM_0.FuncGrpName">
-                                            @foreach (var _sysRptVM_1 in rptVMs.Where(x => x.FuncGrpID == _rptVM_0.FuncGrpID))
-                                            {
-                                                <option value="@_sysRptVM_1.RptID">@_sysRptVM_1.RptName</option>
-                                            }
-                                        </optgroup>
+                                        <option value="@_rptVM.RptID">@_rptVM.RptName</option>
                                     }
                                 }
                             </select>
@@ -232,7 +227,7 @@
                     <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true" multiple data-actions-box="true" title="-----Nhóm vị trí-----" @bind="onchange_filter_positiongroup">
                         @if (position_filter_list != null)
                         {
-                            @foreach (var positiongroup_filter in position_filter_list.Select(x=> new {x.PositionGroupID, x.PositionGroupName}).Distinct())
+                            @foreach (var positiongroup_filter in position_filter_list.Select(x => new { x.PositionGroupID, x.PositionGroupName }).Distinct())
                             {
                                 <option data-subtext="@positiongroup_filter.PositionGroupID" value="@positiongroup_filter.PositionGroupID">@positiongroup_filter.PositionGroupName</option>
                             }

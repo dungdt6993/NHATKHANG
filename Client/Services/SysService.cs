@@ -120,5 +120,10 @@ namespace D69soft.Client.Services
         {
             return await _httpClient.GetFromJsonAsync<bool>($"api/Sys/CheckPermisRpt/{_UserID}");
         }
+
+        public async Task<IEnumerable<RptVM>> GetSysRptList()
+        {
+            return await _httpClient.GetFromJsonAsync<IEnumerable<RptVM>>($"api/Sys/GetSysRptList");
+        }
     }
 }

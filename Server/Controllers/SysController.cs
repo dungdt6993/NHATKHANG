@@ -318,5 +318,19 @@ namespace D69soft.Server.Controllers
             }
         }
 
+        [HttpGet("GetSysRptList")]
+        public async Task<ActionResult<IEnumerable<RptVM>>> GetSysRptList()
+        {
+            var sql = "select * from SYSTEM.Rpt where coalesce(FuncGrpID,'') = '' order by RptName ";
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                var result = await conn.QueryAsync<RptVM>(sql);
+                return Ok(result);
+            }
+        }
+
     }
 }
