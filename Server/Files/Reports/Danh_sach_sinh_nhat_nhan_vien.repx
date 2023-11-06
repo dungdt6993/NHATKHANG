@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XtraReportsLayoutSerializer SerializerVersion="23.1.5.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v23.1, Version=23.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="Danh_sach_sinh_nhat_nhan_vien" Margins="12, 11, 9.833336, 11.9174318" PageWidth="850" PageHeight="1100" Version="23.1" DataMember="RPT_HR_Danh_sach_sinh_nhat_nhan_vien" DataSource="#Ref-0">
+  <Parameters>
+    <Item1 Ref="3" Description="Tháng" ValueInfo="0" Name="M" Type="#Ref-2">
+      <ExpressionBindings>
+        <Item1 Ref="4" PropertyName="Value" Expression="GetMonth(Now())" />
+      </ExpressionBindings>
+    </Item1>
+    <Item2 Ref="7" Description="Công ty" ValueSourceSettings="#Ref-5" Name="DivisonID" />
+    <Item3 Ref="8" Visible="false" Description="UserID" Name="UserID" />
+  </Parameters>
+  <Bands>
+    <Item1 Ref="9" ControlType="DetailBand" Name="Detail" HeightF="27.08333" TextAlignment="TopLeft" Padding="0,0,0,0,100">
+      <Controls>
+        <Item1 Ref="10" ControlType="XRTable" Name="xrTable3" TextAlignment="MiddleCenter" SizeF="825.5236,27.08333" LocationFloat="0.1222869,0" Font="Arial, 8pt" Borders="None" BorderDashStyle="Solid">
+          <Rows>
+            <Item1 Ref="11" ControlType="XRTableRow" Name="xrTableRow3" Weight="1">
+              <Cells>
+                <Item1 Ref="12" ControlType="XRTableCell" Name="xrTableCell16" Weight="0.30920636530331796" TextFormatString="{0:#}">
+                  <Summary Ref="13" Running="Report" />
+                  <ExpressionBindings>
+                    <Item1 Ref="14" EventName="BeforePrint" PropertyName="Text" Expression="sumRecordNumber([Eserial])" />
+                  </ExpressionBindings>
+                </Item1>
+                <Item2 Ref="15" ControlType="XRTableCell" Name="xrTableCell17" Weight="0.62383629954177688">
+                  <ExpressionBindings>
+                    <Item1 Ref="16" EventName="BeforePrint" PropertyName="Text" Expression="[Eserial]" />
+                  </ExpressionBindings>
+                </Item2>
+                <Item3 Ref="17" ControlType="XRTableCell" Name="xrTableCell18" Weight="1.389973872481238">
+                  <ExpressionBindings>
+                    <Item1 Ref="18" EventName="BeforePrint" PropertyName="Text" Expression="[FullName]" />
+                  </ExpressionBindings>
+                </Item3>
+                <Item4 Ref="19" ControlType="XRTableCell" Name="xrTableCell25" Weight="1.6008211231857468">
+                  <ExpressionBindings>
+                    <Item1 Ref="20" EventName="BeforePrint" PropertyName="Text" Expression="[DepartmentName]" />
+                  </ExpressionBindings>
+                </Item4>
+                <Item5 Ref="21" ControlType="XRTableCell" Name="xrTableCell19" Weight="1.9806801057716159" Font="Arial, 8.5pt">
+                  <Summary Ref="22" FormatString="{0:#}" />
+                  <ExpressionBindings>
+                    <Item1 Ref="23" EventName="BeforePrint" PropertyName="Text" Expression="[PositionName]" />
+                  </ExpressionBindings>
+                  <StylePriority Ref="24" UseFont="false" />
+                </Item5>
+                <Item6 Ref="25" ControlType="XRTableCell" Name="xrTableCell20" Weight="1.1370896365858527" TextFormatString="{0:dd/MM/yyyy}">
+                  <ExpressionBindings>
+                    <Item1 Ref="26" EventName="BeforePrint" PropertyName="Text" Expression="[BirthDay]" />
+                  </ExpressionBindings>
+                </Item6>
+                <Item7 Ref="27" ControlType="XRTableCell" Name="xrTableCell26" Weight="1.1889316229938272" TextFormatString="{0:dd/MM/yyyy}">
+                  <ExpressionBindings>
+                    <Item1 Ref="28" EventName="BeforePrint" PropertyName="Text" Expression="[JoinDate]" />
+                  </ExpressionBindings>
+                </Item7>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="29" UseFont="false" UseBorders="false" UseBorderDashStyle="false" UseTextAlignment="false" />
+        </Item1>
+      </Controls>
+    </Item1>
+    <Item2 Ref="30" ControlType="TopMarginBand" Name="TopMargin" HeightF="9.833336" TextAlignment="TopLeft" Padding="0,0,0,0,100" />
+    <Item3 Ref="31" ControlType="BottomMarginBand" Name="BottomMargin" HeightF="11.9174318" TextAlignment="TopLeft" Padding="0,0,0,0,100" />
+    <Item4 Ref="32" ControlType="ReportHeaderBand" Name="reportHeaderBand1" HeightF="32.58335">
+      <Controls>
+        <Item1 Ref="33" ControlType="XRLabel" Name="xrLabel13" Text="DANH SÁCH NHÂN VIÊN SINH NHẬT THÁNG [?M]" TextAlignment="MiddleCenter" SizeF="826.5417,32.58335" LocationFloat="0,0" Font="Tahoma, 16pt, style=Bold" ForeColor="Black" Padding="2,2,0,0,100">
+          <StylePriority Ref="34" UseFont="false" UseForeColor="false" UseBackColor="false" UseTextAlignment="false" />
+        </Item1>
+      </Controls>
+    </Item4>
+    <Item5 Ref="35" ControlType="PageHeaderBand" Name="PageHeader" HeightF="36.4803">
+      <Controls>
+        <Item1 Ref="36" ControlType="XRTable" Name="xrTable1" TextAlignment="MiddleCenter" SizeF="825.5236,36.4803" LocationFloat="0.1222928,0" Font="Times New Roman, 8pt, style=Bold" BackColor="255,219,219,219" Borders="None">
+          <Rows>
+            <Item1 Ref="37" ControlType="XRTableRow" Name="xrTableRow4" Weight="1.9999998710525144">
+              <Cells>
+                <Item1 Ref="38" ControlType="XRTableCell" Name="xrTableCell1" Weight="3.3288014307674265" Text="STT" />
+                <Item2 Ref="39" ControlType="XRTableCell" Name="xrTableCell2" Weight="6.7159946041487073" Text="Mã NV" />
+                <Item3 Ref="40" ControlType="XRTableCell" Name="xrTableCell3" Weight="14.963949848144631" Text="Họ Tên" />
+                <Item4 Ref="41" ControlType="XRTableCell" Name="xrTableCell12" Weight="17.233851789546691" Text="Bộ phận" />
+                <Item5 Ref="42" ControlType="XRTableCell" Name="xrTableCell11" Weight="21.323284088773931" Text="Vị trí" Borders="None">
+                  <StylePriority Ref="43" UseBorders="false" />
+                </Item5>
+                <Item6 Ref="44" ControlType="XRTableCell" Name="xrTableCell27" Weight="12.241478014413302" Text="Ngày sinh" Borders="None">
+                  <StylePriority Ref="45" UseBorders="false" />
+                </Item6>
+                <Item7 Ref="46" ControlType="XRTableCell" Name="xrTableCell4" Weight="12.799611036286406" Multiline="true" Text="Ngày vào làm" Borders="None">
+                  <StylePriority Ref="47" UseBorders="false" />
+                </Item7>
+              </Cells>
+            </Item1>
+          </Rows>
+          <StylePriority Ref="48" UseFont="false" UseBackColor="false" UseBorders="false" UseTextAlignment="false" />
+        </Item1>
+      </Controls>
+    </Item5>
+    <Item6 Ref="49" ControlType="ReportFooterBand" Name="ReportFooter" HeightF="0" />
+  </Bands>
+  <StyleSheet>
+    <Item1 Ref="50" Name="Title" BorderStyle="Inset" Font="Tahoma, 14pt" ForeColor="255,75,75,75" BackColor="Transparent" BorderColor="Black" Sides="None" StringFormat="Near;Near;0;None;Character;GenericDefault" BorderWidthSerializable="1" />
+    <Item2 Ref="51" Name="DetailCaption3" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Tahoma, 8pt, style=Bold" ForeColor="255,75,75,75" BackColor="Transparent" BorderColor="Transparent" Sides="None" StringFormat="Near;Center;0;None;Character;GenericDefault" TextAlignment="MiddleLeft" />
+    <Item3 Ref="52" Name="DetailData3" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Tahoma, 8pt" ForeColor="Black" StringFormat="Near;Center;0;None;Character;GenericDefault" TextAlignment="MiddleLeft" />
+    <Item4 Ref="53" Name="DetailData3_Odd" BorderStyle="Inset" Padding="6,6,0,0,100" Font="Tahoma, 8pt" ForeColor="Black" BackColor="255,231,231,231" BorderColor="Transparent" Sides="None" StringFormat="Near;Center;0;None;Character;GenericDefault" TextAlignment="MiddleLeft" BorderWidthSerializable="1" />
+    <Item5 Ref="54" Name="DetailCaptionBackground3" BorderStyle="Inset" BackColor="Transparent" BorderColor="255,206,206,206" Sides="Top" StringFormat="Near;Near;0;None;Character;GenericDefault" BorderWidthSerializable="2" />
+    <Item6 Ref="55" Name="PageInfo" BorderStyle="Inset" Padding="2,2,0,0,100" Font="Tahoma, 8pt, style=Bold" ForeColor="255,75,75,75" StringFormat="Near;Near;0;None;Character;GenericDefault" />
+  </StyleSheet>
+  <ParameterPanelLayoutItems>
+    <Item1 Ref="56" LayoutItemType="Parameter" Parameter="#Ref-3" />
+    <Item2 Ref="57" LayoutItemType="Parameter" Parameter="#Ref-7" />
+    <Item3 Ref="58" LayoutItemType="Parameter" Parameter="#Ref-8" />
+  </ParameterPanelLayoutItems>
+  <ComponentStorage>
+    <Item1 Ref="0" ObjectType="DevExpress.DataAccess.Sql.SqlDataSource,DevExpress.DataAccess.v23.1" Name="sqlDataSource1" Base64="PFNxbERhdGFTb3VyY2UgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxDb25uZWN0aW9uIE5hbWU9IkQ2OXNvZnREQiIgRnJvbUFwcENvbmZpZz0idHJ1ZSIgLz48UXVlcnkgVHlwZT0iU3RvcmVkUHJvY1F1ZXJ5IiBOYW1lPSJSUFRfSFJfRGFuaF9zYWNoX3NpbmhfbmhhdF9uaGFuX3ZpZW4iPjxQYXJhbWV0ZXIgTmFtZT0iQE0iIFR5cGU9IkRldkV4cHJlc3MuRGF0YUFjY2Vzcy5FeHByZXNzaW9uIj4oU3lzdGVtLkludDMyKSg/TSk8L1BhcmFtZXRlcj48UGFyYW1ldGVyIE5hbWU9IkBEaXZzIiBUeXBlPSJEZXZFeHByZXNzLkRhdGFBY2Nlc3MuRXhwcmVzc2lvbiI+KFN5c3RlbS5TdHJpbmcpKD9EaXZpc29uSUQpPC9QYXJhbWV0ZXI+PFBhcmFtZXRlciBOYW1lPSJARGVwdCIgVHlwZT0iRGV2RXhwcmVzcy5EYXRhQWNjZXNzLkV4cHJlc3Npb24iPihTeXN0ZW0uU3RyaW5nKSg/cGFyYW1ldGVyMyk8L1BhcmFtZXRlcj48UHJvY05hbWU+UlBULkhSX0Rhbmhfc2FjaF9zaW5oX25oYXRfbmhhbl92aWVuPC9Qcm9jTmFtZT48L1F1ZXJ5PjxRdWVyeSBUeXBlPSJTdG9yZWRQcm9jUXVlcnkiIE5hbWU9IkhSX1Byb2ZpbGVfdmlld0RpdmlzaW9uIj48UGFyYW1ldGVyIE5hbWU9IkBVc2VySUQiIFR5cGU9IkRldkV4cHJlc3MuRGF0YUFjY2Vzcy5FeHByZXNzaW9uIj4oU3lzdGVtLlN0cmluZykoP1VzZXJJRCk8L1BhcmFtZXRlcj48UHJvY05hbWU+SFIuUHJvZmlsZV92aWV3RGl2aXNpb25NYWluPC9Qcm9jTmFtZT48L1F1ZXJ5PjxSZXN1bHRTY2hlbWE+PERhdGFTZXQgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxWaWV3IE5hbWU9IlJQVF9IUl9EYW5oX3NhY2hfc2luaF9uaGF0X25oYW5fdmllbiI+PEZpZWxkIE5hbWU9Ik0iIFR5cGU9IkludDMyIiAvPjxGaWVsZCBOYW1lPSJFc2VyaWFsIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkZ1bGxOYW1lIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRlcGFydG1lbnRJRCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEZXBhcnRtZW50TmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJQb3NpdGlvbklEIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlBvc2l0aW9uTmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJCaXJ0aGRheSIgVHlwZT0iRGF0ZVRpbWUiIC8+PEZpZWxkIE5hbWU9IkpvaW5EYXRlIiBUeXBlPSJEYXRlVGltZSIgLz48L1ZpZXc+PFZpZXcgTmFtZT0iSFJfUHJvZmlsZV92aWV3RGl2aXNpb24iPjxGaWVsZCBOYW1lPSJEaXZpc2lvbklEIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uTmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvblNob3J0TmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvblRheENvZGUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGl2aXNpb25BZGRyZXNzIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uVGVsIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uSG90bGluZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvbkVtYWlsIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uV2Vic2l0ZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvbkJhbmtBY2NvdW50IiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uQmFua05hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGl2aXNpb25Mb2dvVXJsIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkNvZGVEaXZzIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IklOT1VUTnVtYmVyIiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iaXMyNjI1IiBUeXBlPSJCeXRlIiAvPjxGaWVsZCBOYW1lPSJpc0F1dG9Fc2VyaWFsIiBUeXBlPSJCeXRlIiAvPjxGaWVsZCBOYW1lPSJpc0FjdGl2ZSIgVHlwZT0iQnl0ZSIgLz48L1ZpZXc+PC9EYXRhU2V0PjwvUmVzdWx0U2NoZW1hPjxDb25uZWN0aW9uT3B0aW9ucyBDbG9zZUNvbm5lY3Rpb249InRydWUiIC8+PC9TcWxEYXRhU291cmNlPg==" />
+  </ComponentStorage>
+  <ObjectStorage>
+    <Item1 ObjectType="DevExpress.XtraReports.Serialization.ObjectStorageInfo, DevExpress.XtraReports.v23.1" Ref="2" Content="System.Int32" Type="System.Type" />
+    <Item2 Ref="5" ObjectType="DevExpress.XtraReports.Parameters.DynamicListLookUpSettings, DevExpress.Printing.v23.1.Core" DataSource="#Ref-0" DataMember="HR_Profile_viewDivision" ValueMember="DivisionID" DisplayMember="DivisionName" />
+  </ObjectStorage>
+</XtraReportsLayoutSerializer>
