@@ -1,6 +1,6 @@
 ﻿namespace D69soft.Server.PredefinedReports.Design
 {
-    partial class HR_Hop_dong_dich_vu
+    partial class Hop_dong_dich_vu
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HR_Hop_dong_dich_vu));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Hop_dong_dich_vu));
             DevExpress.DataAccess.Sql.StoredProcQuery storedProcQuery1 = new DevExpress.DataAccess.Sql.StoredProcQuery();
             this.Detail = new DevExpress.XtraReports.UI.DetailBand();
             this.xrRichText1 = new DevExpress.XtraReports.UI.XRRichText();

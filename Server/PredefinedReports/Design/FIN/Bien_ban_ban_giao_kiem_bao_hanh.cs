@@ -6,9 +6,9 @@ using System.Drawing;
 
 namespace D69soft.Server.PredefinedReports.Design
 {
-    public partial class FIN_Tong_hop_cac_khoan_thu_nhap_khac : DevExpress.XtraReports.UI.XtraReport
+    public partial class Bien_ban_ban_giao_kiem_bao_hanh : DevExpress.XtraReports.UI.XtraReport
     {
-        public FIN_Tong_hop_cac_khoan_thu_nhap_khac()
+        public Bien_ban_ban_giao_kiem_bao_hanh()
         {
             InitializeComponent();
         }

@@ -1,6 +1,6 @@
 ﻿namespace D69soft.Server.PredefinedReports.Design
 {
-    partial class FIN_Tong_hop_cac_khoan_thu_nhap_khac
+    partial class Tong_hop_cac_khoan_thu_nhap_khac
     {
         /// <summary>
         /// Required designer variable.
@@ -35,7 +35,7 @@
             DevExpress.DataAccess.Sql.QueryParameter queryParameter3 = new DevExpress.DataAccess.Sql.QueryParameter();
             DevExpress.DataAccess.Sql.StoredProcQuery storedProcQuery2 = new DevExpress.DataAccess.Sql.StoredProcQuery();
             DevExpress.DataAccess.Sql.QueryParameter queryParameter4 = new DevExpress.DataAccess.Sql.QueryParameter();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FIN_Tong_hop_cac_khoan_thu_nhap_khac));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Tong_hop_cac_khoan_thu_nhap_khac));
             DevExpress.XtraReports.UI.XRSummary xrSummary1 = new DevExpress.XtraReports.UI.XRSummary();
             DevExpress.XtraReports.UI.XRSummary xrSummary2 = new DevExpress.XtraReports.UI.XRSummary();
             DevExpress.XtraReports.UI.XRSummary xrSummary3 = new DevExpress.XtraReports.UI.XRSummary();
@@ -696,7 +696,6 @@
             // 
             this.DivisionID.Description = "Công ty";
             this.DivisionID.Name = "DivisionID";
-            this.DivisionID.ValueInfo = "0";
             dynamicListLookUpSettings1.DataMember = "HR.Profile_viewDivisionMain";
             dynamicListLookUpSettings1.DataSource = this.sqlDataSource1;
             dynamicListLookUpSettings1.DisplayMember = "DivisionName";
@@ -718,7 +717,7 @@
             this.UserID.Name = "UserID";
             this.UserID.Visible = false;
             // 
-            // FIN_Tong_hop_cac_khoan_thu_nhap_khac
+            // Tong_hop_cac_khoan_thu_nhap_khac
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
             this.Detail,

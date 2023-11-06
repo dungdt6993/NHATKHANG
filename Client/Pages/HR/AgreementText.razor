@@ -180,7 +180,6 @@
                                  ValueExpression="@(()=>filterVM.DivisionID)"
                                  Value="@filterVM.DivisionID"
                                  ValueChanged="@((string value) => onchange_filter_division(value))">
-                        <option value="">-----Công ty-----</option>
                         @if (division_filter_list != null)
                         {
                             @foreach (var division_filter in division_filter_list)

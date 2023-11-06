@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<XtraReportsLayoutSerializer SerializerVersion="23.1.4.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v23.1, Version=23.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="FIN_Tong_hop_cac_khoan_thu_nhap_khac" SnapGridSize="25" ReportUnit="TenthsOfAMillimeter" Landscape="true" Margins="25.4, 27.94, 66.25168, 66.39839" PageWidth="2794" PageHeight="2159" Version="23.1" DataMember="RPT_HR_Bang_tong_hop_cac_khoan_thu_nhap_khac" DataSource="#Ref-0" Dpi="254">
+<XtraReportsLayoutSerializer SerializerVersion="23.1.4.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v23.1, Version=23.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="Tong_hop_cac_khoan_thu_nhap_khac" SnapGridSize="25" ReportUnit="TenthsOfAMillimeter" Landscape="true" Margins="25.4, 27.94, 66.25168, 66.39839" PageWidth="2794" PageHeight="2159" Version="23.1" DataMember="RPT_HR_Bang_tong_hop_cac_khoan_thu_nhap_khac" DataSource="#Ref-0" Dpi="254">
   <Parameters>
     <Item1 Ref="3" Description="Tháng" ValueInfo="0" Name="M" Type="#Ref-2">
       <ExpressionBindings>
@@ -11,7 +11,7 @@
         <Item1 Ref="6" PropertyName="Value" Expression="GetYear(Now())" />
       </ExpressionBindings>
     </Item2>
-    <Item3 Ref="9" Description="Công ty" ValueSourceSettings="#Ref-7" ValueInfo="0" Name="DivisionID" />
+    <Item3 Ref="9" Description="Công ty" ValueSourceSettings="#Ref-7" Name="DivisionID" />
     <Item4 Ref="10" Visible="false" Description="UserID" Name="UserID" />
   </Parameters>
   <Bands>

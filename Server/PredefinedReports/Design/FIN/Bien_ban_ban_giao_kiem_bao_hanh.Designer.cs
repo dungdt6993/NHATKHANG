@@ -1,6 +1,6 @@
 ﻿namespace D69soft.Server.PredefinedReports.Design
 {
-    partial class FIN_Bien_ban_ban_giao_kiem_bao_hanh
+    partial class Bien_ban_ban_giao_kiem_bao_hanh
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             DevExpress.XtraReports.UI.XRSummary xrSummary1 = new DevExpress.XtraReports.UI.XRSummary();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FIN_Bien_ban_ban_giao_kiem_bao_hanh));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Bien_ban_ban_giao_kiem_bao_hanh));
             DevExpress.XtraReports.UI.XRSummary xrSummary2 = new DevExpress.XtraReports.UI.XRSummary();
             DevExpress.DataAccess.Sql.StoredProcQuery storedProcQuery1 = new DevExpress.DataAccess.Sql.StoredProcQuery();
             DevExpress.DataAccess.Sql.QueryParameter queryParameter1 = new DevExpress.DataAccess.Sql.QueryParameter();
@@ -1195,7 +1195,7 @@
             this.VNumber.Name = "VNumber";
             this.VNumber.Visible = false;
             // 
-            // FIN_Bien_ban_ban_giao_kiem_bao_hanh
+            // Bien_ban_ban_giao_kiem_bao_hanh
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
             this.Detail,

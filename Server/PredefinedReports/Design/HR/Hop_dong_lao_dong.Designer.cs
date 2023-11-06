@@ -1,6 +1,6 @@
 ﻿namespace D69soft.Server.PredefinedReports.Design
 {
-    partial class HR_Hop_dong_lao_dong
+    partial class Hop_dong_lao_dong
     {
         /// <summary>
         /// Required designer variable.
@@ -45,7 +45,7 @@
             // 
             this.Detail.Name = "Detail";
             // 
-            // HR_Hop_dong_lao_dong
+            // Hop_dong_lao_dong
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
             this.TopMargin,

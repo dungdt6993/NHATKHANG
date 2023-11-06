@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<XtraReportsLayoutSerializer SerializerVersion="23.1.4.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v23.1, Version=23.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="FIN_Bang_luong" SnapGridSize="25" ReportUnit="TenthsOfAMillimeter" Landscape="true" Margins="0, 3, 15, 30" PaperKind="A2" PageWidth="5940" PageHeight="4200" Version="23.1" DataMember="HR_BANG_LUONG_CHI_TIET" DataSource="#Ref-0" Dpi="254">
+<XtraReportsLayoutSerializer SerializerVersion="23.1.4.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v23.1, Version=23.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="Bang_luong" SnapGridSize="25" ReportUnit="TenthsOfAMillimeter" Landscape="true" Margins="0, 3, 15, 30" PaperKind="A2" PageWidth="5940" PageHeight="4200" Version="23.1" DataMember="HR_BANG_LUONG_CHI_TIET" DataSource="#Ref-0" Dpi="254">
   <Parameters>
     <Item1 Ref="3" Description="Tháng" ValueInfo="0" Name="M" Type="#Ref-2">
       <ExpressionBindings>

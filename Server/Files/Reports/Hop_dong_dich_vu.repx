@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<XtraReportsLayoutSerializer SerializerVersion="23.1.4.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v23.1, Version=23.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="HR_Hop_dong_dich_vu" Margins="50, 39, 48.95833, 58.33333" PageWidth="850" PageHeight="1100" Version="23.1" DataMember="RPT_HR_PrintLaborContract" DataSource="#Ref-0">
+<XtraReportsLayoutSerializer SerializerVersion="23.1.4.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v23.1, Version=23.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="Hop_dong_dich_vu" Margins="50, 39, 48.95833, 58.33333" PageWidth="850" PageHeight="1100" Version="23.1" DataMember="RPT_HR_PrintLaborContract" DataSource="#Ref-0">
   <Bands>
     <Item1 Ref="2" ControlType="DetailBand" Name="Detail" PageBreak="BeforeBandExceptFirstEntry" HeightF="3650.083" TextAlignment="TopLeft" Padding="0,0,0,0,100">
       <Controls>
