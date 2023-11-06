@@ -95,6 +95,8 @@ namespace D69soft.Client.Pages.FIN
                 navigationManager.NavigateTo("/");
             }
 
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
+
             itemsTypeVMs = await inventoryService.GetItemsTypes();
 
             itemsClassVMs = await inventoryService.GetItemsClassList();

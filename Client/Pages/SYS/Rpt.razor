@@ -8,24 +8,21 @@
 <section class="content-header">
     <EditForm Model="@filterVM">
         <div class="row">
-            <div class="col-md-12">
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">SỔ SÁCH - BÁO CÁO</label>
-                    <div class="col-sm-4">
-                        <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                           ValueExpression="@(()=>filterVM.RptID)"
-                                           Value="@filterVM.RptID"
-                                           ValueChanged="@((int value) => ViewRPT(value))">
-                            <option value=0>-----Tìm kiếm theo sổ sách, báo cáo-----</option>
-                            @if (rpts != null)
+            <div class="col-md-6">
+                <div class="form-group">
+                    <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                       ValueExpression="@(()=>filterVM.RptID)"
+                                       Value="@filterVM.RptID"
+                                       ValueChanged="@((int value) => ViewRPT(value))">
+                        <option value=0>-----Tìm kiếm theo sổ sách, báo cáo-----</option>
+                        @if (rpts != null)
+                        {
+                            @foreach (var _rpt in rpts)
                             {
-                                @foreach (var _rpt in rpts)
-                                {
-                                    <option value="@_rpt.RptID">@_rpt.RptName</option>
-                                }
+                                <option value="@_rpt.RptID">@_rpt.RptName</option>
                             }
-                        </InputSelectNumber>
-                    </div>
+                        }
+                    </InputSelectNumber>
                 </div>
             </div>
         </div>
@@ -57,7 +54,7 @@
 
                                     <div class="card-footer p-0">
                                         <ul class="nav flex-column">
-                                            @foreach (var _rpt in rpts.Where(x=>x.FuncGrpID == _rptGrp.FuncGrpID))
+                                            @foreach (var _rpt in rpts.Where(x => x.FuncGrpID == _rptGrp.FuncGrpID))
                                             {
                                                 <li class="nav-item">
                                                     <a href="javascript:void(0)" @onclick="(() => ViewRPT(_rpt.RptID))" class="nav-link">
