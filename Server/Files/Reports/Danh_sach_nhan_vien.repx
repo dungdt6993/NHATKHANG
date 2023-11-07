@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<XtraReportsLayoutSerializer SerializerVersion="23.1.5.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v23.1, Version=23.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="Danh_sach_nhan_vien" SnapGridSize="25" ReportUnit="TenthsOfAMillimeter" Landscape="true" Margins="19, 21, 28, 30.25639" PaperKind="A2" PageWidth="5940" PageHeight="4200" Version="23.1" RequestParameters="false" DataMember="RPT_HR_Danh_sach_nhan_vien" DataSource="#Ref-0" Dpi="254">
+<XtraReportsLayoutSerializer SerializerVersion="23.1.4.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v23.1, Version=23.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="Danh_sach_nhan_vien" SnapGridSize="25" ReportUnit="TenthsOfAMillimeter" Landscape="true" Margins="19, 21, 28, 30.25639" PaperKind="A2" PageWidth="5940" PageHeight="4200" Version="23.1" RequestParameters="false" DataMember="RPT_HR_Danh_sach_nhan_vien" DataSource="#Ref-0" Dpi="254">
   <Extensions>
     <Item1 Ref="2" Key="DataSerializationExtension" Value="DevExpress.XtraReports.Web.ReportDesigner.DefaultDataSerializer" />
   </Extensions>
@@ -11,7 +11,7 @@
   </Parameters>
   <Bands>
     <Item1 Ref="12" ControlType="TopMarginBand" Name="topMarginBand1" HeightF="28" TextAlignment="TopLeft" Dpi="254" Padding="0,0,0,0,254" />
-    <Item2 Ref="13" ControlType="ReportHeaderBand" Name="ReportHeader" HeightF="108" Dpi="254">
+    <Item2 Ref="13" ControlType="ReportHeaderBand" Name="ReportHeader" HeightF="82.76171" Dpi="254">
       <Controls>
         <Item1 Ref="14" ControlType="XRLabel" Name="xrLabel13" Text="DANH SÁCH NHÂN VIÊN" TextAlignment="MiddleCenter" SizeF="5899.5,82.76171" LocationFloat="0.4999695,0" Dpi="254" Font="Tahoma, 16pt, style=Bold" ForeColor="Black" Padding="5,5,0,0,254">
           <StylePriority Ref="15" UseFont="false" UseForeColor="false" UseBackColor="false" UseTextAlignment="false" />

@@ -167,7 +167,7 @@
             this.ReportHeader.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
             this.xrLabel13});
             this.ReportHeader.Dpi = 254F;
-            this.ReportHeader.HeightF = 108F;
+            this.ReportHeader.HeightF = 82.76171F;
             this.ReportHeader.Name = "ReportHeader";
             // 
             // xrLabel13

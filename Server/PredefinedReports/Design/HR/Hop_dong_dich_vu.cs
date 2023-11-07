@@ -12,5 +12,10 @@ namespace D69soft.Server.PredefinedReports.Design
         {
             InitializeComponent();
         }
+
+        private void xrRichText14_BeforePrint(object sender, CancelEventArgs e)
+        {
+
+        }
     }
 }

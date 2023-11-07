@@ -61,7 +61,6 @@
             this.TopMargin = new DevExpress.XtraReports.UI.TopMarginBand();
             this.BottomMargin = new DevExpress.XtraReports.UI.BottomMarginBand();
             this.ReportHeader = new DevExpress.XtraReports.UI.ReportHeaderBand();
-            this.xrRichText1 = new DevExpress.XtraReports.UI.XRRichText();
             this.xrLabel13 = new DevExpress.XtraReports.UI.XRLabel();
             this.PageHeader = new DevExpress.XtraReports.UI.PageHeaderBand();
             this.xrTable1 = new DevExpress.XtraReports.UI.XRTable();
@@ -83,7 +82,6 @@
             this.DepartmentID = new DevExpress.XtraReports.Parameters.Parameter();
             this.UserID = new DevExpress.XtraReports.Parameters.Parameter();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.xrRichText1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
@@ -272,7 +270,7 @@
             // 
             // BottomMargin
             // 
-            this.BottomMargin.HeightF = 14.2697F;
+            this.BottomMargin.HeightF = 14.70604F;
             this.BottomMargin.Name = "BottomMargin";
             this.BottomMargin.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 100F);
             this.BottomMargin.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft;
@@ -280,20 +278,9 @@
             // ReportHeader
             // 
             this.ReportHeader.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
-            this.xrRichText1,
             this.xrLabel13});
-            this.ReportHeader.HeightF = 66.66666F;
+            this.ReportHeader.HeightF = 32.58335F;
             this.ReportHeader.Name = "ReportHeader";
-            // 
-            // xrRichText1
-            // 
-            this.xrRichText1.Font = new DevExpress.Drawing.DXFont("Times New Roman", 10F);
-            this.xrRichText1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 32.58335F);
-            this.xrRichText1.Name = "xrRichText1";
-            this.xrRichText1.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrRichText1.SerializableRtfString = resources.GetString("xrRichText1.SerializableRtfString");
-            this.xrRichText1.SizeF = new System.Drawing.SizeF(1080F, 23F);
-            this.xrRichText1.StylePriority.UseFont = false;
             // 
             // xrLabel13
             // 
@@ -307,7 +294,7 @@
             this.xrLabel13.StylePriority.UseFont = false;
             this.xrLabel13.StylePriority.UseForeColor = false;
             this.xrLabel13.StylePriority.UseTextAlignment = false;
-            this.xrLabel13.Text = "DANH SÁCH NHÂN VIÊN THAY ĐỔI CÔNG VIỆC TRONG THÁNG";
+            this.xrLabel13.Text = "DANH SÁCH NHÂN VIÊN THAY ĐỔI CÔNG VIỆC THÁNG [?M] NĂM [?Y]";
             this.xrLabel13.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             // 
             // PageHeader
@@ -494,7 +481,7 @@
             this.DataMember = "RPT_HR_Danh_sach_nhan_vien_thay_doi_cong_viec";
             this.DataSource = this.sqlDataSource1;
             this.Landscape = true;
-            this.Margins = new DevExpress.Drawing.DXMargins(10F, 10F, 11.75F, 14.2697F);
+            this.Margins = new DevExpress.Drawing.DXMargins(10F, 10F, 11.75F, 14.70604F);
             this.PageHeight = 850;
             this.PageWidth = 1100;
             this.ParameterPanelLayoutItems.AddRange(new DevExpress.XtraReports.Parameters.ParameterPanelLayoutItem[] {
@@ -511,7 +498,6 @@
             this.UserID});
             this.Version = "23.1";
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.xrRichText1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
 
@@ -556,6 +542,5 @@
         private DevExpress.XtraReports.Parameters.Parameter DivisionID;
         private DevExpress.XtraReports.Parameters.Parameter DepartmentID;
         private DevExpress.XtraReports.Parameters.Parameter UserID;
-        private DevExpress.XtraReports.UI.XRRichText xrRichText1;
     }
 }
