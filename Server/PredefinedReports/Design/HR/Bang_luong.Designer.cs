@@ -2442,7 +2442,7 @@
             this.xrLabel10,
             this.xrLabel19});
             this.reportHeaderBand1.Dpi = 254F;
-            this.reportHeaderBand1.HeightF = 151.9318F;
+            this.reportHeaderBand1.HeightF = 131.654F;
             this.reportHeaderBand1.Name = "reportHeaderBand1";
             // 
             // xrLabel10
@@ -2473,7 +2473,7 @@
             this.xrLabel19.StylePriority.UseFont = false;
             this.xrLabel19.StylePriority.UseForeColor = false;
             this.xrLabel19.StylePriority.UseTextAlignment = false;
-            this.xrLabel19.Text = "BẢNG LƯƠNG THÁNG [?M]/[?Y]";
+            this.xrLabel19.Text = "BẢNG LƯƠNG THÁNG [?M] NĂM [?Y]";
             this.xrLabel19.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopCenter;
             // 
             // ReportFooter

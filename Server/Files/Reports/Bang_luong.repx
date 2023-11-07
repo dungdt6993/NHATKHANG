@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<XtraReportsLayoutSerializer SerializerVersion="23.1.4.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v23.1, Version=23.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="Bang_luong" SnapGridSize="25" ReportUnit="TenthsOfAMillimeter" Landscape="true" Margins="0, 3, 15, 30" PaperKind="A2" PageWidth="5940" PageHeight="4200" Version="23.1" DataMember="HR_BANG_LUONG_CHI_TIET" DataSource="#Ref-0" Dpi="254">
+<XtraReportsLayoutSerializer SerializerVersion="23.1.5.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v23.1, Version=23.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="Bang_luong" SnapGridSize="25" ReportUnit="TenthsOfAMillimeter" Landscape="true" Margins="0, 3, 15, 30" PaperKind="A2" PageWidth="5940" PageHeight="4200" Version="23.1" DataMember="HR_BANG_LUONG_CHI_TIET" DataSource="#Ref-0" Dpi="254">
   <Parameters>
     <Item1 Ref="3" Description="Tháng" ValueInfo="0" Name="M" Type="#Ref-2">
       <ExpressionBindings>
@@ -683,7 +683,7 @@
       </GroupFields>
     </Item6>
     <Item7 Ref="363" ControlType="PageFooterBand" Name="pageFooterBand1" HeightF="0" Dpi="254" />
-    <Item8 Ref="364" ControlType="ReportHeaderBand" Name="reportHeaderBand1" HeightF="151.9318" Dpi="254">
+    <Item8 Ref="364" ControlType="ReportHeaderBand" Name="reportHeaderBand1" HeightF="131.654" Dpi="254">
       <Controls>
         <Item1 Ref="365" ControlType="XRLabel" Name="xrLabel10" Multiline="true" TextAlignment="MiddleLeft" SizeF="5937,58.42001" LocationFloat="0,0" Dpi="254" Font="Arial, 11pt, style=Bold" Padding="5,5,0,0,254">
           <ExpressionBindings>
@@ -691,7 +691,7 @@
           </ExpressionBindings>
           <StylePriority Ref="367" UseFont="false" UseTextAlignment="false" />
         </Item1>
-        <Item2 Ref="368" ControlType="XRLabel" Name="xrLabel19" Text="BẢNG LƯƠNG THÁNG [?M]/[?Y]" TextAlignment="TopCenter" SizeF="5937,73.23399" LocationFloat="0,58.42001" Dpi="254" StyleName="Title" Font="Tahoma, 16pt, style=Bold" ForeColor="Black" Padding="5,5,0,0,254">
+        <Item2 Ref="368" ControlType="XRLabel" Name="xrLabel19" Text="BẢNG LƯƠNG THÁNG [?M] NĂM [?Y]" TextAlignment="TopCenter" SizeF="5937,73.23399" LocationFloat="0,58.42001" Dpi="254" StyleName="Title" Font="Tahoma, 16pt, style=Bold" ForeColor="Black" Padding="5,5,0,0,254">
           <StylePriority Ref="369" UseFont="false" UseForeColor="false" UseTextAlignment="false" />
         </Item2>
       </Controls>
