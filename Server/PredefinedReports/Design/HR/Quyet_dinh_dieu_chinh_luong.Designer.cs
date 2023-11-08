@@ -307,7 +307,7 @@
             this.xrRichText2.LocationFloat = new DevExpress.Utils.PointFloat(963.1893F, 0F);
             this.xrRichText2.Name = "xrRichText2";
             this.xrRichText2.SerializableRtfString = resources.GetString("xrRichText2.SerializableRtfString");
-            this.xrRichText2.SizeF = new System.Drawing.SizeF(969.751F, 121.9201F);
+            this.xrRichText2.SizeF = new System.Drawing.SizeF(978.8107F, 121.9201F);
             this.xrRichText2.StylePriority.UseFont = false;
             // 
             // xrRichText13
@@ -318,7 +318,7 @@
             this.xrRichText13.LocationFloat = new DevExpress.Utils.PointFloat(963.1893F, 121.9201F);
             this.xrRichText13.Name = "xrRichText13";
             this.xrRichText13.SerializableRtfString = resources.GetString("xrRichText13.SerializableRtfString");
-            this.xrRichText13.SizeF = new System.Drawing.SizeF(969.7498F, 61.06588F);
+            this.xrRichText13.SizeF = new System.Drawing.SizeF(978.8107F, 61.06588F);
             this.xrRichText13.StylePriority.UseFont = false;
             // 
             // xrRichText14
@@ -351,7 +351,7 @@
             this.xrRichText55.LocationFloat = new DevExpress.Utils.PointFloat(963.1893F, 182.986F);
             this.xrRichText55.Name = "xrRichText55";
             this.xrRichText55.SerializableRtfString = resources.GetString("xrRichText55.SerializableRtfString");
-            this.xrRichText55.SizeF = new System.Drawing.SizeF(969.7506F, 58.42F);
+            this.xrRichText55.SizeF = new System.Drawing.SizeF(978.8107F, 58.42F);
             this.xrRichText55.StylePriority.UseFont = false;
             // 
             // xrRichText56
@@ -361,7 +361,7 @@
             this.xrRichText56.LocationFloat = new DevExpress.Utils.PointFloat(0.0002422333F, 314.8543F);
             this.xrRichText56.Name = "xrRichText56";
             this.xrRichText56.SerializableRtfString = resources.GetString("xrRichText56.SerializableRtfString");
-            this.xrRichText56.SizeF = new System.Drawing.SizeF(1933F, 58.41986F);
+            this.xrRichText56.SizeF = new System.Drawing.SizeF(1942F, 58.41986F);
             this.xrRichText56.StylePriority.UseFont = false;
             // 
             // xrRichText63
@@ -371,7 +371,7 @@
             this.xrRichText63.LocationFloat = new DevExpress.Utils.PointFloat(0F, 373.2742F);
             this.xrRichText63.Name = "xrRichText63";
             this.xrRichText63.SerializableRtfString = resources.GetString("xrRichText63.SerializableRtfString");
-            this.xrRichText63.SizeF = new System.Drawing.SizeF(1932.94F, 351.4725F);
+            this.xrRichText63.SizeF = new System.Drawing.SizeF(1942F, 351.4725F);
             this.xrRichText63.StylePriority.UseFont = false;
             // 
             // xrRichText64
@@ -381,7 +381,7 @@
             this.xrRichText64.LocationFloat = new DevExpress.Utils.PointFloat(0F, 786.4828F);
             this.xrRichText64.Name = "xrRichText64";
             this.xrRichText64.SerializableRtfString = resources.GetString("xrRichText64.SerializableRtfString");
-            this.xrRichText64.SizeF = new System.Drawing.SizeF(1932.939F, 58.41992F);
+            this.xrRichText64.SizeF = new System.Drawing.SizeF(1942F, 58.41992F);
             this.xrRichText64.StylePriority.UseFont = false;
             // 
             // xrRichText42
@@ -483,7 +483,7 @@
             this.table2.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 5, 5, 254F);
             this.table2.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.tableRow2});
-            this.table2.SizeF = new System.Drawing.SizeF(1040.253F, 63.5F);
+            this.table2.SizeF = new System.Drawing.SizeF(1044.253F, 63.5F);
             this.table2.StylePriority.UseFont = false;
             this.table2.StylePriority.UsePadding = false;
             this.table2.StylePriority.UseTextAlignment = false;
@@ -519,7 +519,7 @@
             this.table1.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 5, 5, 254F);
             this.table1.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.tableRow1});
-            this.table1.SizeF = new System.Drawing.SizeF(1040.253F, 63.5F);
+            this.table1.SizeF = new System.Drawing.SizeF(1044.253F, 63.5F);
             this.table1.StylePriority.UseFont = false;
             this.table1.StylePriority.UsePadding = false;
             this.table1.StylePriority.UseTextAlignment = false;
@@ -543,7 +543,7 @@
             this.tableCell1.StylePriority.UseTextAlignment = false;
             this.tableCell1.Text = "[AgreementText_Signature_Position]";
             this.tableCell1.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
-            this.tableCell1.Weight = 9.2957963025412624D;
+            this.tableCell1.Weight = 9.33153848629724D;
             // 
             // xrRichText57
             // 
@@ -752,7 +752,7 @@
             this.xrRichText49.LocationFloat = new DevExpress.Utils.PointFloat(0F, 1961.515F);
             this.xrRichText49.Name = "xrRichText49";
             this.xrRichText49.SerializableRtfString = resources.GetString("xrRichText49.SerializableRtfString");
-            this.xrRichText49.SizeF = new System.Drawing.SizeF(874.3917F, 451.6731F);
+            this.xrRichText49.SizeF = new System.Drawing.SizeF(897.7472F, 451.6731F);
             this.xrRichText49.StylePriority.UseFont = false;
             // 
             // xrRichText46

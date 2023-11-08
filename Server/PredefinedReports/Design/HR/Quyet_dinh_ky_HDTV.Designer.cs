@@ -535,7 +535,7 @@
             this.xrRichText44.LocationFloat = new DevExpress.Utils.PointFloat(0F, 2023.18F);
             this.xrRichText44.Name = "xrRichText44";
             this.xrRichText44.SerializableRtfString = resources.GetString("xrRichText44.SerializableRtfString");
-            this.xrRichText44.SizeF = new System.Drawing.SizeF(851.1098F, 391.7964F);
+            this.xrRichText44.SizeF = new System.Drawing.SizeF(868.9346F, 391.7964F);
             this.xrRichText44.StylePriority.UseFont = false;
             // 
             // xrRichText41

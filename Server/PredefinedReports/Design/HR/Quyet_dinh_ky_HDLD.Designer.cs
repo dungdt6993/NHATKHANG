@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Quyet_dinh_ky_HDLD));
             DevExpress.DataAccess.Sql.StoredProcQuery storedProcQuery1 = new DevExpress.DataAccess.Sql.StoredProcQuery();
             this.Detail = new DevExpress.XtraReports.UI.DetailBand();
+            this.xrRichText3 = new DevExpress.XtraReports.UI.XRRichText();
             this.xrRichText29 = new DevExpress.XtraReports.UI.XRRichText();
             this.xrRichText13 = new DevExpress.XtraReports.UI.XRRichText();
             this.xrRichText14 = new DevExpress.XtraReports.UI.XRRichText();
@@ -100,7 +101,6 @@
             this.xrLabel3 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrRichText5 = new DevExpress.XtraReports.UI.XRRichText();
             this.xrRichText4 = new DevExpress.XtraReports.UI.XRRichText();
-            this.xrRichText3 = new DevExpress.XtraReports.UI.XRRichText();
             this.xrRichText2 = new DevExpress.XtraReports.UI.XRRichText();
             this.xrRichText1 = new DevExpress.XtraReports.UI.XRRichText();
             this.TopMargin = new DevExpress.XtraReports.UI.TopMarginBand();
@@ -114,6 +114,7 @@
             this.DetailData3_Odd = new DevExpress.XtraReports.UI.XRControlStyle();
             this.DetailCaptionBackground3 = new DevExpress.XtraReports.UI.XRControlStyle();
             this.PageInfo = new DevExpress.XtraReports.UI.XRControlStyle();
+            ((System.ComponentModel.ISupportInitialize)(this.xrRichText3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText29)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText13)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText14)).BeginInit();
@@ -163,7 +164,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.xrRichText3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
@@ -171,6 +171,7 @@
             // Detail
             // 
             this.Detail.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
+            this.xrRichText3,
             this.xrRichText29,
             this.xrRichText13,
             this.xrRichText14,
@@ -235,7 +236,6 @@
             this.xrLabel3,
             this.xrRichText5,
             this.xrRichText4,
-            this.xrRichText3,
             this.xrRichText2,
             this.xrRichText1});
             this.Detail.Dpi = 254F;
@@ -245,6 +245,16 @@
             this.Detail.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 0, 0, 0, 254F);
             this.Detail.PageBreak = DevExpress.XtraReports.UI.PageBreak.BeforeBandExceptFirstEntry;
             this.Detail.TextAlignment = DevExpress.XtraPrinting.TextAlignment.TopLeft;
+            // 
+            // xrRichText3
+            // 
+            this.xrRichText3.Dpi = 254F;
+            this.xrRichText3.Font = new DevExpress.Drawing.DXFont("Times New Roman", 12F);
+            this.xrRichText3.LocationFloat = new DevExpress.Utils.PointFloat(0.0600338F, 887.0248F);
+            this.xrRichText3.Name = "xrRichText3";
+            this.xrRichText3.SerializableRtfString = resources.GetString("xrRichText3.SerializableRtfString");
+            this.xrRichText3.SizeF = new System.Drawing.SizeF(1932.94F, 74.29504F);
+            this.xrRichText3.StylePriority.UseFont = false;
             // 
             // xrRichText29
             // 
@@ -535,7 +545,7 @@
             this.xrRichText44.LocationFloat = new DevExpress.Utils.PointFloat(0F, 2023.18F);
             this.xrRichText44.Name = "xrRichText44";
             this.xrRichText44.SerializableRtfString = resources.GetString("xrRichText44.SerializableRtfString");
-            this.xrRichText44.SizeF = new System.Drawing.SizeF(851.1098F, 391.7964F);
+            this.xrRichText44.SizeF = new System.Drawing.SizeF(868.9346F, 391.7964F);
             this.xrRichText44.StylePriority.UseFont = false;
             // 
             // xrRichText41
@@ -1001,16 +1011,6 @@
             this.xrRichText4.SizeF = new System.Drawing.SizeF(386.3978F, 58.42004F);
             this.xrRichText4.StylePriority.UseFont = false;
             // 
-            // xrRichText3
-            // 
-            this.xrRichText3.Dpi = 254F;
-            this.xrRichText3.Font = new DevExpress.Drawing.DXFont("Times New Roman", 12F, DevExpress.Drawing.DXFontStyle.Bold);
-            this.xrRichText3.LocationFloat = new DevExpress.Utils.PointFloat(0F, 902.8995F);
-            this.xrRichText3.Name = "xrRichText3";
-            this.xrRichText3.SerializableRtfString = resources.GetString("xrRichText3.SerializableRtfString");
-            this.xrRichText3.SizeF = new System.Drawing.SizeF(1932.939F, 58.41998F);
-            this.xrRichText3.StylePriority.UseFont = false;
-            // 
             // xrRichText2
             // 
             this.xrRichText2.Dpi = 254F;
@@ -1151,6 +1151,7 @@
             this.DetailCaptionBackground3,
             this.PageInfo});
             this.Version = "23.1";
+            ((System.ComponentModel.ISupportInitialize)(this.xrRichText3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText29)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText13)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText14)).EndInit();
@@ -1200,7 +1201,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.xrRichText3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrRichText1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
@@ -1271,7 +1271,6 @@
         private DevExpress.XtraReports.UI.XRLabel xrLabel3;
         private DevExpress.XtraReports.UI.XRRichText xrRichText5;
         private DevExpress.XtraReports.UI.XRRichText xrRichText4;
-        private DevExpress.XtraReports.UI.XRRichText xrRichText3;
         private DevExpress.XtraReports.UI.XRRichText xrRichText2;
         private DevExpress.XtraReports.UI.XRRichText xrRichText1;
         private DevExpress.XtraReports.UI.TopMarginBand TopMargin;
@@ -1292,5 +1291,6 @@
         private DevExpress.XtraReports.UI.XRRichText xrRichText45;
         private DevExpress.XtraReports.UI.XRRichText xrRichText49;
         private DevExpress.XtraReports.UI.XRRichText xrRichText50;
+        private DevExpress.XtraReports.UI.XRRichText xrRichText3;
     }
 }
