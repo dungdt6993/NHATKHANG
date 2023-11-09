@@ -118,9 +118,6 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public string SectionID { get; set; }
         public string SectionName { get; set; }
         public string WorkingLocation { get; set; }
-        public string AgreementText_Signature_Name { get; set; }
-        public string AgreementText_Signature_Position { get; set; }
-        public string TimeAttMachine_SerialLog { get; set; }
 
         public int SalaryID { get; set; }
         public decimal BasicSalary { get; set; }
@@ -135,8 +132,6 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public decimal Benefit8 { get; set; }
         public DateTimeOffset? BeginSalaryDate { get; set; }
         public string Reason { get; set; }
-        public string ApprovedBy { get; set; }
-
         public string CountryCode { get; set; }
         public string CountryName { get; set; }
 

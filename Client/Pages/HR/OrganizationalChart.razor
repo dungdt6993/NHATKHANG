@@ -400,23 +400,6 @@
                         <InputText class="form-control form-control-sm" placeholder="Địa điểm làm việc" @bind-Value="@sectionVM.WorkingLocation" />
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group col-md-7">
-                            <label>Người ký văn bản:</label>
-                            <InputText class="form-control form-control-sm" placeholder="Người ký văn bản" @bind-Value="@sectionVM.AgreementText_Signature_Name" />
-                        </div>
-
-                        <div class="form-group col-md-5">
-                            <label>Chức danh:</label>
-                            <InputText class="form-control form-control-sm" placeholder="Chức danh" @bind-Value="@sectionVM.AgreementText_Signature_Position" />
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Mã máy chấm công:</label>
-                        <InputText class="form-control form-control-sm" placeholder="Mã máy chấm công" @bind-Value="@sectionVM.TimeAttMachine_SerialLog" />
-                    </div>
-
                     <div class="form-row align-items-center">
                         <div class="icheck-success d-inline">
                             <input type="radio" id="Section_isActive1" name="Section_isActive" checked="@(sectionVM.isActive == true)" @onchange="(() => sectionVM.isActive = true)">

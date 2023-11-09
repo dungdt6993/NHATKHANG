@@ -15,7 +15,5 @@ namespace D69soft.Shared.Models.Entities.HR
         public decimal Benefit7 { get; set; }
         public decimal Benefit8 { get; set; }
         public DateTimeOffset? BeginSalaryDate { get; set; }
-        public string Reason { get; set; }
-        public string ApprovedBy { get; set; }
     }
 }

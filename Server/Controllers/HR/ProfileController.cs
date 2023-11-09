@@ -230,7 +230,6 @@ namespace D69soft.Server.Controllers.HR
                 parm.Add("@ispaybymonth", _profileVM.IsPayByMonth);
                 parm.Add("@ispaybydate", _profileVM.IsPayByDate);
                 parm.Add("@reason", _profileVM.Reason);
-                parm.Add("@approvedby", _profileVM.ApprovedBy);
                 parm.Add("@imageurl", _profileVM.UrlAvatar == null ? UrlDirectory.Default_Avatar : _profileVM.UrlAvatar);
                 parm.Add("@pass", _profileVM.User_Password);
                 parm.Add("@passreset", _profileVM.User_PassReset);

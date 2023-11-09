@@ -67,7 +67,7 @@ namespace D69soft.Client.Pages.HR
         bool disabled_JoinDate; bool disabled_StartContractDate; bool disabled_ContractTypeID;
         bool disabled_EndContractDate; bool disabled_JobStartDate;
         bool disabled_BasicSalary; bool disabled_Benefit4; bool disabled_OtherSalary; bool disabled_Benefit5; bool disabled_Benefit1; bool disabled_Benefit6; bool disabled_Benefit2; bool disabled_Benefit7;
-        bool disabled_Benefit3; bool disabled_Benefit8; bool disabled_Reason; bool disabled_ApprovedBy; bool disabled_BeginSalaryDate; bool disabled_SalaryByBank; bool disabled_IsPayBy;
+        bool disabled_Benefit3; bool disabled_Benefit8; bool disabled_Reason; bool disabled_BeginSalaryDate; bool disabled_SalaryByBank; bool disabled_IsPayBy;
 
         IEnumerable<DivisionVM> division_filter_list;
         IEnumerable<DepartmentVM> department_filter_list;
@@ -286,7 +286,6 @@ namespace D69soft.Client.Pages.HR
             disabled_Benefit3 = false;
             disabled_Benefit8 = false;
             disabled_Reason = false;
-            disabled_ApprovedBy = false;
             disabled_BeginSalaryDate = false;
             disabled_SalaryByBank = false;
             disabled_IsPayBy = false;
@@ -632,13 +631,11 @@ namespace D69soft.Client.Pages.HR
             disabled_Benefit3 = false;
             disabled_Benefit8 = false;
             disabled_Reason = false;
-            disabled_ApprovedBy = false;
             disabled_BeginSalaryDate = false;
             disabled_SalaryByBank = false;
             disabled_IsPayBy = false;
 
             profileVM.Reason = string.Empty;
-            profileVM.ApprovedBy = string.Empty;
 
             if (profileVM.ckContractExtension != 0)
             {
@@ -738,7 +735,6 @@ namespace D69soft.Client.Pages.HR
                     disabled_Benefit3 = true;
                     disabled_Benefit8 = true;
                     disabled_Reason = true;
-                    disabled_ApprovedBy = true;
                     disabled_BeginSalaryDate = true;
                     disabled_SalaryByBank = true;
                     disabled_IsPayBy = true;
@@ -767,7 +763,6 @@ namespace D69soft.Client.Pages.HR
                     disabled_Benefit3 = true;
                     disabled_Benefit8 = true;
                     disabled_Reason = true;
-                    disabled_ApprovedBy = true;
                     disabled_BeginSalaryDate = true;
                     disabled_SalaryByBank = true;
                     disabled_IsPayBy = true;
