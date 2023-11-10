@@ -83,10 +83,11 @@ namespace D69soft.Client.Pages.HR
                 navigationManager.NavigateTo("/");
             }
 
-            filterVM.UserID = String.Empty;
+
 
             filterVM.searchValues = string.Empty;
 
+            filterVM.UserID = String.Empty;
             divisionVMs = await organizationalChartService.GetDivisionList(filterVM);
 
             departmentGroupVMs = await organizationalChartService.GetDepartmentGroupList();
@@ -97,6 +98,8 @@ namespace D69soft.Client.Pages.HR
             positionGroups = await organizationalChartService.GetPositionGroupList();
 
             shiftVMs = await dutyRosterService.GetShiftList();
+
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
             isLoadingScreen = false;
         }

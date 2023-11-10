@@ -100,7 +100,6 @@ namespace D69soft.Shared.Models.ViewModels.HR
         public string JobDesc { get; set; }
         public string SectionID { get; set; }
         public string SectionName { get; set; }
-        public string WorkingLocation { get; set; }
         public string ContractTypeID { get; set; }
         public string ContractTypeName { get; set; }
         public int NumMonth { get; set; }

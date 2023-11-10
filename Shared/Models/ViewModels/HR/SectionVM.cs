@@ -13,7 +13,6 @@ namespace D69soft.Shared.Models.ViewModels.HR
 
         public string SectionID { get; set; }
         public string SectionName { get; set; }
-        public string WorkingLocation { get; set; }
         public string DivisionID { get; set; }
         public string DivisionName { get; set; }
         public string DivisionShortName { get; set; }
