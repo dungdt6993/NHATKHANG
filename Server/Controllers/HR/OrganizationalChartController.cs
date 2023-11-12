@@ -229,11 +229,11 @@ namespace D69soft.Server.Controllers.HR
             var sql = "";
             if (_sectionVM.IsTypeUpdate == 0)
             {
-                sql = "Insert into HR.Section (SectionID,SectionName,WorkingLocation,isActive) Values (@SectionID,@SectionName,@WorkingLocation,@isActive)";
+                sql = "Insert into HR.Section (SectionID,SectionName,isActive) Values (@SectionID,@SectionName,@isActive)";
             }
             if (_sectionVM.IsTypeUpdate == 1)
             {
-                sql = "Update HR.Section set SectionName = @SectionName, WorkingLocation = @WorkingLocation, isActive = @isActive where SectionID = @SectionID";
+                sql = "Update HR.Section set SectionName = @SectionName, isActive = @isActive where SectionID = @SectionID";
             }
             if (_sectionVM.IsTypeUpdate == 2)
             {

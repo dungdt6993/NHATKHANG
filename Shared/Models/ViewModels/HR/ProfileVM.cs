@@ -117,7 +117,6 @@ namespace D69soft.Shared.Models.ViewModels.HR
 
         public string SectionID { get; set; }
         public string SectionName { get; set; }
-        public string WorkingLocation { get; set; }
 
         public int SalaryID { get; set; }
         public decimal BasicSalary { get; set; }

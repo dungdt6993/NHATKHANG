@@ -213,7 +213,7 @@
                                 <InputSelect class="selectpicker form-control form-control-sm"
                                              data-style="btn-selectpicker" data-container="body"
                                              data-live-search="true" data-show-subtext="true"
-                                @bind-Value="departmentVM.DepartmentGroupID">
+                                             @bind-Value="departmentVM.DepartmentGroupID">
                                     <option value=@String.Empty>-----Chọn-----</option>
                                     @if (departmentGroupVMs != null)
                                     {
@@ -247,20 +247,20 @@
                     </div>
 
                     <div class="form-group">
-                            <label>Ca làm việc ngầm định:</label>
-                            <InputSelect class="selectpicker form-control form-control-sm"
-                                         data-style="btn-selectpicker" data-container="body"
-                                         data-live-search="true" data-show-subtext="true"
-                            @bind-Value="departmentVM.ShiftID">
-                                <option value=@String.Empty>-----Chọn-----</option>
-                                @if (shiftVMs != null)
+                        <label>Ca làm việc ngầm định:</label>
+                        <InputSelect class="selectpicker form-control form-control-sm"
+                                     data-style="btn-selectpicker" data-container="body"
+                                     data-live-search="true" data-show-subtext="true"
+                                     @bind-Value="departmentVM.ShiftID">
+                            <option value=@String.Empty>-----Chọn-----</option>
+                            @if (shiftVMs != null)
+                            {
+                                @foreach (var _shiftVM in shiftVMs.Where(x => x.isOFF == 0))
                                 {
-                                    @foreach (var _shiftVM in shiftVMs.Where(x => x.isOFF == 0))
-                                    {
-                                        <option data-subtext="@_shiftVM.ShiftID" value="@_shiftVM.ShiftID">@_shiftVM.ShiftName</option>
-                                    }
+                                    <option data-subtext="@_shiftVM.ShiftID" value="@_shiftVM.ShiftID">@_shiftVM.ShiftName</option>
                                 }
-                            </InputSelect>
+                            }
+                        </InputSelect>
                     </div>
 
                     <div class="form-row align-items-center">
@@ -395,11 +395,6 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Địa điểm làm việc:</label>
-                        <InputText class="form-control form-control-sm" placeholder="Địa điểm làm việc" @bind-Value="@sectionVM.WorkingLocation" />
-                    </div>
-
                     <div class="form-row align-items-center">
                         <div class="icheck-success d-inline">
                             <input type="radio" id="Section_isActive1" name="Section_isActive" checked="@(sectionVM.isActive == true)" @onchange="(() => sectionVM.isActive = true)">
@@ -471,7 +466,7 @@
                                 <InputSelect class="selectpicker form-control form-control-sm"
                                              data-style="btn-selectpicker" data-container="body"
                                              data-live-search="true" data-show-subtext="true"
-                                @bind-Value="positionVM.PositionGroupID">
+                                             @bind-Value="positionVM.PositionGroupID">
                                     <option value=@String.Empty>-----Chọn-----</option>
                                     @if (positionGroups != null)
                                     {
@@ -658,16 +653,20 @@
             <div class="card card-primary card-outline">
                 <div class="card-header">
                     <h3 class="card-title">CÔNG TY</h3>
-                    <div class="text-right">
-                        @if (String.IsNullOrEmpty(filterVM.DivisionID))
-                        {
-                            <button type="button" class="btn btn-sm btn-success" title="Thêm mới" @onclick="(() => InitializeModalUpdate_Division(0))"><i class="fa-solid fa-plus"></i></button>
-                        }
-                        else
-                        {
-                            <button type="button" class="btn btn-sm btn-secondary" title="Cập nhật" @onclick="(() => InitializeModalUpdate_Division(1))"><i class="fa-regular fa-pen-to-square"></i></button>
-                        }
-                    </div>
+                    @if (filterVM.UserID == "ADMIN")
+                    {
+                        <div class="text-right">
+                            @if (String.IsNullOrEmpty(filterVM.DivisionID))
+                            {
+                                <button type="button" class="btn btn-sm btn-success" title="Thêm mới" @onclick="(() => InitializeModalUpdate_Division(0))"><i class="fa-solid fa-plus"></i></button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-sm btn-secondary" title="Cập nhật" @onclick="(() => InitializeModalUpdate_Division(1))"><i class="fa-regular fa-pen-to-square"></i></button>
+                            }
+                        </div>
+                    }
+
                 </div>
 
                 <div class="card-body table-responsive p-0">

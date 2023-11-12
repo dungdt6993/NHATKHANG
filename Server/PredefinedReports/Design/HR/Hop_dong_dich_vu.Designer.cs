@@ -254,7 +254,7 @@
             this.xrTableCell6.Font = new DevExpress.Drawing.DXFont("Times New Roman", 12F);
             this.xrTableCell6.Name = "xrTableCell6";
             this.xrTableCell6.StylePriority.UseFont = false;
-            this.xrTableCell6.Text = "[WorkingLocation]";
+            this.xrTableCell6.Text = "[DivisionAddress]";
             this.xrTableCell6.Weight = 24.989721098493337D;
             // 
             // xrTableRow3
