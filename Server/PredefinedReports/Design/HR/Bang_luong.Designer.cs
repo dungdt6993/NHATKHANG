@@ -31,10 +31,11 @@
             this.components = new System.ComponentModel.Container();
             DevExpress.DataAccess.Sql.StoredProcQuery storedProcQuery1 = new DevExpress.DataAccess.Sql.StoredProcQuery();
             DevExpress.DataAccess.Sql.QueryParameter queryParameter1 = new DevExpress.DataAccess.Sql.QueryParameter();
+            DevExpress.DataAccess.Sql.StoredProcQuery storedProcQuery2 = new DevExpress.DataAccess.Sql.StoredProcQuery();
             DevExpress.DataAccess.Sql.QueryParameter queryParameter2 = new DevExpress.DataAccess.Sql.QueryParameter();
             DevExpress.DataAccess.Sql.QueryParameter queryParameter3 = new DevExpress.DataAccess.Sql.QueryParameter();
-            DevExpress.DataAccess.Sql.StoredProcQuery storedProcQuery2 = new DevExpress.DataAccess.Sql.StoredProcQuery();
             DevExpress.DataAccess.Sql.QueryParameter queryParameter4 = new DevExpress.DataAccess.Sql.QueryParameter();
+            DevExpress.DataAccess.Sql.QueryParameter queryParameter5 = new DevExpress.DataAccess.Sql.QueryParameter();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Bang_luong));
             DevExpress.XtraReports.UI.XRSummary xrSummary1 = new DevExpress.XtraReports.UI.XRSummary();
             DevExpress.XtraReports.UI.XRSummary xrSummary2 = new DevExpress.XtraReports.UI.XRSummary();
@@ -314,6 +315,7 @@
             this.Y = new DevExpress.XtraReports.Parameters.Parameter();
             this.DivisionID = new DevExpress.XtraReports.Parameters.Parameter();
             this.UserID = new DevExpress.XtraReports.Parameters.Parameter();
+            this.Eserial = new DevExpress.XtraReports.Parameters.Parameter();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable5)).BeginInit();
@@ -333,28 +335,32 @@
             // 
             this.sqlDataSource1.ConnectionName = "D69softDB";
             this.sqlDataSource1.Name = "sqlDataSource1";
-            storedProcQuery1.Name = "HR_BANG_LUONG_CHI_TIET";
-            queryParameter1.Name = "@Y";
+            storedProcQuery1.Name = "HR_Profile_viewDivisionMain";
+            queryParameter1.Name = "@UserID";
             queryParameter1.Type = typeof(global::DevExpress.DataAccess.Expression);
-            queryParameter1.Value = new DevExpress.DataAccess.Expression("?Y", typeof(int));
-            queryParameter2.Name = "@M";
-            queryParameter2.Type = typeof(global::DevExpress.DataAccess.Expression);
-            queryParameter2.Value = new DevExpress.DataAccess.Expression("?M", typeof(int));
-            queryParameter3.Name = "@DivisionID";
-            queryParameter3.Type = typeof(global::DevExpress.DataAccess.Expression);
-            queryParameter3.Value = new DevExpress.DataAccess.Expression("?DivisionID", typeof(string));
+            queryParameter1.Value = new DevExpress.DataAccess.Expression("?UserID", typeof(string));
             storedProcQuery1.Parameters.AddRange(new DevExpress.DataAccess.Sql.QueryParameter[] {
-            queryParameter1,
-            queryParameter2,
-            queryParameter3});
-            storedProcQuery1.StoredProcName = "RPT.HR_BANG_LUONG_CHI_TIET";
-            storedProcQuery2.Name = "HR_Profile_viewDivisionMain";
-            queryParameter4.Name = "@UserID";
+            queryParameter1});
+            storedProcQuery1.StoredProcName = "HR.Profile_viewDivisionMain";
+            storedProcQuery2.Name = "RPT_HR_Bang_luong";
+            queryParameter2.Name = "@Y";
+            queryParameter2.Type = typeof(global::DevExpress.DataAccess.Expression);
+            queryParameter2.Value = new DevExpress.DataAccess.Expression("?Y", typeof(int));
+            queryParameter3.Name = "@M";
+            queryParameter3.Type = typeof(global::DevExpress.DataAccess.Expression);
+            queryParameter3.Value = new DevExpress.DataAccess.Expression("?M", typeof(int));
+            queryParameter4.Name = "@DivisionID";
             queryParameter4.Type = typeof(global::DevExpress.DataAccess.Expression);
-            queryParameter4.Value = new DevExpress.DataAccess.Expression("?UserID", typeof(string));
+            queryParameter4.Value = new DevExpress.DataAccess.Expression("?DivisionID", typeof(string));
+            queryParameter5.Name = "@Eserial";
+            queryParameter5.Type = typeof(global::DevExpress.DataAccess.Expression);
+            queryParameter5.Value = new DevExpress.DataAccess.Expression("?Eserial", typeof(string));
             storedProcQuery2.Parameters.AddRange(new DevExpress.DataAccess.Sql.QueryParameter[] {
-            queryParameter4});
-            storedProcQuery2.StoredProcName = "HR.Profile_viewDivisionMain";
+            queryParameter2,
+            queryParameter3,
+            queryParameter4,
+            queryParameter5});
+            storedProcQuery2.StoredProcName = "RPT.HR_Bang_luong";
             this.sqlDataSource1.Queries.AddRange(new DevExpress.DataAccess.Sql.SqlQuery[] {
             storedProcQuery1,
             storedProcQuery2});
@@ -3224,6 +3230,11 @@
             this.UserID.Name = "UserID";
             this.UserID.Visible = false;
             // 
+            // Eserial
+            // 
+            this.Eserial.Description = "Mã NV";
+            this.Eserial.Name = "Eserial";
+            // 
             // Bang_luong
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -3238,7 +3249,7 @@
             this.ReportFooter});
             this.ComponentStorage.AddRange(new System.ComponentModel.IComponent[] {
             this.sqlDataSource1});
-            this.DataMember = "HR_BANG_LUONG_CHI_TIET";
+            this.DataMember = "RPT_HR_Bang_luong";
             this.DataSource = this.sqlDataSource1;
             this.Dpi = 254F;
             this.ExportOptions.Csv.EncodingType = DevExpress.XtraPrinting.EncodingType.UTF8;
@@ -3251,11 +3262,13 @@
             new DevExpress.XtraReports.Parameters.ParameterLayoutItem(this.M, DevExpress.XtraReports.Parameters.Orientation.Horizontal),
             new DevExpress.XtraReports.Parameters.ParameterLayoutItem(this.Y, DevExpress.XtraReports.Parameters.Orientation.Horizontal),
             new DevExpress.XtraReports.Parameters.ParameterLayoutItem(this.DivisionID, DevExpress.XtraReports.Parameters.Orientation.Horizontal),
+            new DevExpress.XtraReports.Parameters.ParameterLayoutItem(this.Eserial, DevExpress.XtraReports.Parameters.Orientation.Horizontal),
             new DevExpress.XtraReports.Parameters.ParameterLayoutItem(this.UserID, DevExpress.XtraReports.Parameters.Orientation.Horizontal)});
             this.Parameters.AddRange(new DevExpress.XtraReports.Parameters.Parameter[] {
             this.M,
             this.Y,
             this.DivisionID,
+            this.Eserial,
             this.UserID});
             this.ReportUnit = DevExpress.XtraReports.UI.ReportUnit.TenthsOfAMillimeter;
             this.SnapGridSize = 25F;
@@ -3491,5 +3504,6 @@
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell89;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell90;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell91;
+        private DevExpress.XtraReports.Parameters.Parameter Eserial;
     }
 }
