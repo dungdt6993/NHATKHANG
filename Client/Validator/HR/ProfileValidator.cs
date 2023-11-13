@@ -72,7 +72,7 @@ namespace D69soft.Client.Validator.HR
                 .Must((x, BeginSalaryDate) => BeginSalaryDate > x.Old_BeginSalaryDate).WithMessage("Ngày tính lương mới phải lớn hơn ngày tính lương hiện tại.")
                 .When(x => x.ckContractExtension == 0);
 
-                RuleFor(x => x.Reason).NotEmpty().WithMessage("Ghi chú điều chỉnh lương không được trống.");
+                RuleFor(x => x.Reason).NotEmpty().WithMessage("Lý do điều chỉnh lương không được trống.");
             });
 
             When(x => x.IsTypeUpdate == 4, () =>

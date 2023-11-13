@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<XtraReportsLayoutSerializer SerializerVersion="23.1.5.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v23.1, Version=23.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="Bang_luong" SnapGridSize="25" ReportUnit="TenthsOfAMillimeter" Landscape="true" Margins="0, 3, 15, 30" PaperKind="A2" PageWidth="5940" PageHeight="4200" Version="23.1" DataMember="HR_BANG_LUONG_CHI_TIET" DataSource="#Ref-0" Dpi="254">
+<XtraReportsLayoutSerializer SerializerVersion="23.1.5.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v23.1, Version=23.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="Bang_luong" SnapGridSize="25" ReportUnit="TenthsOfAMillimeter" Landscape="true" Margins="0, 3, 15, 30" PaperKind="A2" PageWidth="5940" PageHeight="4200" Version="23.1" DataMember="RPT_HR_Bang_luong" DataSource="#Ref-0" Dpi="254">
   <Parameters>
     <Item1 Ref="3" Description="Tháng" ValueInfo="0" Name="M" Type="#Ref-2">
       <ExpressionBindings>
@@ -12,972 +12,974 @@
       </ExpressionBindings>
     </Item2>
     <Item3 Ref="9" Description="Công ty" ValueSourceSettings="#Ref-7" Name="DivisionID" />
-    <Item4 Ref="10" Visible="false" Description="UserID" Name="UserID" />
+    <Item4 Ref="10" Description="Mã NV" Name="Eserial" />
+    <Item5 Ref="11" Visible="false" Description="UserID" Name="UserID" />
   </Parameters>
   <Bands>
-    <Item1 Ref="11" ControlType="DetailBand" Name="Detail" HeightF="89.22921" TextAlignment="TopLeft" Dpi="254" StyleName="DataField" Padding="0,0,0,0,254">
+    <Item1 Ref="12" ControlType="DetailBand" Name="Detail" HeightF="89.22921" TextAlignment="TopLeft" Dpi="254" StyleName="DataField" Padding="0,0,0,0,254">
       <Controls>
-        <Item1 Ref="12" ControlType="XRTable" Name="xrTable1" TextAlignment="MiddleRight" SizeF="5937,89.22921" LocationFloat="0,0" Dpi="254" Font="Arial, 8pt" Padding="2,2,0,0,254" BorderColor="Black" Borders="All" BorderWidth="0.5" BorderDashStyle="Dash">
+        <Item1 Ref="13" ControlType="XRTable" Name="xrTable1" TextAlignment="MiddleRight" SizeF="5937,89.22921" LocationFloat="0,0" Dpi="254" Font="Arial, 8pt" Padding="2,2,0,0,254" BorderColor="Black" Borders="All" BorderWidth="0.5" BorderDashStyle="Dash">
           <Rows>
-            <Item1 Ref="13" ControlType="XRTableRow" Name="xrTableRow1" Weight="1" Dpi="254">
+            <Item1 Ref="14" ControlType="XRTableRow" Name="xrTableRow1" Weight="1" Dpi="254">
               <Cells>
-                <Item1 Ref="14" ControlType="XRTableCell" Name="xrTableCell1" Weight="0.21749921697242541" TextAlignment="MiddleCenter" Dpi="254" Borders="All">
-                  <Summary Ref="15" Running="Group" />
+                <Item1 Ref="15" ControlType="XRTableCell" Name="xrTableCell1" Weight="0.21749921697242541" TextAlignment="MiddleCenter" Dpi="254" Borders="All">
+                  <Summary Ref="16" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="16" EventName="BeforePrint" PropertyName="Text" Expression="sumRecordNumber([Eserial])" />
+                    <Item1 Ref="17" EventName="BeforePrint" PropertyName="Text" Expression="sumRecordNumber([Eserial])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="17" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="18" UseBorders="false" UseTextAlignment="false" />
                 </Item1>
-                <Item2 Ref="18" ControlType="XRTableCell" Name="xrTableCell2" Weight="0.36999644247666064" TextAlignment="MiddleCenter" Dpi="254" Borders="All">
+                <Item2 Ref="19" ControlType="XRTableCell" Name="xrTableCell2" Weight="0.36999644247666064" TextAlignment="MiddleCenter" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="19" EventName="BeforePrint" PropertyName="Text" Expression="[Eserial]" />
+                    <Item1 Ref="20" EventName="BeforePrint" PropertyName="Text" Expression="[Eserial]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="20" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="21" UseBorders="false" UseTextAlignment="false" />
                 </Item2>
-                <Item3 Ref="21" ControlType="XRTableCell" Name="xrTableCell4" Weight="0.6733043591521759" TextAlignment="MiddleLeft" Dpi="254">
+                <Item3 Ref="22" ControlType="XRTableCell" Name="xrTableCell4" Weight="0.6733043591521759" TextAlignment="MiddleLeft" Dpi="254">
                   <ExpressionBindings>
-                    <Item1 Ref="22" EventName="BeforePrint" PropertyName="Text" Expression="[FullName]" />
+                    <Item1 Ref="23" EventName="BeforePrint" PropertyName="Text" Expression="[FullName]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="23" UseTextAlignment="false" />
+                  <StylePriority Ref="24" UseTextAlignment="false" />
                 </Item3>
-                <Item4 Ref="24" ControlType="XRTableCell" Name="xrTableCell3" Weight="0.6913133062040262" TextAlignment="MiddleLeft" Dpi="254">
+                <Item4 Ref="25" ControlType="XRTableCell" Name="xrTableCell3" Weight="0.6913133062040262" TextAlignment="MiddleLeft" Dpi="254">
                   <ExpressionBindings>
-                    <Item1 Ref="25" EventName="BeforePrint" PropertyName="Text" Expression="[PositionName]" />
+                    <Item1 Ref="26" EventName="BeforePrint" PropertyName="Text" Expression="[PositionName]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="26" UseTextAlignment="false" />
+                  <StylePriority Ref="27" UseTextAlignment="false" />
                 </Item4>
-                <Item5 Ref="27" ControlType="XRTableCell" Name="xrTableCell7" Weight="0.39361333433486428" TextFormatString="{0:#,#}" Multiline="true" Text="xrTableCell7" TextAlignment="MiddleRight" Dpi="254">
+                <Item5 Ref="28" ControlType="XRTableCell" Name="xrTableCell7" Weight="0.39361333433486428" TextFormatString="{0:#,#}" Multiline="true" Text="xrTableCell7" TextAlignment="MiddleRight" Dpi="254">
                   <ExpressionBindings>
-                    <Item1 Ref="28" EventName="BeforePrint" PropertyName="Text" Expression="[LUONG_CHINH]" />
+                    <Item1 Ref="29" EventName="BeforePrint" PropertyName="Text" Expression="[LUONG_CHINH]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="29" UseTextAlignment="false" />
+                  <StylePriority Ref="30" UseTextAlignment="false" />
                 </Item5>
-                <Item6 Ref="30" ControlType="XRTableCell" Name="xrTableCell6" Weight="0.38766113268617469" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="31" IgnoreNullValues="true" />
+                <Item6 Ref="31" ControlType="XRTableCell" Name="xrTableCell6" Weight="0.38766113268617469" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="32" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="32" EventName="BeforePrint" PropertyName="Text" Expression="[PHUCAP_TRACHNHIEM]" />
+                    <Item1 Ref="33" EventName="BeforePrint" PropertyName="Text" Expression="[PHUCAP_TRACHNHIEM]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="33" UseTextAlignment="false" />
+                  <StylePriority Ref="34" UseTextAlignment="false" />
                 </Item6>
-                <Item7 Ref="34" ControlType="XRTableCell" Name="tableCell55" Weight="0.30608242454377343" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254">
+                <Item7 Ref="35" ControlType="XRTableCell" Name="tableCell55" Weight="0.30608242454377343" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254">
                   <ExpressionBindings>
-                    <Item1 Ref="35" EventName="BeforePrint" PropertyName="Text" Expression="[PHUCAP_ANTRUA]" />
+                    <Item1 Ref="36" EventName="BeforePrint" PropertyName="Text" Expression="[PHUCAP_ANTRUA]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="36" UseTextAlignment="false" />
+                  <StylePriority Ref="37" UseTextAlignment="false" />
                 </Item7>
-                <Item8 Ref="37" ControlType="XRTableCell" Name="tableCell23" Weight="0.34687149519402311" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell23" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item8 Ref="38" ControlType="XRTableCell" Name="tableCell23" Weight="0.34687149519402311" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell23" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="38" EventName="BeforePrint" PropertyName="Text" Expression="[PHUCAP_DIENTHOAI]" />
+                    <Item1 Ref="39" EventName="BeforePrint" PropertyName="Text" Expression="[PHUCAP_DIENTHOAI]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="39" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="40" UseBorders="false" UseTextAlignment="false" />
                 </Item8>
-                <Item9 Ref="40" ControlType="XRTableCell" Name="tableCell36" Weight="0.34687175802351605" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell36" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item9 Ref="41" ControlType="XRTableCell" Name="tableCell36" Weight="0.34687175802351605" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell36" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="41" EventName="BeforePrint" PropertyName="Text" Expression="[PHUCAP_XANGXE]" />
+                    <Item1 Ref="42" EventName="BeforePrint" PropertyName="Text" Expression="[PHUCAP_XANGXE]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="42" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="43" UseBorders="false" UseTextAlignment="false" />
                 </Item9>
-                <Item10 Ref="43" ControlType="XRTableCell" Name="tableCell37" Weight="0.34687185632003842" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell37" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item10 Ref="44" ControlType="XRTableCell" Name="tableCell37" Weight="0.34687185632003842" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell37" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="44" EventName="BeforePrint" PropertyName="Text" Expression="[PHUCAP_KHAC]" />
+                    <Item1 Ref="45" EventName="BeforePrint" PropertyName="Text" Expression="[PHUCAP_KHAC]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="45" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="46" UseBorders="false" UseTextAlignment="false" />
                 </Item10>
-                <Item11 Ref="46" ControlType="XRTableCell" Name="tableCell38" Weight="0.39124865934222991" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell38" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item11 Ref="47" ControlType="XRTableCell" Name="tableCell38" Weight="0.39124865934222991" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell38" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="47" EventName="BeforePrint" PropertyName="Text" Expression="[TONG_THU_NHAP]" />
+                    <Item1 Ref="48" EventName="BeforePrint" PropertyName="Text" Expression="[TONG_THU_NHAP]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="48" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="49" UseBorders="false" UseTextAlignment="false" />
                 </Item11>
-                <Item12 Ref="49" ControlType="XRTableCell" Name="tableCell39" Weight="0.21387489281534067" TextFormatString="{0:f1}" Multiline="true" Text="tableCell39" TextAlignment="MiddleCenter" Dpi="254" Borders="All">
+                <Item12 Ref="50" ControlType="XRTableCell" Name="tableCell39" Weight="0.21387489281534067" TextFormatString="{0:f1}" Multiline="true" Text="tableCell39" TextAlignment="MiddleCenter" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="50" EventName="BeforePrint" PropertyName="Text" Expression="[CONG_TIEU_CHUAN]" />
+                    <Item1 Ref="51" EventName="BeforePrint" PropertyName="Text" Expression="[CONG_TIEU_CHUAN]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="51" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="52" UseBorders="false" UseTextAlignment="false" />
                 </Item12>
-                <Item13 Ref="52" ControlType="XRTableCell" Name="tableCell7" Weight="0.23653023971835849" TextFormatString="{0:f1}" Multiline="true" Text="tableCell7" TextAlignment="MiddleCenter" Dpi="254" Borders="All">
+                <Item13 Ref="53" ControlType="XRTableCell" Name="tableCell7" Weight="0.23653023971835849" TextFormatString="{0:f1}" Multiline="true" Text="tableCell7" TextAlignment="MiddleCenter" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="53" EventName="BeforePrint" PropertyName="Text" Expression="[CONG_NGAY_THUONG]" />
+                    <Item1 Ref="54" EventName="BeforePrint" PropertyName="Text" Expression="[CONG_NGAY_THUONG]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="54" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="55" UseBorders="false" UseTextAlignment="false" />
                 </Item13>
-                <Item14 Ref="55" ControlType="XRTableCell" Name="tableCell12" Weight="0.294062457502979" TextFormatString="{0:f1}" Multiline="true" Text="tableCell12" TextAlignment="MiddleCenter" Dpi="254" Borders="All">
+                <Item14 Ref="56" ControlType="XRTableCell" Name="tableCell12" Weight="0.294062457502979" TextFormatString="{0:f1}" Multiline="true" Text="tableCell12" TextAlignment="MiddleCenter" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="56" EventName="BeforePrint" PropertyName="Text" Expression="[CONG_LAM_NGHI_TUAN]" />
+                    <Item1 Ref="57" EventName="BeforePrint" PropertyName="Text" Expression="[CONG_LAM_NGHI_TUAN]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="57" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="58" UseBorders="false" UseTextAlignment="false" />
                 </Item14>
-                <Item15 Ref="58" ControlType="XRTableCell" Name="tableCell25" Weight="0.25937415059350505" TextFormatString="{0:f1}" Multiline="true" Text="tableCell25" TextAlignment="MiddleCenter" Dpi="254" Borders="All">
+                <Item15 Ref="59" ControlType="XRTableCell" Name="tableCell25" Weight="0.25937415059350505" TextFormatString="{0:f1}" Multiline="true" Text="tableCell25" TextAlignment="MiddleCenter" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="59" EventName="BeforePrint" PropertyName="Text" Expression="[CONG_QUOC_LE]" />
+                    <Item1 Ref="60" EventName="BeforePrint" PropertyName="Text" Expression="[CONG_QUOC_LE]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="60" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="61" UseBorders="false" UseTextAlignment="false" />
                 </Item15>
-                <Item16 Ref="61" ControlType="XRTableCell" Name="tableCell41" Weight="0.31104810678179129" TextFormatString="{0:f1}" Multiline="true" Text="tableCell41" TextAlignment="MiddleCenter" Dpi="254" Borders="All">
+                <Item16 Ref="62" ControlType="XRTableCell" Name="tableCell41" Weight="0.31104810678179129" TextFormatString="{0:f1}" Multiline="true" Text="tableCell41" TextAlignment="MiddleCenter" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="62" EventName="BeforePrint" PropertyName="Text" Expression="[CONG_LAM_NGAY_QUOC_LE]" />
+                    <Item1 Ref="63" EventName="BeforePrint" PropertyName="Text" Expression="[CONG_LAM_NGAY_QUOC_LE]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="63" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="64" UseBorders="false" UseTextAlignment="false" />
                 </Item16>
-                <Item17 Ref="64" ControlType="XRTableCell" Name="tableCell42" Weight="0.25639661387864393" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell42" TextAlignment="MiddleCenter" Dpi="254" Borders="All">
+                <Item17 Ref="65" ControlType="XRTableCell" Name="tableCell42" Weight="0.25639661387864393" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell42" TextAlignment="MiddleCenter" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="65" EventName="BeforePrint" PropertyName="Text" Expression="[CONG_BU_PHEP]" />
+                    <Item1 Ref="66" EventName="BeforePrint" PropertyName="Text" Expression="[CONG_BU_PHEP]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="66" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="67" UseBorders="false" UseTextAlignment="false" />
                 </Item17>
-                <Item18 Ref="67" ControlType="XRTableCell" Name="tableCell43" Weight="0.22543785543203199" TextFormatString="{0:f1}" Multiline="true" Text="tableCell43" TextAlignment="MiddleCenter" Dpi="254" Borders="All">
+                <Item18 Ref="68" ControlType="XRTableCell" Name="tableCell43" Weight="0.22543785543203199" TextFormatString="{0:f1}" Multiline="true" Text="tableCell43" TextAlignment="MiddleCenter" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="68" EventName="BeforePrint" PropertyName="Text" Expression="[CONG_TINH_LUONG_KHAC]" />
+                    <Item1 Ref="69" EventName="BeforePrint" PropertyName="Text" Expression="[CONG_TINH_LUONG_KHAC]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="69" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="70" UseBorders="false" UseTextAlignment="false" />
                 </Item18>
-                <Item19 Ref="70" ControlType="XRTableCell" Name="tableCell44" Weight="0.40344167737514208" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell44" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item19 Ref="71" ControlType="XRTableCell" Name="tableCell44" Weight="0.40344167737514208" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell44" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="71" EventName="BeforePrint" PropertyName="Text" Expression="[TONG_LUONG_THUC_TE]" />
+                    <Item1 Ref="72" EventName="BeforePrint" PropertyName="Text" Expression="[TONG_LUONG_THUC_TE]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="72" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="73" UseBorders="false" UseTextAlignment="false" />
                 </Item19>
-                <Item20 Ref="73" ControlType="XRTableCell" Name="tableCell45" Weight="0.33545955479635836" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell45" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item20 Ref="74" ControlType="XRTableCell" Name="tableCell45" Weight="0.33545955479635836" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell45" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="74" EventName="BeforePrint" PropertyName="Text" Expression="[THU_NHAP_KHAC_KHONG_CHIU_THUE]" />
+                    <Item1 Ref="75" EventName="BeforePrint" PropertyName="Text" Expression="[THU_NHAP_KHAC_KHONG_CHIU_THUE]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="75" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="76" UseBorders="false" UseTextAlignment="false" />
                 </Item20>
-                <Item21 Ref="76" ControlType="XRTableCell" Name="tableCell46" Weight="0.34672159605900527" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell46" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item21 Ref="77" ControlType="XRTableCell" Name="tableCell46" Weight="0.34672159605900527" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell46" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="77" EventName="BeforePrint" PropertyName="Text" Expression="[THU_NHAP_KHAC_CHIU_THUE]" />
+                    <Item1 Ref="78" EventName="BeforePrint" PropertyName="Text" Expression="[THU_NHAP_KHAC_CHIU_THUE]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="78" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="79" UseBorders="false" UseTextAlignment="false" />
                 </Item21>
-                <Item22 Ref="79" ControlType="XRTableCell" Name="tableCell47" Weight="0.39871001685943469" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell47" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item22 Ref="80" ControlType="XRTableCell" Name="tableCell47" Weight="0.39871001685943469" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell47" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="80" EventName="BeforePrint" PropertyName="Text" Expression="[TONG_THU_NHAP_THUC_TE]" />
+                    <Item1 Ref="81" EventName="BeforePrint" PropertyName="Text" Expression="[TONG_THU_NHAP_THUC_TE]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="81" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="82" UseBorders="false" UseTextAlignment="false" />
                 </Item22>
-                <Item23 Ref="82" ControlType="XRTableCell" Name="tableCell48" Weight="0.40372001081399034" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell48" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item23 Ref="83" ControlType="XRTableCell" Name="tableCell48" Weight="0.40372001081399034" TextFormatString="{0:#,#}" Multiline="true" Text="tableCell48" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="83" EventName="BeforePrint" PropertyName="Text" Expression="[LUONG_DONG_BH]" />
+                    <Item1 Ref="84" EventName="BeforePrint" PropertyName="Text" Expression="[LUONG_DONG_BH]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="84" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="85" UseBorders="false" UseTextAlignment="false" />
                 </Item23>
-                <Item24 Ref="85" ControlType="XRTableCell" Name="xrTableCell29" Weight="0.34687233532971851" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item24 Ref="86" ControlType="XRTableCell" Name="xrTableCell29" Weight="0.34687233532971851" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="86" EventName="BeforePrint" PropertyName="Text" Expression="[CONG_DOAN_CONGTY]" />
+                    <Item1 Ref="87" EventName="BeforePrint" PropertyName="Text" Expression="[CONG_DOAN_CONGTY]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="87" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="88" UseBorders="false" UseTextAlignment="false" />
                 </Item24>
-                <Item25 Ref="88" ControlType="XRTableCell" Name="xrTableCell34" Weight="0.36020352489613022" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item25 Ref="89" ControlType="XRTableCell" Name="xrTableCell34" Weight="0.36020352489613022" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="89" EventName="BeforePrint" PropertyName="Text" Expression="[BHXH_CONGTY]" />
+                    <Item1 Ref="90" EventName="BeforePrint" PropertyName="Text" Expression="[BHXH_CONGTY]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="90" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="91" UseBorders="false" UseTextAlignment="false" />
                 </Item25>
-                <Item26 Ref="91" ControlType="XRTableCell" Name="xrTableCell49" Weight="0.34985495822724755" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item26 Ref="92" ControlType="XRTableCell" Name="xrTableCell49" Weight="0.34985495822724755" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="92" EventName="BeforePrint" PropertyName="Text" Expression="[BHYT_CONGTY]" />
+                    <Item1 Ref="93" EventName="BeforePrint" PropertyName="Text" Expression="[BHYT_CONGTY]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="93" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="94" UseBorders="false" UseTextAlignment="false" />
                 </Item26>
-                <Item27 Ref="94" ControlType="XRTableCell" Name="xrTableCell50" Weight="0.35502924156168891" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item27 Ref="95" ControlType="XRTableCell" Name="xrTableCell50" Weight="0.35502924156168891" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="95" EventName="BeforePrint" PropertyName="Text" Expression="[BHYT_CONGTY]" />
+                    <Item1 Ref="96" EventName="BeforePrint" PropertyName="Text" Expression="[BHYT_CONGTY]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="96" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="97" UseBorders="false" UseTextAlignment="false" />
                 </Item27>
-                <Item28 Ref="97" ControlType="XRTableCell" Name="xrTableCell51" Weight="0.35503093527145468" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item28 Ref="98" ControlType="XRTableCell" Name="xrTableCell51" Weight="0.35503093527145468" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="98" EventName="BeforePrint" PropertyName="Text" Expression="[CONG_DOAN_NLD]" />
+                    <Item1 Ref="99" EventName="BeforePrint" PropertyName="Text" Expression="[CONG_DOAN_NLD]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="99" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="100" UseBorders="false" UseTextAlignment="false" />
                 </Item28>
-                <Item29 Ref="100" ControlType="XRTableCell" Name="xrTableCell52" Weight="0.35502867699176693" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item29 Ref="101" ControlType="XRTableCell" Name="xrTableCell52" Weight="0.35502867699176693" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="101" EventName="BeforePrint" PropertyName="Text" Expression="[BHXH_NLD]" />
+                    <Item1 Ref="102" EventName="BeforePrint" PropertyName="Text" Expression="[BHXH_NLD]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="102" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="103" UseBorders="false" UseTextAlignment="false" />
                 </Item29>
-                <Item30 Ref="103" ControlType="XRTableCell" Name="xrTableCell53" Weight="0.35774990401544482" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item30 Ref="104" ControlType="XRTableCell" Name="xrTableCell53" Weight="0.35774990401544482" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="104" EventName="BeforePrint" PropertyName="Text" Expression="[BHYT_NLD]" />
+                    <Item1 Ref="105" EventName="BeforePrint" PropertyName="Text" Expression="[BHYT_NLD]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="105" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="106" UseBorders="false" UseTextAlignment="false" />
                 </Item30>
-                <Item31 Ref="106" ControlType="XRTableCell" Name="xrTableCell54" Weight="0.35301654979002678" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item31 Ref="107" ControlType="XRTableCell" Name="xrTableCell54" Weight="0.35301654979002678" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="107" EventName="BeforePrint" PropertyName="Text" Expression="[BHTN_NLD]" />
+                    <Item1 Ref="108" EventName="BeforePrint" PropertyName="Text" Expression="[BHTN_NLD]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="108" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="109" UseBorders="false" UseTextAlignment="false" />
                 </Item31>
-                <Item32 Ref="109" ControlType="XRTableCell" Name="xrTableCell55" Weight="0.38632843361145192" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item32 Ref="110" ControlType="XRTableCell" Name="xrTableCell55" Weight="0.38632843361145192" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="110" EventName="BeforePrint" PropertyName="Text" Expression="[KHAU_TRU_KHAC_KHONG_GIAM_TRU_THUE]" />
+                    <Item1 Ref="111" EventName="BeforePrint" PropertyName="Text" Expression="[KHAU_TRU_KHAC_KHONG_GIAM_TRU_THUE]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="111" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="112" UseBorders="false" UseTextAlignment="false" />
                 </Item32>
-                <Item33 Ref="112" ControlType="XRTableCell" Name="xrTableCell56" Weight="0.37268052008051378" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item33 Ref="113" ControlType="XRTableCell" Name="xrTableCell56" Weight="0.37268052008051378" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="113" EventName="BeforePrint" PropertyName="Text" Expression="[KHAU_TRU_KHAC_GIAM_TRU_THUE]" />
+                    <Item1 Ref="114" EventName="BeforePrint" PropertyName="Text" Expression="[KHAU_TRU_KHAC_GIAM_TRU_THUE]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="114" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="115" UseBorders="false" UseTextAlignment="false" />
                 </Item33>
-                <Item34 Ref="115" ControlType="XRTableCell" Name="xrTableCell57" Weight="0.39922208110087587" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item34 Ref="116" ControlType="XRTableCell" Name="xrTableCell57" Weight="0.39922208110087587" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="116" EventName="BeforePrint" PropertyName="Text" Expression="[GIAM_TRU_GIA_CANH]" />
+                    <Item1 Ref="117" EventName="BeforePrint" PropertyName="Text" Expression="[GIAM_TRU_GIA_CANH]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="117" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="118" UseBorders="false" UseTextAlignment="false" />
                 </Item34>
-                <Item35 Ref="118" ControlType="XRTableCell" Name="xrTableCell58" Weight="0.39791679544138564" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item35 Ref="119" ControlType="XRTableCell" Name="xrTableCell58" Weight="0.39791679544138564" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="119" EventName="BeforePrint" PropertyName="Text" Expression="[GIAM_TRU_BAN_THAN]" />
+                    <Item1 Ref="120" EventName="BeforePrint" PropertyName="Text" Expression="[GIAM_TRU_BAN_THAN]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="120" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="121" UseBorders="false" UseTextAlignment="false" />
                 </Item35>
-                <Item36 Ref="121" ControlType="XRTableCell" Name="xrTableCell59" Weight="0.39040236966822262" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item36 Ref="122" ControlType="XRTableCell" Name="xrTableCell59" Weight="0.39040236966822262" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="122" EventName="BeforePrint" PropertyName="Text" Expression="[THU_NHAP_TINH_THUE]" />
+                    <Item1 Ref="123" EventName="BeforePrint" PropertyName="Text" Expression="[THU_NHAP_TINH_THUE]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="123" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="124" UseBorders="false" UseTextAlignment="false" />
                 </Item36>
-                <Item37 Ref="124" ControlType="XRTableCell" Name="xrTableCell60" Weight="0.37749065564481571" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item37 Ref="125" ControlType="XRTableCell" Name="xrTableCell60" Weight="0.37749065564481571" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="125" EventName="BeforePrint" PropertyName="Text" Expression="[THUE_TNCN]" />
+                    <Item1 Ref="126" EventName="BeforePrint" PropertyName="Text" Expression="[THUE_TNCN]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="126" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="127" UseBorders="false" UseTextAlignment="false" />
                 </Item37>
-                <Item38 Ref="127" ControlType="XRTableCell" Name="xrTableCell61" Weight="0.41624612250526971" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                <Item38 Ref="128" ControlType="XRTableCell" Name="xrTableCell61" Weight="0.41624612250526971" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="128" EventName="BeforePrint" PropertyName="Text" Expression="[THUC_TRA]" />
+                    <Item1 Ref="129" EventName="BeforePrint" PropertyName="Text" Expression="[THUC_TRA]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="129" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="130" UseBorders="false" UseTextAlignment="false" />
                 </Item38>
               </Cells>
             </Item1>
           </Rows>
-          <StylePriority Ref="130" UseFont="false" UsePadding="false" UseBorderColor="false" UseBorders="false" UseBorderWidth="false" UseBorderDashStyle="false" UseTextAlignment="false" />
+          <StylePriority Ref="131" UseFont="false" UsePadding="false" UseBorderColor="false" UseBorders="false" UseBorderWidth="false" UseBorderDashStyle="false" UseTextAlignment="false" />
         </Item1>
       </Controls>
     </Item1>
-    <Item2 Ref="131" ControlType="TopMarginBand" Name="TopMargin" HeightF="15" TextAlignment="TopLeft" Dpi="254" Padding="0,0,0,0,254" />
-    <Item3 Ref="132" ControlType="BottomMarginBand" Name="BottomMargin" HeightF="30" TextAlignment="TopLeft" Dpi="254" Padding="0,0,0,0,254" />
-    <Item4 Ref="133" ControlType="PageHeaderBand" Name="pageHeaderBand1" HeightF="145.5211" Dpi="254" BorderDashStyle="Dash">
+    <Item2 Ref="132" ControlType="TopMarginBand" Name="TopMargin" HeightF="15" TextAlignment="TopLeft" Dpi="254" Padding="0,0,0,0,254" />
+    <Item3 Ref="133" ControlType="BottomMarginBand" Name="BottomMargin" HeightF="30" TextAlignment="TopLeft" Dpi="254" Padding="0,0,0,0,254" />
+    <Item4 Ref="134" ControlType="PageHeaderBand" Name="pageHeaderBand1" HeightF="145.5211" Dpi="254" BorderDashStyle="Dash">
       <Controls>
-        <Item1 Ref="134" ControlType="XRTable" Name="xrTable7" TextAlignment="MiddleCenter" SizeF="347.0002,145.5208" LocationFloat="3180,0.0002441406" Dpi="254" Font="Times New Roman, 8pt, style=Bold" BackColor="Silver" Padding="2,2,0,0,96" BorderWidth="0.5">
+        <Item1 Ref="135" ControlType="XRTable" Name="xrTable7" TextAlignment="MiddleCenter" SizeF="347.0002,145.5208" LocationFloat="3180,0.0002441406" Dpi="254" Font="Times New Roman, 8pt, style=Bold" BackColor="Silver" Padding="2,2,0,0,96" BorderWidth="0.5">
           <Rows>
-            <Item1 Ref="135" ControlType="XRTableRow" Name="xrTableRow9" Weight="0.5" Dpi="254">
+            <Item1 Ref="136" ControlType="XRTableRow" Name="xrTableRow9" Weight="0.5" Dpi="254">
               <Cells>
-                <Item1 Ref="136" ControlType="XRTableCell" Name="xrTableCell26" Weight="0.815701661274618" Multiline="true" Text="Tổng thu nhập thực tế" Dpi="254" Borders="All">
-                  <StylePriority Ref="137" UseBorders="false" />
+                <Item1 Ref="137" ControlType="XRTableCell" Name="xrTableCell26" Weight="0.815701661274618" Multiline="true" Text="Tổng thu nhập thực tế" Dpi="254" Borders="All">
+                  <StylePriority Ref="138" UseBorders="false" />
                 </Item1>
-                <Item2 Ref="138" ControlType="XRTableCell" Name="xrTableCell9" Weight="0.82595252148060527" Multiline="true" Text="Lương đóng BH" Dpi="254" Borders="All">
-                  <StylePriority Ref="139" UseBorders="false" />
+                <Item2 Ref="139" ControlType="XRTableCell" Name="xrTableCell9" Weight="0.82595252148060527" Multiline="true" Text="Lương đóng BH" Dpi="254" Borders="All">
+                  <StylePriority Ref="140" UseBorders="false" />
                 </Item2>
               </Cells>
             </Item1>
           </Rows>
-          <StylePriority Ref="140" UseFont="false" UseBackColor="false" UseBorderWidth="false" UseTextAlignment="false" />
+          <StylePriority Ref="141" UseFont="false" UseBackColor="false" UseBorderWidth="false" UseTextAlignment="false" />
         </Item1>
-        <Item2 Ref="141" ControlType="XRTable" Name="xrTable5" TextAlignment="MiddleCenter" SizeF="295,145.5208" LocationFloat="2885,0.0002441406" Dpi="254" Font="Times New Roman, 8pt, style=Bold" BackColor="Silver" Padding="2,2,0,0,96" Borders="All" BorderWidth="0.5">
+        <Item2 Ref="142" ControlType="XRTable" Name="xrTable5" TextAlignment="MiddleCenter" SizeF="295,145.5208" LocationFloat="2885,0.0002441406" Dpi="254" Font="Times New Roman, 8pt, style=Bold" BackColor="Silver" Padding="2,2,0,0,96" Borders="All" BorderWidth="0.5">
           <Rows>
-            <Item1 Ref="142" ControlType="XRTableRow" Name="xrTableRow6" Weight="0.5" Dpi="254">
+            <Item1 Ref="143" ControlType="XRTableRow" Name="xrTableRow6" Weight="0.5" Dpi="254">
               <Cells>
-                <Item1 Ref="143" ControlType="XRTableCell" Name="xrTableCell11" Weight="1.3093462062040844" Multiline="true" Text="Thu nhập khác" Dpi="254" />
+                <Item1 Ref="144" ControlType="XRTableCell" Name="xrTableCell11" Weight="1.3093462062040844" Multiline="true" Text="Thu nhập khác" Dpi="254" />
               </Cells>
             </Item1>
-            <Item2 Ref="144" ControlType="XRTableRow" Name="xrTableRow7" Weight="0.5" Dpi="254">
+            <Item2 Ref="145" ControlType="XRTableRow" Name="xrTableRow7" Weight="0.5" Dpi="254">
               <Cells>
-                <Item1 Ref="145" ControlType="XRTableCell" Name="xrTableCell19" Weight="0.40241486144013844" Multiline="true" Text="Không chịu thuế" Dpi="254" />
-                <Item2 Ref="146" ControlType="XRTableCell" Name="xrTableCell20" Weight="0.41592610950644715" Multiline="true" Text="Chịu thuế" Dpi="254" />
+                <Item1 Ref="146" ControlType="XRTableCell" Name="xrTableCell19" Weight="0.40241486144013844" Multiline="true" Text="Không chịu thuế" Dpi="254" />
+                <Item2 Ref="147" ControlType="XRTableCell" Name="xrTableCell20" Weight="0.41592610950644715" Multiline="true" Text="Chịu thuế" Dpi="254" />
               </Cells>
             </Item2>
           </Rows>
-          <StylePriority Ref="147" UseFont="false" UseBackColor="false" UseBorders="false" UseBorderWidth="false" UseTextAlignment="false" />
+          <StylePriority Ref="148" UseFont="false" UseBackColor="false" UseBorders="false" UseBorderWidth="false" UseTextAlignment="false" />
         </Item2>
-        <Item3 Ref="148" ControlType="XRTable" Name="xrTable2" TextAlignment="MiddleCenter" SizeF="750,145.5208" LocationFloat="1014.378,0.0001621246" Dpi="254" Font="Times New Roman, 8pt, style=Bold" BackColor="Silver" Padding="2,2,0,0,96" Borders="All" BorderWidth="0.5" BorderDashStyle="Dash">
+        <Item3 Ref="149" ControlType="XRTable" Name="xrTable2" TextAlignment="MiddleCenter" SizeF="750,145.5208" LocationFloat="1014.378,0.0001621246" Dpi="254" Font="Times New Roman, 8pt, style=Bold" BackColor="Silver" Padding="2,2,0,0,96" Borders="All" BorderWidth="0.5" BorderDashStyle="Dash">
           <Rows>
-            <Item1 Ref="149" ControlType="XRTableRow" Name="xrTableRow2" Weight="0.5" Dpi="254">
+            <Item1 Ref="150" ControlType="XRTableRow" Name="xrTableRow2" Weight="0.5" Dpi="254">
               <Cells>
-                <Item1 Ref="150" ControlType="XRTableCell" Name="xrTableCell8" Weight="3.32884894908809" Multiline="true" Text="Phụ cấp" Dpi="254" />
+                <Item1 Ref="151" ControlType="XRTableCell" Name="xrTableCell8" Weight="3.32884894908809" Multiline="true" Text="Phụ cấp" Dpi="254" />
               </Cells>
             </Item1>
-            <Item2 Ref="151" ControlType="XRTableRow" Name="xrTableRow5" Weight="0.5" Dpi="254">
+            <Item2 Ref="152" ControlType="XRTableRow" Name="xrTableRow5" Weight="0.5" Dpi="254">
               <Cells>
-                <Item1 Ref="152" ControlType="XRTableCell" Name="xrTableCell12" Weight="0.46503729165992358" Multiline="true" Text="Trách nhiệm" Dpi="254" />
-                <Item2 Ref="153" ControlType="XRTableCell" Name="xrTableCell13" Weight="0.36717450464426071" Multiline="true" Text="Ăn trưa" Dpi="254" />
-                <Item3 Ref="154" ControlType="XRTableCell" Name="xrTableCell14" Weight="0.41610590337105269" Multiline="true" Text="Điện thoại" Dpi="254" />
-                <Item4 Ref="155" ControlType="XRTableCell" Name="xrTableCell15" Weight="0.41610591630715704" Multiline="true" Text="Xăng xe" Dpi="254" />
-                <Item5 Ref="156" ControlType="XRTableCell" Name="xrTableCell16" Weight="0.41610594008420387" Multiline="true" Text="Khác" Dpi="254" />
+                <Item1 Ref="153" ControlType="XRTableCell" Name="xrTableCell12" Weight="0.46503729165992358" Multiline="true" Text="Trách nhiệm" Dpi="254" />
+                <Item2 Ref="154" ControlType="XRTableCell" Name="xrTableCell13" Weight="0.36717450464426071" Multiline="true" Text="Ăn trưa" Dpi="254" />
+                <Item3 Ref="155" ControlType="XRTableCell" Name="xrTableCell14" Weight="0.41610590337105269" Multiline="true" Text="Điện thoại" Dpi="254" />
+                <Item4 Ref="156" ControlType="XRTableCell" Name="xrTableCell15" Weight="0.41610591630715704" Multiline="true" Text="Xăng xe" Dpi="254" />
+                <Item5 Ref="157" ControlType="XRTableCell" Name="xrTableCell16" Weight="0.41610594008420387" Multiline="true" Text="Khác" Dpi="254" />
               </Cells>
             </Item2>
           </Rows>
-          <StylePriority Ref="157" UseFont="false" UseBackColor="false" UseBorders="false" UseBorderWidth="false" UseBorderDashStyle="false" UseTextAlignment="false" />
+          <StylePriority Ref="158" UseFont="false" UseBackColor="false" UseBorders="false" UseBorderWidth="false" UseBorderDashStyle="false" UseTextAlignment="false" />
         </Item3>
-        <Item4 Ref="158" ControlType="XRTable" Name="table6" TextAlignment="MiddleCenter" SizeF="261.6772,145.5209" LocationFloat="1764.378,0.0001621246" Dpi="254" Font="Times New Roman, 8pt, style=Bold" BackColor="Silver" Padding="2,2,0,0,96" BorderWidth="0.5">
+        <Item4 Ref="159" ControlType="XRTable" Name="table6" TextAlignment="MiddleCenter" SizeF="261.6772,145.5209" LocationFloat="1764.378,0.0001621246" Dpi="254" Font="Times New Roman, 8pt, style=Bold" BackColor="Silver" Padding="2,2,0,0,96" BorderWidth="0.5">
           <Rows>
-            <Item1 Ref="159" ControlType="XRTableRow" Name="tableRow8" Weight="0.5" Dpi="254">
+            <Item1 Ref="160" ControlType="XRTableRow" Name="tableRow8" Weight="0.5" Dpi="254">
               <Cells>
-                <Item1 Ref="160" ControlType="XRTableCell" Name="tableCell9" Weight="1.0747230145705873" Multiline="true" Text="Tổng thu nhập" Dpi="254" Borders="All">
-                  <StylePriority Ref="161" UseBorders="false" />
+                <Item1 Ref="161" ControlType="XRTableCell" Name="tableCell9" Weight="1.0747230145705873" Multiline="true" Text="Tổng thu nhập" Dpi="254" Borders="All">
+                  <StylePriority Ref="162" UseBorders="false" />
                 </Item1>
-                <Item2 Ref="162" ControlType="XRTableCell" Name="xrTableCell10" Weight="0.587491305722343" Multiline="true" Text="Công tiêu chuẩn" Dpi="254" Borders="All">
-                  <StylePriority Ref="163" UseBorders="false" />
+                <Item2 Ref="163" ControlType="XRTableCell" Name="xrTableCell10" Weight="0.587491305722343" Multiline="true" Text="Công tiêu chuẩn" Dpi="254" Borders="All">
+                  <StylePriority Ref="164" UseBorders="false" />
                 </Item2>
               </Cells>
             </Item1>
           </Rows>
-          <StylePriority Ref="164" UseFont="false" UseBackColor="false" UseBorderWidth="false" UseTextAlignment="false" />
+          <StylePriority Ref="165" UseFont="false" UseBackColor="false" UseBorderWidth="false" UseTextAlignment="false" />
         </Item4>
-        <Item5 Ref="165" ControlType="XRTable" Name="table5" TextAlignment="MiddleCenter" SizeF="180,145.5208" LocationFloat="5757,0" Dpi="254" Font="Times New Roman, 8pt, style=Bold" BackColor="Silver" Padding="2,2,0,0,96" BorderWidth="0.5">
+        <Item5 Ref="166" ControlType="XRTable" Name="table5" TextAlignment="MiddleCenter" SizeF="180,145.5208" LocationFloat="5757,0" Dpi="254" Font="Times New Roman, 8pt, style=Bold" BackColor="Silver" Padding="2,2,0,0,96" BorderWidth="0.5">
           <Rows>
-            <Item1 Ref="166" ControlType="XRTableRow" Name="tableRow7" Weight="0.5" Dpi="254">
+            <Item1 Ref="167" ControlType="XRTableRow" Name="tableRow7" Weight="0.5" Dpi="254">
               <Cells>
-                <Item1 Ref="167" ControlType="XRTableCell" Name="tableCell15" Weight="0.97981688148151413" Multiline="true" Text="Thực trả" Dpi="254" Borders="All">
-                  <StylePriority Ref="168" UseBorders="false" />
+                <Item1 Ref="168" ControlType="XRTableCell" Name="tableCell15" Weight="0.97981688148151413" Multiline="true" Text="Thực trả" Dpi="254" Borders="All">
+                  <StylePriority Ref="169" UseBorders="false" />
                 </Item1>
               </Cells>
             </Item1>
           </Rows>
-          <StylePriority Ref="169" UseFont="false" UseBackColor="false" UseBorderWidth="false" UseTextAlignment="false" />
+          <StylePriority Ref="170" UseFont="false" UseBackColor="false" UseBorderWidth="false" UseTextAlignment="false" />
         </Item5>
-        <Item6 Ref="170" ControlType="XRTable" Name="table4" TextAlignment="MiddleCenter" SizeF="2230,145.5208" LocationFloat="3527,0.0001614888" Dpi="254" Font="Times New Roman, 8pt, style=Bold" BackColor="Silver" Padding="2,2,0,0,96" Borders="All" BorderWidth="0.5">
+        <Item6 Ref="171" ControlType="XRTable" Name="table4" TextAlignment="MiddleCenter" SizeF="2230,145.5208" LocationFloat="3527,0.0001614888" Dpi="254" Font="Times New Roman, 8pt, style=Bold" BackColor="Silver" Padding="2,2,0,0,96" Borders="All" BorderWidth="0.5">
           <Rows>
-            <Item1 Ref="171" ControlType="XRTableRow" Name="tableRow5" Weight="0.5" Dpi="254">
+            <Item1 Ref="172" ControlType="XRTableRow" Name="tableRow5" Weight="0.5" Dpi="254">
               <Cells>
-                <Item1 Ref="172" ControlType="XRTableCell" Name="xrTableCell24" Weight="5.9428872969840869" Multiline="true" Text="Trích vào chi phí công ty" Dpi="254" />
-                <Item2 Ref="173" ControlType="XRTableCell" Name="tableCell21" Weight="5.98020439466042" Multiline="true" Text="Trích vào lương nhân viên" Dpi="254" />
-                <Item3 Ref="174" ControlType="XRTableCell" Name="xrTableCell87" Weight="3.1946454467399614" Multiline="true" Text="Khấu trừ" Dpi="254" />
-                <Item4 Ref="175" ControlType="XRTableCell" Name="tableCell24" Weight="3.3551233576394051" Multiline="true" Text="Giảm trừ" Dpi="254" />
-                <Item5 Ref="176" ControlType="XRTableCell" Name="tableCell27" Weight="3.2320332423500013" Multiline="true" Text="Thuế" Dpi="254" />
+                <Item1 Ref="173" ControlType="XRTableCell" Name="xrTableCell24" Weight="5.9428872969840869" Multiline="true" Text="Trích vào chi phí công ty" Dpi="254" />
+                <Item2 Ref="174" ControlType="XRTableCell" Name="tableCell21" Weight="5.98020439466042" Multiline="true" Text="Trích vào lương nhân viên" Dpi="254" />
+                <Item3 Ref="175" ControlType="XRTableCell" Name="xrTableCell87" Weight="3.1946454467399614" Multiline="true" Text="Khấu trừ" Dpi="254" />
+                <Item4 Ref="176" ControlType="XRTableCell" Name="tableCell24" Weight="3.3551233576394051" Multiline="true" Text="Giảm trừ" Dpi="254" />
+                <Item5 Ref="177" ControlType="XRTableCell" Name="tableCell27" Weight="3.2320332423500013" Multiline="true" Text="Thuế" Dpi="254" />
               </Cells>
             </Item1>
-            <Item2 Ref="177" ControlType="XRTableRow" Name="tableRow6" Weight="0.5" Dpi="254">
+            <Item2 Ref="178" ControlType="XRTableRow" Name="tableRow6" Weight="0.5" Dpi="254">
               <Cells>
-                <Item1 Ref="178" ControlType="XRTableCell" Name="xrTableCell27" Weight="0.69877538010927553" Multiline="true" Text="KPCĐ 2%" Dpi="254" />
-                <Item2 Ref="179" ControlType="XRTableCell" Name="xrTableCell25" Weight="0.72563228413048519" Multiline="true" Text="BHXH 17,5%" Dpi="254" />
-                <Item3 Ref="180" ControlType="XRTableCell" Name="xrTableCell23" Weight="0.704786167682414" Multiline="true" Text="BHYT 3%" Dpi="254" />
-                <Item4 Ref="181" ControlType="XRTableCell" Name="xrTableCell28" Weight="0.71520865724158933" Multiline="true" Text="BHTN 1%" Dpi="254" />
-                <Item5 Ref="182" ControlType="XRTableCell" Name="tableCell28" Weight="0.71520979457130973" Multiline="true" Text="KPCĐ 1%" Dpi="254" />
-                <Item6 Ref="183" ControlType="XRTableCell" Name="tableCell29" Weight="0.71520979457130984" Multiline="true" Text="BHXH 8%" Dpi="254" />
-                <Item7 Ref="184" ControlType="XRTableCell" Name="tableCell30" Weight="0.72068944916494893" Multiline="true" Text="BHYT 1,5%" Dpi="254" />
-                <Item8 Ref="185" ControlType="XRTableCell" Name="tableCell31" Weight="0.71115407587608626" Multiline="true" Text="BHTN 1%" Dpi="254" />
-                <Item9 Ref="186" ControlType="XRTableCell" Name="xrTableCell21" Weight="0.77826335336721375" Multiline="true" Text="Không giảm trừ thuế" Dpi="254" />
-                <Item10 Ref="187" ControlType="XRTableCell" Name="tableCell32" Weight="0.75076727186649372" Multiline="true" Text="Giảm trừ thuế" Dpi="254" />
-                <Item11 Ref="188" ControlType="XRTableCell" Name="tableCell33" Weight="0.80423314208329577" Multiline="true" Text="Gia cảnh" Dpi="254" />
-                <Item12 Ref="189" ControlType="XRTableCell" Name="tableCell34" Weight="0.80160591038069406" Multiline="true" Text="Bản thân" Dpi="254" />
-                <Item13 Ref="190" ControlType="XRTableCell" Name="tableCell35" Weight="0.78646805180009327" Multiline="true" Text="Thu nhập tính thuế" Dpi="254" />
-                <Item14 Ref="191" ControlType="XRTableCell" Name="tableCell19" Weight="0.76045732109097763" Multiline="true" Text="Thuế TNCN" Dpi="254" />
+                <Item1 Ref="179" ControlType="XRTableCell" Name="xrTableCell27" Weight="0.69877538010927553" Multiline="true" Text="KPCĐ 2%" Dpi="254" />
+                <Item2 Ref="180" ControlType="XRTableCell" Name="xrTableCell25" Weight="0.72563228413048519" Multiline="true" Text="BHXH 17,5%" Dpi="254" />
+                <Item3 Ref="181" ControlType="XRTableCell" Name="xrTableCell23" Weight="0.704786167682414" Multiline="true" Text="BHYT 3%" Dpi="254" />
+                <Item4 Ref="182" ControlType="XRTableCell" Name="xrTableCell28" Weight="0.71520865724158933" Multiline="true" Text="BHTN 1%" Dpi="254" />
+                <Item5 Ref="183" ControlType="XRTableCell" Name="tableCell28" Weight="0.71520979457130973" Multiline="true" Text="KPCĐ 1%" Dpi="254" />
+                <Item6 Ref="184" ControlType="XRTableCell" Name="tableCell29" Weight="0.71520979457130984" Multiline="true" Text="BHXH 8%" Dpi="254" />
+                <Item7 Ref="185" ControlType="XRTableCell" Name="tableCell30" Weight="0.72068944916494893" Multiline="true" Text="BHYT 1,5%" Dpi="254" />
+                <Item8 Ref="186" ControlType="XRTableCell" Name="tableCell31" Weight="0.71115407587608626" Multiline="true" Text="BHTN 1%" Dpi="254" />
+                <Item9 Ref="187" ControlType="XRTableCell" Name="xrTableCell21" Weight="0.77826335336721375" Multiline="true" Text="Không giảm trừ thuế" Dpi="254" />
+                <Item10 Ref="188" ControlType="XRTableCell" Name="tableCell32" Weight="0.75076727186649372" Multiline="true" Text="Giảm trừ thuế" Dpi="254" />
+                <Item11 Ref="189" ControlType="XRTableCell" Name="tableCell33" Weight="0.80423314208329577" Multiline="true" Text="Gia cảnh" Dpi="254" />
+                <Item12 Ref="190" ControlType="XRTableCell" Name="tableCell34" Weight="0.80160591038069406" Multiline="true" Text="Bản thân" Dpi="254" />
+                <Item13 Ref="191" ControlType="XRTableCell" Name="tableCell35" Weight="0.78646805180009327" Multiline="true" Text="Thu nhập tính thuế" Dpi="254" />
+                <Item14 Ref="192" ControlType="XRTableCell" Name="tableCell19" Weight="0.76045732109097763" Multiline="true" Text="Thuế TNCN" Dpi="254" />
               </Cells>
             </Item2>
           </Rows>
-          <StylePriority Ref="192" UseFont="false" UseBackColor="false" UseBorders="false" UseBorderWidth="false" UseTextAlignment="false" />
+          <StylePriority Ref="193" UseFont="false" UseBackColor="false" UseBorders="false" UseBorderWidth="false" UseTextAlignment="false" />
         </Item6>
-        <Item7 Ref="193" ControlType="XRTable" Name="table3" TextAlignment="MiddleCenter" SizeF="174.4631,145.5208" LocationFloat="2710.537,0.0002153184" Dpi="254" Font="Times New Roman, 8pt, style=Bold" BackColor="Silver" Padding="2,2,0,0,96" BorderWidth="0.5">
+        <Item7 Ref="194" ControlType="XRTable" Name="table3" TextAlignment="MiddleCenter" SizeF="174.4631,145.5208" LocationFloat="2710.537,0.0002153184" Dpi="254" Font="Times New Roman, 8pt, style=Bold" BackColor="Silver" Padding="2,2,0,0,96" BorderWidth="0.5">
           <Rows>
-            <Item1 Ref="194" ControlType="XRTableRow" Name="tableRow4" Weight="0.5" Dpi="254">
+            <Item1 Ref="195" ControlType="XRTableRow" Name="tableRow4" Weight="0.5" Dpi="254">
               <Cells>
-                <Item1 Ref="195" ControlType="XRTableCell" Name="tableCell26" Weight="0.74749619130010936" Multiline="true" Text="Tổng lương thực tế" Dpi="254" Borders="All">
-                  <StylePriority Ref="196" UseBorders="false" />
+                <Item1 Ref="196" ControlType="XRTableCell" Name="tableCell26" Weight="0.74749619130010936" Multiline="true" Text="Tổng lương thực tế" Dpi="254" Borders="All">
+                  <StylePriority Ref="197" UseBorders="false" />
                 </Item1>
               </Cells>
             </Item1>
           </Rows>
-          <StylePriority Ref="197" UseFont="false" UseBackColor="false" UseBorderWidth="false" UseTextAlignment="false" />
+          <StylePriority Ref="198" UseFont="false" UseBackColor="false" UseBorderWidth="false" UseTextAlignment="false" />
         </Item7>
-        <Item8 Ref="198" ControlType="XRTable" Name="table1" TextAlignment="MiddleCenter" SizeF="684.4818,145.5208" LocationFloat="2026.055,0" Dpi="254" Font="Times New Roman, 8pt, style=Bold" BackColor="Silver" Padding="2,2,0,0,96" Borders="All" BorderWidth="0.5">
+        <Item8 Ref="199" ControlType="XRTable" Name="table1" TextAlignment="MiddleCenter" SizeF="684.4818,145.5208" LocationFloat="2026.055,0" Dpi="254" Font="Times New Roman, 8pt, style=Bold" BackColor="Silver" Padding="2,2,0,0,96" Borders="All" BorderWidth="0.5">
           <Rows>
-            <Item1 Ref="199" ControlType="XRTableRow" Name="tableRow1" Weight="0.5" Dpi="254">
+            <Item1 Ref="200" ControlType="XRTableRow" Name="tableRow1" Weight="0.5" Dpi="254">
               <Cells>
-                <Item1 Ref="200" ControlType="XRTableCell" Name="tableCell8" Weight="80.61377246090764" Multiline="true" Text="Công tính lương" Dpi="254" />
+                <Item1 Ref="201" ControlType="XRTableCell" Name="tableCell8" Weight="80.61377246090764" Multiline="true" Text="Công tính lương" Dpi="254" />
               </Cells>
             </Item1>
-            <Item2 Ref="201" ControlType="XRTableRow" Name="tableRow3" Weight="0.5" Dpi="254">
+            <Item2 Ref="202" ControlType="XRTableRow" Name="tableRow3" Weight="0.5" Dpi="254">
               <Cells>
-                <Item1 Ref="202" ControlType="XRTableCell" Name="tableCell13" Weight="1.0223781166556443" Multiline="true" Text="Ngày thường" Dpi="254" />
-                <Item2 Ref="203" ControlType="XRTableCell" Name="xrTableCell18" Weight="1.27105664241361" Multiline="true" Text="Làm nghỉ tuần" Dpi="254" />
-                <Item3 Ref="204" ControlType="XRTableCell" Name="xrTableCell17" Weight="1.1211193848785821" Multiline="true" Text="Ngày quốc lễ" Dpi="254" />
-                <Item4 Ref="205" ControlType="XRTableCell" Name="xrTableCell22" Weight="1.3444739496387283" Multiline="true" Text="Làm ngày quốc lễ" Dpi="254" />
-                <Item5 Ref="206" ControlType="XRTableCell" Name="xrTableCell31" Weight="1.1082488965327904" Multiline="true" Text="Bù, phép" Dpi="254" />
-                <Item6 Ref="207" ControlType="XRTableCell" Name="xrTableCell32" Weight="0.97443251543295983" Multiline="true" Text="Khác" Dpi="254" />
+                <Item1 Ref="203" ControlType="XRTableCell" Name="tableCell13" Weight="1.0223781166556443" Multiline="true" Text="Ngày thường" Dpi="254" />
+                <Item2 Ref="204" ControlType="XRTableCell" Name="xrTableCell18" Weight="1.27105664241361" Multiline="true" Text="Làm nghỉ tuần" Dpi="254" />
+                <Item3 Ref="205" ControlType="XRTableCell" Name="xrTableCell17" Weight="1.1211193848785821" Multiline="true" Text="Ngày quốc lễ" Dpi="254" />
+                <Item4 Ref="206" ControlType="XRTableCell" Name="xrTableCell22" Weight="1.3444739496387283" Multiline="true" Text="Làm ngày quốc lễ" Dpi="254" />
+                <Item5 Ref="207" ControlType="XRTableCell" Name="xrTableCell31" Weight="1.1082488965327904" Multiline="true" Text="Bù, phép" Dpi="254" />
+                <Item6 Ref="208" ControlType="XRTableCell" Name="xrTableCell32" Weight="0.97443251543295983" Multiline="true" Text="Khác" Dpi="254" />
               </Cells>
             </Item2>
           </Rows>
-          <StylePriority Ref="208" UseFont="false" UseBackColor="false" UseBorders="false" UseBorderWidth="false" UseTextAlignment="false" />
+          <StylePriority Ref="209" UseFont="false" UseBackColor="false" UseBorders="false" UseBorderWidth="false" UseTextAlignment="false" />
         </Item8>
-        <Item9 Ref="209" ControlType="XRTable" Name="table2" TextAlignment="MiddleCenter" SizeF="1014.378,145.5208" LocationFloat="0,0" Dpi="254" Font="Times New Roman, 8pt, style=Bold" BackColor="Silver" Padding="2,2,0,0,254" Borders="All" BorderWidth="0.5" BorderDashStyle="Dash">
+        <Item9 Ref="210" ControlType="XRTable" Name="table2" TextAlignment="MiddleCenter" SizeF="1014.378,145.5208" LocationFloat="0,0" Dpi="254" Font="Times New Roman, 8pt, style=Bold" BackColor="Silver" Padding="2,2,0,0,254" Borders="All" BorderWidth="0.5" BorderDashStyle="Dash">
           <Rows>
-            <Item1 Ref="210" ControlType="XRTableRow" Name="tableRow2" Weight="0.5" Dpi="254">
+            <Item1 Ref="211" ControlType="XRTableRow" Name="tableRow2" Weight="0.5" Dpi="254">
               <Cells>
-                <Item1 Ref="211" ControlType="XRTableCell" Name="tableCell1" Weight="0.25582618413009034" Multiline="true" Text="STT" Dpi="254" />
-                <Item2 Ref="212" ControlType="XRTableCell" Name="tableCell2" Weight="0.43519615433043957" Multiline="true" Text="Mã NV" Dpi="254" />
-                <Item3 Ref="213" ControlType="XRTableCell" Name="tableCell3" Weight="0.791951998655327" Multiline="true" Text="Họ Tên" Dpi="254" />
-                <Item4 Ref="214" ControlType="XRTableCell" Name="tableCell5" Weight="0.81313418474162769" Multiline="true" Text="Vị trí" Dpi="254" />
-                <Item5 Ref="215" ControlType="XRTableCell" Name="xrTableCell5" Weight="0.46297467358392586" Multiline="true" Text="Lương chính" Dpi="254" />
+                <Item1 Ref="212" ControlType="XRTableCell" Name="tableCell1" Weight="0.25582618413009034" Multiline="true" Text="STT" Dpi="254" />
+                <Item2 Ref="213" ControlType="XRTableCell" Name="tableCell2" Weight="0.43519615433043957" Multiline="true" Text="Mã NV" Dpi="254" />
+                <Item3 Ref="214" ControlType="XRTableCell" Name="tableCell3" Weight="0.791951998655327" Multiline="true" Text="Họ Tên" Dpi="254" />
+                <Item4 Ref="215" ControlType="XRTableCell" Name="tableCell5" Weight="0.81313418474162769" Multiline="true" Text="Vị trí" Dpi="254" />
+                <Item5 Ref="216" ControlType="XRTableCell" Name="xrTableCell5" Weight="0.46297467358392586" Multiline="true" Text="Lương chính" Dpi="254" />
               </Cells>
             </Item1>
           </Rows>
-          <StylePriority Ref="216" UseFont="false" UseBackColor="false" UsePadding="false" UseBorders="false" UseBorderWidth="false" UseBorderDashStyle="false" UseTextAlignment="false" />
+          <StylePriority Ref="217" UseFont="false" UseBackColor="false" UsePadding="false" UseBorders="false" UseBorderWidth="false" UseBorderDashStyle="false" UseTextAlignment="false" />
         </Item9>
       </Controls>
-      <StylePriority Ref="217" UseBorderDashStyle="false" />
+      <StylePriority Ref="218" UseBorderDashStyle="false" />
     </Item4>
-    <Item5 Ref="218" ControlType="GroupHeaderBand" Name="groupHeaderBand1" HeightF="79.87497" Dpi="254" StyleName="DataField">
+    <Item5 Ref="219" ControlType="GroupHeaderBand" Name="groupHeaderBand1" HeightF="79.87497" Dpi="254" StyleName="DataField">
       <GroupFields>
-        <Item1 Ref="219" FieldName="DepartmentGroupID" />
+        <Item1 Ref="220" FieldName="DepartmentGroupID" />
       </GroupFields>
       <Controls>
-        <Item1 Ref="220" ControlType="XRTable" Name="xrTable3" TextAlignment="MiddleRight" SizeF="5937,79.87497" LocationFloat="0,0" Dpi="254" Font="Arial, 7.5pt, style=Bold" BackColor="255,228,228,228" Padding="2,2,0,0,254" Borders="All" BorderWidth="0.5" BorderDashStyle="Dash">
+        <Item1 Ref="221" ControlType="XRTable" Name="xrTable3" TextAlignment="MiddleRight" SizeF="5937,79.87497" LocationFloat="0,0" Dpi="254" Font="Arial, 7.5pt, style=Bold" BackColor="255,228,228,228" Padding="2,2,0,0,254" Borders="All" BorderWidth="0.5" BorderDashStyle="Dash">
           <Rows>
-            <Item1 Ref="221" ControlType="XRTableRow" Name="xrTableRow3" Weight="1" Dpi="254">
+            <Item1 Ref="222" ControlType="XRTableRow" Name="xrTableRow3" Weight="1" Dpi="254">
               <Cells>
-                <Item1 Ref="222" ControlType="XRTableCell" Name="xrTableCell79" Weight="2.47351771227122" TextAlignment="MiddleLeft" Dpi="254" Font="Arial, 8pt, style=Bold" Borders="All">
+                <Item1 Ref="223" ControlType="XRTableCell" Name="xrTableCell79" Weight="2.47351771227122" TextAlignment="MiddleLeft" Dpi="254" Font="Arial, 8pt, style=Bold" Borders="All">
                   <ExpressionBindings>
-                    <Item1 Ref="223" EventName="BeforePrint" PropertyName="Text" Expression="[DepartmentGroupName]" />
+                    <Item1 Ref="224" EventName="BeforePrint" PropertyName="Text" Expression="[DepartmentGroupName]" />
                   </ExpressionBindings>
-                  <StylePriority Ref="224" UseFont="false" UseBorderColor="false" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="225" UseFont="false" UseBorderColor="false" UseBorders="false" UseTextAlignment="false" />
                 </Item1>
-                <Item2 Ref="225" ControlType="XRTableCell" Name="xrTableCell80" Weight="0.4987462466025524" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="226" Running="Group" IgnoreNullValues="true" />
+                <Item2 Ref="226" ControlType="XRTableCell" Name="xrTableCell80" Weight="0.4987462466025524" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="227" Running="Group" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="227" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([LUONG_CHINH])" />
+                    <Item1 Ref="228" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([LUONG_CHINH])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="228" UseTextAlignment="false" />
+                  <StylePriority Ref="229" UseTextAlignment="false" />
                 </Item2>
-                <Item3 Ref="229" ControlType="XRTableCell" Name="xrTableCell81" Weight="0.49120449760181495" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="230" Running="Group" IgnoreNullValues="true" />
+                <Item3 Ref="230" ControlType="XRTableCell" Name="xrTableCell81" Weight="0.49120449760181495" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="231" Running="Group" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="231" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_TRACHNHIEM])" />
+                    <Item1 Ref="232" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_TRACHNHIEM])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="232" UseTextAlignment="false" />
+                  <StylePriority Ref="233" UseTextAlignment="false" />
                 </Item3>
-                <Item4 Ref="233" ControlType="XRTableCell" Name="xrTableCell82" Weight="0.38783624371290504" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="234" Running="Group" IgnoreNullValues="true" />
+                <Item4 Ref="234" ControlType="XRTableCell" Name="xrTableCell82" Weight="0.38783624371290504" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="235" Running="Group" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="235" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_ANTRUA])" />
+                    <Item1 Ref="236" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_ANTRUA])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="236" UseTextAlignment="false" />
+                  <StylePriority Ref="237" UseTextAlignment="false" />
                 </Item4>
-                <Item5 Ref="237" ControlType="XRTableCell" Name="xrTableCell83" Weight="0.43951991951489611" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="238" Running="Group" IgnoreNullValues="true" />
+                <Item5 Ref="238" ControlType="XRTableCell" Name="xrTableCell83" Weight="0.43951991951489611" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="239" Running="Group" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="239" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_DIENTHOAI])" />
+                    <Item1 Ref="240" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_DIENTHOAI])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="240" UseTextAlignment="false" />
+                  <StylePriority Ref="241" UseTextAlignment="false" />
                 </Item5>
-                <Item6 Ref="241" ControlType="XRTableCell" Name="xrTableCell84" Weight="0.4395202936236145" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="242" Running="Group" />
+                <Item6 Ref="242" ControlType="XRTableCell" Name="xrTableCell84" Weight="0.4395202936236145" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="243" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="243" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_XANGXE])" />
+                    <Item1 Ref="244" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_XANGXE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="244" UseTextAlignment="false" />
+                  <StylePriority Ref="245" UseTextAlignment="false" />
                 </Item6>
-                <Item7 Ref="245" ControlType="XRTableCell" Name="xrTableCell85" Weight="0.43952040928211467" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="246" Running="Group" />
+                <Item7 Ref="246" ControlType="XRTableCell" Name="xrTableCell85" Weight="0.43952040928211467" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="247" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="247" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_KHAC])" />
+                    <Item1 Ref="248" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_KHAC])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="248" UseTextAlignment="false" />
+                  <StylePriority Ref="249" UseTextAlignment="false" />
                 </Item7>
-                <Item8 Ref="249" ControlType="XRTableCell" Name="xrTableCell88" Weight="0.49575047727454946" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="250" Running="Group" IgnoreNullValues="true" />
+                <Item8 Ref="250" ControlType="XRTableCell" Name="xrTableCell88" Weight="0.49575047727454946" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="251" Running="Group" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="251" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([TONG_THU_NHAP])" />
+                    <Item1 Ref="252" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([TONG_THU_NHAP])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="252" UseTextAlignment="false" />
+                  <StylePriority Ref="253" UseTextAlignment="false" />
                 </Item8>
-                <Item9 Ref="253" ControlType="XRTableCell" Name="xrTableCell92" Weight="0.27100138161601123" TextAlignment="MiddleCenter" Dpi="254">
-                  <Summary Ref="254" IgnoreNullValues="true" />
-                  <StylePriority Ref="255" UseTextAlignment="false" />
+                <Item9 Ref="254" ControlType="XRTableCell" Name="xrTableCell92" Weight="0.27100138161601123" TextAlignment="MiddleCenter" Dpi="254">
+                  <Summary Ref="255" IgnoreNullValues="true" />
+                  <StylePriority Ref="256" UseTextAlignment="false" />
                 </Item9>
-                <Item10 Ref="256" ControlType="XRTableCell" Name="xrTableCell93" Weight="0.29970474558387489" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
-                  <Summary Ref="257" Running="Group" IgnoreNullValues="true" />
+                <Item10 Ref="257" ControlType="XRTableCell" Name="xrTableCell93" Weight="0.29970474558387489" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
+                  <Summary Ref="258" Running="Group" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="258" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_NGAY_THUONG])" />
+                    <Item1 Ref="259" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_NGAY_THUONG])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="259" UseTextAlignment="false" />
+                  <StylePriority Ref="260" UseTextAlignment="false" />
                 </Item10>
-                <Item11 Ref="260" ControlType="XRTableCell" Name="xrTableCell95" Weight="0.37260575883910185" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
-                  <Summary Ref="261" Running="Group" IgnoreNullValues="true" />
+                <Item11 Ref="261" ControlType="XRTableCell" Name="xrTableCell95" Weight="0.37260575883910185" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
+                  <Summary Ref="262" Running="Group" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="262" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_LAM_NGHI_TUAN])" />
+                    <Item1 Ref="263" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_LAM_NGHI_TUAN])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="263" UseTextAlignment="false" />
+                  <StylePriority Ref="264" UseTextAlignment="false" />
                 </Item11>
-                <Item12 Ref="264" ControlType="XRTableCell" Name="xrTableCell97" Weight="0.32865230207213025" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
-                  <Summary Ref="265" Running="Group" IgnoreNullValues="true" />
+                <Item12 Ref="265" ControlType="XRTableCell" Name="xrTableCell97" Weight="0.32865230207213025" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
+                  <Summary Ref="266" Running="Group" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="266" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_QUOC_LE])" />
+                    <Item1 Ref="267" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_QUOC_LE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="267" UseTextAlignment="false" />
+                  <StylePriority Ref="268" UseTextAlignment="false" />
                 </Item12>
-                <Item13 Ref="268" ControlType="XRTableCell" Name="xrTableCell98" Weight="0.394128952984115" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
-                  <Summary Ref="269" Running="Group" IgnoreNullValues="true" />
+                <Item13 Ref="269" ControlType="XRTableCell" Name="xrTableCell98" Weight="0.394128952984115" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
+                  <Summary Ref="270" Running="Group" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="270" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_LAM_NGAY_QUOC_LE])" />
+                    <Item1 Ref="271" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_LAM_NGAY_QUOC_LE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="271" UseTextAlignment="false" />
+                  <StylePriority Ref="272" UseTextAlignment="false" />
                 </Item13>
-                <Item14 Ref="272" ControlType="XRTableCell" Name="xrTableCell99" Weight="0.32487946019488173" TextFormatString="{0:#,#}" TextAlignment="MiddleCenter" Dpi="254">
-                  <Summary Ref="273" Running="Group" IgnoreNullValues="true" />
+                <Item14 Ref="273" ControlType="XRTableCell" Name="xrTableCell99" Weight="0.32487946019488173" TextFormatString="{0:#,#}" TextAlignment="MiddleCenter" Dpi="254">
+                  <Summary Ref="274" Running="Group" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="274" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_BU_PHEP])" />
+                    <Item1 Ref="275" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_BU_PHEP])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="275" UseTextAlignment="false" />
+                  <StylePriority Ref="276" UseTextAlignment="false" />
                 </Item14>
-                <Item15 Ref="276" ControlType="XRTableCell" Name="xrTableCell100" Weight="0.2856517138567406" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
-                  <Summary Ref="277" Running="Group" IgnoreNullValues="true" />
+                <Item15 Ref="277" ControlType="XRTableCell" Name="xrTableCell100" Weight="0.2856517138567406" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
+                  <Summary Ref="278" Running="Group" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="278" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_TINH_LUONG_KHAC])" />
+                    <Item1 Ref="279" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_TINH_LUONG_KHAC])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="279" UseTextAlignment="false" />
+                  <StylePriority Ref="280" UseTextAlignment="false" />
                 </Item15>
-                <Item16 Ref="280" ControlType="XRTableCell" Name="xrTableCell102" Weight="0.51120203131974873" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="281" Running="Group" IgnoreNullValues="true" />
+                <Item16 Ref="281" ControlType="XRTableCell" Name="xrTableCell102" Weight="0.51120203131974873" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="282" Running="Group" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="282" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([TONG_LUONG_THUC_TE])" />
+                    <Item1 Ref="283" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([TONG_LUONG_THUC_TE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="283" UseTextAlignment="false" />
+                  <StylePriority Ref="284" UseTextAlignment="false" />
                 </Item16>
-                <Item17 Ref="284" ControlType="XRTableCell" Name="xrTableCell103" Weight="0.42505820368732972" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="285" Running="Group" IgnoreNullValues="true" />
+                <Item17 Ref="285" ControlType="XRTableCell" Name="xrTableCell103" Weight="0.42505820368732972" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="286" Running="Group" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="286" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THU_NHAP_KHAC_KHONG_CHIU_THUE])" />
+                    <Item1 Ref="287" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THU_NHAP_KHAC_KHONG_CHIU_THUE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="287" UseTextAlignment="false" />
+                  <StylePriority Ref="288" UseTextAlignment="false" />
                 </Item17>
-                <Item18 Ref="288" ControlType="XRTableCell" Name="xrTableCell104" Weight="0.43933069468818109" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="289" Running="Group" IgnoreNullValues="true" />
+                <Item18 Ref="289" ControlType="XRTableCell" Name="xrTableCell104" Weight="0.43933069468818109" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="290" Running="Group" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="290" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THU_NHAP_KHAC_CHIU_THUE])" />
+                    <Item1 Ref="291" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THU_NHAP_KHAC_CHIU_THUE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="291" UseTextAlignment="false" />
+                  <StylePriority Ref="292" UseTextAlignment="false" />
                 </Item18>
-                <Item19 Ref="292" ControlType="XRTableCell" Name="xrTableCell106" Weight="0.50520310121247869" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="293" Running="Group" IgnoreNullValues="true" />
+                <Item19 Ref="293" ControlType="XRTableCell" Name="xrTableCell106" Weight="0.50520310121247869" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="294" Running="Group" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="294" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([TONG_THU_NHAP_THUC_TE])" />
+                    <Item1 Ref="295" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([TONG_THU_NHAP_THUC_TE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="295" UseTextAlignment="false" />
+                  <StylePriority Ref="296" UseTextAlignment="false" />
                 </Item19>
-                <Item20 Ref="296" ControlType="XRTableCell" Name="xrTableCell107" Weight="0.51155255553655044" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="297" Running="Group" IgnoreNullValues="true" />
+                <Item20 Ref="297" ControlType="XRTableCell" Name="xrTableCell107" Weight="0.51155255553655044" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="298" Running="Group" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="298" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([LUONG_DONG_BH])" />
+                    <Item1 Ref="299" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([LUONG_DONG_BH])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="299" UseTextAlignment="false" />
+                  <StylePriority Ref="300" UseTextAlignment="false" />
                 </Item20>
-                <Item21 Ref="300" ControlType="XRTableCell" Name="xrTableCell108" Weight="0.43952029655534897" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="301" Running="Group" IgnoreNullValues="true" />
+                <Item21 Ref="301" ControlType="XRTableCell" Name="xrTableCell108" Weight="0.43952029655534897" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="302" Running="Group" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="302" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_DOAN_CONGTY])" />
+                    <Item1 Ref="303" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_DOAN_CONGTY])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="303" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="304" UseBorders="false" UseTextAlignment="false" />
                 </Item21>
-                <Item22 Ref="304" ControlType="XRTableCell" Name="xrTableCell33" Weight="0.45641292684458856" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="305" Running="Group" />
+                <Item22 Ref="305" ControlType="XRTableCell" Name="xrTableCell33" Weight="0.45641292684458856" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="306" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="306" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHXH_CONGTY])" />
+                    <Item1 Ref="307" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHXH_CONGTY])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="307" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="308" UseBorders="false" UseTextAlignment="false" />
                 </Item22>
-                <Item23 Ref="308" ControlType="XRTableCell" Name="xrTableCell36" Weight="0.4433032363600532" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="309" Running="Group" />
+                <Item23 Ref="309" ControlType="XRTableCell" Name="xrTableCell36" Weight="0.4433032363600532" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="310" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="310" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHYT_CONGTY])" />
+                    <Item1 Ref="311" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHYT_CONGTY])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="311" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="312" UseBorders="false" UseTextAlignment="false" />
                 </Item23>
-                <Item24 Ref="312" ControlType="XRTableCell" Name="xrTableCell37" Weight="0.44985660616190543" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="313" Running="Group" />
+                <Item24 Ref="313" ControlType="XRTableCell" Name="xrTableCell37" Weight="0.44985660616190543" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="314" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="314" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHYT_CONGTY])" />
+                    <Item1 Ref="315" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHYT_CONGTY])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="315" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="316" UseBorders="false" UseTextAlignment="false" />
                 </Item24>
-                <Item25 Ref="316" ControlType="XRTableCell" Name="xrTableCell38" Weight="0.44985875225705524" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="317" Running="Group" />
+                <Item25 Ref="317" ControlType="XRTableCell" Name="xrTableCell38" Weight="0.44985875225705524" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="318" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="318" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_DOAN_NLD])" />
+                    <Item1 Ref="319" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_DOAN_NLD])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="319" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="320" UseBorders="false" UseTextAlignment="false" />
                 </Item25>
-                <Item26 Ref="320" ControlType="XRTableCell" Name="xrTableCell39" Weight="0.44985732152695534" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="321" Running="Group" />
+                <Item26 Ref="321" ControlType="XRTableCell" Name="xrTableCell39" Weight="0.44985732152695534" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="322" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="322" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHXH_NLD])" />
+                    <Item1 Ref="323" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHXH_NLD])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="323" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="324" UseBorders="false" UseTextAlignment="false" />
                 </Item26>
-                <Item27 Ref="324" ControlType="XRTableCell" Name="xrTableCell40" Weight="0.45330395033755733" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="325" Running="Group" />
+                <Item27 Ref="325" ControlType="XRTableCell" Name="xrTableCell40" Weight="0.45330395033755733" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="326" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="326" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHYT_NLD])" />
+                    <Item1 Ref="327" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHYT_NLD])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="327" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="328" UseBorders="false" UseTextAlignment="false" />
                 </Item27>
-                <Item28 Ref="328" ControlType="XRTableCell" Name="xrTableCell41" Weight="0.44730630921390979" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="329" Running="Group" />
+                <Item28 Ref="329" ControlType="XRTableCell" Name="xrTableCell41" Weight="0.44730630921390979" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="330" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="330" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHTN_NLD])" />
+                    <Item1 Ref="331" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHTN_NLD])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="331" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="332" UseBorders="false" UseTextAlignment="false" />
                 </Item28>
-                <Item29 Ref="332" ControlType="XRTableCell" Name="xrTableCell42" Weight="0.48951716761317809" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="333" Running="Group" />
+                <Item29 Ref="333" ControlType="XRTableCell" Name="xrTableCell42" Weight="0.48951716761317809" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="334" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="334" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([KHAU_TRU_KHAC_KHONG_GIAM_TRU_THUE])" />
+                    <Item1 Ref="335" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([KHAU_TRU_KHAC_KHONG_GIAM_TRU_THUE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="335" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="336" UseBorders="false" UseTextAlignment="false" />
                 </Item29>
-                <Item30 Ref="336" ControlType="XRTableCell" Name="xrTableCell43" Weight="0.47222105379638835" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="337" Running="Group" />
+                <Item30 Ref="337" ControlType="XRTableCell" Name="xrTableCell43" Weight="0.47222105379638835" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="338" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="338" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([KHAU_TRU_KHAC_GIAM_TRU_THUE])" />
+                    <Item1 Ref="339" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([KHAU_TRU_KHAC_GIAM_TRU_THUE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="339" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="340" UseBorders="false" UseTextAlignment="false" />
                 </Item30>
-                <Item31 Ref="340" ControlType="XRTableCell" Name="xrTableCell44" Weight="0.50585321266991556" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="341" Running="Group" />
+                <Item31 Ref="341" ControlType="XRTableCell" Name="xrTableCell44" Weight="0.50585321266991556" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="342" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="342" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([GIAM_TRU_GIA_CANH])" />
+                    <Item1 Ref="343" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([GIAM_TRU_GIA_CANH])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="343" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="344" UseBorders="false" UseTextAlignment="false" />
                 </Item31>
-                <Item32 Ref="344" ControlType="XRTableCell" Name="xrTableCell45" Weight="0.50419929061956947" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="345" Running="Group" />
+                <Item32 Ref="345" ControlType="XRTableCell" Name="xrTableCell45" Weight="0.50419929061956947" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="346" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="346" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([GIAM_TRU_BAN_THAN])" />
+                    <Item1 Ref="347" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([GIAM_TRU_BAN_THAN])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="347" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="348" UseBorders="false" UseTextAlignment="false" />
                 </Item32>
-                <Item33 Ref="348" ControlType="XRTableCell" Name="xrTableCell46" Weight="0.49467780689556823" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="349" Running="Group" />
+                <Item33 Ref="349" ControlType="XRTableCell" Name="xrTableCell46" Weight="0.49467780689556823" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="350" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="350" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THU_NHAP_TINH_THUE])" />
+                    <Item1 Ref="351" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THU_NHAP_TINH_THUE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="351" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="352" UseBorders="false" UseTextAlignment="false" />
                 </Item33>
-                <Item34 Ref="352" ControlType="XRTableCell" Name="xrTableCell47" Weight="0.47831739480034879" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="353" Running="Group" />
+                <Item34 Ref="353" ControlType="XRTableCell" Name="xrTableCell47" Weight="0.47831739480034879" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="354" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="354" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THUE_TNCN])" />
+                    <Item1 Ref="355" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THUE_TNCN])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="355" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="356" UseBorders="false" UseTextAlignment="false" />
                 </Item34>
-                <Item35 Ref="356" ControlType="XRTableCell" Name="xrTableCell48" Weight="0.527420919746519" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="357" Running="Group" />
+                <Item35 Ref="357" ControlType="XRTableCell" Name="xrTableCell48" Weight="0.527420919746519" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="358" Running="Group" />
                   <ExpressionBindings>
-                    <Item1 Ref="358" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THUC_TRA])" />
+                    <Item1 Ref="359" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THUC_TRA])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="359" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="360" UseBorders="false" UseTextAlignment="false" />
                 </Item35>
               </Cells>
             </Item1>
           </Rows>
-          <StylePriority Ref="360" UseFont="false" UseBackColor="false" UsePadding="false" UseBorders="false" UseBorderWidth="false" UseBorderDashStyle="false" UseTextAlignment="false" />
+          <StylePriority Ref="361" UseFont="false" UseBackColor="false" UsePadding="false" UseBorders="false" UseBorderWidth="false" UseBorderDashStyle="false" UseTextAlignment="false" />
         </Item1>
       </Controls>
     </Item5>
-    <Item6 Ref="361" ControlType="GroupHeaderBand" Name="groupHeaderBand2" Level="1" HeightF="0" Dpi="254" StyleName="DataField">
+    <Item6 Ref="362" ControlType="GroupHeaderBand" Name="groupHeaderBand2" Level="1" HeightF="0" Dpi="254" StyleName="DataField">
       <GroupFields>
-        <Item1 Ref="362" FieldName="DepartmentGroupID" />
+        <Item1 Ref="363" FieldName="DepartmentGroupID" />
       </GroupFields>
     </Item6>
-    <Item7 Ref="363" ControlType="PageFooterBand" Name="pageFooterBand1" HeightF="0" Dpi="254" />
-    <Item8 Ref="364" ControlType="ReportHeaderBand" Name="reportHeaderBand1" HeightF="131.654" Dpi="254">
+    <Item7 Ref="364" ControlType="PageFooterBand" Name="pageFooterBand1" HeightF="0" Dpi="254" />
+    <Item8 Ref="365" ControlType="ReportHeaderBand" Name="reportHeaderBand1" HeightF="131.654" Dpi="254">
       <Controls>
-        <Item1 Ref="365" ControlType="XRLabel" Name="xrLabel10" Multiline="true" TextAlignment="MiddleLeft" SizeF="5937,58.42001" LocationFloat="0,0" Dpi="254" Font="Arial, 11pt, style=Bold" Padding="5,5,0,0,254">
+        <Item1 Ref="366" ControlType="XRLabel" Name="xrLabel10" Multiline="true" TextAlignment="MiddleLeft" SizeF="5937,58.42001" LocationFloat="0,0" Dpi="254" Font="Arial, 11pt, style=Bold" Padding="5,5,0,0,254">
           <ExpressionBindings>
-            <Item1 Ref="366" EventName="BeforePrint" PropertyName="Text" Expression="[DivisionName]" />
+            <Item1 Ref="367" EventName="BeforePrint" PropertyName="Text" Expression="[DivisionName]" />
           </ExpressionBindings>
-          <StylePriority Ref="367" UseFont="false" UseTextAlignment="false" />
+          <StylePriority Ref="368" UseFont="false" UseTextAlignment="false" />
         </Item1>
-        <Item2 Ref="368" ControlType="XRLabel" Name="xrLabel19" Text="BẢNG LƯƠNG THÁNG [?M] NĂM [?Y]" TextAlignment="TopCenter" SizeF="5937,73.23399" LocationFloat="0,58.42001" Dpi="254" StyleName="Title" Font="Tahoma, 16pt, style=Bold" ForeColor="Black" Padding="5,5,0,0,254">
-          <StylePriority Ref="369" UseFont="false" UseForeColor="false" UseTextAlignment="false" />
+        <Item2 Ref="369" ControlType="XRLabel" Name="xrLabel19" Text="BẢNG LƯƠNG THÁNG [?M] NĂM [?Y]" TextAlignment="TopCenter" SizeF="5937,73.23399" LocationFloat="0,58.42001" Dpi="254" StyleName="Title" Font="Tahoma, 16pt, style=Bold" ForeColor="Black" Padding="5,5,0,0,254">
+          <StylePriority Ref="370" UseFont="false" UseForeColor="false" UseTextAlignment="false" />
         </Item2>
       </Controls>
     </Item8>
-    <Item9 Ref="370" ControlType="ReportFooterBand" Name="ReportFooter" HeightF="433.8705" Dpi="254">
+    <Item9 Ref="371" ControlType="ReportFooterBand" Name="ReportFooter" HeightF="433.8705" Dpi="254">
       <Controls>
-        <Item1 Ref="371" ControlType="XRTable" Name="xrTable6" TextAlignment="TopCenter" SizeF="5937,63.49999" LocationFloat="0,123.4568" Dpi="254" Font="Times New Roman, 9.75pt, style=Bold" Padding="2,2,0,0,96">
+        <Item1 Ref="372" ControlType="XRTable" Name="xrTable6" TextAlignment="TopCenter" SizeF="5937,63.49999" LocationFloat="0,123.4568" Dpi="254" Font="Times New Roman, 9.75pt, style=Bold" Padding="2,2,0,0,96">
           <Rows>
-            <Item1 Ref="372" ControlType="XRTableRow" Name="xrTableRow8" Weight="1" Dpi="254">
+            <Item1 Ref="373" ControlType="XRTableRow" Name="xrTableRow8" Weight="1" Dpi="254">
               <Cells>
-                <Item1 Ref="373" ControlType="XRTableCell" Name="xrTableCell89" Weight="1" Multiline="true" Text="Người lập biểu" Dpi="254" />
-                <Item2 Ref="374" ControlType="XRTableCell" Name="xrTableCell90" Weight="1" Multiline="true" Text="Kế toán trưởng" Dpi="254" />
-                <Item3 Ref="375" ControlType="XRTableCell" Name="xrTableCell91" Weight="1" Multiline="true" Text="Giám đốc&#xD;&#xA;(Ký, đóng dấu)" Dpi="254" />
+                <Item1 Ref="374" ControlType="XRTableCell" Name="xrTableCell89" Weight="1" Multiline="true" Text="Người lập biểu" Dpi="254" />
+                <Item2 Ref="375" ControlType="XRTableCell" Name="xrTableCell90" Weight="1" Multiline="true" Text="Kế toán trưởng" Dpi="254" />
+                <Item3 Ref="376" ControlType="XRTableCell" Name="xrTableCell91" Weight="1" Multiline="true" Text="Giám đốc&#xD;&#xA;(Ký, đóng dấu)" Dpi="254" />
               </Cells>
             </Item1>
           </Rows>
-          <StylePriority Ref="376" UseFont="false" UseTextAlignment="false" />
+          <StylePriority Ref="377" UseFont="false" UseTextAlignment="false" />
         </Item1>
-        <Item2 Ref="377" ControlType="XRTable" Name="xrTable4" TextAlignment="MiddleRight" SizeF="5937,79.375" LocationFloat="0,0" Dpi="254" Font="Arial, 7pt, style=Bold" BackColor="255,228,228,228" Padding="2,2,0,0,254" Borders="All" BorderWidth="0.5" BorderDashStyle="Dash">
+        <Item2 Ref="378" ControlType="XRTable" Name="xrTable4" TextAlignment="MiddleRight" SizeF="5937,79.375" LocationFloat="0,0" Dpi="254" Font="Arial, 7pt, style=Bold" BackColor="255,228,228,228" Padding="2,2,0,0,254" Borders="All" BorderWidth="0.5" BorderDashStyle="Dash">
           <Rows>
-            <Item1 Ref="378" ControlType="XRTableRow" Name="xrTableRow4" Weight="1" Dpi="254">
+            <Item1 Ref="379" ControlType="XRTableRow" Name="xrTableRow4" Weight="1" Dpi="254">
               <Cells>
-                <Item1 Ref="379" ControlType="XRTableCell" Name="xrTableCell30" Weight="2.4603580324572718" Text="Tổng" TextAlignment="MiddleCenter" Dpi="254" Font="Arial, 8pt, style=Bold" Borders="All">
-                  <StylePriority Ref="380" UseFont="false" UseBorderColor="false" UseBorders="false" UseTextAlignment="false" />
+                <Item1 Ref="380" ControlType="XRTableCell" Name="xrTableCell30" Weight="2.4603580324572718" Text="Tổng" TextAlignment="MiddleCenter" Dpi="254" Font="Arial, 8pt, style=Bold" Borders="All">
+                  <StylePriority Ref="381" UseFont="false" UseBorderColor="false" UseBorders="false" UseTextAlignment="false" />
                 </Item1>
-                <Item2 Ref="381" ControlType="XRTableCell" Name="xrTableCell71" Weight="0.49609259127837735" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="382" Running="Report" IgnoreNullValues="true" />
+                <Item2 Ref="382" ControlType="XRTableCell" Name="xrTableCell71" Weight="0.49609259127837735" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="383" Running="Report" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="383" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([LUONG_CHINH])" />
+                    <Item1 Ref="384" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([LUONG_CHINH])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="384" UseTextAlignment="false" />
+                  <StylePriority Ref="385" UseTextAlignment="false" />
                 </Item2>
-                <Item3 Ref="385" ControlType="XRTableCell" Name="xrTableCell75" Weight="0.48859134628851136" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="386" Running="Report" IgnoreNullValues="true" />
+                <Item3 Ref="386" ControlType="XRTableCell" Name="xrTableCell75" Weight="0.48859134628851136" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="387" Running="Report" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="387" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_TRACHNHIEM])" />
+                    <Item1 Ref="388" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_TRACHNHIEM])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="388" UseTextAlignment="false" />
+                  <StylePriority Ref="389" UseTextAlignment="false" />
                 </Item3>
-                <Item4 Ref="389" ControlType="XRTableCell" Name="xrTableCell76" Weight="0.38577282341038843" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="390" Running="Report" IgnoreNullValues="true" />
+                <Item4 Ref="390" ControlType="XRTableCell" Name="xrTableCell76" Weight="0.38577282341038843" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="391" Running="Report" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="391" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_ANTRUA])" />
+                    <Item1 Ref="392" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_ANTRUA])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="392" UseTextAlignment="false" />
+                  <StylePriority Ref="393" UseTextAlignment="false" />
                 </Item4>
-                <Item5 Ref="393" ControlType="XRTableCell" Name="xrTableCell77" Weight="0.43718153658888875" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="394" Running="Report" IgnoreNullValues="true" />
+                <Item5 Ref="394" ControlType="XRTableCell" Name="xrTableCell77" Weight="0.43718153658888875" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="395" Running="Report" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="395" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_DIENTHOAI])" />
+                    <Item1 Ref="396" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_DIENTHOAI])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="396" UseTextAlignment="false" />
+                  <StylePriority Ref="397" UseTextAlignment="false" />
                 </Item5>
-                <Item6 Ref="397" ControlType="XRTableCell" Name="xrTableCell78" Weight="0.437181907908976" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="398" Running="Report" />
+                <Item6 Ref="398" ControlType="XRTableCell" Name="xrTableCell78" Weight="0.437181907908976" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="399" Running="Report" />
                   <ExpressionBindings>
-                    <Item1 Ref="399" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_XANGXE])" />
+                    <Item1 Ref="400" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_XANGXE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="400" UseTextAlignment="false" />
+                  <StylePriority Ref="401" UseTextAlignment="false" />
                 </Item6>
-                <Item7 Ref="401" ControlType="XRTableCell" Name="xrTableCell136" Weight="0.43718141426701213" TextFormatString="{0:#,#}" Multiline="true" Text="xrTableCell136" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="402" Running="Report" />
+                <Item7 Ref="402" ControlType="XRTableCell" Name="xrTableCell136" Weight="0.43718141426701213" TextFormatString="{0:#,#}" Multiline="true" Text="xrTableCell136" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="403" Running="Report" />
                   <ExpressionBindings>
-                    <Item1 Ref="403" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_KHAC])" />
+                    <Item1 Ref="404" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([PHUCAP_KHAC])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="404" UseTextAlignment="false" />
+                  <StylePriority Ref="405" UseTextAlignment="false" />
                 </Item7>
-                <Item8 Ref="405" ControlType="XRTableCell" Name="xrTableCell112" Weight="0.49311293974904152" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="406" Running="Report" IgnoreNullValues="true" />
+                <Item8 Ref="406" ControlType="XRTableCell" Name="xrTableCell112" Weight="0.49311293974904152" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="407" Running="Report" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="407" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([TONG_THU_NHAP])" />
+                    <Item1 Ref="408" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([TONG_THU_NHAP])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="408" UseTextAlignment="false" />
+                  <StylePriority Ref="409" UseTextAlignment="false" />
                 </Item8>
-                <Item9 Ref="409" ControlType="XRTableCell" Name="xrTableCell116" Weight="0.26956672504785789" TextAlignment="MiddleCenter" Dpi="254">
-                  <Summary Ref="410" IgnoreNullValues="true" />
-                  <StylePriority Ref="411" UseTextAlignment="false" />
+                <Item9 Ref="410" ControlType="XRTableCell" Name="xrTableCell116" Weight="0.26956672504785789" TextAlignment="MiddleCenter" Dpi="254">
+                  <Summary Ref="411" IgnoreNullValues="true" />
+                  <StylePriority Ref="412" UseTextAlignment="false" />
                 </Item9>
-                <Item10 Ref="412" ControlType="XRTableCell" Name="xrTableCell117" Weight="0.29810372296332605" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
-                  <Summary Ref="413" Running="Report" IgnoreNullValues="true" />
+                <Item10 Ref="413" ControlType="XRTableCell" Name="xrTableCell117" Weight="0.29810372296332605" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
+                  <Summary Ref="414" Running="Report" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="414" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_NGAY_THUONG])" />
+                    <Item1 Ref="415" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_NGAY_THUONG])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="415" UseTextAlignment="false" />
+                  <StylePriority Ref="416" UseTextAlignment="false" />
                 </Item10>
-                <Item11 Ref="416" ControlType="XRTableCell" Name="xrTableCell119" Weight="0.3706226730692444" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
-                  <Summary Ref="417" Running="Report" IgnoreNullValues="true" />
+                <Item11 Ref="417" ControlType="XRTableCell" Name="xrTableCell119" Weight="0.3706226730692444" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
+                  <Summary Ref="418" Running="Report" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="418" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_LAM_NGHI_TUAN])" />
+                    <Item1 Ref="419" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_LAM_NGHI_TUAN])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="419" UseTextAlignment="false" />
+                  <StylePriority Ref="420" UseTextAlignment="false" />
                 </Item11>
-                <Item12 Ref="420" ControlType="XRTableCell" Name="xrTableCell121" Weight="0.32690376148025468" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
-                  <Summary Ref="421" Running="Report" IgnoreNullValues="true" />
+                <Item12 Ref="421" ControlType="XRTableCell" Name="xrTableCell121" Weight="0.32690376148025468" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
+                  <Summary Ref="422" Running="Report" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="422" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_QUOC_LE])" />
+                    <Item1 Ref="423" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_QUOC_LE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="423" UseTextAlignment="false" />
+                  <StylePriority Ref="424" UseTextAlignment="false" />
                 </Item12>
-                <Item13 Ref="424" ControlType="XRTableCell" Name="xrTableCell122" Weight="0.3920313506261216" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
-                  <Summary Ref="425" Running="Report" IgnoreNullValues="true" />
+                <Item13 Ref="425" ControlType="XRTableCell" Name="xrTableCell122" Weight="0.3920313506261216" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
+                  <Summary Ref="426" Running="Report" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="426" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_LAM_NGAY_QUOC_LE])" />
+                    <Item1 Ref="427" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_LAM_NGAY_QUOC_LE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="427" UseTextAlignment="false" />
+                  <StylePriority Ref="428" UseTextAlignment="false" />
                 </Item13>
-                <Item14 Ref="428" ControlType="XRTableCell" Name="xrTableCell123" Weight="0.32315100576140116" TextFormatString="{0:#,#}" TextAlignment="MiddleCenter" Dpi="254">
-                  <Summary Ref="429" Running="Report" IgnoreNullValues="true" />
+                <Item14 Ref="429" ControlType="XRTableCell" Name="xrTableCell123" Weight="0.32315100576140116" TextFormatString="{0:#,#}" TextAlignment="MiddleCenter" Dpi="254">
+                  <Summary Ref="430" Running="Report" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="430" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_BU_PHEP])" />
+                    <Item1 Ref="431" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_BU_PHEP])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="431" UseTextAlignment="false" />
+                  <StylePriority Ref="432" UseTextAlignment="false" />
                 </Item14>
-                <Item15 Ref="432" ControlType="XRTableCell" Name="xrTableCell124" Weight="0.28413124222160491" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
-                  <Summary Ref="433" Running="Report" IgnoreNullValues="true" />
+                <Item15 Ref="433" ControlType="XRTableCell" Name="xrTableCell124" Weight="0.28413124222160491" TextFormatString="{0:f1}" TextAlignment="MiddleCenter" Dpi="254">
+                  <Summary Ref="434" Running="Report" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="434" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_TINH_LUONG_KHAC])" />
+                    <Item1 Ref="435" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_TINH_LUONG_KHAC])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="435" UseTextAlignment="false" />
+                  <StylePriority Ref="436" UseTextAlignment="false" />
                 </Item15>
-                <Item16 Ref="436" ControlType="XRTableCell" Name="xrTableCell126" Weight="0.508493646007887" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="437" Running="Report" IgnoreNullValues="true" />
+                <Item16 Ref="437" ControlType="XRTableCell" Name="xrTableCell126" Weight="0.508493646007887" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="438" Running="Report" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="438" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([TONG_LUONG_THUC_TE])" />
+                    <Item1 Ref="439" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([TONG_LUONG_THUC_TE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="439" UseTextAlignment="false" />
+                  <StylePriority Ref="440" UseTextAlignment="false" />
                 </Item16>
-                <Item17 Ref="440" ControlType="XRTableCell" Name="xrTableCell127" Weight="0.42278478203373049" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="441" Running="Report" IgnoreNullValues="true" />
+                <Item17 Ref="441" ControlType="XRTableCell" Name="xrTableCell127" Weight="0.42278478203373049" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="442" Running="Report" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="442" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THU_NHAP_KHAC_KHONG_CHIU_THUE])" />
+                    <Item1 Ref="443" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THU_NHAP_KHAC_KHONG_CHIU_THUE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="443" UseTextAlignment="false" />
+                  <StylePriority Ref="444" UseTextAlignment="false" />
                 </Item17>
-                <Item18 Ref="444" ControlType="XRTableCell" Name="xrTableCell128" Weight="0.43699264898066548" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="445" Running="Report" IgnoreNullValues="true" />
+                <Item18 Ref="445" ControlType="XRTableCell" Name="xrTableCell128" Weight="0.43699264898066548" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="446" Running="Report" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="446" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THU_NHAP_KHAC_CHIU_THUE])" />
+                    <Item1 Ref="447" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THU_NHAP_KHAC_CHIU_THUE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="447" UseTextAlignment="false" />
+                  <StylePriority Ref="448" UseTextAlignment="false" />
                 </Item18>
-                <Item19 Ref="448" ControlType="XRTableCell" Name="xrTableCell130" Weight="0.50251720819673273" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="449" Running="Report" IgnoreNullValues="true" />
+                <Item19 Ref="449" ControlType="XRTableCell" Name="xrTableCell130" Weight="0.50251720819673273" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="450" Running="Report" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="450" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([TONG_THU_NHAP_THUC_TE])" />
+                    <Item1 Ref="451" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([TONG_THU_NHAP_THUC_TE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="451" UseTextAlignment="false" />
+                  <StylePriority Ref="452" UseTextAlignment="false" />
                 </Item19>
-                <Item20 Ref="452" ControlType="XRTableCell" Name="xrTableCell131" Weight="0.50883162255147063" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
-                  <Summary Ref="453" Running="Report" IgnoreNullValues="true" />
+                <Item20 Ref="453" ControlType="XRTableCell" Name="xrTableCell131" Weight="0.50883162255147063" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254">
+                  <Summary Ref="454" Running="Report" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="454" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([LUONG_DONG_BH])" />
+                    <Item1 Ref="455" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([LUONG_DONG_BH])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="455" UseTextAlignment="false" />
+                  <StylePriority Ref="456" UseTextAlignment="false" />
                 </Item20>
-                <Item21 Ref="456" ControlType="XRTableCell" Name="xrTableCell132" Weight="0.43718260845154011" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="457" Running="Report" IgnoreNullValues="true" />
+                <Item21 Ref="457" ControlType="XRTableCell" Name="xrTableCell132" Weight="0.43718260845154011" TextFormatString="{0:#,#}" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="458" Running="Report" IgnoreNullValues="true" />
                   <ExpressionBindings>
-                    <Item1 Ref="458" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_DOAN_CONGTY])" />
+                    <Item1 Ref="459" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_DOAN_CONGTY])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="459" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="460" UseBorders="false" UseTextAlignment="false" />
                 </Item21>
-                <Item22 Ref="460" ControlType="XRTableCell" Name="xrTableCell35" Weight="0.45398216279867165" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="461" Running="Report" />
+                <Item22 Ref="461" ControlType="XRTableCell" Name="xrTableCell35" Weight="0.45398216279867165" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="462" Running="Report" />
                   <ExpressionBindings>
-                    <Item1 Ref="462" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHXH_CONGTY])" />
+                    <Item1 Ref="463" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHXH_CONGTY])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="463" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="464" UseBorders="false" UseTextAlignment="false" />
                 </Item22>
-                <Item23 Ref="464" ControlType="XRTableCell" Name="xrTableCell62" Weight="0.44094319824685263" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="465" Running="Report" />
+                <Item23 Ref="465" ControlType="XRTableCell" Name="xrTableCell62" Weight="0.44094319824685263" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="466" Running="Report" />
                   <ExpressionBindings>
-                    <Item1 Ref="466" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHYT_CONGTY])" />
+                    <Item1 Ref="467" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHYT_CONGTY])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="467" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="468" UseBorders="false" UseTextAlignment="false" />
                 </Item23>
-                <Item24 Ref="468" ControlType="XRTableCell" Name="xrTableCell63" Weight="0.44746321419309321" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="469" Running="Report" />
+                <Item24 Ref="469" ControlType="XRTableCell" Name="xrTableCell63" Weight="0.44746321419309321" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="470" Running="Report" />
                   <ExpressionBindings>
-                    <Item1 Ref="470" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHYT_CONGTY])" />
+                    <Item1 Ref="471" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHYT_CONGTY])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="471" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="472" UseBorders="false" UseTextAlignment="false" />
                 </Item24>
-                <Item25 Ref="472" ControlType="XRTableCell" Name="xrTableCell64" Weight="0.44746392575218363" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="473" Running="Report" />
+                <Item25 Ref="473" ControlType="XRTableCell" Name="xrTableCell64" Weight="0.44746392575218363" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="474" Running="Report" />
                   <ExpressionBindings>
-                    <Item1 Ref="474" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_DOAN_NLD])" />
+                    <Item1 Ref="475" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([CONG_DOAN_NLD])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="475" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="476" UseBorders="false" UseTextAlignment="false" />
                 </Item25>
-                <Item26 Ref="476" ControlType="XRTableCell" Name="xrTableCell65" Weight="0.4474653488703646" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="477" Running="Report" />
+                <Item26 Ref="477" ControlType="XRTableCell" Name="xrTableCell65" Weight="0.4474653488703646" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="478" Running="Report" />
                   <ExpressionBindings>
-                    <Item1 Ref="478" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHXH_NLD])" />
+                    <Item1 Ref="479" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHXH_NLD])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="479" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="480" UseBorders="false" UseTextAlignment="false" />
                 </Item26>
-                <Item27 Ref="480" ControlType="XRTableCell" Name="xrTableCell66" Weight="0.45089221745020691" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="481" Running="Report" />
+                <Item27 Ref="481" ControlType="XRTableCell" Name="xrTableCell66" Weight="0.45089221745020691" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="482" Running="Report" />
                   <ExpressionBindings>
-                    <Item1 Ref="482" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHYT_NLD])" />
+                    <Item1 Ref="483" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHYT_NLD])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="483" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="484" UseBorders="false" UseTextAlignment="false" />
                 </Item27>
-                <Item28 Ref="484" ControlType="XRTableCell" Name="xrTableCell67" Weight="0.44492650603546496" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="485" Running="Report" />
+                <Item28 Ref="485" ControlType="XRTableCell" Name="xrTableCell67" Weight="0.44492650603546496" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="486" Running="Report" />
                   <ExpressionBindings>
-                    <Item1 Ref="486" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHTN_NLD])" />
+                    <Item1 Ref="487" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([BHTN_NLD])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="487" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="488" UseBorders="false" UseTextAlignment="false" />
                 </Item28>
-                <Item29 Ref="488" ControlType="XRTableCell" Name="xrTableCell68" Weight="0.486911354714217" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="489" Running="Report" />
+                <Item29 Ref="489" ControlType="XRTableCell" Name="xrTableCell68" Weight="0.486911354714217" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="490" Running="Report" />
                   <ExpressionBindings>
-                    <Item1 Ref="490" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([KHAU_TRU_KHAC_KHONG_GIAM_TRU_THUE])" />
+                    <Item1 Ref="491" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([KHAU_TRU_KHAC_KHONG_GIAM_TRU_THUE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="491" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="492" UseBorders="false" UseTextAlignment="false" />
                 </Item29>
-                <Item30 Ref="492" ControlType="XRTableCell" Name="xrTableCell69" Weight="0.46971154850117919" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="493" Running="Report" />
+                <Item30 Ref="493" ControlType="XRTableCell" Name="xrTableCell69" Weight="0.46971154850117919" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="494" Running="Report" />
                   <ExpressionBindings>
-                    <Item1 Ref="494" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([KHAU_TRU_KHAC_GIAM_TRU_THUE])" />
+                    <Item1 Ref="495" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([KHAU_TRU_KHAC_GIAM_TRU_THUE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="495" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="496" UseBorders="false" UseTextAlignment="false" />
                 </Item30>
-                <Item31 Ref="496" ControlType="XRTableCell" Name="xrTableCell70" Weight="0.50316191362212392" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="497" Running="Report" />
+                <Item31 Ref="497" ControlType="XRTableCell" Name="xrTableCell70" Weight="0.50316191362212392" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="498" Running="Report" />
                   <ExpressionBindings>
-                    <Item1 Ref="498" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([GIAM_TRU_GIA_CANH])" />
+                    <Item1 Ref="499" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([GIAM_TRU_GIA_CANH])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="499" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="500" UseBorders="false" UseTextAlignment="false" />
                 </Item31>
-                <Item32 Ref="500" ControlType="XRTableCell" Name="xrTableCell72" Weight="0.50151678900489072" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="501" Running="Report" />
+                <Item32 Ref="501" ControlType="XRTableCell" Name="xrTableCell72" Weight="0.50151678900489072" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="502" Running="Report" />
                   <ExpressionBindings>
-                    <Item1 Ref="502" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([GIAM_TRU_BAN_THAN])" />
+                    <Item1 Ref="503" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([GIAM_TRU_BAN_THAN])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="503" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="504" UseBorders="false" UseTextAlignment="false" />
                 </Item32>
-                <Item33 Ref="504" ControlType="XRTableCell" Name="xrTableCell73" Weight="0.49204595398408096" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="505" Running="Report" />
+                <Item33 Ref="505" ControlType="XRTableCell" Name="xrTableCell73" Weight="0.49204595398408096" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="506" Running="Report" />
                   <ExpressionBindings>
-                    <Item1 Ref="506" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THU_NHAP_TINH_THUE])" />
+                    <Item1 Ref="507" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THU_NHAP_TINH_THUE])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="507" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="508" UseBorders="false" UseTextAlignment="false" />
                 </Item33>
-                <Item34 Ref="508" ControlType="XRTableCell" Name="xrTableCell74" Weight="0.47577262252497843" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="509" Running="Report" />
+                <Item34 Ref="509" ControlType="XRTableCell" Name="xrTableCell74" Weight="0.47577262252497843" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="510" Running="Report" />
                   <ExpressionBindings>
-                    <Item1 Ref="510" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THUE_TNCN])" />
+                    <Item1 Ref="511" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THUE_TNCN])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="511" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="512" UseBorders="false" UseTextAlignment="false" />
                 </Item34>
-                <Item35 Ref="512" ControlType="XRTableCell" Name="xrTableCell86" Weight="0.52461746287493927" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
-                  <Summary Ref="513" Running="Report" />
+                <Item35 Ref="513" ControlType="XRTableCell" Name="xrTableCell86" Weight="0.52461746287493927" TextFormatString="{0:#,#}" Multiline="true" TextAlignment="MiddleRight" Dpi="254" Borders="All">
+                  <Summary Ref="514" Running="Report" />
                   <ExpressionBindings>
-                    <Item1 Ref="514" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THUC_TRA])" />
+                    <Item1 Ref="515" EventName="BeforePrint" PropertyName="Text" Expression="sumSum([THUC_TRA])" />
                   </ExpressionBindings>
-                  <StylePriority Ref="515" UseBorders="false" UseTextAlignment="false" />
+                  <StylePriority Ref="516" UseBorders="false" UseTextAlignment="false" />
                 </Item35>
               </Cells>
             </Item1>
           </Rows>
-          <StylePriority Ref="516" UseFont="false" UseBackColor="false" UsePadding="false" UseBorders="false" UseBorderWidth="false" UseBorderDashStyle="false" UseTextAlignment="false" />
+          <StylePriority Ref="517" UseFont="false" UseBackColor="false" UsePadding="false" UseBorders="false" UseBorderWidth="false" UseBorderDashStyle="false" UseTextAlignment="false" />
         </Item2>
       </Controls>
-      <StylePriority Ref="517" UseFont="false" />
+      <StylePriority Ref="518" UseFont="false" />
     </Item9>
   </Bands>
-  <ExportOptions Ref="518">
-    <Csv Ref="519" EncodingType="UTF8" />
+  <ExportOptions Ref="519">
+    <Csv Ref="520" EncodingType="UTF8" />
   </ExportOptions>
   <StyleSheet>
-    <Item1 Ref="520" Name="Title" BorderStyle="Inset" Font="Tahoma, 24pt, style=Bold" ForeColor="Teal" BackColor="Transparent" BorderColor="Black" Sides="None" StringFormat="Near;Near;0;None;Character;GenericDefault" BorderWidthSerializable="1" />
-    <Item2 Ref="521" Name="FieldCaption" BorderStyle="Inset" Font="Arial, 10pt, style=Bold" ForeColor="Black" BackColor="Transparent" BorderColor="Black" Sides="None" StringFormat="Near;Near;0;None;Character;GenericDefault" BorderWidthSerializable="1" />
-    <Item3 Ref="522" Name="PageInfo" BorderStyle="Inset" Font="Arial, 9pt" ForeColor="Black" BackColor="Transparent" BorderColor="Black" Sides="None" StringFormat="Near;Near;0;None;Character;GenericDefault" BorderWidthSerializable="1" />
-    <Item4 Ref="523" Name="DataField" BorderStyle="Inset" Padding="5,5,0,0,254" Font="Arial, 10pt" ForeColor="Black" BackColor="Transparent" BorderColor="Black" Sides="None" StringFormat="Near;Near;0;None;Character;GenericDefault" BorderWidthSerializable="1" />
+    <Item1 Ref="521" Name="Title" BorderStyle="Inset" Font="Tahoma, 24pt, style=Bold" ForeColor="Teal" BackColor="Transparent" BorderColor="Black" Sides="None" StringFormat="Near;Near;0;None;Character;GenericDefault" BorderWidthSerializable="1" />
+    <Item2 Ref="522" Name="FieldCaption" BorderStyle="Inset" Font="Arial, 10pt, style=Bold" ForeColor="Black" BackColor="Transparent" BorderColor="Black" Sides="None" StringFormat="Near;Near;0;None;Character;GenericDefault" BorderWidthSerializable="1" />
+    <Item3 Ref="523" Name="PageInfo" BorderStyle="Inset" Font="Arial, 9pt" ForeColor="Black" BackColor="Transparent" BorderColor="Black" Sides="None" StringFormat="Near;Near;0;None;Character;GenericDefault" BorderWidthSerializable="1" />
+    <Item4 Ref="524" Name="DataField" BorderStyle="Inset" Padding="5,5,0,0,254" Font="Arial, 10pt" ForeColor="Black" BackColor="Transparent" BorderColor="Black" Sides="None" StringFormat="Near;Near;0;None;Character;GenericDefault" BorderWidthSerializable="1" />
   </StyleSheet>
   <ParameterPanelLayoutItems>
-    <Item1 Ref="524" LayoutItemType="Parameter" Parameter="#Ref-3" />
-    <Item2 Ref="525" LayoutItemType="Parameter" Parameter="#Ref-5" />
-    <Item3 Ref="526" LayoutItemType="Parameter" Parameter="#Ref-9" />
-    <Item4 Ref="527" LayoutItemType="Parameter" Parameter="#Ref-10" />
+    <Item1 Ref="525" LayoutItemType="Parameter" Parameter="#Ref-3" />
+    <Item2 Ref="526" LayoutItemType="Parameter" Parameter="#Ref-5" />
+    <Item3 Ref="527" LayoutItemType="Parameter" Parameter="#Ref-9" />
+    <Item4 Ref="528" LayoutItemType="Parameter" Parameter="#Ref-10" />
+    <Item5 Ref="529" LayoutItemType="Parameter" Parameter="#Ref-11" />
   </ParameterPanelLayoutItems>
   <ComponentStorage>
-    <Item1 Ref="0" ObjectType="DevExpress.DataAccess.Sql.SqlDataSource,DevExpress.DataAccess.v23.1" Name="sqlDataSource1" Base64="PFNxbERhdGFTb3VyY2UgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxDb25uZWN0aW9uIE5hbWU9IkQ2OXNvZnREQiIgRnJvbUFwcENvbmZpZz0idHJ1ZSIgLz48UXVlcnkgVHlwZT0iU3RvcmVkUHJvY1F1ZXJ5IiBOYW1lPSJIUl9CQU5HX0xVT05HX0NISV9USUVUIj48UGFyYW1ldGVyIE5hbWU9IkBZIiBUeXBlPSJEZXZFeHByZXNzLkRhdGFBY2Nlc3MuRXhwcmVzc2lvbiI+KFN5c3RlbS5JbnQzMikoP1kpPC9QYXJhbWV0ZXI+PFBhcmFtZXRlciBOYW1lPSJATSIgVHlwZT0iRGV2RXhwcmVzcy5EYXRhQWNjZXNzLkV4cHJlc3Npb24iPihTeXN0ZW0uSW50MzIpKD9NKTwvUGFyYW1ldGVyPjxQYXJhbWV0ZXIgTmFtZT0iQERpdmlzaW9uSUQiIFR5cGU9IkRldkV4cHJlc3MuRGF0YUFjY2Vzcy5FeHByZXNzaW9uIj4oU3lzdGVtLlN0cmluZykoP0RpdmlzaW9uSUQpPC9QYXJhbWV0ZXI+PFByb2NOYW1lPlJQVC5IUl9CQU5HX0xVT05HX0NISV9USUVUPC9Qcm9jTmFtZT48L1F1ZXJ5PjxRdWVyeSBUeXBlPSJTdG9yZWRQcm9jUXVlcnkiIE5hbWU9IkhSX1Byb2ZpbGVfdmlld0RpdmlzaW9uTWFpbiI+PFBhcmFtZXRlciBOYW1lPSJAVXNlcklEIiBUeXBlPSJEZXZFeHByZXNzLkRhdGFBY2Nlc3MuRXhwcmVzc2lvbiI+KFN5c3RlbS5TdHJpbmcpKD9Vc2VySUQpPC9QYXJhbWV0ZXI+PFByb2NOYW1lPkhSLlByb2ZpbGVfdmlld0RpdmlzaW9uTWFpbjwvUHJvY05hbWU+PC9RdWVyeT48UmVzdWx0U2NoZW1hPjxEYXRhU2V0IE5hbWU9InNxbERhdGFTb3VyY2UxIj48VmlldyBOYW1lPSJIUl9Qcm9maWxlX3ZpZXdEaXZpc2lvbk1haW4iPjxGaWVsZCBOYW1lPSJEaXZpc2lvbklEIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uTmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvblRheENvZGUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGl2aXNpb25BZGRyZXNzIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uVGVsIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uSG90bGluZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvbk5hbWVFbmciIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iQ29kZURpdnMiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iSU5PVVROdW1iZXIiIFR5cGU9IkludDMyIiAvPjxGaWVsZCBOYW1lPSJpczI2MjUiIFR5cGU9IkJ5dGUiIC8+PEZpZWxkIE5hbWU9ImlzQXV0b0VzZXJpYWwiIFR5cGU9IkJ5dGUiIC8+PEZpZWxkIE5hbWU9ImlzQWN0aXZlIiBUeXBlPSJCeXRlIiAvPjwvVmlldz48VmlldyBOYW1lPSJIUl9CQU5HX0xVT05HX0NISV9USUVUIj48RmllbGQgTmFtZT0iRnVsbE5hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRXNlcmlhbCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJMVU9OR19DSElOSCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iUEhVQ0FQX1RSQUNITkhJRU0iIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlBIVUNBUF9BTlRSVUEiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlBIVUNBUF9ESUVOVEhPQUkiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlBIVUNBUF9YQU5HWEUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlBIVUNBUF9LSEFDIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUT05HX1RIVV9OSEFQIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJDT05HX1RJRVVfQ0hVQU4iIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkNPTkdfTkdBWV9USFVPTkciIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkNPTkdfTEFNX05HSElfVFVBTiIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQ09OR19RVU9DX0xFIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJDT05HX0xBTV9OR0FZX1FVT0NfTEUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkNPTkdfQlVfUEhFUCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQ09OR19USU5IX0xVT05HX0tIQUMiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRPTkdfQ09OR19USU5IX0xVT05HIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUT05HX0xVT05HX1RIVUNfVEUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRIVV9OSEFQX0tIQUNfS0hPTkdfQ0hJVV9USFVFIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUSFVfTkhBUF9LSEFDX0NISVVfVEhVRSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVE9OR19USFVfTkhBUF9USFVDX1RFIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJMVU9OR19ET05HX0JIIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJDT05HX0RPQU5fQ09OR1RZIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJCSFhIX0NPTkdUWSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQkhZVF9DT05HVFkiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkJIVE5fQ09OR1RZIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJDT05HX0RPQU5fTkxEIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJCSFhIX05MRCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQkhZVF9OTEQiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkJIVE5fTkxEIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJHSUFNX1RSVV9HSUFfQ0FOSCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iR0lBTV9UUlVfQkFOX1RIQU4iIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IktIQVVfVFJVX0tIQUNfS0hPTkdfR0lBTV9UUlVfVEhVRSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iS0hBVV9UUlVfS0hBQ19HSUFNX1RSVV9USFVFIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUT05HX0tIQVVfVFJVIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUSFVfTkhBUF9USU5IX1RIVUUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRIVUVfVE5DTiIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVEhVQ19UUkEiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IklEIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlBlcmlvZCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJFc2VyaWFsXzEiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGl2aXNpb25JRCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEZXBhcnRtZW50SUQiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iUG9zaXRpb25JRCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJTZWN0aW9uSUQiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVmlldG5hbWVzZSIgVHlwZT0iQnl0ZSIgLz48RmllbGQgTmFtZT0iUElUVGF4Q29kZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJKb2luRGF0ZSIgVHlwZT0iRGF0ZVRpbWUiIC8+PEZpZWxkIE5hbWU9IkJhbmtJRCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJCYW5rQWNjb3VudCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJTYWxhcnlCeUJhbmsiIFR5cGU9IkJ5dGUiIC8+PEZpZWxkIE5hbWU9IklzUGF5QnlNb250aCIgVHlwZT0iQnl0ZSIgLz48RmllbGQgTmFtZT0iSXNQYXlCeURhdGUiIFR5cGU9IkJ5dGUiIC8+PEZpZWxkIE5hbWU9IldvcmtUeXBlSUQiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iV0REZWZhdWx0IiBUeXBlPSJEb3VibGUiIC8+PEZpZWxkIE5hbWU9IkRPRGVmYXVsdCIgVHlwZT0iRG91YmxlIiAvPjxGaWVsZCBOYW1lPSJQYWlkRGVmYXVsdCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQmFzaWNTYWxhcnlBY3RpdmUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9Ik90aGVyU2FsYXJ5QWN0aXZlIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJCZW5lZml0MUFjdGl2ZSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQmVuZWZpdDJBY3RpdmUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkJlbmVmaXQzQWN0aXZlIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJCZW5lZml0NEFjdGl2ZSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQmVuZWZpdDVBY3RpdmUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkJlbmVmaXQ2QWN0aXZlIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJCZW5lZml0N0FjdGl2ZSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQmVuZWZpdDhBY3RpdmUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRlcm1pbmF0ZURhdGUiIFR5cGU9IkRhdGVUaW1lIiAvPjxGaWVsZCBOYW1lPSJTb2NpYWxTYWxhcnlBY3RpdmUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9ImlzUHJpbnQiIFR5cGU9IkJ5dGUiIC8+PEZpZWxkIE5hbWU9IlRpbWVQcmludCIgVHlwZT0iRGF0ZVRpbWUiIC8+PEZpZWxkIE5hbWU9IkVzZXJpYWxQcmludCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJVcmxQYXlTbGlwUERGIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlRpbWVVcGRhdGVQYXlTbGlwUERGIiBUeXBlPSJEYXRlVGltZSIgLz48RmllbGQgTmFtZT0iU2FsYXJ5UXVlc3Rpb24iIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVGltZVNhbGFyeVF1ZXN0aW9uIiBUeXBlPSJEYXRlVGltZSIgLz48RmllbGQgTmFtZT0iU2FsYXJ5UmVwbHkiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRXNlcmlhbFNhbGFyeVJlcGx5IiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlRpbWVTYWxhcnlSZXBseSIgVHlwZT0iRGF0ZVRpbWUiIC8+PEZpZWxkIE5hbWU9IkVzZXJpYWxfMiIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJDb2RlIiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iTGFzdE5hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iTWlkZGxlTmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJGaXJzdE5hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iSURDYXJkIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRhdGVPZklzc3VlIiBUeXBlPSJEYXRlVGltZSIgLz48RmllbGQgTmFtZT0iUGxhY2VPZklzc3VlIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkJpcnRoZGF5IiBUeXBlPSJEYXRlVGltZSIgLz48RmllbGQgTmFtZT0iUGxhY2VPZkJpcnRoIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkdlbmRlciIgVHlwZT0iQnl0ZSIgLz48RmllbGQgTmFtZT0iTWFycmllZCIgVHlwZT0iQnl0ZSIgLz48RmllbGQgTmFtZT0iTmF0aW9uYWxpdHkiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iUmVzaWRlbnQiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVGVtcG9yYXJpdHkiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iUXVhbGlmaWNhdGlvbiIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJWaWV0bmFtZXNlXzEiIFR5cGU9IkJ5dGUiIC8+PEZpZWxkIE5hbWU9Ik1vYmlsZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJFbWFpbCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJTa3lwZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJFeHQiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRmFjZWJvb2siIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iUElUVGF4Q29kZV8xIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlZpc2FOdW1iZXIiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVmlzYUV4cERhdGUiIFR5cGU9IkRhdGVUaW1lIiAvPjxGaWVsZCBOYW1lPSJJbWFnZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJFdGhuaWNJRCIgVHlwZT0iSW50MzIiIC8+PEZpZWxkIE5hbWU9IkhvbWV0b3duIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlVybEF2YXRhciIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJVc2VyX1Bhc3N3b3JkIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlVzZXJfQXV0aG9yIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlVzZXJfQ3JlYXRlZERhdGUiIFR5cGU9IkRhdGVUaW1lIiAvPjxGaWVsZCBOYW1lPSJVc2VyX2lzQ2hhbmdlUGFzcyIgVHlwZT0iQnl0ZSIgLz48RmllbGQgTmFtZT0iVXNlcl9QYXNzUmVzZXQiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVXNlcl9pc0FjdGl2ZSIgVHlwZT0iQnl0ZSIgLz48RmllbGQgTmFtZT0iVXNlcl9Sb2xlIiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iU2lnbmF0dXJlSW1hZ2VVUkwiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iQ29udGFjdCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJUYXhEZXB0IiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkNvbnRhY3RfTmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJDb250YWN0X1JlbGEiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iQ29udGFjdF9UZWwiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iQ29udGFjdF9BZGRyZXNzIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uSURfMSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvbk5hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGl2aXNpb25UYXhDb2RlIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uQWRkcmVzcyIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvblRlbCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvbkhvdGxpbmUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGl2aXNpb25OYW1lRW5nIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkNvZGVEaXZzIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IklOT1VUTnVtYmVyIiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iaXMyNjI1IiBUeXBlPSJCeXRlIiAvPjxGaWVsZCBOYW1lPSJpc0F1dG9Fc2VyaWFsIiBUeXBlPSJCeXRlIiAvPjxGaWVsZCBOYW1lPSJpc0FjdGl2ZSIgVHlwZT0iQnl0ZSIgLz48RmllbGQgTmFtZT0iRGVwYXJ0bWVudElEXzEiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGVwYXJ0bWVudE5hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGl2aXNpb25JRF8yIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRlcGFydG1lbnRHcm91cElEIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlNoaWZ0RGVwdElEIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9ImlzQWN0aXZlXzEiIFR5cGU9IkJ5dGUiIC8+PEZpZWxkIE5hbWU9IkNSU19Cb2F0SUQiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGVwYXJ0bWVudEdyb3VwSURfMSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEZXBhcnRtZW50R3JvdXBOYW1lIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlBvc2l0aW9uSURfMSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJQb3NpdGlvbk5hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iUG9zaXRpb25Hcm91cElEIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkpvYkRlc2MiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRm9ybUtQSSIgVHlwZT0iSW50MzIiIC8+PEZpZWxkIE5hbWU9ImlzQWN0aXZlXzIiIFR5cGU9IkJ5dGUiIC8+PC9WaWV3PjwvRGF0YVNldD48L1Jlc3VsdFNjaGVtYT48Q29ubmVjdGlvbk9wdGlvbnMgQ2xvc2VDb25uZWN0aW9uPSJ0cnVlIiAvPjwvU3FsRGF0YVNvdXJjZT4=" />
+    <Item1 Ref="0" ObjectType="DevExpress.DataAccess.Sql.SqlDataSource,DevExpress.DataAccess.v23.1" Name="sqlDataSource1" Base64="PFNxbERhdGFTb3VyY2UgTmFtZT0ic3FsRGF0YVNvdXJjZTEiPjxDb25uZWN0aW9uIE5hbWU9IkQ2OXNvZnREQiIgRnJvbUFwcENvbmZpZz0idHJ1ZSIgLz48UXVlcnkgVHlwZT0iU3RvcmVkUHJvY1F1ZXJ5IiBOYW1lPSJIUl9Qcm9maWxlX3ZpZXdEaXZpc2lvbk1haW4iPjxQYXJhbWV0ZXIgTmFtZT0iQFVzZXJJRCIgVHlwZT0iRGV2RXhwcmVzcy5EYXRhQWNjZXNzLkV4cHJlc3Npb24iPihTeXN0ZW0uU3RyaW5nKSg/VXNlcklEKTwvUGFyYW1ldGVyPjxQcm9jTmFtZT5IUi5Qcm9maWxlX3ZpZXdEaXZpc2lvbk1haW48L1Byb2NOYW1lPjwvUXVlcnk+PFF1ZXJ5IFR5cGU9IlN0b3JlZFByb2NRdWVyeSIgTmFtZT0iUlBUX0hSX0JhbmdfbHVvbmciPjxQYXJhbWV0ZXIgTmFtZT0iQFkiIFR5cGU9IkRldkV4cHJlc3MuRGF0YUFjY2Vzcy5FeHByZXNzaW9uIj4oU3lzdGVtLkludDMyKSg/WSk8L1BhcmFtZXRlcj48UGFyYW1ldGVyIE5hbWU9IkBNIiBUeXBlPSJEZXZFeHByZXNzLkRhdGFBY2Nlc3MuRXhwcmVzc2lvbiI+KFN5c3RlbS5JbnQzMikoP00pPC9QYXJhbWV0ZXI+PFBhcmFtZXRlciBOYW1lPSJARGl2aXNpb25JRCIgVHlwZT0iRGV2RXhwcmVzcy5EYXRhQWNjZXNzLkV4cHJlc3Npb24iPihTeXN0ZW0uU3RyaW5nKSg/RGl2aXNpb25JRCk8L1BhcmFtZXRlcj48UGFyYW1ldGVyIE5hbWU9IkBFc2VyaWFsIiBUeXBlPSJEZXZFeHByZXNzLkRhdGFBY2Nlc3MuRXhwcmVzc2lvbiI+KFN5c3RlbS5TdHJpbmcpKD9Fc2VyaWFsKTwvUGFyYW1ldGVyPjxQcm9jTmFtZT5SUFQuSFJfQmFuZ19sdW9uZzwvUHJvY05hbWU+PC9RdWVyeT48UmVzdWx0U2NoZW1hPjxEYXRhU2V0IE5hbWU9InNxbERhdGFTb3VyY2UxIj48VmlldyBOYW1lPSJIUl9Qcm9maWxlX3ZpZXdEaXZpc2lvbk1haW4iPjxGaWVsZCBOYW1lPSJEaXZpc2lvbklEIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uTmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvblNob3J0TmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvblRheENvZGUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGl2aXNpb25BZGRyZXNzIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uVGVsIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uSG90bGluZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvbkVtYWlsIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uV2Vic2l0ZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvbkJhbmtBY2NvdW50IiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uQmFua05hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGl2aXNpb25Mb2dvVXJsIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkNvZGVEaXZzIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IklOT1VUTnVtYmVyIiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iaXMyNjI1IiBUeXBlPSJCeXRlIiAvPjxGaWVsZCBOYW1lPSJpc0F1dG9Fc2VyaWFsIiBUeXBlPSJCeXRlIiAvPjxGaWVsZCBOYW1lPSJpc0FjdGl2ZSIgVHlwZT0iQnl0ZSIgLz48L1ZpZXc+PFZpZXcgTmFtZT0iUlBUX0hSX0JhbmdfbHVvbmciPjxGaWVsZCBOYW1lPSJGdWxsTmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJFc2VyaWFsIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkxVT05HX0NISU5IIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJQSFVDQVBfVFJBQ0hOSElFTSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iUEhVQ0FQX0FOVFJVQSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iUEhVQ0FQX0RJRU5USE9BSSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iUEhVQ0FQX1hBTkdYRSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iUEhVQ0FQX0tIQUMiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRPTkdfVEhVX05IQVAiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkNPTkdfVElFVV9DSFVBTiIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQ09OR19OR0FZX1RIVU9ORyIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQ09OR19MQU1fTkdISV9UVUFOIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJDT05HX1FVT0NfTEUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkNPTkdfTEFNX05HQVlfUVVPQ19MRSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQ09OR19CVV9QSEVQIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJDT05HX1RJTkhfTFVPTkdfS0hBQyIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVE9OR19DT05HX1RJTkhfTFVPTkciIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRPTkdfTFVPTkdfVEhVQ19URSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVEhVX05IQVBfS0hBQ19LSE9OR19DSElVX1RIVUUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRIVV9OSEFQX0tIQUNfQ0hJVV9USFVFIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUT05HX1RIVV9OSEFQX1RIVUNfVEUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkxVT05HX0RPTkdfQkgiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkNPTkdfRE9BTl9DT05HVFkiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkJIWEhfQ09OR1RZIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJCSFlUX0NPTkdUWSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQkhUTl9DT05HVFkiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkNPTkdfRE9BTl9OTEQiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkJIWEhfTkxEIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJCSFlUX05MRCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQkhUTl9OTEQiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IktIQVVfVFJVX0tIQUNfS0hPTkdfR0lBTV9UUlVfVEhVRSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iS0hBVV9UUlVfS0hBQ19HSUFNX1RSVV9USFVFIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUT05HX0tIQVVfVFJVIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJHSUFNX1RSVV9HSUFfQ0FOSCIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iR0lBTV9UUlVfQkFOX1RIQU4iIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IlRIVV9OSEFQX1RJTkhfVEhVRSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVEhVRV9UTkNOIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJUSFVDX1RSQSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iSUQiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iUGVyaW9kIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkVzZXJpYWxfMSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvbklEIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRlcGFydG1lbnRJRCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJQb3NpdGlvbklEIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlNlY3Rpb25JRCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJWaWV0bmFtZXNlIiBUeXBlPSJCeXRlIiAvPjxGaWVsZCBOYW1lPSJQSVRUYXhDb2RlIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkpvaW5EYXRlIiBUeXBlPSJEYXRlVGltZSIgLz48RmllbGQgTmFtZT0iQmFua0lEIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkJhbmtBY2NvdW50IiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlNhbGFyeUJ5QmFuayIgVHlwZT0iQnl0ZSIgLz48RmllbGQgTmFtZT0iSXNQYXlCeU1vbnRoIiBUeXBlPSJCeXRlIiAvPjxGaWVsZCBOYW1lPSJJc1BheUJ5RGF0ZSIgVHlwZT0iQnl0ZSIgLz48RmllbGQgTmFtZT0iV29ya1R5cGVJRCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJXRERlZmF1bHQiIFR5cGU9IkRvdWJsZSIgLz48RmllbGQgTmFtZT0iRE9EZWZhdWx0IiBUeXBlPSJEb3VibGUiIC8+PEZpZWxkIE5hbWU9IlBhaWREZWZhdWx0IiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJCYXNpY1NhbGFyeUFjdGl2ZSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iT3RoZXJTYWxhcnlBY3RpdmUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkJlbmVmaXQxQWN0aXZlIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJCZW5lZml0MkFjdGl2ZSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQmVuZWZpdDNBY3RpdmUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkJlbmVmaXQ0QWN0aXZlIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJCZW5lZml0NUFjdGl2ZSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iQmVuZWZpdDZBY3RpdmUiIFR5cGU9IkRlY2ltYWwiIC8+PEZpZWxkIE5hbWU9IkJlbmVmaXQ3QWN0aXZlIiBUeXBlPSJEZWNpbWFsIiAvPjxGaWVsZCBOYW1lPSJCZW5lZml0OEFjdGl2ZSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iVGVybWluYXRlRGF0ZSIgVHlwZT0iRGF0ZVRpbWUiIC8+PEZpZWxkIE5hbWU9IlNvY2lhbFNhbGFyeUFjdGl2ZSIgVHlwZT0iRGVjaW1hbCIgLz48RmllbGQgTmFtZT0iaXNQcmludCIgVHlwZT0iQnl0ZSIgLz48RmllbGQgTmFtZT0iVGltZVByaW50IiBUeXBlPSJEYXRlVGltZSIgLz48RmllbGQgTmFtZT0iRXNlcmlhbFByaW50IiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlVybFBheVNsaXBQREYiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVGltZVVwZGF0ZVBheVNsaXBQREYiIFR5cGU9IkRhdGVUaW1lIiAvPjxGaWVsZCBOYW1lPSJTYWxhcnlRdWVzdGlvbiIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJUaW1lU2FsYXJ5UXVlc3Rpb24iIFR5cGU9IkRhdGVUaW1lIiAvPjxGaWVsZCBOYW1lPSJTYWxhcnlSZXBseSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJFc2VyaWFsU2FsYXJ5UmVwbHkiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVGltZVNhbGFyeVJlcGx5IiBUeXBlPSJEYXRlVGltZSIgLz48RmllbGQgTmFtZT0iRXNlcmlhbF8yIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkNvZGUiIFR5cGU9IkludDMyIiAvPjxGaWVsZCBOYW1lPSJMYXN0TmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJNaWRkbGVOYW1lIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkZpcnN0TmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJJRENhcmQiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGF0ZU9mSXNzdWUiIFR5cGU9IkRhdGVUaW1lIiAvPjxGaWVsZCBOYW1lPSJQbGFjZU9mSXNzdWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iQmlydGhkYXkiIFR5cGU9IkRhdGVUaW1lIiAvPjxGaWVsZCBOYW1lPSJQbGFjZU9mQmlydGgiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iR2VuZGVyIiBUeXBlPSJCeXRlIiAvPjxGaWVsZCBOYW1lPSJNYXJyaWVkIiBUeXBlPSJCeXRlIiAvPjxGaWVsZCBOYW1lPSJOYXRpb25hbGl0eSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJSZXNpZGVudCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJUZW1wb3Jhcml0eSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJRdWFsaWZpY2F0aW9uIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlZpZXRuYW1lc2VfMSIgVHlwZT0iQnl0ZSIgLz48RmllbGQgTmFtZT0iTW9iaWxlIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkVtYWlsIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlNreXBlIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkV4dCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJGYWNlYm9vayIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJQSVRUYXhDb2RlXzEiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVmlzYU51bWJlciIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJWaXNhRXhwRGF0ZSIgVHlwZT0iRGF0ZVRpbWUiIC8+PEZpZWxkIE5hbWU9IkltYWdlIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkV0aG5pY0lEIiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iSG9tZXRvd24iIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVXJsQXZhdGFyIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlVzZXJfUGFzc3dvcmQiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVXNlcl9BdXRob3IiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iVXNlcl9DcmVhdGVkRGF0ZSIgVHlwZT0iRGF0ZVRpbWUiIC8+PEZpZWxkIE5hbWU9IlVzZXJfaXNDaGFuZ2VQYXNzIiBUeXBlPSJCeXRlIiAvPjxGaWVsZCBOYW1lPSJVc2VyX1Bhc3NSZXNldCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJVc2VyX2lzQWN0aXZlIiBUeXBlPSJCeXRlIiAvPjxGaWVsZCBOYW1lPSJTaWduYXR1cmVJbWFnZVVSTCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJDb250YWN0IiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlRheERlcHQiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iQ29udGFjdF9OYW1lIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkNvbnRhY3RfUmVsYSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJDb250YWN0X1RlbCIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJDb250YWN0X0FkZHJlc3MiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGl2aXNpb25JRF8xIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uTmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvblNob3J0TmFtZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvblRheENvZGUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGl2aXNpb25BZGRyZXNzIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uVGVsIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uSG90bGluZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvbkVtYWlsIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uV2Vic2l0ZSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEaXZpc2lvbkJhbmtBY2NvdW50IiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRpdmlzaW9uQmFua05hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGl2aXNpb25Mb2dvVXJsIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkNvZGVEaXZzIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IklOT1VUTnVtYmVyIiBUeXBlPSJJbnQzMiIgLz48RmllbGQgTmFtZT0iaXMyNjI1IiBUeXBlPSJCeXRlIiAvPjxGaWVsZCBOYW1lPSJpc0F1dG9Fc2VyaWFsIiBUeXBlPSJCeXRlIiAvPjxGaWVsZCBOYW1lPSJpc0FjdGl2ZSIgVHlwZT0iQnl0ZSIgLz48RmllbGQgTmFtZT0iRGVwYXJ0bWVudElEXzEiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGVwYXJ0bWVudE5hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iRGl2aXNpb25JRF8yIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkRlcGFydG1lbnRHcm91cElEIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlNoaWZ0SUQiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iaXNBY3RpdmVfMSIgVHlwZT0iQnl0ZSIgLz48RmllbGQgTmFtZT0iRGVwYXJ0bWVudEdyb3VwSURfMSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJEZXBhcnRtZW50R3JvdXBOYW1lIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IlBvc2l0aW9uSURfMSIgVHlwZT0iU3RyaW5nIiAvPjxGaWVsZCBOYW1lPSJQb3NpdGlvbk5hbWUiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iUG9zaXRpb25Hcm91cElEIiBUeXBlPSJTdHJpbmciIC8+PEZpZWxkIE5hbWU9IkpvYkRlc2MiIFR5cGU9IlN0cmluZyIgLz48RmllbGQgTmFtZT0iaXNMZWFkZXIiIFR5cGU9IkJ5dGUiIC8+PEZpZWxkIE5hbWU9ImlzQWN0aXZlXzIiIFR5cGU9IkJ5dGUiIC8+PC9WaWV3PjwvRGF0YVNldD48L1Jlc3VsdFNjaGVtYT48Q29ubmVjdGlvbk9wdGlvbnMgQ2xvc2VDb25uZWN0aW9uPSJ0cnVlIiAvPjwvU3FsRGF0YVNvdXJjZT4=" />
   </ComponentStorage>
   <ObjectStorage>
     <Item1 ObjectType="DevExpress.XtraReports.Serialization.ObjectStorageInfo, DevExpress.XtraReports.v23.1" Ref="2" Content="System.Int32" Type="System.Type" />
