@@ -68,7 +68,7 @@ namespace D69soft.Client.Pages.HR
         string ReportName = String.Empty;
         private async Task viewPayslip(string _id)
         {
-            ReportName = "Payslip?ID=" + _id + "";
+            ReportName = "Phieu_luong?ID=" + _id + "";
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalView_Rpt");
         }
 
