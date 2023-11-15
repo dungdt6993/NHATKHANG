@@ -105,6 +105,9 @@ namespace D69soft.Client.Pages.HR
             filterVM.DepartmentID = string.Empty;
             department_filter_list = await organizationalChartService.GetDepartmentList(filterVM);
 
+            filterVM.Eserial = string.Empty;
+            eserial_filter_list = await profileService.GetEserialListByID(filterVM);
+
             documentVMs = null;
 
             isLoading = false;

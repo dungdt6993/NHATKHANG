@@ -75,7 +75,8 @@
                             <div class="tab-pane fade @active_tabProfile" id="custom-tabs-three-profile" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
 
                                 <div class="row">
-                                    <div class="col-sm-2 col-md-2 text-center">
+
+                                    <div class="col-md-2 text-center">
                                         <div class="img-avatar-profile">
                                             <label>
                                                 <InputFile OnChange="OnInputFileChange" style="display:none;" accept="image/*" />
@@ -89,172 +90,157 @@
                                             <span>&nbsp;</span>
                                             <a href="javascript:void(0)" @onclick="(() => FileDefault())"><i class="fa-solid fa-trash-can"></i></a>
                                         }
-
                                     </div>
-                                    <div class="col-sm-10 col-md-10">
-                                        <table class="table no-border mb-0">
-                                            <tbody>
-                                                <tr>
-                                                    <th class="text-danger">Mã NV:</th>
-                                                    <td style="width:20%"><InputText class="form-control form-control-sm" placeholder="@placeholder_Eserial" @bind-Value:get="profileVM.Eserial" @bind-Value:set="(value) => {profileVM.Eserial = value.ToUpper();}" disabled="@disable_Eserial" /></td>
-                                                    <th class="text-danger">Họ:</th>
-                                                    <td style="width:20%"><InputText class="form-control form-control-sm" placeholder="Họ" @bind-Value="profileVM.LastName" /></td>
-                                                    <th>Đệm:</th>
-                                                    <td style="width:30%"><InputText class="form-control form-control-sm" placeholder="Đệm" @bind-Value="profileVM.MiddleName" /></td>
-                                                    <th class="text-danger">Tên:</th>
-                                                    <td style="width:30%"><InputText class="form-control form-control-sm" placeholder="Tên" @bind-Value="profileVM.FirstName" /></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
 
-                                        <table class="table no-border mb-0">
-                                            <tbody>
-                                                <tr>
-                                                    <th class="text-danger">Ngày sinh:</th>
-                                                    <td style="width:30%">
-                                                        <div class="input-group date">
-                                                            <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.Birthday" onClick="this.select();" />
-                                                            <div class="input-group-append">
-                                                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <th>Nơi sinh:</th>
-                                                    <td style="width:55%"><InputText class="form-control form-control-sm" placeholder="Nơi sinh" @bind-Value="profileVM.PlaceOfBirth" /></td>
-                                                    <th>Giới tính:</th>
-                                                    <td style="width:15%">
-                                                        <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" @bind-Value="profileVM.Gender">
-                                                            <option value="0">Nam</option>
-                                                            <option value="1">Nữ</option>
-                                                        </InputSelectNumber>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <div class="col-md-10">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-2">
+                                                <label class="text-danger">Mã NV</label>
+                                                <InputText class="form-control form-control-sm" placeholder="@placeholder_Eserial" @bind-Value:get="profileVM.Eserial" @bind-Value:set="(value) => {profileVM.Eserial = value.ToUpper();}" disabled="@disable_Eserial" />
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label class="text-danger">Họ</label>
+                                                <InputText class="form-control form-control-sm" placeholder="Họ" @bind-Value="profileVM.LastName" />
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label>Đệm</label>
+                                                <InputText class="form-control form-control-sm" placeholder="Đệm" @bind-Value="profileVM.MiddleName" />
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label class="text-danger">Tên</label>
+                                                <InputText class="form-control form-control-sm" placeholder="Tên" @bind-Value="profileVM.FirstName" />
+                                            </div>
+                                            <div class="form-group col-md-1">
+                                                <label>Giới tính</label>
+                                                <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" @bind-Value="profileVM.Gender">
+                                                    <option value="0">Nam</option>
+                                                    <option value="1">Nữ</option>
+                                                </InputSelectNumber>
+                                            </div>
 
-                                        <table class="table no-border mb-0">
-                                            <tbody>
-                                                <tr>
-                                                    <th class="text-danger">Căn cước:</th>
-                                                    <td style="width:35%"><InputText class="form-control form-control-sm" placeholder="Căn cước công dân/ Hộ chiếu" @bind-Value="profileVM.IDCard" /></td>
-                                                    <th>Ngày cấp:</th>
-                                                    <td style="width:30%">
-                                                        <div class="input-group date">
-                                                            <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.DateOfIssue" onClick="this.select();" />
-                                                            <div class="input-group-append">
-                                                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <th>Nơi cấp:</th>
-                                                    <td style="width:35%"><InputText class="form-control form-control-sm" placeholder="Nơi cấp" @bind-Value="profileVM.PlaceOfIssue" /></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-
-                                    <table class="table no-border mb-0">
-                                        <tbody>
-                                            <tr>
-                                                <th>Quốc tịch:</th>
-                                                <td style="width:20%">
-
-                                                    <InputSelect class="selectpicker form-control form-control-sm" data-container="body" data-style="btn-selectpicker" data-live-search="true" @bind-Value="profileVM.CountryCode">
-                                                        @if (countryVMs != null)
-                                                        {
-                                                            @foreach (var country in countryVMs)
-                                                            {
-                                                                <option value="@country.CountryCode">@country.CountryName</option>
-                                                            }
-                                                        }
-                                                    </InputSelect>
-                                                </td>
-                                                <th>Dân tộc:</th>
-                                                <td style="width:20%">
-
-                                                    <InputSelectNumber class="selectpicker form-control form-control-sm" data-container="body" data-style="btn-selectpicker" data-live-search="true" @bind-Value="profileVM.EthnicID">
-                                                        @if (ethnicVMs != null)
-                                                        {
-                                                            @foreach (var ethnic in ethnicVMs)
-                                                            {
-                                                                <option value="@ethnic.EthnicID">@ethnic.EthnicName</option>
-                                                            }
-                                                        }
-                                                    </InputSelectNumber>
-                                                </td>
-                                                <th>Nguyên quán:</th>
-                                                <td style="width:60%"><InputText class="form-control form-control-sm" placeholder="Nguyên quán" @bind-Value="profileVM.Hometown" /></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="table no-border mb-0">
-                                        <tbody>
-                                            <tr>
-                                                <th>Trình độ:</th>
-                                                <td style="width:35%"><InputText class="form-control form-control-sm" placeholder="Trình độ học vấn" @bind-Value="profileVM.Qualification" /></td>
-                                                <th>Điện thoại:</th>
-                                                <td style="width:30%"><InputText class="form-control form-control-sm" placeholder="Điện thoại" @bind-Value="profileVM.Mobile" /></td>
-                                                <th>Email:</th>
-                                                <td style="width:35%"><InputText class="form-control form-control-sm" placeholder="Email cá nhân" @bind-Value="profileVM.Email" /></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="table no-border mb-0">
-                                        <tbody>
-                                            <tr>
-                                                <th>Thường trú:</th>
-                                                <td style="width:50%"><InputText class="form-control form-control-sm" placeholder="Địa chỉ thường trú" @bind-Value="profileVM.Resident" /></td>
-                                                <th>Tạm trú:</th>
-                                                <td style="width:50%"><InputText class="form-control form-control-sm" placeholder="Địa chỉ tạm trú" @bind-Value="profileVM.Temporarity" /></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="table no-border mb-0">
-                                        <tbody>
-                                            <tr>
-                                                <th style="width:5%">MST:</th>
-                                                <td style="width:30%"><InputText class="form-control form-control-sm" placeholder="Mã số thuế" @bind-Value="profileVM.PITTaxCode" /></td>
-                                                <th style="width:10%">Cơ quan thuế:</th>
-                                                <td style="width:55%"><InputText class="form-control form-control-sm" placeholder="Cơ quan thuế" @bind-Value="profileVM.TaxDept" /></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="table no-border mb-0">
-                                        <tbody>
-                                            <tr>
-                                                <th style="width:5%">Số Visa:</th>
-                                                <td style="width:20%"><InputText class="form-control form-control-sm" placeholder="Số Visa" @bind-Value="profileVM.VisaNumber" /></td>
-                                                <th style="width:10%">Ngày hết hạn visa:</th>
-                                                <td style="width:20%">
-                                                    <div class="input-group date">
-                                                        <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.VisaExpDate" onClick="this.select();" />
-                                                        <div class="input-group-append">
-                                                            <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                                        </div>
+                                            <div class="form-group col-md-2">
+                                                <label class="text-danger">Ngày sinh</label>
+                                                <div class="input-group date">
+                                                    <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.Birthday" onClick="this.select();" />
+                                                    <div class="input-group-append">
+                                                        <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                                                     </div>
-                                                </td>
-                                                <td style="width:30%"></td>
-                                                <th style="width:5%"></th>
-                                                <td style="width:30%"></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-5">
+                                                <label>Nơi sinh</label>
+                                                <InputText class="form-control form-control-sm" placeholder="Nơi sinh" @bind-Value="profileVM.PlaceOfBirth" />
+                                            </div>
+                                            <div class="form-group col-md-5">
+                                                <label>Nguyên quán</label>
+                                                <InputText class="form-control form-control-sm" placeholder="Nguyên quán" @bind-Value="profileVM.Hometown" />
+                                            </div>
+
+                                            <div class="form-group col-md-3">
+                                                <label class="text-danger">Căn cước/ Hộ chiếu</label>
+                                                <InputText class="form-control form-control-sm" placeholder="Căn cước công dân/ Hộ chiếu" @bind-Value="profileVM.IDCard" />
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label>Ngày cấp</label>
+                                                <div class="input-group date">
+                                                    <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.DateOfIssue" onClick="this.select();" />
+                                                    <div class="input-group-append">
+                                                        <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label>Nơi cấp</label>
+                                                <InputText class="form-control form-control-sm" placeholder="Nơi cấp" @bind-Value="profileVM.PlaceOfIssue" />
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label>Quốc tịch</label>
+                                                <InputSelect class="selectpicker form-control form-control-sm" data-container="body" data-style="btn-selectpicker" data-live-search="true" @bind-Value="profileVM.CountryCode">
+                                                    @if (countryVMs != null)
+                                                    {
+                                                        @foreach (var country in countryVMs)
+                                                        {
+                                                            <option value="@country.CountryCode">@country.CountryName</option>
+                                                        }
+                                                    }
+                                                </InputSelect>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label>Dân tộc</label>
+                                                <InputSelectNumber class="selectpicker form-control form-control-sm" data-container="body" data-style="btn-selectpicker" data-live-search="true" @bind-Value="profileVM.EthnicID">
+                                                    @if (ethnicVMs != null)
+                                                    {
+                                                        @foreach (var ethnic in ethnicVMs)
+                                                        {
+                                                            <option value="@ethnic.EthnicID">@ethnic.EthnicName</option>
+                                                        }
+                                                    }
+                                                </InputSelectNumber>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label>Trình độ</label>
+                                        <InputText class="form-control form-control-sm" placeholder="Trình độ học vấn" @bind-Value="profileVM.Qualification" />
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>Điện thoại</label>
+                                        <InputText class="form-control form-control-sm" placeholder="Điện thoại" @bind-Value="profileVM.Mobile" />
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>Email</label>
+                                        <InputText class="form-control form-control-sm" placeholder="Email cá nhân" @bind-Value="profileVM.Email" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label>Thường trú</label>
+                                        <InputText class="form-control form-control-sm" placeholder="Địa chỉ thường trú" @bind-Value="profileVM.Resident" />
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label>Tạm trú</label>
+                                        <InputText class="form-control form-control-sm" placeholder="Địa chỉ tạm trú" @bind-Value="profileVM.Temporarity" />
+                                    </div>
 
                                 </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <label>Mã số thuế</label>
+                                        <InputText class="form-control form-control-sm" placeholder="Mã số thuế" @bind-Value="profileVM.PITTaxCode" />
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label>Cơ quan thuế</label>
+                                        <InputText class="form-control form-control-sm" placeholder="Cơ quan thuế" @bind-Value="profileVM.TaxDept" />
+                                    </div>
+
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <label>Visa</label>
+                                        <InputText class="form-control form-control-sm" placeholder="Số Visa" @bind-Value="profileVM.VisaNumber" />
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label>Ngày hết hạn</label>
+                                        <div class="input-group date">
+                                            <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.VisaExpDate" onClick="this.select();" />
+                                            <div class="input-group-append">
+                                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
                             </div>
 
-                            @{
-                                string active_tabJob;
-                                active_tabJob = @profileVM.IsTypeUpdate == 2 ? "show active" : "";
-                            }
-                            <div class="tab-pane fade @active_tabJob" id="custom-tabs-three-job" role="tabpanel" aria-labelledby="custom-tabs-three-job-tab">
+                            <div class="tab-pane fade @(profileVM.IsTypeUpdate == 2 ? "show active" : "") " id="custom-tabs-three-job" role="tabpanel" aria-labelledby="custom-tabs-three-job-tab">
 
                                 <div class="@hidden_adjustProfile">
 
@@ -277,15 +263,6 @@
                                     </div>
 
                                     <div class="form-group clearfix">
-                                        @*                                        <div class="icheck-primary d-inline">
-                                        <input type="radio" id="ckJob1" name="ckJob" value="1" @onchange="onchange_ckJob" checked="@(profileVM.ckJob == 1? true: false)" disabled="@disable_ckJob">
-                                        <label for="ckJob1">
-                                        Thay đổi công việc
-                                        </label>
-                                        </div>
-                                        <label>
-                                        &nbsp;&nbsp;
-                                        </label>*@
                                         <div class="icheck-primary d-inline">
                                             <input type="radio" id="ckJob2" name="ckJob" value="2" @onchange="onchange_ckJob" checked="@(profileVM.ckJob == 2? true: false)" disabled="@disable_ckJob">
                                             <label for="ckJob2">
@@ -304,202 +281,184 @@
                                     </div>
                                 </div>
 
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <label class="text-danger">Ngày vào làm</label>
+                                        <div class="input-group date">
+                                            <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.JoinDate" onClick="this.select();" disabled="@disabled_JoinDate" />
+                                            <div class="input-group-append">
+                                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="text-danger">Công ty</label>
+                                        <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true">
+                                            <option data-subtext="@filterVM.DivisionID" showSubtext="true">@(division_filter_list != null ? @division_filter_list.Where(x => x.DivisionID == filterVM.DivisionID).Select(x => x.DivisionName).First() : String.Empty)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label>Ngày ký HĐ</label>
+                                        <div class="input-group date">
+                                            <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.StartContractDate" OnRangeSelect="onchange_StartContractDate" onClick="this.select();" disabled="@disabled_StartContractDate" />
+                                            <div class="input-group-append">
+                                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <label>Ngày tính phép năm</label>
+                                        <div class="input-group date">
+                                            <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.StartDayAL" onClick="this.select();" />
+                                            <div class="input-group-append">
+                                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="text-danger">Bộ phận</label>
+                                        <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                                     @bind-Value="profileVM.DepartmentID">
+                                            <option value=@string.Empty>-----Chọn-----</option>
+                                            @if (department_filter_list != null)
+                                            {
+                                                @foreach (var department in department_filter_list)
+                                                {
+                                                    <option data-subtext="@department.DepartmentID" value="@department.DepartmentID">@department.DepartmentName</option>
+                                                }
+                                            }
+                                        </InputSelect>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label class="text-danger">Loại HĐ</label>
+                                        <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
+                                                     ValueExpression="@(()=>profileVM.ContractTypeID)"
+                                                     Value="@profileVM.ContractTypeID"
+                                                     ValueChanged="@((string value) => onchange_ContractType(value))" disabled="@disabled_ContractTypeID">
+                                            @if (profileVM.IsTypeUpdate == 0)
+                                            {
+                                                <option value=@string.Empty>-----Chọn-----</option>
+                                            }
+                                            @if (contractTypeVMs != null)
+                                            {
+                                                @foreach (var contractTypeVM in contractTypeVMs)
+                                                {
+                                                    <option data-subtext="@contractTypeVM.ContractTypeID" value="@contractTypeVM.ContractTypeID">@contractTypeVM.ContractTypeName</option>
+                                                }
+                                            }
+                                        </InputSelect>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <label class="text-danger">Loại công việc</label>
+                                        <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind-Value="profileVM.WorkTypeID">
+                                            <option value=@string.Empty>-----Chọn-----</option>
+                                            @if (workTypeVMs != null)
+                                            {
+                                                @foreach (var workType in workTypeVMs)
+                                                {
+                                                    <option data-subtext="@workType.WorkTypeID" value="@workType.WorkTypeID">@workType.WorkTypeName</option>
+                                                }
+                                            }
+                                        </InputSelect>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="text-danger">Khu vực</label>
+                                        <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind-Value="profileVM.SectionID">
+                                            <option value=@string.Empty>-----Chọn-----</option>
+                                            @if (section_filter_list != null)
+                                            {
+                                                @foreach (var _section in section_filter_list)
+                                                {
+                                                    <option data-subtext="@_section.SectionID" value="@_section.SectionID">@_section.SectionName</option>
+                                                }
+                                            }
+                                        </InputSelect>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label>Ngày hết hạn HĐ</label>
+                                        <div class="input-group">
+                                            <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.EndContractDate" onClick="this.select();" disabled="@disabled_EndContractDate" />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <label>Mã chấm công</label>
+                                        <InputNumber type="text" class="form-control form-control-sm" placeholder="Mã chấm công" @bind-Value="profileVM.TimeAttCode" />
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="text-danger">Vị trí</label>
+                                        <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind-Value="profileVM.PositionID">
+                                            <option value=@string.Empty>-----Chọn-----</option>
+                                            @if (position_filter_list != null)
+                                            {
+                                                @foreach (var position in position_filter_list)
+                                                {
+                                                    <option data-subtext="@position.PositionID" value="@position.PositionID">@position.PositionName</option>
+                                                }
+                                            }
+                                        </InputSelect>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label class="text-danger">Ngày bắt đầu CV</label>
+                                        <div class="input-group date">
+                                            <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.JobStartDate" onClick="this.select();" disabled="@disabled_JobStartDate" />
+                                            <div class="input-group-append">
+                                                <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label>Email công ty</label>
+                                        <InputText class="form-control form-control-sm" placeholder="Email công ty" @bind-Value="profileVM.EmailCompany" />
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>Số sổ BHXH</label>
+                                        <InputText class="form-control form-control-sm" placeholder="Số sổ BHXH" @bind-Value="profileVM.SocialInsNumber" />
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label>Thẻ BHYT</label>
+                                        <InputText class="form-control form-control-sm" placeholder="Thẻ BHYT" @bind-Value="profileVM.HealthInsNumber" />
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label>Số TKNH</label>
+                                        <InputText class="form-control form-control-sm" placeholder="Số tài khoản" @bind-Value="profileVM.BankAccount" />
+                                    </div>
+                                    <div class="form-group col-md-8">
+                                        <label>Ngân hàng</label>
+                                        <InputSelect class="selectpicker form-control form-control-sm"
+                                                     data-style="btn-selectpicker" data-container="body"
+                                                     data-live-search="true" data-show-subtext="true"
+                                                     @bind-Value="profileVM.BankCode">
+                                            <option value=@String.Empty>-----Chọn-----</option>
+                                            @if (bankVMs != null)
+                                            {
+                                                @foreach (var _bankVM in bankVMs)
+                                                {
+                                                    <option data-subtext="@_bankVM.BankShortName" value="@_bankVM.SwiftCode">@_bankVM.BankFullName</option>
+                                                }
+                                            }
+                                        </InputSelect>
+                                    </div>
+                                </div>
+
                                 <div class="row">
-
-                                    <table class="table no-border mb-0">
-                                        <tbody>
-                                            <tr>
-                                                <th style="width:10%" class="text-danger">Ngày vào làm:</th>
-                                                <td style="width:20%">
-                                                    <div class="input-group date">
-                                                        <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.JoinDate" onClick="this.select();" disabled="@disabled_JoinDate" />
-                                                        <div class="input-group-append">
-                                                            <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <th style="width:7%" class="text-danger">Công ty:</th>
-                                                <td style="width:33%">
-                                                    <select class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-live-search="true">
-                                                        <option data-subtext="@filterVM.DivisionID" showSubtext="true">@(division_filter_list != null ? @division_filter_list.Where(x => x.DivisionID == filterVM.DivisionID).Select(x => x.DivisionName).First() : String.Empty)</option>
-                                                    </select>
-                                                </td>
-                                                <th style="width:10%" class="text-danger">Ngày ký HĐ:</th>
-                                                <td style="width:20%">
-                                                    <div class="input-group date">
-                                                        <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.StartContractDate" OnRangeSelect="onchange_StartContractDate" onClick="this.select();" disabled="@disabled_StartContractDate" />
-                                                        <div class="input-group-append">
-                                                            <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="table no-border mb-0">
-                                        <tbody>
-                                            <tr>
-                                                <th style="width:10%">Ngày tính phép năm:</th>
-                                                <td style="width:20%">
-                                                    <div class="input-group date">
-                                                        <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.StartDayAL" onClick="this.select();" />
-                                                        <div class="input-group-append">
-                                                            <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <th style="width:7%" class="text-danger">Bộ phận:</th>
-                                                <td style="width:33%">
-
-                                                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                                    @bind-Value="profileVM.DepartmentID">
-                                                        <option value=@string.Empty>-----Chọn-----</option>
-                                                        @if (department_filter_list != null)
-                                                        {
-                                                            @foreach (var department in department_filter_list)
-                                                            {
-                                                                <option data-subtext="@department.DepartmentID" value="@department.DepartmentID">@department.DepartmentName</option>
-                                                            }
-                                                        }
-                                                    </InputSelect>
-
-                                                </td>
-                                                <th style="width:10%" class="text-danger">Loại HĐ:</th>
-                                                <td style="width:20%">
-
-                                                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true"
-                                                                 ValueExpression="@(()=>profileVM.ContractTypeID)"
-                                                                 Value="@profileVM.ContractTypeID"
-                                                                 ValueChanged="@((string value) => onchange_ContractType(value))" disabled="@disabled_ContractTypeID">
-                                                        <option value=@string.Empty>-----Chọn-----</option>
-                                                        @if (contractTypeVMs != null)
-                                                        {
-                                                            @foreach (var contractTypeVM in contractTypeVMs)
-                                                            {
-                                                                <option data-subtext="@contractTypeVM.ContractTypeID" value="@contractTypeVM.ContractTypeID">@contractTypeVM.ContractTypeName</option>
-                                                            }
-                                                        }
-                                                    </InputSelect>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="table no-border mb-0">
-                                        <tbody>
-                                            <tr>
-                                                <th style="width:10%;" class="text-danger">Loại công việc:</th>
-                                                <td style="width:20%">
-
-                                                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind-Value="profileVM.WorkTypeID">
-                                                        <option value=@string.Empty>-----Chọn-----</option>
-                                                        @if (workTypeVMs != null)
-                                                        {
-                                                            @foreach (var workType in workTypeVMs)
-                                                            {
-                                                                <option data-subtext="@workType.WorkTypeID" value="@workType.WorkTypeID">@workType.WorkTypeName</option>
-                                                            }
-                                                        }
-                                                    </InputSelect>
-                                                </td>
-                                                <th style="width:7%" class="text-danger">Khu vực:</th>
-                                                <td style="width:33%">
-
-                                                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind-Value="profileVM.SectionID">
-                                                        <option value=@string.Empty>-----Chọn-----</option>
-                                                        @if (section_filter_list != null)
-                                                        {
-                                                            @foreach (var _section in section_filter_list)
-                                                            {
-                                                                <option data-subtext="@_section.SectionID" value="@_section.SectionID">@_section.SectionName</option>
-                                                            }
-                                                        }
-                                                    </InputSelect>
-
-                                                </td>
-                                                <th style="width:10%;">Ngày hết hạn HĐ:</th>
-                                                <td style="width:20%">
-                                                    <div class="input-group">
-                                                        <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.EndContractDate" onClick="this.select();" disabled="@disabled_EndContractDate" />
-                                                        <div class="input-group-append">
-                                                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="table no-border mb-0">
-                                        <tbody>
-                                            <tr>
-                                                <th style="width:10%;">Mã chấm công:</th>
-                                                <td style="width:20%"><InputNumber type="text" class="form-control form-control-sm" placeholder="Mã chấm công" @bind-Value="profileVM.TimeAttCode" /></td>
-                                                <th style="width:7%;" class="text-danger">Vị trí:</th>
-                                                <td style="width:33%">
-
-                                                    <InputSelect class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body" data-live-search="true" @bind-Value="profileVM.PositionID">
-                                                        <option value=@string.Empty>-----Chọn-----</option>
-                                                        @if (position_filter_list != null)
-                                                        {
-                                                            @foreach (var position in position_filter_list)
-                                                            {
-                                                                <option data-subtext="@position.PositionID" value="@position.PositionID">@position.PositionName</option>
-                                                            }
-                                                        }
-                                                    </InputSelect>
-
-                                                </td>
-                                                <th style="width:10%;" class="text-danger">Ngày bắt đầu CV:</th>
-                                                <td style="width:20%">
-                                                    <div class="input-group date">
-                                                        <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask" @bind-StartDate="profileVM.JobStartDate" onClick="this.select();" disabled="@disabled_JobStartDate" />
-                                                        <div class="input-group-append">
-                                                            <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="table no-border mb-0">
-                                        <tbody>
-                                            <tr>
-                                                <th style="width:10%;">Email:</th>
-                                                <td style="width:30%"><InputText class="form-control form-control-sm" placeholder="Email công ty" @bind-Value="profileVM.EmailCompany" /></td>
-                                                <th style="width:10%;">Số BHXH:</th>
-                                                <td style="width:20%"><InputText class="form-control form-control-sm" placeholder="Số sổ BHXH" @bind-Value="profileVM.SocialInsNumber" /></td>
-                                                <th style="width:10%;">Thẻ BHYT:</th>
-                                                <td style="width:20%"><InputText class="form-control form-control-sm" placeholder="Thẻ BHYT" @bind-Value="profileVM.HealthInsNumber" /></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="table no-border mb-0">
-                                        <tbody>
-                                            <tr>
-                                                <th style="width:10%">Ngân hàng:</th>
-                                                <td style="width:20%"><InputText class="form-control form-control-sm" placeholder="Số tài khoản" @bind-Value="profileVM.BankAccount" /></td>
-                                                <td style="width:70%">
-                                                    <InputSelect class="selectpicker form-control form-control-sm"
-                                                                 data-style="btn-selectpicker" data-container="body"
-                                                                 data-live-search="true" data-show-subtext="true"
-                                                    @bind-Value="profileVM.BankCode">
-                                                        <option value=@String.Empty>-----Chọn-----</option>
-                                                        @if (bankVMs != null)
-                                                        {
-                                                            @foreach (var _bankVM in bankVMs)
-                                                            {
-                                                                <option data-subtext="@_bankVM.BankShortName" value="@_bankVM.SwiftCode">@_bankVM.BankFullName</option>
-                                                            }
-                                                        }
-                                                    </InputSelect>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
 
                                     <table class="table no-border mb-0">
                                         <tbody>
@@ -713,7 +672,7 @@
                                                         <div class="form-group">
                                                             <div class="input-group date">
                                                                 <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask"
-                                                                @bind-StartDate="profileVM.BeginSalaryDate"
+                                                                                 @bind-StartDate="profileVM.BeginSalaryDate"
                                                                                  onClick="this.select();" disabled="@disabled_BeginSalaryDate" />
                                                                 <div class="input-group-append">
                                                                     <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
@@ -1230,7 +1189,7 @@
                                              data-style="btn-selectpicker"
                                              data-container="body"
                                              data-show-subtext="true"
-                                @bind-Value="contractTypeVM.ContractTypeGroupID">
+                                             @bind-Value="contractTypeVM.ContractTypeGroupID">
                                     <option value=@string.Empty>-----Nhóm HĐ-----</option>
                                     @if (contractTypeGroupVMs != null)
                                     {
@@ -1616,7 +1575,7 @@
                             <label class="col-sm-2 col-form-label">Quan hệ</label>
                             <div class="col-sm-5">
                                 <InputSelectNumber class="selectpicker form-control form-control-sm" data-style="btn-selectpicker" data-container="body"
-                                @bind-Value="profileRelationshipVM.RelationshipID">
+                                                   @bind-Value="profileRelationshipVM.RelationshipID">
                                     @if (relationshipVMs != null)
                                     {
                                         @foreach (var _relationshipVM in relationshipVMs)
@@ -1652,7 +1611,7 @@
                             <div class="col-sm-5">
                                 <div class="input-group date" name="datepicker">
                                     <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask"
-                                    @bind-StartDate="profileRelationshipVM.Rela_Birthday" OnRangeSelect="onchange_Rela_Birthday"
+                                                     @bind-StartDate="profileRelationshipVM.Rela_Birthday" OnRangeSelect="onchange_Rela_Birthday"
                                                      onClick="this.select();" />
                                     <div class="input-group-append">
                                         <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
@@ -1750,7 +1709,7 @@
                             @for (int j = 1; j <= 12; j++)
                             {
                                 <th class="text-center">
-                                    @_drPayroll["T"+@j].ToString()
+                                    @_drPayroll["T" + @j].ToString()
                                     @if (@_drPayroll["TypeID"].ToString() == "4" && j >= 2)
                                     {
                                         if (float.Parse(_drPayroll["T" + j].ToString()) >= float.Parse(_drPayroll["T" + (j - 1)].ToString()))

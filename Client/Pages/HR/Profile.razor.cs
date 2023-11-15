@@ -707,7 +707,7 @@ namespace D69soft.Client.Pages.HR
                 }
                 else
                 {
-                    placeholder_Eserial = "Mã NV tự động";
+                    placeholder_Eserial = "Mặc định";
                 }
             }
             else
