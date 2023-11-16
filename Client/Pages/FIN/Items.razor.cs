@@ -11,6 +11,7 @@ using D69soft.Client.Extensions;
 using D69soft.Shared.Models.ViewModels.HR;
 using Newtonsoft.Json.Linq;
 using Blazored.TextEditor;
+using D69soft.Shared.Models.Entities.HR;
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -38,6 +39,7 @@ namespace D69soft.Client.Pages.FIN
         IEnumerable<ItemsTypeVM> itemsTypeVMs;
 
         //ItemsClass
+        ItemsClassVM itemsClassVM = new();
         IEnumerable<ItemsClassVM> itemsClassVMs;
 
         //ItemsGroup
@@ -95,7 +97,7 @@ namespace D69soft.Client.Pages.FIN
                 navigationManager.NavigateTo("/");
             }
 
-            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
+            filterVM.DivisionID = string.Empty;
 
             itemsTypeVMs = await inventoryService.GetItemsTypes();
 
@@ -142,6 +144,8 @@ namespace D69soft.Client.Pages.FIN
             isLoading = true;
 
             filterVM.IClsCode = value;
+
+            itemsClassVM = String.IsNullOrEmpty(value) ? new() : itemsClassVMs.First(x => x.IClsCode == value);
 
             filterVM.IGrpCode = String.Empty;
 
@@ -193,6 +197,67 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
+        private async Task InitializeModalUpdate_ItemsClass(int _IsTypeUpdate)
+        {
+            isLoading = true;
+
+            if (_IsTypeUpdate == 0)
+            {
+                itemsClassVM = new();
+            }
+
+            itemsClassVM.IsTypeUpdate = _IsTypeUpdate;
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_ItemsClass");
+
+            isLoading = false;
+        }
+
+        private async Task UpdateItemsClass(EditContext _formItemsClassVM, int _IsTypeUpdate)
+        {
+            itemsClassVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formItemsClassVM.Validate()) return;
+
+            isLoading = true;
+
+            if (itemsClassVM.IsTypeUpdate != 2)
+            {
+                await inventoryService.UpdateItemsClass(itemsClassVM);
+
+                await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsClass");
+                await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+            }
+            else
+            {
+                if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
+                {
+                    int affectedRows = await inventoryService.UpdateItemsClass(itemsClassVM);
+
+                    if (affectedRows > 0)
+                    {
+                        filterVM.IClsCode = String.Empty;
+
+                        await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsClass");
+                        await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
+                    }
+                    else
+                    {
+                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu liên quan.", SweetAlertMessageType.error);
+                        itemsClassVM.IsTypeUpdate = 1;
+                    }
+                }
+                else
+                {
+                    itemsClassVM.IsTypeUpdate = 1;
+                }
+            }
+
+            itemsClassVMs = await inventoryService.GetItemsClassList();
+
+            isLoading = false;
+        }
+
         private async Task InitializeModalUpdate_ItemsGroup(int _IsTypeUpdate)
         {
             isLoading = true;
@@ -211,8 +276,12 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
-        private async Task UpdateItemsGroup()
+        private async Task UpdateItemsGroup(EditContext _formItemsGroupVM, int _IsTypeUpdate)
         {
+            itemsGroupVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formItemsGroupVM.Validate()) return;
+
             isLoading = true;
 
             if (itemsGroupVM.IsTypeUpdate != 2)
@@ -231,7 +300,6 @@ namespace D69soft.Client.Pages.FIN
                     if (affectedRows > 0)
                     {
                         filterVM.IGrpCode = String.Empty;
-                        itemsVMs = await inventoryService.GetItemsList(filterVM);
 
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsGroup");
                         await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);

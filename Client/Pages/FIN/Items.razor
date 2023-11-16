@@ -4,11 +4,72 @@
 <LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 <Loading isLoading="@isLoading"></Loading>
 
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_ItemsClass">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <EditForm Model="@itemsClassVM" Context="formItemsClassVM">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>CẬP NHẬT LỚP HÀNG</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Mã</label>
+                        <div class="col-sm-5">
+                            @if (itemsClassVM.IsTypeUpdate == 0)
+                            {
+                                <InputText class="form-control form-control-sm" placeholder="Mã lớp hàng" @bind-Value:get="itemsClassVM.IClsCode" @bind-Value:set="(value) => {itemsClassVM.IClsCode = value.ToUpper();}" />
+                                <ValidationMessage For="@(() => itemsClassVM.IClsCode)" />
+                            }
+                            else
+                            {
+                                <input type="text" readonly class="form-control form-control-sm" placeholder="Mã lớp hàng" value="@itemsClassVM.IClsCode" />
+                            }
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Tên</label>
+                        <div class="col-sm-9">
+                            <InputText class="form-control form-control-sm" placeholder="Tên nhóm hàng" @bind-Value="itemsClassVM.IClsName" autofocus />
+                            <ValidationMessage For="@(() => itemsClassVM.IClsName)" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-check"></i> Lưu</button>
+                    @if (itemsClassVM.IsTypeUpdate == 1)
+                    {
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateItemsClass(formItemsClassVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                    }
+                </div>
+
+            </EditForm>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_ItemsGroup">
     <div class="modal-dialog">
         <div class="modal-content">
 
-            <EditForm Model="@itemsGroupVM" OnValidSubmit="@UpdateItemsGroup">
+            <EditForm Model="@itemsGroupVM" Context="formItemsGroupVM">
 
                 <FluentValidationValidator />
 
@@ -73,7 +134,7 @@
                     <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-check"></i> Lưu</button>
                     @if (itemsGroupVM.IsTypeUpdate == 1)
                     {
-                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => itemsGroupVM.IsTypeUpdate = 2)><i class="fas fa-trash-alt"></i> Xóa</button>
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateItemsGroup(formItemsGroupVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
                     }
                 </div>
 
@@ -193,6 +254,7 @@
                                                     }
                                                 }
                                             </InputSelect>
+                                            <ValidationMessage For="@(() => itemsVM.ITypeCode)" />
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label>Lớp hàng</label>
@@ -209,7 +271,6 @@
                                                     }
                                                 }
                                             </InputSelect>
-                                            <ValidationMessage For="@(() => itemsVM.IClsCode)" />
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label>Nhóm hàng</label>
@@ -226,7 +287,6 @@
                                                     }
                                                 }
                                             </InputSelect>
-                                            <ValidationMessage For="@(() => itemsVM.IGrpCode)" />
                                         </div>
                                     </div>
 
@@ -562,24 +622,36 @@
 
                     <div class="card card-primary card-outline">
                         <div class="card-header">
-                            <h3 class="card-title">Lớp hàng</h3>
+                            <div class="d-flex justify-content-between">
+                                <h3 class="card-title">Lớp hàng</h3>
+                                <a @onclick="(() => InitializeModalUpdate_ItemsClass(0))"> <i class="fa-solid fa-xl fa-circle-plus text-success"></i></a>
+                            </div>
                         </div>
                         <div class="card-body">
-                            <InputSelect class="selectpicker form-control form-control-sm"
-                                         data-style="btn-selectpicker" data-container="body"
-                                         data-live-search="true" data-show-subtext="true"
-                                         ValueExpression="@(()=>filterVM.IClsCode)"
-                                         Value="@filterVM.IClsCode"
-                                         ValueChanged="@((string value) => onchange_filter_IClsCode(value))">
-                                <option value=@String.Empty>-----Tất cả-----</option>
-                                @if (itemsClassVMs != null)
-                                {
-                                    @foreach (var _itemsClassVM in itemsClassVMs)
+                            <div class="input-group">
+                                <InputSelect class="selectpicker form-control form-control-sm"
+                                             data-style="btn-selectpicker" data-container="body"
+                                             data-live-search="true" data-show-subtext="true"
+                                             ValueExpression="@(()=>filterVM.IClsCode)"
+                                             Value="@filterVM.IClsCode"
+                                             ValueChanged="@((string value) => onchange_filter_IClsCode(value))">
+                                    <option value=@String.Empty>-----Tất cả-----</option>
+                                    @if (itemsClassVMs != null)
                                     {
-                                        <option data-subtext="@_itemsClassVM.IClsCode" value="@_itemsClassVM.IClsCode">@_itemsClassVM.IClsName</option>
+                                        @foreach (var _itemsClassVM in itemsClassVMs)
+                                        {
+                                            <option data-subtext="@_itemsClassVM.IClsCode" value="@_itemsClassVM.IClsCode">@_itemsClassVM.IClsName</option>
+                                        }
                                     }
+                                </InputSelect>
+                                @if (!String.IsNullOrEmpty(filterVM.IClsCode))
+                                {
+                                    <div class="input-group-append">
+                                        <button class="btn" @onclick="(() => InitializeModalUpdate_ItemsClass(1))"><i class="fa-solid fa-pencil text-secondary"></i></button>
+                                    </div>
                                 }
-                            </InputSelect>
+                            </div>
+
                         </div>
                     </div>
 

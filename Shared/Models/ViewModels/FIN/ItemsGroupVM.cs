@@ -11,7 +11,6 @@ namespace D69soft.Shared.Models.ViewModels.FIN
     {
         //Para
         public int IsTypeUpdate { get; set; }
-        //Para
 
         public string IClsCode { get; set; }
         public string IClsName { get; set; }

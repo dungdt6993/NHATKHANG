@@ -33,6 +33,31 @@ namespace D69soft.Client.Validator.FIN
         }
     }
 
+    public class ItemsClassValidator : AbstractValidator<ItemsClassVM>
+    {
+        public ItemsClassValidator(InventoryService _inventoryService)
+        {
+            When(x => x.IsTypeUpdate != 2, () =>
+            {
+                RuleFor(x => x.IClsCode).NotEmpty().WithMessage("Không được trống.")
+                .Matches(@"^[a-zA-Z0-9]+$").WithMessage("Không hợp lệ.")
+                .MinimumLength(2).WithMessage("Tối thiểu 2 kí tự.")
+                .MustAsync(async (id, cancellation) =>
+                {
+                    bool result = true;
+                    if (!String.IsNullOrEmpty(id))
+                    {
+                        result = await _inventoryService.ContainsIClsCode(id);
+                    }
+                    return result;
+                }).When(x => x.IsTypeUpdate == 0).WithMessage("Đã tồn tại.");
+
+                RuleFor(x => x.IClsName).NotEmpty().WithMessage("Không được trống.");
+
+            });
+        }
+    }
+
     public class ItemsGroupValidator : AbstractValidator<ItemsGroupVM>
     {
         public ItemsGroupValidator(InventoryService _inventoryService)

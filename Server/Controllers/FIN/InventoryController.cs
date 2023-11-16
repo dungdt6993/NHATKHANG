@@ -52,6 +52,46 @@ namespace D69soft.Server.Controllers.FIN
                 return Ok(result);
             }
         }
+        [HttpPost("UpdateItemsClass")]
+        public async Task<ActionResult<int>> UpdateItemsClass(ItemsClassVM _itemsClassVM)
+        {
+            var sql = "";
+            if (_itemsClassVM.IsTypeUpdate == 0)
+            {
+                sql = "Insert into FIN.ItemsClass (IClsCode,IClsName,IClsActive) Values (@IClsCode,@IClsName,1) ";
+            }
+            if (_itemsClassVM.IsTypeUpdate == 1)
+            {
+                sql = "Update FIN.ItemsClass set IClsName = @IClsName where IClsCode = @IClsCode ";
+            }
+            if (_itemsClassVM.IsTypeUpdate == 2)
+            {
+                sql = "if not exists (select * from FIN.ItemsGroup where IClsCode=@IClsCode) ";
+                sql += "begin ";
+                sql += "delete from FIN.ItemsClass where IClsCode=@IClsCode ";
+                sql += "end ";
+            }
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == System.Data.ConnectionState.Closed)
+                    conn.Open();
+
+                return await conn.ExecuteAsync(sql, _itemsClassVM); ;
+            }
+        }
+
+        [HttpGet("ContainsIClsCode/{id}")]
+        public async Task<ActionResult<bool>> ContainsIClsCode(string id)
+        {
+            var sql = "SELECT CAST(CASE WHEN EXISTS (SELECT 1 FROM FIN.ItemsClass where IClsCode = @IClsCode) THEN 0 ELSE 1 END as BIT)";
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == System.Data.ConnectionState.Closed)
+                    conn.Open();
+
+                return await conn.ExecuteScalarAsync<bool>(sql, new { IClsCode = id });
+            }
+        }
 
         [HttpGet("GetItemsGroupList")]
         public async Task<ActionResult<IEnumerable<ItemsGroupVM>>> GetItemsGroupList()
@@ -325,7 +365,7 @@ namespace D69soft.Server.Controllers.FIN
         [HttpPost("GetStockList")]
         public async Task<ActionResult<IEnumerable<StockVM>>> GetStockList(FilterVM _filterVM)
         {
-            var sql = "select * from FIN.Stock where DivisionID=@DivisionID order by StockName ";
+            var sql = "select * from FIN.Stock order by StockName ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)
