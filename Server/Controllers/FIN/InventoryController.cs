@@ -362,8 +362,8 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
-        [HttpPost("GetStockList")]
-        public async Task<ActionResult<IEnumerable<StockVM>>> GetStockList(FilterVM _filterVM)
+        [HttpGet("GetStockList")]
+        public async Task<ActionResult<IEnumerable<StockVM>>> GetStockList()
         {
             var sql = "select * from FIN.Stock order by StockName ";
             using (var conn = new SqlConnection(_connConfig.Value))
@@ -371,7 +371,7 @@ namespace D69soft.Server.Controllers.FIN
                 if (conn.State == ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<StockVM>(sql, _filterVM);
+                var result = await conn.QueryAsync<StockVM>(sql);
                 return Ok(result);
             }
         }
@@ -395,11 +395,11 @@ namespace D69soft.Server.Controllers.FIN
             var sql = "";
             if (_stockVM.IsTypeUpdate == 0)
             {
-                sql = "Insert into FIN.Stock (StockCode,StockName,StockAddress,DivisionID,DepartmentID,StockActive) Values (@StockCode,@StockName,@StockAddress,@DivisionID,@DepartmentID,@StockActive)";
+                sql = "Insert into FIN.Stock (StockCode,StockName,StockAddress,StockActive) Values (@StockCode,@StockName,@StockAddress,@StockActive)";
             }
             if (_stockVM.IsTypeUpdate == 1)
             {
-                sql = "Update FIN.Stock set StockName = @StockName, StockAddress = @StockAddress, DepartmentID = @DepartmentID, StockActive = @StockActive where StockCode = @StockCode";
+                sql = "Update FIN.Stock set StockName = @StockName, StockAddress = @StockAddress, StockActive = @StockActive where StockCode = @StockCode";
             }
             if (_stockVM.IsTypeUpdate == 2)
             {

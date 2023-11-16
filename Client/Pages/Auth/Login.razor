@@ -26,10 +26,17 @@
                         <ValidationMessage For="@(() => userVM.Eserial)" />
                     </div>
                     <div class="input-group mb-3">
-                        <InputText type="password" class="form-control" placeholder="Mật khẩu" @bind-Value="userVM.User_Password" />
+                        <InputText type="@(userVM.isShowPass?"text":"password")" class="form-control" placeholder="Mật khẩu" @bind-Value="userVM.User_Password" />
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
+                                @if(!userVM.isShowPass)
+                                {
+                                    <span class="fa-solid fa-eye-slash" style="cursor:pointer" @onclick="(() => userVM.isShowPass = true)"></span>                                   
+                                }
+                                else
+                                {
+                                    <span class="fa-solid fa-eye" style="cursor:pointer" @onclick="(() => userVM.isShowPass = false)"></span>
+                                }
                             </div>
                         </div>
                         <ValidationMessage For="@(() => userVM.User_Password)" />

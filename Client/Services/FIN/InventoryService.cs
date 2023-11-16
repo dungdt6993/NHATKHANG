@@ -1,5 +1,6 @@
 ﻿using D69soft.Shared.Models.ViewModels.FIN;
 using D69soft.Shared.Models.ViewModels.SYSTEM;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using System.Collections;
 using System.Net.Http.Json;
 
@@ -99,11 +100,9 @@ namespace D69soft.Client.Services.FIN
         }
 
         //Stock
-        public async Task<IEnumerable<StockVM>> GetStockList(FilterVM _filterVM)
+        public async Task<IEnumerable<StockVM>> GetStockList()
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Inventory/GetStockList", _filterVM);
-
-            return await response.Content.ReadFromJsonAsync<IEnumerable<StockVM>>();
+            return await _httpClient.GetFromJsonAsync<IEnumerable<StockVM>>($"api/Inventory/GetStockList");
         }
 
         public async Task<bool> ContainsStockCode(string id)

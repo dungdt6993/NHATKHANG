@@ -33,15 +33,9 @@ namespace D69soft.Client.Pages.FIN
         //Filter
         FilterVM filterVM = new();
 
-        //Division
-        IEnumerable<DivisionVM> filter_divisionVMs;
-
         //Stock
         StockVM stockVM = new();
         List<StockVM> stockVMs;
-
-        //Department
-        IEnumerable<DepartmentVM> departmentVMs;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -68,33 +62,9 @@ namespace D69soft.Client.Pages.FIN
                 navigationManager.NavigateTo("/");
             }
 
-            filter_divisionVMs = await organizationalChartService.GetDivisionList(filterVM);
-            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
-
-            filterVM.UserID = String.Empty;
-            departmentVMs = await organizationalChartService.GetDepartmentList(filterVM);
-            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
-
             await GetStocks();
 
             isLoadingScreen = false;
-        }
-
-        private async void onchange_DivisionID(string value)
-        {
-            isLoading = true;
-
-            filterVM.DivisionID = value;
-
-            filterVM.UserID = String.Empty;
-            departmentVMs = await organizationalChartService.GetDepartmentList(filterVM);
-            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
-
-            await GetStocks();
-
-            isLoading = false;
-
-            StateHasChanged();
         }
 
         private async Task GetStocks()
@@ -104,7 +74,7 @@ namespace D69soft.Client.Pages.FIN
             stockVM = new();
 
             filterVM.searchText = String.Empty;
-            stockVMs = (await inventoryService.GetStockList(filterVM)).ToList();
+            stockVMs = (await inventoryService.GetStockList()).ToList();
 
             isLoading = false;
         }
@@ -131,7 +101,6 @@ namespace D69soft.Client.Pages.FIN
             {
                 stockVM = new();
 
-                stockVM.DivisionID = filterVM.DivisionID;
                 stockVM.StockActive = true;
             }
 
