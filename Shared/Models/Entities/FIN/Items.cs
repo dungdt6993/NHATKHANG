@@ -18,7 +18,6 @@ namespace D69soft.Shared.Models.Entities.FIN
         public string IURLPicture1 { get; set; }
         public string VATDefault { get; set; }
         public string StockDefault { get; set; }
-        public string VendorDefault { get; set; }
         public bool IActive { get; set; }
         public bool IsSale { get; set; }
     }

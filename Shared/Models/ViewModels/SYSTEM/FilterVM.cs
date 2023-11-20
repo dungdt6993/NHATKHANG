@@ -29,6 +29,7 @@ namespace D69soft.Shared.Models.ViewModels.SYSTEM
         public int ShowEntity { get; set; }
 
         //FIN
+        public string searchItems { get; set; }
         public int searchActive { get; set; }
         public bool IActive { get; set; }
         public string ICode { get; set; }

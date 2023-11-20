@@ -77,7 +77,7 @@ namespace D69soft.Server.Controllers.FIN
         [HttpGet("GetVoucherDetails/{_VNumber}")]
         public async Task<ActionResult<List<VoucherDetailVM>>> GetVoucherDetails(string _VNumber)
         {
-            var sql = "select SeqVD, vd.VDDesc, i.ICode, i.IName, i.IPrice, i.VendorDefault, i.StockDefault, vd.VDQty, iu.IUnitName, vd.VDPrice, vd.VDAmount, vd.VDDiscountPercent, vd.VDDiscountAmount,";
+            var sql = "select SeqVD, vd.VDDesc, i.ICode, i.IName, i.IPrice, i.StockDefault, vd.VDQty, iu.IUnitName, vd.VDPrice, vd.VDAmount, vd.VDDiscountPercent, vd.VDDiscountAmount,";
             sql += "vd.ToStockCode, toStock.StockName as ToStockName, vd.FromStockCode, fromStock.StockName as FromStockName, vd.VDNote, ";
             sql += "vd.InventoryCheck_StockCode, inventorycheckStock.StockName as InventoryCheck_StockName, vd.InventoryCheck_Qty, vd.InventoryCheck_ActualQty, vat.VATCode, coalesce(vat.VATRate,0) as VATRate, vat.VATName, vd.VATAmount, vd.TaxAccount ";
             sql += "from FIN.VoucherDetail vd ";
@@ -99,22 +99,22 @@ namespace D69soft.Server.Controllers.FIN
         }
 
         [HttpPost("GetSearchItems")]
-        public async Task<ActionResult<IEnumerable<VoucherDetailVM>>> GetSearchItems(VoucherVM _voucherVM)
+        public async Task<ActionResult<IEnumerable<VoucherDetailVM>>> GetSearchItems(FilterVM _filterVM)
         {
-            var sql = "select top 5 i.ICode, i.IName, iu.IUnitName, case when @VtypeID='FIN_Purchasing' then i.ICost else case when @VtypeID='FIN_Sale' then i.IPrice else 0 end end as VDPrice, ";
-            sql += "vat.VATCode, vat.VATName, s.StockCode as ToStockCode, s.StockName as ToStockName, ";
-            sql += "s.StockCode as FromStockCode, s.StockName as FromStockName, s.StockCode as InventoryCheck_StockCode, s.StockName as InventoryCheck_StockName from FIN.Items i ";
+            var sql = "select top 5 i.ICode, i.IName, iu.IUnitName, case when @FuncID='FIN_Purchasing' then i.ICost else case when @FuncID='FIN_Sale' then i.IPrice else 0 end end as VDPrice, ";
+            sql += "vat.VATCode, vat.VATName, s.StockCode as ToStockCode, s.StockName as ToStockName, s.StockCode as FromStockCode, s.StockName as FromStockName, ";
+            sql += "s.StockCode as InventoryCheck_StockCode, s.StockName as InventoryCheck_StockName from FIN.Items i ";
             sql += "join FIN.ItemsType it on it.ITypeCode = i.ITypeCode ";
             sql += "join FIN.ItemsUnit iu on iu.IUnitCode = i.IUnitCode ";
             sql += "left join FIN.VATDef vat on vat.VATCode = i.VATDefault ";
             sql += "left join FIN.Stock s on s.StockCode = i.StockDefault ";
-            sql += "where i.IActive=1 and i.ITypeCode=@ITypeCode and (i.ICode LIKE CONCAT('%',@valueSearchItems,'%') or i.IName LIKE CONCAT('%',@valueSearchItems,'%')) ";
+            sql += "where i.IActive=1 and i.ITypeCode=@ITypeCode and (i.ICode LIKE CONCAT('%',@searchItems,'%') or i.IName LIKE CONCAT('%',@searchItems,'%')) ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryAsync<VoucherDetailVM>(sql, _voucherVM);
+                var result = await conn.QueryAsync<VoucherDetailVM>(sql, _filterVM);
                 return Ok(result);
             }
         }

@@ -36,9 +36,9 @@ namespace D69soft.Client.Services.FIN
             return await _httpClient.GetFromJsonAsync<List<VoucherDetailVM>>($"api/Voucher/GetVoucherDetails/{_VNumber}");
         }
 
-        public async Task<IEnumerable<VoucherDetailVM>> GetSearchItems(VoucherVM _voucherVM)
+        public async Task<IEnumerable<VoucherDetailVM>> GetSearchItems(FilterVM _filterVM)
         {
-            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetSearchItems", _voucherVM);
+            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetSearchItems", _filterVM);
 
             return await response.Content.ReadFromJsonAsync<IEnumerable<VoucherDetailVM>>();
         }

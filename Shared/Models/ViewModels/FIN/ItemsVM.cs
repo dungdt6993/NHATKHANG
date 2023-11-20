@@ -17,7 +17,7 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string FileName { get; set; }
         public byte[] FileContent { get; set; }
         public string FileType { get; set; }
-        //Para
+        public decimal VDPrice { get; set; }
 
         public string ICode { get; set; }
         public string IBarCode { get; set; }
@@ -29,7 +29,6 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string IURLPicture1 { get; set; }
         public string VATDefault { get; set; }
         public string StockDefault { get; set; }
-        public string VendorDefault { get; set; }
         public bool IActive { get; set; }
         public bool IsSale { get; set; }
         public string IClsCode { get; set; }

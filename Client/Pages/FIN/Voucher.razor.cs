@@ -14,6 +14,7 @@ using D69soft.Shared.Models.ViewModels.SYSTEM;
 using D69soft.Client.Extensions;
 using Microsoft.AspNetCore.Components.Forms;
 using D69soft.Server.Services.HR;
+using Blazored.TextEditor;
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -80,6 +81,31 @@ namespace D69soft.Client.Pages.FIN
         //BankAccount
         List<BankAccountVM> bankAccountVMs;
 
+        //ItemsType
+        IEnumerable<ItemsTypeVM> itemsTypeVMs;
+
+        //ItemsClass
+        ItemsClassVM itemsClassVM = new();
+        IEnumerable<ItemsClassVM> itemsClassVMs;
+
+        //ItemsGroup
+        ItemsGroupVM itemsGroupVM = new();
+        IEnumerable<ItemsGroupVM> itemsGroupVMs;
+
+        //Items
+        ItemsVM itemsVM = new();
+        List<ItemsVM> itemsVMs;
+        BlazoredTextEditor QuillHtml = new BlazoredTextEditor();
+
+        //QuantitativeItems
+        ItemsVM qi_itemsVM = new();
+        QuantitativeItemsVM quantitativeItemsVM = new();
+        List<QuantitativeItemsVM> quantitativeItemsVMs;
+
+        //Unit
+        ItemsUnitVM itemsUnitVM = new();
+        IEnumerable<ItemsUnitVM> itemsUnitVMs;
+
         //VAT
         IEnumerable<VATDefVM> vatDefVMs;
 
@@ -142,6 +168,35 @@ namespace D69soft.Client.Pages.FIN
 
             filterVM.StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             filterVM.EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1).AddTicks(-1);
+
+            //Profile
+            filterVM.DivisionID = filterVM.DivisionID;
+            filterVM.TypeProfile = 0;
+            profileVMs = await profileService.GetProfileList(filterVM);
+
+            //Items
+            itemsUnitVMs = await inventoryService.GetItemsUnitList();
+            itemsTypeVMs = await inventoryService.GetItemsTypes();
+            itemsClassVMs = await inventoryService.GetItemsClassList();
+            itemsGroupVMs = await inventoryService.GetItemsGroupList();
+
+            //Stock
+            stockVMs = await inventoryService.GetStockList();
+
+            //Vendor
+            vendorVMs = await purchasingService.GetVendorList();
+
+            //Customer
+            customerVMs = await customerService.GetCustomers();
+
+            //VAT
+            vatDefVMs = await voucherService.GetVATDefs();
+
+            //Bank
+            accountVMs = await voucherService.GetAccounts();
+
+            //BankAccount
+            bankAccountVMs = (await moneyService.GetBankAccountList()).ToList();
 
             await GetVouchers();
 
@@ -228,23 +283,6 @@ namespace D69soft.Client.Pages.FIN
             {
                 vSubTypeVMs = vSubTypeVMs.Where(x => x.VSubTypeID != "FIN_Cash_Payment_Vendor" && x.VSubTypeID != "FIN_Cash_Receipt_Customer" && x.VSubTypeID != "FIN_Deposit_Debit_Vendor" && x.VSubTypeID != "FIN_Deposit_Credit_Customer");
             }
-
-            //Profile
-            filterVM.DivisionID = filterVM.DivisionID;
-            filterVM.TypeProfile = 0;
-            profileVMs = await profileService.GetProfileList(filterVM);
-
-            vendorVMs = await purchasingService.GetVendorList();
-
-            customerVMs = await customerService.GetCustomers();
-
-            stockVMs = await inventoryService.GetStockList();
-
-            bankAccountVMs = (await moneyService.GetBankAccountList()).ToList();
-
-            vatDefVMs = await voucherService.GetVATDefs();
-
-            accountVMs = await voucherService.GetAccounts();
 
             if (_IsTypeUpdate == 0)
             {
@@ -389,10 +427,10 @@ namespace D69soft.Client.Pages.FIN
             }
         }
 
-        private async Task<IEnumerable<VoucherDetailVM>> SearchItems(string _valueSearchItems)
+        private async Task<IEnumerable<VoucherDetailVM>> SearchItems(string _searchItems)
         {
-            voucherVM.valueSearchItems = _valueSearchItems;
-            return await voucherService.GetSearchItems(voucherVM);
+            filterVM.searchItems = _searchItems;
+            return await voucherService.GetSearchItems(filterVM);
         }
 
         private async Task SelectedItem(VoucherDetailVM _voucherDetailVM)
@@ -1112,6 +1150,367 @@ namespace D69soft.Client.Pages.FIN
             {
                 inventoryVMs = await inventoryService.GetInventorys(filterVM);
             }
+
+            isLoading = false;
+        }
+
+        //Items
+        private async Task GetItems()
+        {
+            isLoading = true;
+
+            //itemsVMs = await inventoryService.GetItemsList(filterVM);
+
+
+
+            isLoading = false;
+        }
+        private async Task UpdateItemsClass(EditContext _formItemsClassVM, int _IsTypeUpdate)
+        {
+            itemsClassVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formItemsClassVM.Validate()) return;
+
+            isLoading = true;
+
+            if (itemsClassVM.IsTypeUpdate != 2)
+            {
+                await inventoryService.UpdateItemsClass(itemsClassVM);
+
+                await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsClass");
+                await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+            }
+            else
+            {
+                if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
+                {
+                    int affectedRows = await inventoryService.UpdateItemsClass(itemsClassVM);
+
+                    if (affectedRows > 0)
+                    {
+                        filterVM.IClsCode = String.Empty;
+
+                        await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsClass");
+                        await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
+                    }
+                    else
+                    {
+                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu liên quan.", SweetAlertMessageType.error);
+                        itemsClassVM.IsTypeUpdate = 1;
+                    }
+                }
+                else
+                {
+                    itemsClassVM.IsTypeUpdate = 1;
+                }
+            }
+
+            itemsClassVMs = await inventoryService.GetItemsClassList();
+
+            isLoading = false;
+        }
+
+        private async Task UpdateItemsGroup(EditContext _formItemsGroupVM, int _IsTypeUpdate)
+        {
+            itemsGroupVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formItemsGroupVM.Validate()) return;
+
+            isLoading = true;
+
+            if (itemsGroupVM.IsTypeUpdate != 2)
+            {
+                await inventoryService.UpdateItemsGroup(itemsGroupVM);
+
+                await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsGroup");
+                await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+            }
+            else
+            {
+                if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
+                {
+                    int affectedRows = await inventoryService.UpdateItemsGroup(itemsGroupVM);
+
+                    if (affectedRows > 0)
+                    {
+                        filterVM.IGrpCode = String.Empty;
+
+                        await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsGroup");
+                        await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
+                    }
+                    else
+                    {
+                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu hàng hóa liên quan.", SweetAlertMessageType.error);
+                        itemsGroupVM.IsTypeUpdate = 1;
+                    }
+                }
+                else
+                {
+                    itemsGroupVM.IsTypeUpdate = 1;
+                }
+            }
+
+            itemsGroupVMs = await inventoryService.GetItemsGroupList();
+
+            isLoading = false;
+        }
+
+        private async Task InitializeModalUpdate_Items(int _IsTypeUpdate)
+        {
+            isLoading = true;
+
+            if (_IsTypeUpdate == 0)
+            {
+                itemsVM = new();
+                quantitativeItemsVMs = new();
+
+                itemsVM.IURLPicture1 = "/images/_default/no-image.png";
+                itemsVM.IClsCode = filterVM.IClsCode;
+                itemsVM.IGrpCode = filterVM.IGrpCode;
+                itemsVM.IActive = true;
+            }
+
+            if (_IsTypeUpdate == 1)
+            {
+                if (!String.IsNullOrEmpty(itemsVM.IDetail))
+                {
+                    await QuillHtml.LoadHTMLContent(itemsVM.IDetail);
+                }
+
+                quantitativeItemsVMs = await inventoryService.GetQuantitativeItems(itemsVM.ICode);
+            }
+
+            itemsVM.IsTypeUpdate = _IsTypeUpdate;
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_Items");
+
+            isLoading = false;
+        }
+
+        public string onchange_IClsCode
+        {
+            get
+            {
+                return itemsVM.IClsCode;
+            }
+            set
+            {
+                itemsVM.IClsCode = value;
+                itemsVM.IGrpCode = String.Empty;
+            }
+        }
+
+        MemoryStream memoryStream;
+        Stream stream;
+        private async Task OnInputFileChange(InputFileChangeEventArgs e)
+        {
+            isLoading = true;
+
+            var format = "image/png";
+            long maxFileSize = 1024 * 1024 * 15;
+
+            var resizedFile = await e.File.RequestImageFileAsync(format, 640, 480); // resize the image file
+            stream = resizedFile.OpenReadStream(maxFileSize);
+            memoryStream = new();
+            await stream.CopyToAsync(memoryStream);
+
+            itemsVM.IURLPicture1 = $"data:{format};base64,{Convert.ToBase64String(memoryStream.ToArray())}";// convert to a base64 string!!
+
+            itemsVM.FileContent = memoryStream.ToArray();
+
+            memoryStream.Close();
+
+            isLoading = false;
+        }
+
+        private void FileDefault()
+        {
+            memoryStream = null;
+            itemsVM.IsDelFileUpload = true;
+            itemsVM.IURLPicture1 = UrlDirectory.Default_Items;
+            itemsVM.FileContent = null;
+        }
+
+        private void SelectedItemQI(ItemsVM result)
+        {
+            if (result != null)
+            {
+                qi_itemsVM = result;
+
+                quantitativeItemsVM.QI_ICode = qi_itemsVM.ICode;
+                quantitativeItemsVM.QI_IName = qi_itemsVM.IName;
+                quantitativeItemsVM.QI_IUnitName = itemsUnitVMs.Where(x => x.IUnitCode == qi_itemsVM.IUnitCode).Select(x => x.IUnitName).First();
+
+                quantitativeItemsVMs.Add(quantitativeItemsVM);
+
+                quantitativeItemsVM = new();
+            }
+        }
+        private async Task UpdateItems(EditContext _formItemsVM, int _IsTypeUpdate)
+        {
+            itemsVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formItemsVM.Validate()) return;
+
+            isLoading = true;
+
+            if (itemsVM.IsTypeUpdate != 2)
+            {
+                if (itemsVM.ITypeCode != "TP")
+                {
+                    quantitativeItemsVMs = new();
+                }
+                else
+                {
+                    if (quantitativeItemsVMs.Count() == 0)
+                    {
+                        await js.Toast_Alert("Thành phần, định lượng không được trống!", SweetAlertMessageType.warning);
+                        isLoading = false;
+                        return;
+                    }
+
+                    if (quantitativeItemsVMs.Where(x => x.QI_UnitRatio == 0).Count() > 0)
+                    {
+                        await js.Toast_Alert("Tỷ lệ phải khác 0!", SweetAlertMessageType.warning);
+
+                        isLoading = false;
+                        return;
+                    }
+
+                }
+
+                itemsVM.IDetail = await QuillHtml.GetHTML();
+
+                itemsVM.ICode = await inventoryService.UpdateItems(itemsVM, quantitativeItemsVMs);
+                itemsVM.IsTypeUpdate = 1;
+
+                await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+            }
+            else
+            {
+                if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
+                {
+                    var result = await inventoryService.UpdateItems(itemsVM, quantitativeItemsVMs);
+
+                    if (result != "Err_NotDel")
+                    {
+                        await GetItems();
+
+                        await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Items");
+                        await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
+                    }
+                    else
+                    {
+                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu hàng hóa liên quan.", SweetAlertMessageType.error);
+                        itemsVM.IsTypeUpdate = 1;
+                    }
+                }
+                else
+                {
+                    itemsVM.IsTypeUpdate = 1;
+                }
+            }
+
+            isLoading = false;
+        }
+
+        private async Task InitializeModalUpdate_ItemsUnit(int _IsTypeUpdate)
+        {
+            isLoading = true;
+
+            if (_IsTypeUpdate == 0)
+            {
+                itemsUnitVM = new();
+            }
+
+            if (_IsTypeUpdate == 1)
+            {
+                itemsUnitVM = itemsUnitVMs.First(x => x.IUnitCode == itemsVM.IUnitCode);
+            }
+
+            itemsUnitVM.IsTypeUpdate = _IsTypeUpdate;
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_ItemsUnit");
+
+            isLoading = false;
+        }
+
+        private async Task UpdateItemsUnit(EditContext _formItemsUnitVM, int _IsTypeUpdate)
+        {
+            itemsUnitVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formItemsUnitVM.Validate()) return;
+
+            isLoading = true;
+
+            if (itemsUnitVM.IsTypeUpdate != 2)
+            {
+                await inventoryService.UpdateItemsUnit(itemsUnitVM);
+
+                await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsUnit");
+                await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+            }
+            else
+            {
+                if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
+                {
+                    int affectedRows = await inventoryService.UpdateItemsUnit(itemsUnitVM);
+
+                    if (affectedRows > 0)
+                    {
+                        itemsVM.IUnitCode = String.Empty;
+                        itemsUnitVMs = await inventoryService.GetItemsUnitList();
+
+                        await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsUnit");
+                        await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
+                    }
+                    else
+                    {
+                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu hàng hóa liên quan.", SweetAlertMessageType.error);
+                        itemsUnitVM.IsTypeUpdate = 1;
+                    }
+                }
+                else
+                {
+                    itemsUnitVM.IsTypeUpdate = 1;
+                }
+            }
+
+            itemsUnitVMs = await inventoryService.GetItemsUnitList();
+
+            isLoading = false;
+        }
+
+        private async Task InitializeModalUpdate_ItemsClass(int _IsTypeUpdate)
+        {
+            isLoading = true;
+
+            if (_IsTypeUpdate == 0)
+            {
+                itemsClassVM = new();
+            }
+
+            itemsClassVM.IsTypeUpdate = _IsTypeUpdate;
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_ItemsClass");
+
+            isLoading = false;
+        }
+
+        private async Task InitializeModalUpdate_ItemsGroup(int _IsTypeUpdate)
+        {
+            isLoading = true;
+
+            if (_IsTypeUpdate == 0)
+            {
+                itemsGroupVM = new();
+
+                itemsGroupVM.IClsCode = filterVM.IClsCode;
+            }
+
+            itemsGroupVM.IsTypeUpdate = _IsTypeUpdate;
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_ItemsGroup");
 
             isLoading = false;
         }
