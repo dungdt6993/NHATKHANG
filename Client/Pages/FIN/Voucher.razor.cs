@@ -1384,6 +1384,13 @@ namespace D69soft.Client.Pages.FIN
                 itemsVM.ICode = await inventoryService.UpdateItems(itemsVM, quantitativeItemsVMs);
                 itemsVM.IsTypeUpdate = 1;
 
+
+                await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Items");
+
+                voucherDetailVM = (await SearchItems(itemsVM.ICode)).First();
+
+                await SelectedItem(voucherDetailVM);
+
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
             }
             else
