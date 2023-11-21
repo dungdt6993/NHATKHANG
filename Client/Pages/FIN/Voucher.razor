@@ -27,7 +27,7 @@
                         <div class="col-sm-2">
                             <select class="selectpicker form-control"
                                     data-style="btn-selectpicker" data-container="body"
-                            @bind="onchange_VSubTypeID">
+                                    @bind="onchange_VSubTypeID">
                                 <option value=@String.Empty>-----Chọn-----</option>
                                 @foreach (var _vSubTypeVM in vSubTypeVMs)
                                 {
@@ -135,20 +135,28 @@
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
                                             <label>Nhà cung cấp</label>
-                                            <select class="selectpicker form-control form-control-sm"
-                                                    data-style="btn-selectpicker" data-container="body"
-                                                    data-live-search="true" data-show-subtext="true"
-                                            @bind="onchange_VendorCode">
-                                                <option value=@String.Empty>-----Chọn-----</option>
-                                                @if (vendorVMs != null)
-                                                {
-                                                    @foreach (var _vendorVM in vendorVMs)
+                                            <div class="input-group">
+                                                <select class="selectpicker form-control form-control-sm"
+                                                        data-style="btn-selectpicker" data-container="body"
+                                                        data-live-search="true" data-show-subtext="true"
+                                                        @bind="onchange_VendorCode">
+                                                    <option value=@String.Empty>-----Chọn-----</option>
+                                                    @if (vendorVMs != null)
                                                     {
-                                                        <option data-subtext="@_vendorVM.VendorCode" value="@_vendorVM.VendorCode">@_vendorVM.VendorName</option>
+                                                        @foreach (var _vendorVM in vendorVMs)
+                                                        {
+                                                            <option data-subtext="@_vendorVM.VendorCode" value="@_vendorVM.VendorCode">@_vendorVM.VendorName</option>
+                                                        }
                                                     }
-                                                }
-                                            </select>
-                                            <ValidationMessage For="@(() => voucherVM.VendorCode)" />
+                                                </select>
+
+                                                <div class="input-group-append">
+                                                    <a class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Vendor(0))"><i class="fa-solid fa-plus"></i></a>
+                                                </div>
+
+                                                <ValidationMessage For="@(() => voucherVM.VendorCode)" />
+                                            </div>
+
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label>Người giao hàng</label>
@@ -167,7 +175,7 @@
                                             <select class="selectpicker form-control form-control-sm"
                                                     data-style="btn-selectpicker" data-container="body"
                                                     data-live-search="true" data-show-subtext="true"
-                                            @bind="onchange_CustomerCode">
+                                                    @bind="onchange_CustomerCode">
                                                 <option value=@String.Empty>-----Chọn-----</option>
                                                 @if (customerVMs != null)
                                                 {
@@ -210,7 +218,7 @@
                                         <select class="selectpicker form-control form-control-sm"
                                                 data-style="btn-selectpicker" data-container="body"
                                                 data-live-search="true" data-show-subtext="true"
-                                        @bind="voucherVM.BankAccountID">
+                                                @bind="voucherVM.BankAccountID">
                                             <option value=0>-----Chọn-----</option>
                                             @if (bankAccountVMs != null)
                                             {
@@ -246,7 +254,7 @@
                                         <select class="selectpicker form-control form-control-sm"
                                                 data-style="btn-selectpicker" data-container="body"
                                                 data-live-search="true" data-show-subtext="true"
-                                        @bind="voucherVM.EserialPerform">
+                                                @bind="voucherVM.EserialPerform">
                                             <option value=@String.Empty>-----Chọn-----</option>
                                             @if (profileVMs != null)
                                             {
@@ -276,7 +284,7 @@
                                         }
                                         <div class="input-group">
                                             <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask"
-                                            @bind-StartDate="voucherVM.VDate" OnRangeSelect="OnRangeSelect_VDate"
+                                                             @bind-StartDate="voucherVM.VDate" OnRangeSelect="OnRangeSelect_VDate"
                                                              onClick="this.select();" />
 
                                             <div class="input-group-append">
@@ -299,7 +307,7 @@
                                             <label>Ngày hóa đơn</label>
                                             <div class="input-group">
                                                 <DateRangePicker SingleDatePicker="true" class="form-control form-control-sm" name="date-mask"
-                                                @bind-StartDate="voucherVM.InvoiceDate"
+                                                                 @bind-StartDate="voucherVM.InvoiceDate"
                                                                  onClick="this.select();" />
 
                                                 <div class="input-group-append">
@@ -318,7 +326,7 @@
 
                                     <h5 class="text-right">Tổng tiền thanh toán</h5><br />
                                     <h2 class="text-bold text-right">
-                                        @String.Format("{0:#,##0}",voucherVM.TotalAmount)
+                                        @String.Format("{0:#,##0}", voucherVM.TotalAmount)
                                     </h2>
 
                                 </div>
@@ -332,7 +340,7 @@
                                     <h2 class="text-bold text-right">
                                         @if (voucherDetailVMs != null)
                                         {
-                                            @String.Format("{0:#,##0}",voucherVM.TotalAmount)
+                                            @String.Format("{0:#,##0}", voucherVM.TotalAmount)
                                         }
                                     </h2>
 
@@ -618,7 +626,7 @@
                                                                             data-style="btn-selectpicker"
                                                                             data-container="body" data-live-search="true"
                                                                             data-show-subtext="true"
-                                                                    @bind="_voucherDetailVM.TaxAccount">
+                                                                            @bind="_voucherDetailVM.TaxAccount">
 
                                                                         <option value=0>-----Chọn-----</option>
                                                                         @if (accountVMs != null)
@@ -702,7 +710,7 @@
                                                                 <select class="selectpicker form-control form-control-sm"
                                                                         data-style="btn-selectpicker" data-container="body"
                                                                         data-live-search="true" data-show-subtext="true"
-                                                                @bind="_voucherDetailVM.ToStockCode">
+                                                                        @bind="_voucherDetailVM.ToStockCode">
                                                                     <option value=@String.Empty>-----Chọn-----</option>
                                                                     @if (stockVMs != null)
                                                                     {
@@ -758,31 +766,31 @@
                                             @if (voucherVM.VTypeID == "FIN_InventoryCheck")
                                             {
                                                 <th class="text-center" colspan=2></th>
-                                                <th class="text-center">@voucherDetailVMs.Select(x=>x.InventoryCheck_Qty).Sum()</th>
-                                                <th class="text-center">@voucherDetailVMs.Select(x=>x.InventoryCheck_ActualQty).Sum()</th>
-                                                <th class="text-center">@voucherDetailVMs.Select(x=>x.InventoryCheck_ActualQty - x.InventoryCheck_Qty).Sum()</th>
+                                                <th class="text-center">@voucherDetailVMs.Select(x => x.InventoryCheck_Qty).Sum()</th>
+                                                <th class="text-center">@voucherDetailVMs.Select(x => x.InventoryCheck_ActualQty).Sum()</th>
+                                                <th class="text-center">@voucherDetailVMs.Select(x => x.InventoryCheck_ActualQty - x.InventoryCheck_Qty).Sum()</th>
                                                 <th></th>
                                             }
 
                                             @if (voucherVM.VTypeID != "FIN_InventoryCheck")
                                             {
-                                                <th class="text-right">@voucherDetailVMs.Select(x=>x.VDQty).Sum()</th>
+                                                <th class="text-right">@voucherDetailVMs.Select(x => x.VDQty).Sum()</th>
                                             }
                                             @if (voucherVM.VTypeID == "FIN_Purchasing" || voucherVM.VTypeID == "FIN_Sale")
                                             {
                                                 <th class="text-center"></th>
 
-                                                <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDAmount).Sum())</th>
+                                                <th class="text-right">@String.Format("{0:#,##0}", @voucherDetailVMs.Select(x => x.VDAmount).Sum())</th>
 
                                                 <th class="text-center"></th>
 
-                                                <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDDiscountAmount).Sum())</th>
+                                                <th class="text-right">@String.Format("{0:#,##0}", @voucherDetailVMs.Select(x => x.VDDiscountAmount).Sum())</th>
 
                                                 @if (voucherVM.IsInvoice)
                                                 {
                                                     <th class="text-center"></th>
 
-                                                    <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VATAmount).Sum())</th>
+                                                    <th class="text-right">@String.Format("{0:#,##0}", @voucherDetailVMs.Select(x => x.VATAmount).Sum())</th>
 
                                                     <th class="text-center"></th>
                                                 }
@@ -801,7 +809,7 @@
                                         {
                                             <th class="text-center">@voucherDetailVMs.Count()</th>
                                             <th></th>
-                                            <th class="text-right">@String.Format("{0:#,##0}",@voucherDetailVMs.Select(x=>x.VDPrice).Sum())</th>
+                                            <th class="text-right">@String.Format("{0:#,##0}", @voucherDetailVMs.Select(x => x.VDPrice).Sum())</th>
                                         }
                                         <th class="text-center"></th>
                                     </tr>
@@ -832,7 +840,7 @@
                                                    MinimumLength="2"
                                                    MaximumSuggestions="6"
                                                    placeholder="Tìm kiếm theo mã hàng hoặc tên hàng..."
-                                @ref="txtSearchItems">
+                                                   @ref="txtSearchItems">
                                     <SelectedTemplate Context="_item">
                                         <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm theo mã hàng hoặc tên hàng...
                                     </SelectedTemplate>
@@ -1028,7 +1036,7 @@
                                                 <InputSelect class="selectpicker form-control form-control-sm"
                                                              data-style="btn-selectpicker" data-container="body"
                                                              data-live-search="true" data-show-subtext="true"
-                                                @bind-Value="itemsVM.IUnitCode">
+                                                             @bind-Value="itemsVM.IUnitCode">
                                                     <option value=@String.Empty>--Tất cả--</option>
                                                     @if (itemsUnitVMs != null)
                                                     {
@@ -1038,18 +1046,11 @@
                                                         }
                                                     }
                                                 </InputSelect>
-                                                @if (String.IsNullOrEmpty(itemsVM.IUnitCode))
-                                                {
-                                                    <div class="input-group-append">
-                                                        <a class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_ItemsUnit(0))"><i class="fa-solid fa-plus"></i></a>
-                                                    </div>
-                                                }
-                                                else
-                                                {
-                                                    <div class="input-group-append">
-                                                        <a class="btn btn-sm btn-secondary" @onclick="(() => InitializeModalUpdate_ItemsUnit(1))"><i class="fa-solid fa-pencil"></i></a>
-                                                    </div>
-                                                }
+
+                                                <div class="input-group-append">
+                                                    <a class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_ItemsUnit(0))"><i class="fa-solid fa-plus"></i></a>
+                                                </div>
+
                                                 <ValidationMessage For="@(() => itemsVM.IUnitCode)" />
                                             </div>
                                         </div>
@@ -1061,7 +1062,7 @@
                                             <InputSelect class="selectpicker form-control form-control-sm"
                                                          data-style="btn-selectpicker" data-container="body"
                                                          data-live-search="true" data-show-subtext="true"
-                                            @bind-Value="itemsVM.ITypeCode">
+                                                         @bind-Value="itemsVM.ITypeCode">
                                                 <option value=@String.Empty>-----Tất cả-----</option>
                                                 @if (itemsTypeVMs != null)
                                                 {
@@ -1079,7 +1080,7 @@
                                                 <InputSelect class="selectpicker form-control form-control-sm"
                                                              data-style="btn-selectpicker" data-container="body"
                                                              data-live-search="true" data-show-subtext="true"
-                                                @bind-Value="onchange_IClsCode">
+                                                             @bind-Value="onchange_IClsCode">
                                                     <option value=@String.Empty>-----Tất cả-----</option>
                                                     @if (itemsClassVMs != null)
                                                     {
@@ -1089,52 +1090,41 @@
                                                         }
                                                     }
                                                 </InputSelect>
-                                                @if (String.IsNullOrEmpty(itemsVM.IClsCode))
-                                                {
-                                                    <div class="input-group-append">
-                                                        <a class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_ItemsClass(0))"><i class="fa-solid fa-plus"></i></a>
-                                                    </div>
-                                                }
-                                                else
-                                                {
-                                                    <div class="input-group-append">
-                                                        <a class="btn btn-sm btn-secondary" @onclick="(() => InitializeModalUpdate_ItemsClass(1))"><i class="fa-solid fa-pencil"></i></a>
-                                                    </div>
-                                                }
+
+                                                <div class="input-group-append">
+                                                    <a class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_ItemsClass(0))"><i class="fa-solid fa-plus"></i></a>
+                                                </div>
+
                                                 <ValidationMessage For="@(() => itemsVM.IClsCode)" />
                                             </div>
                                         </div>
-                                        <div class="form-group col-md-4">
-                                            <label>Nhóm hàng</label>
-                                            <div class="input-group">
-                                                <InputSelect class="selectpicker form-control form-control-sm"
-                                                             data-style="btn-selectpicker" data-container="body"
-                                                             data-live-search="true" data-show-subtext="true"
-                                                @bind-Value="itemsVM.IGrpCode">
-                                                    <option value=@String.Empty>-----Tất cả-----</option>
-                                                    @if (itemsGroupVMs != null)
-                                                    {
-                                                        @foreach (var _itemsGroupVM in itemsGroupVMs.Where(x => x.IGrpActive && (x.IClsCode == itemsVM.IClsCode || String.IsNullOrEmpty(itemsVM.IClsCode))))
+                                        @if (!String.IsNullOrEmpty(itemsVM.IClsCode))
+                                        {
+                                            <div class="form-group col-md-4">
+                                                <label>Nhóm hàng</label>
+                                                <div class="input-group">
+                                                    <InputSelect class="selectpicker form-control form-control-sm"
+                                                                 data-style="btn-selectpicker" data-container="body"
+                                                                 data-live-search="true" data-show-subtext="true"
+                                                                 @bind-Value="itemsVM.IGrpCode">
+                                                        <option value=@String.Empty>-----Tất cả-----</option>
+                                                        @if (itemsGroupVMs != null)
                                                         {
-                                                            <option data-subtext="@_itemsGroupVM.IGrpCode" value="@_itemsGroupVM.IGrpCode">@_itemsGroupVM.IGrpName</option>
+                                                            @foreach (var _itemsGroupVM in itemsGroupVMs.Where(x => x.IGrpActive && (x.IClsCode == itemsVM.IClsCode || String.IsNullOrEmpty(itemsVM.IClsCode))))
+                                                            {
+                                                                <option data-subtext="@_itemsGroupVM.IGrpCode" value="@_itemsGroupVM.IGrpCode">@_itemsGroupVM.IGrpName</option>
+                                                            }
                                                         }
-                                                    }
-                                                </InputSelect>
-                                                @if (String.IsNullOrEmpty(itemsVM.IGrpCode))
-                                                {
+                                                    </InputSelect>
+
                                                     <div class="input-group-append">
                                                         <a class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_ItemsGroup(0))"><i class="fa-solid fa-plus"></i></a>
                                                     </div>
-                                                }
-                                                else
-                                                {
-                                                    <div class="input-group-append">
-                                                        <a class="btn btn-sm btn-secondary" @onclick="(() => InitializeModalUpdate_ItemsGroup(1))"><i class="fa-solid fa-pencil"></i></a>
-                                                    </div>
-                                                }
-                                                <ValidationMessage For="@(() => itemsVM.IGrpCode)" />
+
+                                                    <ValidationMessage For="@(() => itemsVM.IGrpCode)" />
+                                                </div>
                                             </div>
-                                        </div>
+                                        }
                                     </div>
 
                                     <div class="form-row">
@@ -1255,7 +1245,7 @@
                                             <select class="selectpicker form-control form-control-sm"
                                                     data-style="btn-selectpicker" data-container="body"
                                                     data-live-search="true" data-show-subtext="true"
-                                            @bind="itemsVM.StockDefault">
+                                                    @bind="itemsVM.StockDefault">
                                                 <option value=@String.Empty>-----Tất cả-----</option>
                                                 @if (stockVMs != null)
                                                 {
@@ -1272,7 +1262,7 @@
                                             <InputSelect class="selectpicker form-control form-control-sm"
                                                          data-style="btn-selectpicker"
                                                          data-container="body"
-                                            @bind-Value="itemsVM.VATDefault">
+                                                         @bind-Value="itemsVM.VATDefault">
 
                                                 <option value=@String.Empty>-----Chọn-----</option>
                                                 @if (vatDefVMs != null)
@@ -1398,9 +1388,9 @@
 
                 <div class="modal-body">
 
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Mã</label>
-                        <div class="col-sm-5">
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label>Mã</label>
                             @if (itemsUnitVM.IsTypeUpdate == 0)
                             {
                                 <InputText class="form-control form-control-sm" placeholder="Mã đơn vị tính" @bind-Value:get="itemsUnitVM.IUnitCode" @bind-Value:set="(value) => {itemsUnitVM.IUnitCode = value.ToUpper();}" />
@@ -1411,11 +1401,8 @@
                                 <input type="text" readonly class="form-control form-control-sm" placeholder="Mã đơn vị tính" value="@itemsUnitVM.IUnitCode" />
                             }
                         </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Tên</label>
-                        <div class="col-sm-10">
+                        <div class="form-group col-md-9">
+                            <label>Tên</label>
                             <InputText class="form-control form-control-sm" placeholder="Tên đơn vị tính" @bind-Value="itemsUnitVM.IUnitName" autofocus />
                             <ValidationMessage For="@(() => itemsUnitVM.IUnitName)" />
                         </div>
@@ -1424,7 +1411,7 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-check"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateItemsUnit(formItemsUnitVM, itemsUnitVM.IsTypeUpdate))><i class="fas fa-check"></i> Lưu</button>
                     @if (itemsUnitVM.IsTypeUpdate == 1)
                     {
                         <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateItemsUnit(formItemsUnitVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
@@ -1459,9 +1446,9 @@
 
                 <div class="modal-body">
 
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Mã</label>
-                        <div class="col-sm-5">
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label>Mã</label>
                             @if (itemsClassVM.IsTypeUpdate == 0)
                             {
                                 <InputText class="form-control form-control-sm" placeholder="Mã lớp hàng" @bind-Value:get="itemsClassVM.IClsCode" @bind-Value:set="(value) => {itemsClassVM.IClsCode = value.ToUpper();}" />
@@ -1472,12 +1459,9 @@
                                 <input type="text" readonly class="form-control form-control-sm" placeholder="Mã lớp hàng" value="@itemsClassVM.IClsCode" />
                             }
                         </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Tên</label>
-                        <div class="col-sm-9">
-                            <InputText class="form-control form-control-sm" placeholder="Tên nhóm hàng" @bind-Value="itemsClassVM.IClsName" autofocus />
+                        <div class="form-group col-md-9">
+                            <label>Tên</label>
+                            <InputText class="form-control form-control-sm" placeholder="Tên lớp hàng" @bind-Value="itemsClassVM.IClsName" autofocus />
                             <ValidationMessage For="@(() => itemsClassVM.IClsName)" />
                         </div>
                     </div>
@@ -1485,7 +1469,7 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-check"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateItemsClass(formItemsClassVM, itemsClassVM.IsTypeUpdate))><i class="fas fa-check"></i> Lưu</button>
                     @if (itemsClassVM.IsTypeUpdate == 1)
                     {
                         <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateItemsClass(formItemsClassVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
@@ -1520,9 +1504,9 @@
 
                 <div class="modal-body">
 
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Mã</label>
-                        <div class="col-sm-5">
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label>Mã</label>
                             @if (itemsGroupVM.IsTypeUpdate == 0)
                             {
                                 <InputText class="form-control form-control-sm" placeholder="Mã nhóm hàng" @bind-Value:get="itemsGroupVM.IGrpCode" @bind-Value:set="(value) => {itemsGroupVM.IGrpCode = value.ToUpper();}" />
@@ -1533,40 +1517,17 @@
                                 <input type="text" readonly class="form-control form-control-sm" placeholder="Mã nhóm hàng" value="@itemsGroupVM.IGrpCode" />
                             }
                         </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Tên</label>
-                        <div class="col-sm-9">
+                        <div class="form-group col-md-9">
+                            <label>Tên</label>
                             <InputText class="form-control form-control-sm" placeholder="Tên nhóm hàng" @bind-Value="itemsGroupVM.IGrpName" autofocus />
                             <ValidationMessage For="@(() => itemsGroupVM.IGrpName)" />
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Lớp hàng</label>
-                        <div class="col-sm-9">
-                            <InputSelect class="selectpicker form-control form-control-sm"
-                                         data-style="btn-selectpicker" data-container="body"
-                                         data-live-search="true" data-show-subtext="true"
-                            @bind-Value="itemsGroupVM.IClsCode">
-                                <option value=@String.Empty>-----Tất cả-----</option>
-                                @if (itemsClassVMs != null)
-                                {
-                                    @foreach (var _itemsClassVM in itemsClassVMs)
-                                    {
-                                        <option data-subtext="@_itemsClassVM.IClsCode" value="@_itemsClassVM.IClsCode">@_itemsClassVM.IClsName</option>
-                                    }
-                                }
-                            </InputSelect>
-                            <ValidationMessage For="@(() => itemsGroupVM.IClsCode)" />
                         </div>
                     </div>
 
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-check"></i> Lưu</button>
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateItemsGroup(formItemsGroupVM, itemsGroupVM.IsTypeUpdate))><i class="fas fa-check"></i> Lưu</button>
                     @if (itemsGroupVM.IsTypeUpdate == 1)
                     {
                         <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateItemsGroup(formItemsGroupVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
@@ -1581,6 +1542,83 @@
     </div>
 </div>
 @* End Items *@
+
+@* Vendor *@
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Vendor">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <EditForm Model="vendorVM" Context="formVendorVM">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>NHÀ CUNG CẤP</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label>Mã nhà cung cấp</label>
+                            @if (vendorVM.IsTypeUpdate == 0)
+                            {
+                                <InputText class="form-control form-control-sm" placeholder="Mã mặc định" @bind-Value="vendorVM.VendorCode" disabled />
+                                <ValidationMessage For="@(() => vendorVM.VendorCode)" />
+                            }
+                            else
+                            {
+                                <input type="text" readonly class="form-control form-control-sm" value="@vendorVM.VendorCode" />
+                            }
+                        </div>
+                        <div class="form-group col-md-5">
+                            <label>Mã số thuế</label>
+                            <InputText class="form-control form-control-sm" @bind-Value="@vendorVM.VendorTaxCode" />
+                            <ValidationMessage For="@(() => vendorVM.VendorTaxCode)" />
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label>Điện thoại</label>
+                            <InputText class="form-control form-control-sm" @bind-Value="@vendorVM.VendorTel" />
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tên nhà cung cấp</label>
+                        <InputText class="form-control form-control-sm" @bind-Value="@vendorVM.VendorName" />
+                        <ValidationMessage For="@(() => vendorVM.VendorName)" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Địa chỉ</label>
+                        <InputTextArea class="form-control form-control-sm" @bind-Value="@vendorVM.VendorAddress" />
+                        <ValidationMessage For="@(() => vendorVM.VendorAddress)" />
+                    </div>
+
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateVendor(formVendorVM, vendorVM.IsTypeUpdate))><i class="fas fa-check"></i> Lưu</button>
+                    @if (vendorVM.IsTypeUpdate == 1)
+                    {
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateVendor(formVendorVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                    }
+                </div>
+
+            </EditForm>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+@* End Vendor *@
 
 <Modal_RptViewer ReportName=@ReportName></Modal_RptViewer>
 
@@ -1821,25 +1859,25 @@
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label>Dư đầu kỳ</label>
-                                        <h3>@String.Format("{0:#,##0}",@moneyBooks.Select(x => x.VDPriceOpen).FirstOrDefault())</h3>
+                                        <h3>@String.Format("{0:#,##0}", @moneyBooks.Select(x => x.VDPriceOpen).FirstOrDefault())</h3>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label>Tổng thu</label>
-                                        <h3 class="text-success">@String.Format("{0:#,##0}",@moneyBooks.Select(x => x.VDPriceInput).Sum())</h3>
+                                        <h3 class="text-success">@String.Format("{0:#,##0}", @moneyBooks.Select(x => x.VDPriceInput).Sum())</h3>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label>Tổng chi</label>
-                                        <h3 class="text-danger">@String.Format("{0:#,##0}",@moneyBooks.Select(x => x.VDPriceOutput).Sum())</h3>
+                                        <h3 class="text-danger">@String.Format("{0:#,##0}", @moneyBooks.Select(x => x.VDPriceOutput).Sum())</h3>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label>Dư cuối kỳ</label>
-                                        <h3>@String.Format("{0:#,##0}",@moneyBooks.Select(x => x.VDPriceEnd).FirstOrDefault())</h3>
+                                        <h3>@String.Format("{0:#,##0}", @moneyBooks.Select(x => x.VDPriceEnd).FirstOrDefault())</h3>
                                     </div>
                                 </div>
                             </div>
@@ -1932,12 +1970,12 @@
                                         <td>@voucherVM.VDesc</td>
                                         @if (filterVM.FuncID == "FIN_Cash" || filterVM.FuncID == "FIN_Deposit")
                                         {
-                                            <td class="text-right">@String.Format("{0:#,##0}",@voucherVM.TotalAmount)</td>
+                                            <td class="text-right">@String.Format("{0:#,##0}", @voucherVM.TotalAmount)</td>
                                         }
                                         @if (filterVM.FuncID == "FIN_Purchasing" || filterVM.FuncID == "FIN_Sale")
                                         {
-                                            <td class="text-right">@String.Format("{0:#,##0}",@voucherVM.TotalAmount)</td>
-                                            <td class="text-right">@String.Format("{0:#,##0}",@voucherVM.PaymentAmount)</td>
+                                            <td class="text-right">@String.Format("{0:#,##0}", @voucherVM.TotalAmount)</td>
+                                            <td class="text-right">@String.Format("{0:#,##0}", @voucherVM.PaymentAmount)</td>
 
                                             @if (voucherVM.PaymentAmount == voucherVM.TotalAmount)
                                             {
@@ -1968,12 +2006,12 @@
                                     <th></th>
                                     @if (filterVM.FuncID == "FIN_Cash" || filterVM.FuncID == "FIN_Deposit")
                                     {
-                                        <th class="text-right">@String.Format("{0:#,##0}",@voucherVMs.Select(x=>x.TotalAmount).Sum())</th>
+                                        <th class="text-right">@String.Format("{0:#,##0}", @voucherVMs.Select(x => x.TotalAmount).Sum())</th>
                                     }
                                     @if (filterVM.FuncID == "FIN_Purchasing" || filterVM.FuncID == "FIN_Sale")
                                     {
-                                        <th class="text-right">@String.Format("{0:#,##0}",@voucherVMs.Select(x=>x.TotalAmount).Sum())</th>
-                                        <th class="text-right">@String.Format("{0:#,##0}",@voucherVMs.Select(x=>x.PaymentAmount).Sum())</th>
+                                        <th class="text-right">@String.Format("{0:#,##0}", @voucherVMs.Select(x => x.TotalAmount).Sum())</th>
+                                        <th class="text-right">@String.Format("{0:#,##0}", @voucherVMs.Select(x => x.PaymentAmount).Sum())</th>
                                         <th></th>
                                     }
                                     <th></th>
@@ -2021,7 +2059,7 @@
                                             <td class="text-center">@_inventoryVM.QtyInput</td>
                                             <td class="text-center">@_inventoryVM.QtyOutput</td>
                                             <td class="text-center">@_inventoryVM.QtyEnd</td>
-                                            <td class="text-right">@String.Format("{0:#,##}",_inventoryVM.PriceInventory_End)</td>
+                                            <td class="text-right">@String.Format("{0:#,##}", _inventoryVM.PriceInventory_End)</td>
                                         </tr>
                                     </Virtualize>
                                 </tbody>
@@ -2061,7 +2099,7 @@
                                         <th>Số dư đầu kỳ</th>
                                         <td></td>
                                         <td></td>
-                                        <th class="text-right">@String.Format("{0:#,##0}",@VDPriceBalance)</th>
+                                        <th class="text-right">@String.Format("{0:#,##0}", @VDPriceBalance)</th>
                                         <td></td>
                                     </tr>
                                     <Virtualize Items="@moneyBooks" Context="cashBook" OverscanCount="50">
@@ -2073,9 +2111,9 @@
                                             <td class="text-center">@cashBook.VNumberInput</td>
                                             <td class="text-center">@cashBook.VNumberOutput</td>
                                             <td>@cashBook.VDDesc</td>
-                                            <td class="text-right">@String.Format("{0:#,##}",@cashBook.VDPriceInput)</td>
-                                            <td class="text-right">@String.Format("{0:#,##}",@cashBook.VDPriceOutput)</td>
-                                            <td class="text-right">@String.Format("{0:#,##}",VDPriceBalance)</td>
+                                            <td class="text-right">@String.Format("{0:#,##}", @cashBook.VDPriceInput)</td>
+                                            <td class="text-right">@String.Format("{0:#,##}", @cashBook.VDPriceOutput)</td>
+                                            <td class="text-right">@String.Format("{0:#,##}", VDPriceBalance)</td>
                                             <td></td>
                                         </tr>
                                     </Virtualize>
@@ -2086,7 +2124,7 @@
                                         <th>Số dư cuối kỳ</th>
                                         <td></td>
                                         <td></td>
-                                        <th class="text-right">@String.Format("{0:#,##0}",@moneyBooks.Select(x => x.VDPriceEnd).FirstOrDefault())</th>
+                                        <th class="text-right">@String.Format("{0:#,##0}", @moneyBooks.Select(x => x.VDPriceEnd).FirstOrDefault())</th>
                                         <td></td>
                                     </tr>
                                 </tbody>

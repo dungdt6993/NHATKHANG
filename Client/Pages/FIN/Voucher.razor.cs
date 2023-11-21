@@ -70,6 +70,7 @@ namespace D69soft.Client.Pages.FIN
         List<VoucherDetailVM> voucherDetailVMs;
 
         //Vendor
+        VendorVM vendorVM = new();
         IEnumerable<VendorVM> vendorVMs;
 
         //Customer
@@ -1154,6 +1155,70 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
+        //Vendor
+
+        private async Task InitializeModalUpdate_Vendor(int _IsTypeUpdate)
+        {
+            isLoading = true;
+
+            if (_IsTypeUpdate == 0)
+            {
+                vendorVM = new();
+            }
+
+            vendorVM.IsTypeUpdate = _IsTypeUpdate;
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_Vendor");
+
+            isLoading = false;
+        }
+
+        private async Task UpdateVendor(EditContext _formVendorVM, int _IsTypeUpdate)
+        {
+            vendorVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formVendorVM.Validate()) return;
+            isLoading = true;
+
+            if (vendorVM.IsTypeUpdate != 2)
+            {
+                vendorVM.VendorCode = await purchasingService.UpdateVendor(vendorVM);
+
+                logVM.LogDesc = (vendorVM.IsTypeUpdate == 0 ? "Thêm mới" : "Cập nhật") + " nhà cung cấp " + vendorVM.VendorCode + "";
+                await sysService.InsertLog(logVM);
+
+                await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Vendor");
+                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
+
+                vendorVMs = (await purchasingService.GetVendorList()).ToList();
+                voucherVM.VendorCode = vendorVM.VendorCode;
+
+                vendorVM.IsTypeUpdate = 1;
+            }
+            else
+            {
+                if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
+                {
+                    await purchasingService.UpdateVendor(vendorVM);
+
+                    logVM.LogDesc = "Xóa nhà cung cấp " + vendorVM.VendorCode + "";
+                    await sysService.InsertLog(logVM);
+
+                    vendorVMs = (await purchasingService.GetVendorList()).ToList();
+                    voucherVM.VendorCode = String.Empty;
+
+                    await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Vendor");
+                    await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
+                }
+                else
+                {
+                    vendorVM.IsTypeUpdate = 1;
+                }
+            }
+
+            isLoading = false;
+        }
+
         //Items
         private async Task GetItems()
         {
@@ -1162,6 +1227,22 @@ namespace D69soft.Client.Pages.FIN
             //itemsVMs = await inventoryService.GetItemsList(filterVM);
 
 
+
+            isLoading = false;
+        }
+
+        private async Task InitializeModalUpdate_ItemsClass(int _IsTypeUpdate)
+        {
+            isLoading = true;
+
+            if (_IsTypeUpdate == 0)
+            {
+                itemsClassVM = new();
+            }
+
+            itemsClassVM.IsTypeUpdate = _IsTypeUpdate;
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_ItemsClass");
 
             isLoading = false;
         }
@@ -1177,8 +1258,14 @@ namespace D69soft.Client.Pages.FIN
             {
                 await inventoryService.UpdateItemsClass(itemsClassVM);
 
+                logVM.LogDesc = (itemsClassVM.IsTypeUpdate == 0 ? "Thêm mới" : "Cập nhật") + " lớp hàng " + itemsClassVM.IClsCode + "";
+                await sysService.InsertLog(logVM);
+
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsClass");
-                await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
+
+                itemsClassVMs = await inventoryService.GetItemsClassList();
+                itemsVM.IClsCode = itemsClassVM.IClsCode;
             }
             else
             {
@@ -1188,10 +1275,14 @@ namespace D69soft.Client.Pages.FIN
 
                     if (affectedRows > 0)
                     {
-                        filterVM.IClsCode = String.Empty;
+                        logVM.LogDesc = "Xóa lớp hàng " + itemsClassVM.IClsCode + "";
+                        await sysService.InsertLog(logVM);
+
+                        itemsClassVMs = await inventoryService.GetItemsClassList();
+                        itemsVM.IClsCode = String.Empty;
 
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsClass");
-                        await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
+                        await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
                     }
                     else
                     {
@@ -1205,7 +1296,22 @@ namespace D69soft.Client.Pages.FIN
                 }
             }
 
-            itemsClassVMs = await inventoryService.GetItemsClassList();
+            isLoading = false;
+        }
+
+        private async Task InitializeModalUpdate_ItemsGroup(int _IsTypeUpdate)
+        {
+            isLoading = true;
+
+            if (_IsTypeUpdate == 0)
+            {
+                itemsGroupVM = new();
+                itemsGroupVM.IClsCode = itemsVM.IClsCode;
+            }
+
+            itemsGroupVM.IsTypeUpdate = _IsTypeUpdate;
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_ItemsGroup");
 
             isLoading = false;
         }
@@ -1222,8 +1328,14 @@ namespace D69soft.Client.Pages.FIN
             {
                 await inventoryService.UpdateItemsGroup(itemsGroupVM);
 
+                logVM.LogDesc = (itemsGroupVM.IsTypeUpdate == 0 ? "Thêm mới" : "Cập nhật") + " lớp hàng " + itemsGroupVM.IGrpCode + "";
+                await sysService.InsertLog(logVM);
+
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsGroup");
-                await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
+
+                itemsGroupVMs = await inventoryService.GetItemsGroupList();
+                itemsVM.IGrpCode = itemsGroupVM.IGrpCode;
             }
             else
             {
@@ -1233,10 +1345,14 @@ namespace D69soft.Client.Pages.FIN
 
                     if (affectedRows > 0)
                     {
-                        filterVM.IGrpCode = String.Empty;
+                        logVM.LogDesc = "Xóa nhóm hàng " + itemsGroupVM.IGrpCode + "";
+                        await sysService.InsertLog(logVM);
+
+                        itemsGroupVMs = await inventoryService.GetItemsGroupList();
+                        itemsVM.IGrpCode = String.Empty;
 
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsGroup");
-                        await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
+                        await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
                     }
                     else
                     {
@@ -1250,7 +1366,79 @@ namespace D69soft.Client.Pages.FIN
                 }
             }
 
-            itemsGroupVMs = await inventoryService.GetItemsGroupList();
+            isLoading = false;
+        }
+
+        private async Task InitializeModalUpdate_ItemsUnit(int _IsTypeUpdate)
+        {
+            isLoading = true;
+
+            if (_IsTypeUpdate == 0)
+            {
+                itemsUnitVM = new();
+            }
+
+            if (_IsTypeUpdate == 1)
+            {
+                itemsUnitVM = itemsUnitVMs.First(x => x.IUnitCode == itemsVM.IUnitCode);
+            }
+
+            itemsUnitVM.IsTypeUpdate = _IsTypeUpdate;
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_ItemsUnit");
+
+            isLoading = false;
+        }
+
+        private async Task UpdateItemsUnit(EditContext _formItemsUnitVM, int _IsTypeUpdate)
+        {
+            itemsUnitVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formItemsUnitVM.Validate()) return;
+
+            isLoading = true;
+
+            if (itemsUnitVM.IsTypeUpdate != 2)
+            {
+                await inventoryService.UpdateItemsUnit(itemsUnitVM);
+
+                logVM.LogDesc = (itemsUnitVM.IsTypeUpdate == 0 ? "Thêm mới" : "Cập nhật") + " đơn vị tính " + itemsUnitVM.IUnitCode + "";
+                await sysService.InsertLog(logVM);
+
+                await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsUnit");
+                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
+
+                itemsUnitVMs = await inventoryService.GetItemsUnitList();
+                itemsVM.IUnitCode = itemsUnitVM.IUnitCode;
+            }
+            else
+            {
+                if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
+                {
+                    int affectedRows = await inventoryService.UpdateItemsUnit(itemsUnitVM);
+
+                    if (affectedRows > 0)
+                    {
+                        logVM.LogDesc = "Xóa đơn vị tính " + itemsGroupVM.IGrpCode + "";
+                        await sysService.InsertLog(logVM);
+
+                        itemsUnitVMs = await inventoryService.GetItemsUnitList();
+                        itemsVM.IUnitCode = String.Empty;
+
+                        await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsUnit");
+                        await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
+                    }
+                    else
+                    {
+                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu hàng hóa liên quan.", SweetAlertMessageType.error);
+                        itemsUnitVM.IsTypeUpdate = 1;
+                    }
+                }
+                else
+                {
+                    itemsUnitVM.IsTypeUpdate = 1;
+                }
+            }
 
             isLoading = false;
         }
@@ -1421,105 +1609,5 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
-        private async Task InitializeModalUpdate_ItemsUnit(int _IsTypeUpdate)
-        {
-            isLoading = true;
-
-            if (_IsTypeUpdate == 0)
-            {
-                itemsUnitVM = new();
-            }
-
-            if (_IsTypeUpdate == 1)
-            {
-                itemsUnitVM = itemsUnitVMs.First(x => x.IUnitCode == itemsVM.IUnitCode);
-            }
-
-            itemsUnitVM.IsTypeUpdate = _IsTypeUpdate;
-
-            await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_ItemsUnit");
-
-            isLoading = false;
-        }
-
-        private async Task UpdateItemsUnit(EditContext _formItemsUnitVM, int _IsTypeUpdate)
-        {
-            itemsUnitVM.IsTypeUpdate = _IsTypeUpdate;
-
-            if (!_formItemsUnitVM.Validate()) return;
-
-            isLoading = true;
-
-            if (itemsUnitVM.IsTypeUpdate != 2)
-            {
-                await inventoryService.UpdateItemsUnit(itemsUnitVM);
-
-                await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsUnit");
-                await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
-            }
-            else
-            {
-                if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
-                {
-                    int affectedRows = await inventoryService.UpdateItemsUnit(itemsUnitVM);
-
-                    if (affectedRows > 0)
-                    {
-                        itemsVM.IUnitCode = String.Empty;
-                        itemsUnitVMs = await inventoryService.GetItemsUnitList();
-
-                        await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsUnit");
-                        await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
-                    }
-                    else
-                    {
-                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu hàng hóa liên quan.", SweetAlertMessageType.error);
-                        itemsUnitVM.IsTypeUpdate = 1;
-                    }
-                }
-                else
-                {
-                    itemsUnitVM.IsTypeUpdate = 1;
-                }
-            }
-
-            itemsUnitVMs = await inventoryService.GetItemsUnitList();
-
-            isLoading = false;
-        }
-
-        private async Task InitializeModalUpdate_ItemsClass(int _IsTypeUpdate)
-        {
-            isLoading = true;
-
-            if (_IsTypeUpdate == 0)
-            {
-                itemsClassVM = new();
-            }
-
-            itemsClassVM.IsTypeUpdate = _IsTypeUpdate;
-
-            await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_ItemsClass");
-
-            isLoading = false;
-        }
-
-        private async Task InitializeModalUpdate_ItemsGroup(int _IsTypeUpdate)
-        {
-            isLoading = true;
-
-            if (_IsTypeUpdate == 0)
-            {
-                itemsGroupVM = new();
-
-                itemsGroupVM.IClsCode = filterVM.IClsCode;
-            }
-
-            itemsGroupVM.IsTypeUpdate = _IsTypeUpdate;
-
-            await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_ItemsGroup");
-
-            isLoading = false;
-        }
     }
 }
