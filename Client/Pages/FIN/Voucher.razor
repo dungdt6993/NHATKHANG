@@ -832,25 +832,29 @@
                             }
 
                             <div class="col-sm-11">
+
                                 <BlazoredTypeahead SearchMethod="SearchItems"
                                                    Value="voucherDetailVM"
                                                    ValueChanged="@( (VoucherDetailVM i) => SelectedItem(i) )"
                                                    ValueExpression="@( () => voucherDetailVM)"
                                                    Debounce="500"
                                                    MinimumLength="2"
-                                                   MaximumSuggestions="6"
+                                                   MaximumSuggestions="4"
                                                    placeholder="Tìm kiếm theo mã hàng hoặc tên hàng..."
                                                    @ref="txtSearchItems">
                                     <SelectedTemplate Context="_item">
                                         <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm theo mã hàng hoặc tên hàng...
                                     </SelectedTemplate>
+    
                                     <ResultTemplate Context="_item">
-                                        <i class="fa-solid fa-barcode"></i> @_item.ICode <i class="fa-solid fa-box"></i> @_item.IName
+                                        <img alt="Ảnh" class="img-items-typeahead" src="@_item.IURLPicture1" /> <i class="fa-solid fa-barcode"></i> @_item.ICode <i class="fa-solid fa-box"></i> @_item.IName
                                     </ResultTemplate>
+
                                     <NotFoundTemplate Context="_item">
                                         <i class="fa-solid fa-file-circle-xmark text-danger"></i> Không có dữ liệu
                                     </NotFoundTemplate>
                                 </BlazoredTypeahead>
+
                             </div>
 
                             <a class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="Cập nhật hàng hóa" @onclick="(() => InitializeModalUpdate_Items(0))"><i class="fa-solid fa-plus"></i></a>
@@ -1888,7 +1892,7 @@
             }
 
             <!-- /.card-header -->
-            <div class="card-body table-responsive p-0" style="height: calc(100vh - 190px);">
+            <div class="card-body table-responsive p-0" style="height: calc(100vh - 169px);">
                 @if (filterVM.TypeView == 0)
                 {
                     @if (voucherVMs != null)
@@ -2139,12 +2143,10 @@
                 }
             </div>
             <!-- /.card-body -->
-            @if (voucherVMs != null)
-            {
+
                 <div class="card-footer text-muted">
-                    Tổng số: <b>@voucherVMs.Count()</b> bản ghi
                 </div>
-            }
+
             <!-- /.card-footer -->
         </div>
     </div><!-- /.container-fluid -->

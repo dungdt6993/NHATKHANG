@@ -101,7 +101,7 @@ namespace D69soft.Server.Controllers.FIN
         [HttpPost("GetSearchItems")]
         public async Task<ActionResult<IEnumerable<VoucherDetailVM>>> GetSearchItems(FilterVM _filterVM)
         {
-            var sql = "select top 5 i.ICode, i.IName, iu.IUnitName, case when @FuncID='FIN_Purchasing' then i.ICost else case when @FuncID='FIN_Sale' then i.IPrice else 0 end end as VDPrice, ";
+            var sql = "select top 5 i.ICode, i.IName, iu.IUnitName, i.IURLPicture1, case when @FuncID='FIN_Purchasing' then i.ICost else case when @FuncID='FIN_Sale' then i.IPrice else 0 end end as VDPrice, ";
             sql += "vat.VATCode, vat.VATName, s.StockCode as ToStockCode, s.StockName as ToStockName, s.StockCode as FromStockCode, s.StockName as FromStockName, ";
             sql += "s.StockCode as InventoryCheck_StockCode, s.StockName as InventoryCheck_StockName from FIN.Items i ";
             sql += "join FIN.ItemsType it on it.ITypeCode = i.ITypeCode ";

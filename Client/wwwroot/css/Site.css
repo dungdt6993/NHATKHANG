@@ -268,8 +268,13 @@ img.table-picture {
 .product-image-thumb label {
     cursor: pointer;
 }
-/*Items*/
 
+.img-items-typeahead {
+    border-radius: 50%;
+    display: inline;
+    width: 2rem;
+}
+/*Items*/
 /*EmplTrf*/
 #QuillEditor {
     min-height: 100px;
