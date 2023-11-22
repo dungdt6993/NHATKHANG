@@ -2056,7 +2056,7 @@
                                                 <img alt="Ảnh" class="table-profile-avatar" src="@_inventoryVM.IURLPicture1">
                                             </td>
                                             <td>@_inventoryVM.StockCode - @_inventoryVM.StockName</td>
-                                            <td class="text-center">@_inventoryVM.ICode</td>
+                                            <td class="text-center"><a @onclick=@(() => ClickUpdateItems(_inventoryVM.ICode))>@_inventoryVM.ICode</a></td>
                                             <td>@_inventoryVM.IName</td>
                                             <td class="text-center">@_inventoryVM.IUnitName</td>
                                             <td class="text-center">@_inventoryVM.QtyOpen</td>

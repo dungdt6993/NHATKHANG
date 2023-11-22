@@ -1156,7 +1156,6 @@ namespace D69soft.Client.Pages.FIN
         }
 
         //Vendor
-
         private async Task InitializeModalUpdate_Vendor(int _IsTypeUpdate)
         {
             isLoading = true;
@@ -1607,6 +1606,19 @@ namespace D69soft.Client.Pages.FIN
             }
 
             isLoading = false;
+        }
+
+        //Tong_hop_ton_kho
+        private async void ClickUpdateItems(string _ICode)
+        {
+            filterVM.IActive = true;
+            filterVM.searchText = _ICode;
+
+            itemsVM = (await inventoryService.GetItemsList(filterVM)).First();
+
+            await InitializeModalUpdate_Items(1);
+
+            StateHasChanged();
         }
 
     }
