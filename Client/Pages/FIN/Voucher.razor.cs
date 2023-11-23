@@ -1518,6 +1518,13 @@ namespace D69soft.Client.Pages.FIN
             itemsVM.FileContent = null;
         }
 
+        private async Task<IEnumerable<ItemsVM>> SearchItemsQI(string _searchItems)
+        {
+            filterVM.ITypeCode = "HH";
+            filterVM.IActive = true;
+            filterVM.searchText = _searchItems;
+            return await inventoryService.GetItemsList(filterVM);
+        }
         private void SelectedItemQI(ItemsVM result)
         {
             if (result != null)
@@ -1571,13 +1578,20 @@ namespace D69soft.Client.Pages.FIN
                 itemsVM.ICode = await inventoryService.UpdateItems(itemsVM, quantitativeItemsVMs);
                 itemsVM.IsTypeUpdate = 1;
 
+                //Cập nhật Items từ Voucher
+                if(filterVM.TypeView==0)
+                {
+                    voucherDetailVM = (await SearchItems(itemsVM.ICode)).First();
+                    await SelectedItem(voucherDetailVM);
+                }
+
+                //Cập nhật Items từ tồn kho
+                if (filterVM.TypeView == 1 && ReportName == "FIN_Tong_hop_ton_kho")
+                {
+                    inventoryVMs = await inventoryService.GetInventorys(filterVM);
+                }
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Items");
-
-                voucherDetailVM = (await SearchItems(itemsVM.ICode)).First();
-
-                await SelectedItem(voucherDetailVM);
-
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
             }
             else

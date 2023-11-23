@@ -217,6 +217,7 @@ namespace D69soft.Server.Controllers.FIN
             {
                 sql += "and i.IsSale=@IsSale ";
             }
+            sql += "and (i.ITypeCode=@ITypeCode or coalesce(@ITypeCode,'') = '') ";
             sql += "and (i.IClsCode=@IClsCode or coalesce(@IClsCode,'') = '') ";
             sql += "and (i.IGrpCode=@IGrpCode or coalesce(@IGrpCode,'') = '') ";
             sql += "and (i.ICode LIKE CONCAT('%',@searchText,'%') or i.IName LIKE CONCAT('%',@searchText,'%')) ";

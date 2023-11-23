@@ -474,7 +474,7 @@
                                                                     <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm theo mã hàng hoặc tên hàng...
                                                                 </SelectedTemplate>
                                                                 <ResultTemplate Context="_item">
-                                                                    <i class="fa-solid fa-barcode"></i> @_item.ICode <i class="fa-solid fa-box"></i> @_item.IName
+                                                                    <img alt="Ảnh" class="img-items-typeahead" src="@_item.IURLPicture1" /> <i class="fa-solid fa-barcode"></i> @_item.ICode <i class="fa-solid fa-box"></i> @_item.IName
                                                                 </ResultTemplate>
                                                                 <NotFoundTemplate Context="_item">
                                                                     <i class="fa-solid fa-file-circle-xmark text-danger"></i> Không có dữ liệu
@@ -845,7 +845,7 @@
                                     <SelectedTemplate Context="_item">
                                         <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm theo mã hàng hoặc tên hàng...
                                     </SelectedTemplate>
-    
+
                                     <ResultTemplate Context="_item">
                                         <img alt="Ảnh" class="img-items-typeahead" src="@_item.IURLPicture1" /> <i class="fa-solid fa-barcode"></i> @_item.ICode <i class="fa-solid fa-box"></i> @_item.IName
                                     </ResultTemplate>
@@ -1067,10 +1067,13 @@
                                                          data-style="btn-selectpicker" data-container="body"
                                                          data-live-search="true" data-show-subtext="true"
                                                          @bind-Value="itemsVM.ITypeCode">
-                                                <option value=@String.Empty>-----Tất cả-----</option>
+                                                @if (itemsVM.IsTypeUpdate == 0)
+                                                {
+                                                    <option value=@String.Empty>-----Tất cả-----</option>
+                                                }
                                                 @if (itemsTypeVMs != null)
                                                 {
-                                                    @foreach (var _itemsTypeVM in itemsTypeVMs)
+                                                    @foreach (var _itemsTypeVM in itemsVM.IsTypeUpdate==0? itemsTypeVMs : itemsTypeVMs.Where(x=>x.ITypeCode==itemsVM.ITypeCode))
                                                     {
                                                         <option value="@_itemsTypeVM.ITypeCode">@_itemsTypeVM.ITypeName</option>
                                                     }
@@ -1328,7 +1331,7 @@
                                             }
                                         </table>
 
-                                        <BlazoredTypeahead SearchMethod="SearchItems"
+                                        <BlazoredTypeahead SearchMethod="SearchItemsQI"
                                                            Value="qi_itemsVM"
                                                            ValueChanged="@( (ItemsVM i) => SelectedItemQI(i) )"
                                                            ValueExpression="@( () => qi_itemsVM)"
@@ -1340,7 +1343,7 @@
                                                 <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm để thêm thành phần...
                                             </SelectedTemplate>
                                             <ResultTemplate Context="_item">
-                                                <i class="fa-solid fa-barcode"></i> @_item.ICode <i class="fa-solid fa-box"></i> @_item.IName
+                                                <img alt="Ảnh" class="img-items-typeahead" src="@_item.IURLPicture1" /> <i class="fa-solid fa-barcode"></i> @_item.ICode <i class="fa-solid fa-box"></i> @_item.IName
                                             </ResultTemplate>
                                             <NotFoundTemplate Context="_item">
                                                 <i class="fa-solid fa-file-circle-xmark text-danger"></i> Không có dữ liệu
@@ -2057,7 +2060,7 @@
                                             </td>
                                             <td>@_inventoryVM.StockCode - @_inventoryVM.StockName</td>
                                             <td class="text-center"><a @onclick=@(() => ClickUpdateItems(_inventoryVM.ICode))>@_inventoryVM.ICode</a></td>
-                                            <td>@_inventoryVM.IName</td>
+                                            <td><a @onclick=@(() => ClickUpdateItems(_inventoryVM.ICode))>@_inventoryVM.IName</a></td>
                                             <td class="text-center">@_inventoryVM.IUnitName</td>
                                             <td class="text-center">@_inventoryVM.QtyOpen</td>
                                             <td class="text-center">@_inventoryVM.QtyInput</td>
@@ -2144,8 +2147,8 @@
             </div>
             <!-- /.card-body -->
 
-                <div class="card-footer text-muted">
-                </div>
+            <div class="card-footer text-muted">
+            </div>
 
             <!-- /.card-footer -->
         </div>
