@@ -1628,6 +1628,8 @@
 @* End Vendor *@
 
 @* Stock *@
+    @if (filterVM.CategoryName == "Stock")
+    {
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalList_Stock">
     <div class="modal-dialog modal-xl">
         <div class="modal-content" style="background-color: #f4f6f9;">
@@ -1639,18 +1641,12 @@
                 </h5>
 
                 <div class="ml-auto">
-                    @if (filterVM.TypeView == 2)
+                    @if (!String.IsNullOrEmpty(stockVM.StockCode))
                     {
-                        @if (filterVM.CategoryName == "Stock")
-                        {
-                            @if (!String.IsNullOrEmpty(stockVM.StockCode))
-                            {
-                                <button type="button" class="btn btn-sm btn-info" @onclick=@(() => InitializeModalUpdate_Stock(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
-                            }
-
-                            <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Stock(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm mới</button>
-                        }
+                        <button type="button" class="btn btn-sm btn-info" @onclick=@(() => InitializeModalUpdate_Stock(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
                     }
+
+                    <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Stock(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm mới</button>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -1659,10 +1655,7 @@
             </div>
 
             <div class="modal-body p-0" style="height: calc(100vh - 120px);">
-                @if (filterVM.TypeView == 2)
-                {
-                    @if (filterVM.CategoryName == "Stock")
-                    {
+
                         @if (stockVMs != null)
                         {
                             <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
@@ -1701,8 +1694,7 @@
                                 <img class="img-no-result" src="images/_default/no-results.png" />
                             }
                         }
-                    }
-                }
+
             </div>
 
             <div class="modal-footer justify-content-center">
@@ -1713,6 +1705,7 @@
         <!-- /.modal-dialog -->
     </div>
 </div>
+                    }
 
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Stock">
     <div class="modal-dialog">
@@ -2380,5 +2373,5 @@
                     }
                 },
         };
-                }
+}
 

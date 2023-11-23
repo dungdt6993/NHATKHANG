@@ -1224,7 +1224,6 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            filterVM.TypeView = 2;
             filterVM.CategoryName = "Stock";
 
             stockVM = new();
