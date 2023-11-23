@@ -77,7 +77,8 @@ namespace D69soft.Client.Pages.FIN
         IEnumerable<CustomerVM> customerVMs;
 
         //Stock
-        IEnumerable<StockVM> stockVMs;
+        StockVM stockVM = new();
+        List<StockVM> stockVMs;
 
         //BankAccount
         List<BankAccountVM> bankAccountVMs;
@@ -182,7 +183,7 @@ namespace D69soft.Client.Pages.FIN
             itemsGroupVMs = await inventoryService.GetItemsGroupList();
 
             //Stock
-            stockVMs = await inventoryService.GetStockList();
+            stockVMs = (await inventoryService.GetStockList()).ToList();
 
             //Vendor
             vendorVMs = await purchasingService.GetVendorList();
@@ -1212,6 +1213,105 @@ namespace D69soft.Client.Pages.FIN
                 else
                 {
                     vendorVM.IsTypeUpdate = 1;
+                }
+            }
+
+            isLoading = false;
+        }
+
+        //Stock
+        private async Task GetStocks()
+        {
+            isLoading = true;
+
+            filterVM.TypeView = 2;
+            filterVM.CategoryName = "Stock";
+
+            stockVM = new();
+
+            filterVM.searchText = String.Empty;
+            stockVMs = (await inventoryService.GetStockList()).ToList();
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalList_Stock");
+
+            isLoading = false;
+        }
+
+        private void onclick_Selected(StockVM _stockVM)
+        {
+            stockVM = _stockVM == stockVM ? new() : _stockVM;
+        }
+
+        private string SetSelected(StockVM _stockVM)
+        {
+            if (stockVM.StockCode != _stockVM.StockCode)
+            {
+                return string.Empty;
+            }
+            return "selected";
+        }
+
+        private async Task InitializeModalUpdate_Stock(int _IsTypeUpdate)
+        {
+            isLoading = true;
+
+            if (_IsTypeUpdate == 0)
+            {
+                stockVM = new();
+
+                stockVM.StockActive = true;
+            }
+
+            stockVM.IsTypeUpdate = _IsTypeUpdate;
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_Stock");
+
+            isLoading = false;
+        }
+
+        private async Task UpdateStock(EditContext _formStockVM, int _IsTypeUpdate)
+        {
+            stockVM.IsTypeUpdate = _IsTypeUpdate;
+            if (!_formStockVM.Validate()) return;
+
+            isLoading = true;
+
+            if (stockVM.IsTypeUpdate != 2)
+            {
+                await inventoryService.UpdateStock(stockVM);
+
+                logVM.LogDesc = (stockVM.IsTypeUpdate == 0 ? "Thêm mới" : "Cập nhật") + " kho " + stockVM.StockCode + "";
+                await sysService.InsertLog(logVM);
+
+                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
+
+                stockVM.IsTypeUpdate = 1;
+            }
+            else
+            {
+                if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
+                {
+                    int affectedRows = await inventoryService.UpdateStock(stockVM);
+
+                    if (affectedRows > 0)
+                    {
+                        logVM.LogDesc = "Xóa kho " + stockVM.StockCode + "";
+                        await sysService.InsertLog(logVM);
+
+                        await GetStocks();
+
+                        await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Stock");
+                        await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
+                    }
+                    else
+                    {
+                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu liên quan.", SweetAlertMessageType.error);
+                        stockVM.IsTypeUpdate = 1;
+                    }
+                }
+                else
+                {
+                    stockVM.IsTypeUpdate = 1;
                 }
             }
 

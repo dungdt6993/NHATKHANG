@@ -1073,7 +1073,7 @@
                                                 }
                                                 @if (itemsTypeVMs != null)
                                                 {
-                                                    @foreach (var _itemsTypeVM in itemsVM.IsTypeUpdate==0? itemsTypeVMs : itemsTypeVMs.Where(x=>x.ITypeCode==itemsVM.ITypeCode))
+                                                    @foreach (var _itemsTypeVM in itemsVM.IsTypeUpdate == 0 ? itemsTypeVMs : itemsTypeVMs.Where(x => x.ITypeCode == itemsVM.ITypeCode))
                                                     {
                                                         <option value="@_itemsTypeVM.ITypeCode">@_itemsTypeVM.ITypeName</option>
                                                     }
@@ -1226,8 +1226,8 @@
                                     <div class="form-group">
                                         <div class="form-group clearfix">
                                             <div class="icheck-success d-inline">
-                                                <input type="radio" id="isActive1" name="isActive" checked="@(itemsVM.IActive == true)" @onchange="(() => itemsVM.IActive = true)">
-                                                <label for="isActive1">
+                                                <input type="radio" id="Items_isActive1" name="Items_isActive" checked="@(itemsVM.IActive == true)" @onchange="(() => itemsVM.IActive = true)">
+                                                <label for="Items_isActive1">
                                                     Hoạt động
                                                 </label>
                                             </div>
@@ -1235,8 +1235,8 @@
                                                 &nbsp;&nbsp;
                                             </label>
                                             <div class="icheck-danger d-inline">
-                                                <input type="radio" id="isActive2" name="isActive" checked="@(itemsVM.IActive == false)" @onchange="(() => itemsVM.IActive = false)">
-                                                <label for="isActive2">
+                                                <input type="radio" id="Items_isActive2" name="Items_isActive" checked="@(itemsVM.IActive == false)" @onchange="(() => itemsVM.IActive = false)">
+                                                <label for="Items_isActive2">
                                                     Không hoạt động
                                                 </label>
                                             </div>
@@ -1627,6 +1627,173 @@
 </div>
 @* End Vendor *@
 
+@* Stock *@
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalList_Stock">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background-color: #f4f6f9;">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    <span>KHO</span>
+                </h5>
+
+                <div class="ml-auto">
+                    @if (filterVM.TypeView == 2)
+                    {
+                        @if (filterVM.CategoryName == "Stock")
+                        {
+                            @if (!String.IsNullOrEmpty(stockVM.StockCode))
+                            {
+                                <button type="button" class="btn btn-sm btn-info" @onclick=@(() => InitializeModalUpdate_Stock(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
+                            }
+
+                            <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Stock(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm mới</button>
+                        }
+                    }
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="modal-body p-0" style="height: calc(100vh - 120px);">
+                @if (filterVM.TypeView == 2)
+                {
+                    @if (filterVM.CategoryName == "Stock")
+                    {
+                        @if (stockVMs != null)
+                        {
+                            <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th class="text-center">Mã kho</th>
+                                        <th>Tên kho</th>
+                                        <th>Địa chỉ</th>
+                                        <th class="text-center">Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <Virtualize Items="@stockVMs" Context="_stockVM" OverscanCount="50">
+                                        <tr class="@(SetSelected(_stockVM))" @onclick="() => onclick_Selected(_stockVM)">
+                                            <td class="text-center">@_stockVM.StockCode</td>
+                                            <td>@_stockVM.StockName</td>
+                                            <td>@_stockVM.StockAddress</td>
+
+                                            <td class="text-center">
+                                                @if (_stockVM.StockActive)
+                                                {
+                                                    <i class="fas fa-check text-success"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fas fa-times"></i>
+                                                }
+                                            </td>
+
+                                        </tr>
+                                    </Virtualize>
+                                </tbody>
+                            </table>
+                            if (stockVMs.Count() <= 0)
+                            {
+                                <img class="img-no-result" src="images/_default/no-results.png" />
+                            }
+                        }
+                    }
+                }
+            </div>
+
+            <div class="modal-footer justify-content-center">
+            </div>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Stock">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <EditForm Model="stockVM" Context="formStockVM">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>KHO</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="GetStocks">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label>Mã</label>
+                            @if (stockVM.IsTypeUpdate == 0)
+                            {
+                                <InputText class="form-control form-control-sm" placeholder="Mã kho" @bind-Value:get="stockVM.StockCode" @bind-Value:set="(value) => {stockVM.StockCode = value.ToUpper();}" autofocus />
+                                <ValidationMessage For="@(() => stockVM.StockCode)" />
+                            }
+                            else
+                            {
+                                <input type="text" readonly class="form-control form-control-sm" value="@stockVM.StockCode" />
+                            }
+                        </div>
+                        <div class="form-group col-md-9">
+                            <label>Tên</label>
+                            <InputText class="form-control form-control-sm" @bind-Value="@stockVM.StockName" />
+                            <ValidationMessage For="@(() => stockVM.StockName)" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Địa chỉ</label>
+                        <InputTextArea class="form-control form-control-sm" @bind-Value="@stockVM.StockAddress" />
+                    </div>
+
+                    <div class="form-row align-items-center">
+                        <div class="icheck-success d-inline">
+                            <input type="radio" id="Stock_isActive1" name="Stock_isActive" checked="@(stockVM.StockActive == true)" @onchange="(() => stockVM.StockActive = true)">
+                            <label for="Stock_isActive1">
+                                Hoạt động
+                            </label>
+                        </div>
+                        <label>
+                            &nbsp;&nbsp;
+                        </label>
+                        <div class="icheck-danger d-inline">
+                            <input type="radio" id="Stock_isActive2" name="Stock_isActive" checked="@(stockVM.StockActive == false)" @onchange="(() => stockVM.StockActive = false)">
+                            <label for="Stock_isActive2">
+                                Không hoạt động
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateStock(formStockVM, stockVM.IsTypeUpdate))><i class="fas fa-check"></i> Lưu</button>
+                    @if (stockVM.IsTypeUpdate == 1)
+                    {
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateStock(formStockVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                    }
+                </div>
+
+            </EditForm>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+@* End Stock *@
+
 <Modal_RptViewer ReportName=@ReportName></Modal_RptViewer>
 
 <EditForm Model="@filterVM">
@@ -1733,6 +1900,17 @@
         <div class="card card-primary card-outline">
 
             <div class="card-header text-right">
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa-solid fa-list-ul"></i> Danh mục
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+
+                        <a class="dropdown-item" @onclick=@(() => GetStocks())>Kho</a>
+
+                    </div>
+                </div>
 
                 <div class="btn-group">
                     <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -2031,7 +2209,7 @@
                         }
                     }
                 }
-                else
+                @if (filterVM.TypeView == 1)
                 {
                     @if (ReportName == "FIN_Tong_hop_ton_kho")
                     {
@@ -2059,8 +2237,8 @@
                                                 <img alt="Ảnh" class="table-profile-avatar" src="@_inventoryVM.IURLPicture1">
                                             </td>
                                             <td>@_inventoryVM.StockCode - @_inventoryVM.StockName</td>
-                                            <td class="text-center"><a @onclick=@(() => ClickUpdateItems(_inventoryVM.ICode))>@_inventoryVM.ICode</a></td>
-                                            <td><a @onclick=@(() => ClickUpdateItems(_inventoryVM.ICode))>@_inventoryVM.IName</a></td>
+                                            <td class="text-center">@_inventoryVM.ICode</td>
+                                            <td>@_inventoryVM.IName</td>
                                             <td class="text-center">@_inventoryVM.IUnitName</td>
                                             <td class="text-center">@_inventoryVM.QtyOpen</td>
                                             <td class="text-center">@_inventoryVM.QtyInput</td>
@@ -2152,7 +2330,9 @@
 
             <!-- /.card-footer -->
         </div>
-    </div><!-- /.container-fluid -->
+    </div>
+
+    <!-- /.container-fluid -->
 </section>
 
 @code {
@@ -2200,5 +2380,5 @@
                     }
                 },
         };
-}
+                }
 

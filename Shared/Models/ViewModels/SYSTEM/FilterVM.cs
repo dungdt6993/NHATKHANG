@@ -20,6 +20,7 @@ namespace D69soft.Shared.Models.ViewModels.SYSTEM
         public DateTimeOffset? dDate { get; set; }
 
         public int TypeView { get; set; } = 0;
+        public string CategoryName { get; set; }
 
         public DateTimeOffset StartDate { get; set; }
         public DateTimeOffset EndDate { get; set; }
