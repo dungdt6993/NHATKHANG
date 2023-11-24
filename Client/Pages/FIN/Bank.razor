@@ -82,7 +82,7 @@
 
                 @if (!String.IsNullOrEmpty(bankVM.SwiftCode))
                 {
-                    <button type="button" class="btn btn-sm btn-info" @onclick=@(() => InitializeModalUpdate_Bank(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
+                    <button type="button" class="btn btn-sm btn-primary" @onclick=@(() => InitializeModalUpdate_Bank(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
                 }
 
                 <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Bank(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm mới</button>

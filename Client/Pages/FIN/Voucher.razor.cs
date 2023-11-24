@@ -74,13 +74,18 @@ namespace D69soft.Client.Pages.FIN
         List<VendorVM> vendorVMs;
 
         //Customer
-        IEnumerable<CustomerVM> customerVMs;
+        CustomerVM customerVM = new();
+        List<CustomerVM> customerVMs;
 
         //Stock
         StockVM stockVM = new();
         List<StockVM> stockVMs;
 
+        //Bank
+        List<BankVM> bankVMs;
+
         //BankAccount
+        BankAccountVM bankAccountVM = new();
         List<BankAccountVM> bankAccountVMs;
 
         //ItemsType
@@ -171,10 +176,20 @@ namespace D69soft.Client.Pages.FIN
             filterVM.StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             filterVM.EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1).AddTicks(-1);
 
-            //Profile
-            filterVM.DivisionID = filterVM.DivisionID;
-            filterVM.TypeProfile = 0;
-            profileVMs = await profileService.GetProfileList(filterVM);
+            //Bank
+            bankVMs = (await moneyService.GetBankList()).ToList();
+
+            //BankAccount
+            bankAccountVMs = (await moneyService.GetBankAccountList()).ToList();
+
+            //Vendor
+            vendorVMs = (await purchasingService.GetVendorList()).ToList();
+
+            //Customer
+            customerVMs = (await customerService.GetCustomers()).ToList();
+
+            //Stock
+            stockVMs = (await inventoryService.GetStockList()).ToList();
 
             //Items
             itemsUnitVMs = await inventoryService.GetItemsUnitList();
@@ -182,23 +197,16 @@ namespace D69soft.Client.Pages.FIN
             itemsClassVMs = await inventoryService.GetItemsClassList();
             itemsGroupVMs = await inventoryService.GetItemsGroupList();
 
-            //Stock
-            stockVMs = (await inventoryService.GetStockList()).ToList();
-
-            //Vendor
-            vendorVMs = (await purchasingService.GetVendorList()).ToList();
-
-            //Customer
-            customerVMs = await customerService.GetCustomers();
+            //Account
+            accountVMs = await voucherService.GetAccounts();
 
             //VAT
             vatDefVMs = await voucherService.GetVATDefs();
 
-            //Bank
-            accountVMs = await voucherService.GetAccounts();
-
-            //BankAccount
-            bankAccountVMs = (await moneyService.GetBankAccountList()).ToList();
+            //Profile
+            filterVM.DivisionID = filterVM.DivisionID;
+            filterVM.TypeProfile = 0;
+            profileVMs = await profileService.GetProfileList(filterVM);
 
             await GetVouchers();
 
@@ -1156,6 +1164,105 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
+        //BankAccount
+        private async Task GetBankAccounts()
+        {
+            isLoading = true;
+
+            filterVM.CategoryName = "BankAccount";
+
+            bankAccountVM = new();
+
+            bankAccountVMs = (await moneyService.GetBankAccountList()).ToList();
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalList_BankAccount");
+
+            isLoading = false;
+        }
+
+        private void onclick_Selected(BankAccountVM _bankAccount)
+        {
+            bankAccountVM = _bankAccount == bankAccountVM ? new() : _bankAccount;
+        }
+
+        private string SetSelected(BankAccountVM _bankAccount)
+        {
+            if (bankAccountVM.BankAccountID != _bankAccount.BankAccountID)
+            {
+                return string.Empty;
+            }
+            return "selected";
+        }
+
+        private async Task InitializeModalUpdate_BankAccount(int _IsTypeUpdate)
+        {
+            isLoading = true;
+
+            if (_IsTypeUpdate == 0)
+            {
+                bankAccountVM = new();
+            }
+
+            bankAccountVM.IsTypeUpdate = _IsTypeUpdate;
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_BankAccount");
+
+            isLoading = false;
+        }
+
+        private async Task UpdateBankAccount(EditContext _formBankAccountVM, int _IsTypeUpdate)
+        {
+            bankAccountVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formBankAccountVM.Validate()) return;
+            isLoading = true;
+
+            if (bankAccountVM.IsTypeUpdate != 2)
+            {
+                await moneyService.UpdateBankAccount(bankAccountVM);
+
+                logVM.LogDesc = (bankAccountVM.IsTypeUpdate == 0 ? "Thêm mới" : "Cập nhật") + " tài khoản ngân hàng " + bankAccountVM.BankAccount + " - " + bankVMs.Where(x => x.SwiftCode == bankAccountVM.SwiftCode).Select(x => x.BankShortName).First() + "";
+                await sysService.InsertLog(logVM);
+
+                bankAccountVMs = (await moneyService.GetBankAccountList()).ToList();
+
+                await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
+                await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_BankAccount");
+
+                bankAccountVM.IsTypeUpdate = 1;
+            }
+            else
+            {
+                if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
+                {
+                    int affectedRows = await moneyService.UpdateBankAccount(bankAccountVM);
+
+                    if (affectedRows > 0)
+                    {
+                        logVM.LogDesc = "Xóa tài khoản ngân hàng " + bankAccountVM.BankAccount + " - " + bankVMs.Where(x => x.SwiftCode == bankAccountVM.SwiftCode).Select(x => x.BankShortName).First() + "";
+                        await sysService.InsertLog(logVM);
+
+                        bankAccountVM = new();
+                        bankAccountVMs = (await moneyService.GetBankAccountList()).ToList();
+
+                        await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
+                        await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_BankAccount");
+                    }
+                    else
+                    {
+                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu liên quan.", SweetAlertMessageType.error);
+                        stockVM.IsTypeUpdate = 1;
+                    }
+                }
+                else
+                {
+                    bankAccountVM.IsTypeUpdate = 1;
+                }
+            }
+
+            isLoading = false;
+        }
+
         //Vendor
         private async Task GetVendors()
         {
@@ -1235,22 +1342,121 @@ namespace D69soft.Client.Pages.FIN
                         logVM.LogDesc = "Xóa nhà cung cấp " + vendorVM.VendorCode + "";
                         await sysService.InsertLog(logVM);
 
-                        vendorVMs = (await purchasingService.GetVendorList()).ToList();
                         vendorVM = new();
-                        voucherVM.VendorCode = String.Empty;
+                        vendorVMs = (await purchasingService.GetVendorList()).ToList();
 
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Vendor");
                         await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
                     }
                     else
                     {
-                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu hàng hóa liên quan.", SweetAlertMessageType.error);
+                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu liên quan.", SweetAlertMessageType.error);
                         vendorVM.IsTypeUpdate = 1;
                     }
                 }
                 else
                 {
                     vendorVM.IsTypeUpdate = 1;
+                }
+            }
+
+            isLoading = false;
+        }
+
+        //Customer
+        private async Task GetCustomers()
+        {
+            isLoading = true;
+
+            filterVM.CategoryName = "Customer";
+
+            customerVM = new();
+
+            customerVMs = (await customerService.GetCustomers()).ToList();
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalList_Customer");
+
+            isLoading = false;
+        }
+
+        private void onclick_Selected(CustomerVM _customerVM)
+        {
+            customerVM = _customerVM == customerVM ? new() : _customerVM;
+        }
+
+        private string SetSelected(CustomerVM _customerVM)
+        {
+            if (customerVM.CustomerCode != _customerVM.CustomerCode)
+            {
+                return string.Empty;
+            }
+            return "selected";
+        }
+
+        private async Task InitializeModalUpdate_Customer(int _IsTypeUpdate)
+        {
+            isLoading = true;
+
+            if (_IsTypeUpdate == 0)
+            {
+                customerVM = new();
+            }
+
+            customerVM.IsTypeUpdate = _IsTypeUpdate;
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalUpdate_Customer");
+
+            isLoading = false;
+        }
+
+        private async Task UpdateCustomer(EditContext _formVendorVM, int _IsTypeUpdate)
+        {
+            customerVM.IsTypeUpdate = _IsTypeUpdate;
+
+            if (!_formVendorVM.Validate()) return;
+            isLoading = true;
+
+            if (customerVM.IsTypeUpdate != 2)
+            {
+                customerVM.CustomerCode = await customerService.UpdateCustomer(customerVM);
+
+                logVM.LogDesc = (customerVM.IsTypeUpdate == 0 ? "Thêm mới" : "Cập nhật") + " khách hàng " + customerVM.CustomerCode + "";
+                await sysService.InsertLog(logVM);
+
+                customerVMs = (await customerService.GetCustomers()).ToList();
+                voucherVM.CustomerCode = customerVM.CustomerCode;
+
+                await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
+                await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Customer");
+
+                customerVM.IsTypeUpdate = 1;
+            }
+            else
+            {
+                if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
+                {
+                    var result = await customerService.UpdateCustomer(customerVM);
+
+                    if (result != "Err_NotDel")
+                    {
+                        logVM.LogDesc = "Xóa khách hàng " + customerVM.CustomerCode + "";
+                        await sysService.InsertLog(logVM);
+
+                        customerVM = new();
+                        customerVMs = (await customerService.GetCustomers()).ToList();
+
+                        await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
+                        await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Customer");
+                    }
+                    else
+                    {
+                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu liên quan.", SweetAlertMessageType.error);
+                        vendorVM.IsTypeUpdate = 1;
+                    }
+                }
+                else
+                {
+                    customerVM.IsTypeUpdate = 1;
                 }
             }
 
@@ -1266,7 +1472,6 @@ namespace D69soft.Client.Pages.FIN
 
             stockVM = new();
 
-            filterVM.searchText = String.Empty;
             stockVMs = (await inventoryService.GetStockList()).ToList();
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalList_Stock");
@@ -1320,7 +1525,10 @@ namespace D69soft.Client.Pages.FIN
                 logVM.LogDesc = (stockVM.IsTypeUpdate == 0 ? "Thêm mới" : "Cập nhật") + " kho " + stockVM.StockCode + "";
                 await sysService.InsertLog(logVM);
 
-                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
+                stockVMs = (await inventoryService.GetStockList()).ToList();
+
+                await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
+                await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Stock");
 
                 stockVM.IsTypeUpdate = 1;
             }
@@ -1335,10 +1543,11 @@ namespace D69soft.Client.Pages.FIN
                         logVM.LogDesc = "Xóa kho " + stockVM.StockCode + "";
                         await sysService.InsertLog(logVM);
 
-                        await GetStocks();
+                        stockVM = new();
+                        stockVMs = (await inventoryService.GetStockList()).ToList();
 
-                        await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Stock");
                         await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
+                        await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Stock");
                     }
                     else
                     {
@@ -1492,7 +1701,7 @@ namespace D69soft.Client.Pages.FIN
                     }
                     else
                     {
-                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu hàng hóa liên quan.", SweetAlertMessageType.error);
+                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu liên quan.", SweetAlertMessageType.error);
                         itemsGroupVM.IsTypeUpdate = 1;
                     }
                 }
@@ -1566,7 +1775,7 @@ namespace D69soft.Client.Pages.FIN
                     }
                     else
                     {
-                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu hàng hóa liên quan.", SweetAlertMessageType.error);
+                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu liên quan.", SweetAlertMessageType.error);
                         itemsUnitVM.IsTypeUpdate = 1;
                     }
                 }
@@ -1746,7 +1955,7 @@ namespace D69soft.Client.Pages.FIN
                     }
                     else
                     {
-                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu hàng hóa liên quan.", SweetAlertMessageType.error);
+                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu liên quan.", SweetAlertMessageType.error);
                         itemsVM.IsTypeUpdate = 1;
                     }
                 }

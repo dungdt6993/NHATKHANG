@@ -41,11 +41,11 @@ namespace D69soft.Client.Services.FIN
             return await _httpClient.GetFromJsonAsync<bool>($"api/Money/CheckContainsBankAccount/{id}");
         }
 
-        public async Task<string> UpdateBankAccount(BankAccountVM _bankAccountVM)
+        public async Task<int> UpdateBankAccount(BankAccountVM _bankAccountVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/Money/UpdateBankAccount", _bankAccountVM);
 
-            return await response.Content.ReadAsStringAsync();
+            return await response.Content.ReadFromJsonAsync<int>();
         }
     }
 }

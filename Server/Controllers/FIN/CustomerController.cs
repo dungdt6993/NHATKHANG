@@ -35,8 +35,6 @@ namespace D69soft.Server.Controllers.FIN
                     sql += "Insert into CRM.Customer (CustomerCode,CustomerName,CustomerTaxCode,CustomerBirthday,CustomerTel,CustomerAddress) ";
                     sql += "select Code_ID, @CustomerName, @CustomerTaxCode, @CustomerBirthday, @CustomerTel, @CustomerAddress from #tmpAuto_Code_ID ";
                     sql += "select Code_ID from #tmpAuto_Code_ID";
-
-                    _customerVM.CustomerCode = await conn.ExecuteScalarAsync<string>(sql, _customerVM);
                 }
 
                 if (_customerVM.IsTypeUpdate == 1)
@@ -48,9 +46,17 @@ namespace D69soft.Server.Controllers.FIN
 
                 if (_customerVM.IsTypeUpdate == 2)
                 {
-                    sql = "delete from CRM.Customer where CustomerCode=@CustomerCode ";
-                    await conn.ExecuteAsync(sql, _customerVM);
+                    sql = "if not exists (select * from FIN.Voucher where CustomerCode=@CustomerCode) ";
+                    sql += "begin ";
+                    sql += "delete from CRM.Customer where CustomerCode=@CustomerCode ";
+                    sql += "end ";
+                    sql += "else ";
+                    sql += "begin ";
+                    sql += "select 'Err_NotDel' ";
+                    sql += "end ";
                 }
+
+                _customerVM.CustomerCode = await conn.ExecuteScalarAsync<string>(sql, _customerVM);
 
                 return _customerVM.CustomerCode;
             }

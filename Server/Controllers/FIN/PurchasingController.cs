@@ -50,7 +50,6 @@ namespace D69soft.Server.Controllers.FIN
                     sql += "exec SYSTEM.AUTO_CODE_ID 'FIN.Vendor','VendorCode','NCC','0000' ";
                     sql += "Insert into FIN.Vendor (VendorCode,VendorName,VendorTaxCode,VendorAddress,VendorTel,VendorContractFile,VendorContractStartDate,VendorContractEndDate) ";
                     sql += "select Code_ID,@VendorName,@VendorTaxCode,@VendorAddress,@VendorTel,@VendorContractFile,@VendorContractStartDate,@VendorContractEndDate from #tmpAuto_Code_ID ";
-
                     sql += "select Code_ID from #tmpAuto_Code_ID";
                 }
 

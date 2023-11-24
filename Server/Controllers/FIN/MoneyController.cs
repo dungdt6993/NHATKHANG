@@ -108,7 +108,7 @@ namespace D69soft.Server.Controllers.FIN
         }
 
         [HttpPost("UpdateBankAccount")]
-        public async Task<ActionResult<bool>> UpdateBankAccount(BankAccountVM _bankAccountVM)
+        public async Task<ActionResult<int>> UpdateBankAccount(BankAccountVM _bankAccountVM)
         {
             var sql = "";
             if (_bankAccountVM.IsTypeUpdate == 0)
@@ -131,10 +131,8 @@ namespace D69soft.Server.Controllers.FIN
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                await conn.ExecuteAsync(sql, _bankAccountVM);
+                return await conn.ExecuteAsync(sql, _bankAccountVM);
             }
-
-            return true;
         }
     }
 }

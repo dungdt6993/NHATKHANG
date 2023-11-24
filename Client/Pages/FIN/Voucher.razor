@@ -172,20 +172,30 @@
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
                                             <label>Khách hàng</label>
-                                            <select class="selectpicker form-control form-control-sm"
-                                                    data-style="btn-selectpicker" data-container="body"
-                                                    data-live-search="true" data-show-subtext="true"
-                                                    @bind="onchange_CustomerCode">
-                                                <option value=@String.Empty>-----Chọn-----</option>
-                                                @if (customerVMs != null)
-                                                {
-                                                    @foreach (var _customerVM in customerVMs)
+
+                                            <div class="input-group">
+
+                                                <select class="selectpicker form-control form-control-sm"
+                                                        data-style="btn-selectpicker" data-container="body"
+                                                        data-live-search="true" data-show-subtext="true"
+                                                        @bind="onchange_CustomerCode">
+                                                    <option value=@String.Empty>-----Chọn-----</option>
+                                                    @if (customerVMs != null)
                                                     {
-                                                        <option data-subtext="@_customerVM.CustomerCode" value="@_customerVM.CustomerCode">@_customerVM.CustomerName</option>
+                                                        @foreach (var _customerVM in customerVMs)
+                                                        {
+                                                            <option data-subtext="@_customerVM.CustomerCode" value="@_customerVM.CustomerCode">@_customerVM.CustomerName</option>
+                                                        }
                                                     }
-                                                }
-                                            </select>
-                                            <ValidationMessage For="@(() => voucherVM.CustomerCode)" />
+                                                </select>
+
+                                                <div class="input-group-append">
+                                                    <a class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Customer(0))"><i class="fa-solid fa-plus"></i></a>
+                                                </div>
+
+                                                <ValidationMessage For="@(() => voucherVM.CustomerCode)" />
+                                            </div>
+
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label>Người mua hàng</label>
@@ -974,6 +984,142 @@
     </div>
 </div>
 
+@* BankAccount *@
+@if (filterVM.CategoryName == "BankAccount")
+{
+    <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalList_BankAccount">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content" style="background-color: #f4f6f9;">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        <span>Tài khoản ngân hàng</span>
+                    </h5>
+
+                    <div class="ml-auto">
+                        @if (bankAccountVM.BankAccountID != 0)
+                        {
+                            <button type="button" class="btn btn-sm btn-primary" @onclick=@(() => InitializeModalUpdate_BankAccount(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
+                        }
+
+                        <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_BankAccount(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm mới</button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="modal-body p-0" style="height: calc(100vh - 120px);">
+
+                    @if (bankAccountVMs != null)
+                    {
+                        <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Số tài khoản</th>
+                                    <th>Tên ngân hàng</th>
+                                    <th>Chủ tài khoản</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <Virtualize Items="@bankAccountVMs" Context="_bankAccountVM" OverscanCount="50">
+                                    <tr class="@(SetSelected(_bankAccountVM))" @onclick="() => onclick_Selected(_bankAccountVM)">
+                                        <td>@_bankAccountVM.BankAccount</td>
+                                        <td>@_bankAccountVM.BankFullName</td>
+                                        <td>@_bankAccountVM.AccountHolder</td>
+                                    </tr>
+                                </Virtualize>
+                            </tbody>
+                        </table>
+                        if (bankAccountVMs.Count() <= 0)
+                        {
+                            <img class="img-no-result" src="images/_default/no-results.png" />
+                        }
+                    }
+
+                </div>
+
+                <div class="modal-footer justify-content-center">
+                </div>
+
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    </div>
+
+    <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_BankAccount">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <EditForm Model="bankAccountVM" Context="_formBankAccountVM">
+
+                    <FluentValidationValidator />
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <span>TÀI KHOẢN NGÂN HÀNG</span>
+                        </h5>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="GetBankAccounts">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label>Số tài khoản</label>
+                                <InputText class="form-control form-control-sm" @bind-Value="bankAccountVM.BankAccount" />
+                                <ValidationMessage For="@(() => bankAccountVM.BankAccount)" />
+                            </div>
+                            <div class="form-group col-md-9">
+                                <label>Tên ngân hàng</label>
+                                <InputSelect class="selectpicker form-control form-control-sm"
+                                             data-style="btn-selectpicker" data-container="body"
+                                             data-live-search="true" data-show-subtext="true"
+                                             @bind-Value="bankAccountVM.SwiftCode">
+                                    <option value=@String.Empty>-----Chọn-----</option>
+                                    @if (bankVMs != null)
+                                    {
+                                        @foreach (var _bankVM in bankVMs)
+                                        {
+                                            <option data-subtext="@_bankVM.BankShortName" value="@_bankVM.SwiftCode">@_bankVM.BankFullName</option>
+                                        }
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => bankAccountVM.SwiftCode)" />
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label>Chủ tài khoản</label>
+                            <InputText class="form-control form-control-sm" @bind-Value="@bankAccountVM.AccountHolder" />
+                            <ValidationMessage For="@(() => bankAccountVM.AccountHolder)" />
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateBankAccount(_formBankAccountVM, bankAccountVM.IsTypeUpdate))><i class="fas fa-check"></i> Lưu</button>
+                        @if (bankAccountVM.IsTypeUpdate == 1)
+                        {
+                            <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateBankAccount(_formBankAccountVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                        }
+                    </div>
+
+                </EditForm>
+
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    </div>
+}
+@* End BankAccount *@
+
 @* Items *@
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Items">
     <div class="modal-dialog modal-lg">
@@ -1564,7 +1710,7 @@
                 <div class="ml-auto">
                     @if (!String.IsNullOrEmpty(vendorVM.VendorCode))
                     {
-                        <button type="button" class="btn btn-sm btn-info" @onclick=@(() => InitializeModalUpdate_Vendor(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
+                        <button type="button" class="btn btn-sm btn-primary" @onclick=@(() => InitializeModalUpdate_Vendor(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
                     }
 
                     <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Vendor(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm mới</button>
@@ -1582,9 +1728,9 @@
                     <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
                         <thead class="thead-light">
                             <tr>
-                                <th class="text-center">Mã nhà cung cấp</th>
-                                <th>Tên nhà cung cấp</th>
-                                <th class="text-center">Công nợ</th>
+                                <th class="text-center">M</th>
+                                <th>Tên</th>
+                                <th class="text-center">Địa chỉ</th>
                                 <th class="text-center">Mã số thuế</th>
                                 <th class="text-center">Điện thoại</th>
                             </tr>
@@ -1594,7 +1740,7 @@
                                 <tr class="@(SetSelected(_vendorVM))" @onclick="() => onclick_Selected(_vendorVM)">
                                     <td class="text-center">@_vendorVM.VendorCode</td>
                                     <td>@_vendorVM.VendorName</td>
-                                    <td></td>
+                                    <td>@_vendorVM.VendorAddress</td>
                                     <td class="text-center">@_vendorVM.VendorTaxCode</td>
                                     <td class="text-center">@_vendorVM.VendorTel</td>
                                 </tr>
@@ -1695,7 +1841,150 @@
 @* End Vendor *@
 
 @* Customer *@
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalList_Customer">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background-color: #f4f6f9;">
 
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    <span>KHÁCH HÀNG</span>
+                </h5>
+
+                <div class="ml-auto">
+                    @if (!String.IsNullOrEmpty(customerVM.CustomerCode))
+                    {
+                        <button type="button" class="btn btn-sm btn-primary" @onclick=@(() => InitializeModalUpdate_Customer(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
+                    }
+
+                    <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Customer(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm mới</button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="modal-body p-0" style="height: calc(100vh - 120px);">
+
+                @if (customerVMs != null)
+                {
+                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="text-center">Mã</th>
+                                <th>Tên</th>
+                                <th>Địa chỉ</th>
+                                <th class="text-center">Công nợ</th>
+                                <th class="text-center">Mã số thuế</th>
+                                <th class="text-center">Điện thoại</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <Virtualize Items="@customerVMs" Context="_customerVM" OverscanCount="50">
+                                <tr class="@(SetSelected(_customerVM))" @onclick="() => onclick_Selected(_customerVM)">
+                                    <td class="text-center">@_customerVM.CustomerCode</td>
+                                    <td>@_customerVM.CustomerName</td>
+                                    <td>@_customerVM.CustomerAddress</td>
+                                    <td></td>
+                                    <td class="text-center">@_customerVM.CustomerTaxCode</td>
+                                    <td class="text-center">@_customerVM.CustomerTel</td>
+                                </tr>
+                            </Virtualize>
+                        </tbody>
+                    </table>
+                    if (customerVMs.Count() <= 0)
+                    {
+                        <img class="img-no-result" src="images/_default/no-results.png" />
+                    }
+                }
+
+
+            </div>
+
+            <div class="modal-footer justify-content-center">
+            </div>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Customer">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <EditForm Model="customerVM" Context="formCustomerVM">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>KHÁCH HÀNG</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="GetCustomers">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label>Mã khách hàng</label>
+                            @if (customerVM.IsTypeUpdate == 0)
+                            {
+                                <InputText class="form-control form-control-sm" placeholder="Mã mặc định" @bind-Value="customerVM.CustomerCode" disabled />
+                                <ValidationMessage For="@(() => customerVM.CustomerCode)" />
+                            }
+                            else
+                            {
+                                <input type="text" readonly class="form-control form-control-sm" value="@customerVM.CustomerCode" />
+                            }
+                        </div>
+                        <div class="form-group col-md-5">
+                            <label>Mã số thuế</label>
+                            <InputText class="form-control form-control-sm" @bind-Value="@customerVM.CustomerTaxCode" />
+                            <ValidationMessage For="@(() => customerVM.CustomerTaxCode)" />
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label>Điện thoại:</label>
+                            <InputText class="form-control form-control-sm" @bind-Value="@customerVM.CustomerTel" />
+                            <ValidationMessage For="@(() => customerVM.CustomerTel)" />
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tên khách hàng</label>
+                        <InputText class="form-control form-control-sm" @bind-Value="@customerVM.CustomerName" />
+                        <ValidationMessage For="@(() => customerVM.CustomerName)" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Địa chỉ:</label>
+                        <InputTextArea class="form-control form-control-sm" @bind-Value="@customerVM.CustomerAddress" />
+                        <ValidationMessage For="@(() => customerVM.CustomerAddress)" />
+                    </div>
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateCustomer(formCustomerVM, customerVM.IsTypeUpdate))><i class="fas fa-check"></i> Lưu</button>
+                    @if (customerVM.IsTypeUpdate == 1)
+                    {
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateCustomer(formCustomerVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                    }
+                </div>
+
+            </EditForm>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
 @* End Customer *@
 
 @* Stock *@
@@ -1714,7 +2003,7 @@
                     <div class="ml-auto">
                         @if (!String.IsNullOrEmpty(stockVM.StockCode))
                         {
-                            <button type="button" class="btn btn-sm btn-info" @onclick=@(() => InitializeModalUpdate_Stock(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
+                            <button type="button" class="btn btn-sm btn-primary" @onclick=@(() => InitializeModalUpdate_Stock(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
                         }
 
                         <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Stock(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm mới</button>
@@ -1732,8 +2021,8 @@
                         <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
                             <thead class="thead-light">
                                 <tr>
-                                    <th class="text-center">Mã kho</th>
-                                    <th>Tên kho</th>
+                                    <th class="text-center">Mã</th>
+                                    <th>Tên</th>
                                     <th>Địa chỉ</th>
                                     <th class="text-center">Trạng thái</th>
                                 </tr>
@@ -1971,6 +2260,8 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
 
+                        <a class="dropdown-item" @onclick=@(() => GetBankAccounts())>Tài khoản ngân hàng</a>
+                        <a class="dropdown-item" @onclick=@(() => GetCustomers())>Khách hàng</a>
                         <a class="dropdown-item" @onclick=@(() => GetVendors())>Nhà cung cấp</a>
                         <a class="dropdown-item" @onclick=@(() => GetStocks())>Kho</a>
 
