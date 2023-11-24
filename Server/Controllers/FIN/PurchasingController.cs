@@ -52,8 +52,6 @@ namespace D69soft.Server.Controllers.FIN
                     sql += "select Code_ID,@VendorName,@VendorTaxCode,@VendorAddress,@VendorTel,@VendorContractFile,@VendorContractStartDate,@VendorContractEndDate from #tmpAuto_Code_ID ";
 
                     sql += "select Code_ID from #tmpAuto_Code_ID";
-
-                    _vendorVM.VendorCode = await conn.ExecuteScalarAsync<string>(sql, _vendorVM);
                 }
 
                 if (_vendorVM.IsTypeUpdate == 1)
@@ -64,9 +62,17 @@ namespace D69soft.Server.Controllers.FIN
 
                 if (_vendorVM.IsTypeUpdate == 2)
                 {
-                    sql = "delete from FIN.Vendor where VendorCode=@VendorCode ";
-                    await conn.ExecuteAsync(sql, _vendorVM);
+                    sql = "if not exists (select * from FIN.Voucher where VendorCode=@VendorCode) ";
+                    sql += "begin ";
+                    sql += "delete from FIN.Vendor where VendorCode=@VendorCode ";
+                    sql += "end ";
+                    sql += "else ";
+                    sql += "begin ";
+                    sql += "select 'Err_NotDel' ";
+                    sql += "end ";
                 }
+
+                _vendorVM.VendorCode = await conn.ExecuteScalarAsync<string>(sql, _vendorVM);
 
                 return _vendorVM.VendorCode;
             }

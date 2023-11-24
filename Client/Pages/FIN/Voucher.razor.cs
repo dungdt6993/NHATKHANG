@@ -71,7 +71,7 @@ namespace D69soft.Client.Pages.FIN
 
         //Vendor
         VendorVM vendorVM = new();
-        IEnumerable<VendorVM> vendorVMs;
+        List<VendorVM> vendorVMs;
 
         //Customer
         IEnumerable<CustomerVM> customerVMs;
@@ -186,7 +186,7 @@ namespace D69soft.Client.Pages.FIN
             stockVMs = (await inventoryService.GetStockList()).ToList();
 
             //Vendor
-            vendorVMs = await purchasingService.GetVendorList();
+            vendorVMs = (await purchasingService.GetVendorList()).ToList();
 
             //Customer
             customerVMs = await customerService.GetCustomers();
@@ -1157,6 +1157,35 @@ namespace D69soft.Client.Pages.FIN
         }
 
         //Vendor
+        private async Task GetVendors()
+        {
+            isLoading = true;
+
+            filterVM.CategoryName = "Vendor";
+
+            vendorVM = new();
+
+            vendorVMs = (await purchasingService.GetVendorList()).ToList();
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalList_Vendor");
+
+            isLoading = false;
+        }
+
+        private void onclick_Selected(VendorVM _vendorVM)
+        {
+            vendorVM = _vendorVM == vendorVM ? new() : _vendorVM;
+        }
+
+        private string SetSelected(VendorVM _vendorVM)
+        {
+            if (vendorVM.VendorCode != _vendorVM.VendorCode)
+            {
+                return string.Empty;
+            }
+            return "selected";
+        }
+
         private async Task InitializeModalUpdate_Vendor(int _IsTypeUpdate)
         {
             isLoading = true;
@@ -1187,11 +1216,11 @@ namespace D69soft.Client.Pages.FIN
                 logVM.LogDesc = (vendorVM.IsTypeUpdate == 0 ? "Thêm mới" : "Cập nhật") + " nhà cung cấp " + vendorVM.VendorCode + "";
                 await sysService.InsertLog(logVM);
 
-                await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Vendor");
-                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
-
                 vendorVMs = (await purchasingService.GetVendorList()).ToList();
                 voucherVM.VendorCode = vendorVM.VendorCode;
+
+                await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Vendor");
+                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
 
                 vendorVM.IsTypeUpdate = 1;
             }
@@ -1199,16 +1228,25 @@ namespace D69soft.Client.Pages.FIN
             {
                 if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
                 {
-                    await purchasingService.UpdateVendor(vendorVM);
+                    var result = await purchasingService.UpdateVendor(vendorVM);
 
-                    logVM.LogDesc = "Xóa nhà cung cấp " + vendorVM.VendorCode + "";
-                    await sysService.InsertLog(logVM);
+                    if (result != "Err_NotDel")
+                    {
+                        logVM.LogDesc = "Xóa nhà cung cấp " + vendorVM.VendorCode + "";
+                        await sysService.InsertLog(logVM);
 
-                    vendorVMs = (await purchasingService.GetVendorList()).ToList();
-                    voucherVM.VendorCode = String.Empty;
+                        vendorVMs = (await purchasingService.GetVendorList()).ToList();
+                        vendorVM = new();
+                        voucherVM.VendorCode = String.Empty;
 
-                    await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Vendor");
-                    await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
+                        await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Vendor");
+                        await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
+                    }
+                    else
+                    {
+                        await js.Swal_Message("Xóa không thành công!", "Có dữ liệu hàng hóa liên quan.", SweetAlertMessageType.error);
+                        vendorVM.IsTypeUpdate = 1;
+                    }
                 }
                 else
                 {
@@ -1719,19 +1757,6 @@ namespace D69soft.Client.Pages.FIN
             }
 
             isLoading = false;
-        }
-
-        //Tong_hop_ton_kho
-        private async void ClickUpdateItems(string _ICode)
-        {
-            filterVM.IActive = true;
-            filterVM.searchText = _ICode;
-
-            itemsVM = (await inventoryService.GetItemsList(filterVM)).First();
-
-            await InitializeModalUpdate_Items(1);
-
-            StateHasChanged();
         }
 
     }
