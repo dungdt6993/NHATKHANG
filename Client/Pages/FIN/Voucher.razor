@@ -49,7 +49,7 @@
                     }
 
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="()=> GetVouchers()">
-                        <span aria-hidden="true">&times;</span>
+                        <i class="fa-regular fa-circle-xmark"></i>
                     </button>
 
                 </div>
@@ -954,7 +954,7 @@
                 </h5>
 
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <i class="fa-regular fa-circle-xmark"></i>
                 </button>
             </div>
             <div class="modal-body">
@@ -997,17 +997,29 @@
                         <span>Tài khoản ngân hàng</span>
                     </h5>
 
-                    <div class="ml-auto">
-                        @if (bankAccountVM.BankAccountID != 0)
-                        {
-                            <button type="button" class="btn btn-sm btn-primary" @onclick=@(() => InitializeModalUpdate_BankAccount(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
-                        }
+                    <div class="btn-toolbar">
+                        <div class="btn-group btn-group-sm mr-2">
+                            @if (bankAccountVM.BankAccountID != 0)
+                            {
+                                <button type="button" class="btn btn-sm btn-primary" @onclick=@(() => InitializeModalUpdate_BankAccount(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
+                            }
 
-                        <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_BankAccount(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm mới</button>
+                            <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_BankAccount(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm</button>
+                        </div>
+
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                              <div class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></div>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Tìm kiếm theo số, tên ngân hàng">
+                        </div>
+
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                            <i class="fa-regular fa-circle-xmark"></i>
                         </button>
+
                     </div>
+
                 </div>
 
                 <div class="modal-body p-0" style="height: calc(100vh - 120px);">
@@ -1062,8 +1074,8 @@
                             <span>TÀI KHOẢN NGÂN HÀNG</span>
                         </h5>
 
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="GetBankAccounts">
-                            <span aria-hidden="true">&times;</span>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i class="fa-regular fa-circle-xmark"></i>
                         </button>
                     </div>
                     <div class="modal-body">
@@ -1134,8 +1146,8 @@
                         <span>CẬP NHẬT HÀNG HÓA</span>
                     </h5>
 
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="()=> GetItems()">
-                        <span aria-hidden="true">&times;</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa-regular fa-circle-xmark"></i>
                     </button>
                 </div>
 
@@ -1535,7 +1547,7 @@
                     </h5>
 
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <i class="fa-regular fa-circle-xmark"></i>
                     </button>
                 </div>
 
@@ -1593,7 +1605,7 @@
                     </h5>
 
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <i class="fa-regular fa-circle-xmark"></i>
                     </button>
                 </div>
 
@@ -1651,7 +1663,7 @@
                     </h5>
 
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <i class="fa-regular fa-circle-xmark"></i>
                     </button>
                 </div>
 
@@ -1713,9 +1725,9 @@
                         <button type="button" class="btn btn-sm btn-primary" @onclick=@(() => InitializeModalUpdate_Vendor(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
                     }
 
-                    <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Vendor(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm mới</button>
+                    <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Vendor(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm</button>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <i class="fa-regular fa-circle-xmark"></i>
                     </button>
                 </div>
 
@@ -1778,7 +1790,7 @@
                     </h5>
 
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <i class="fa-regular fa-circle-xmark"></i>
                     </button>
                 </div>
                 <div class="modal-body">
@@ -1857,9 +1869,9 @@
                         <button type="button" class="btn btn-sm btn-primary" @onclick=@(() => InitializeModalUpdate_Customer(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
                     }
 
-                    <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Customer(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm mới</button>
+                    <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Customer(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm</button>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <i class="fa-regular fa-circle-xmark"></i>
                     </button>
                 </div>
 
@@ -1924,8 +1936,8 @@
                         <span>KHÁCH HÀNG</span>
                     </h5>
 
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="GetCustomers">
-                        <span aria-hidden="true">&times;</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa-regular fa-circle-xmark"></i>
                     </button>
                 </div>
                 <div class="modal-body">
@@ -2006,9 +2018,9 @@
                             <button type="button" class="btn btn-sm btn-primary" @onclick=@(() => InitializeModalUpdate_Stock(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
                         }
 
-                        <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Stock(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm mới</button>
+                        <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Stock(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm</button>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                            <i class="fa-regular fa-circle-xmark"></i>
                         </button>
                     </div>
 
@@ -2079,8 +2091,8 @@
                             <span>KHO</span>
                         </h5>
 
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="GetStocks">
-                            <span aria-hidden="true">&times;</span>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i class="fa-regular fa-circle-xmark"></i>
                         </button>
                     </div>
                     <div class="modal-body">
