@@ -1564,18 +1564,7 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
-        //Items
-        private async Task GetItems()
-        {
-            isLoading = true;
-
-            //itemsVMs = await inventoryService.GetItemsList(filterVM);
-
-
-
-            isLoading = false;
-        }
-
+        //ItemsClass
         private async Task InitializeModalUpdate_ItemsClass(int _IsTypeUpdate)
         {
             isLoading = true;
@@ -1644,6 +1633,7 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
+        //ItemsGroup
         private async Task InitializeModalUpdate_ItemsGroup(int _IsTypeUpdate)
         {
             isLoading = true;
@@ -1714,6 +1704,7 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
+        //ItemsUnit
         private async Task InitializeModalUpdate_ItemsUnit(int _IsTypeUpdate)
         {
             isLoading = true;
@@ -1788,6 +1779,36 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
+        //Items
+        private async Task GetItems()
+        {
+            isLoading = true;
+
+            filterVM.CategoryName = "Items";
+
+            itemsVM = new();
+
+            filterVM.IActive = true;
+            itemsVMs = await inventoryService.GetItemsList(filterVM);
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalList_Items");
+
+            isLoading = false;
+        }
+
+        private void onclick_Selected(ItemsVM _itemsVM)
+        {
+            itemsVM = _itemsVM == itemsVM ? new() : _itemsVM;
+        }
+
+        private string SetSelected(ItemsVM _itemsVM)
+        {
+            if (itemsVM.ICode != _itemsVM.ICode)
+            {
+                return string.Empty;
+            }
+            return "selected";
+        }
         private async Task InitializeModalUpdate_Items(int _IsTypeUpdate)
         {
             isLoading = true;

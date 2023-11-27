@@ -1009,9 +1009,9 @@
 
                         <div class="input-group input-group-sm">
                             <div class="input-group-prepend">
-                              <div class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></div>
+                                <div class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></div>
                             </div>
-                            <input type="text" class="form-control" placeholder="Tìm kiếm theo số, tên ngân hàng">
+                            <input type="text" class="form-control" placeholder="Tìm kiếm">
                         </div>
 
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -1132,7 +1132,596 @@
 }
 @* End BankAccount *@
 
+@* Vendor *@
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalList_Vendor">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background-color: #f4f6f9;">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    <span>NHÀ CUNG CẤP</span>
+                </h5>
+
+                <div class="btn-toolbar">
+                    <div class="btn-group btn-group-sm mr-2">
+                        @if (!String.IsNullOrEmpty(vendorVM.VendorCode))
+                        {
+                            <button type="button" class="btn btn-sm btn-primary" @onclick=@(() => InitializeModalUpdate_Vendor(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
+                        }
+
+                        <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Vendor(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm</button>
+                    </div>
+
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></div>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Tìm kiếm">
+                    </div>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa-regular fa-circle-xmark text-danger"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="modal-body p-0" style="height: calc(100vh - 120px);">
+
+                @if (vendorVMs != null)
+                {
+                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="text-center">M</th>
+                                <th>Tên</th>
+                                <th class="text-center">Địa chỉ</th>
+                                <th class="text-center">Mã số thuế</th>
+                                <th class="text-center">Điện thoại</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <Virtualize Items="@vendorVMs" Context="_vendorVM" OverscanCount="50">
+                                <tr class="@(SetSelected(_vendorVM))" @onclick="() => onclick_Selected(_vendorVM)">
+                                    <td class="text-center">@_vendorVM.VendorCode</td>
+                                    <td>@_vendorVM.VendorName</td>
+                                    <td>@_vendorVM.VendorAddress</td>
+                                    <td class="text-center">@_vendorVM.VendorTaxCode</td>
+                                    <td class="text-center">@_vendorVM.VendorTel</td>
+                                </tr>
+                            </Virtualize>
+                        </tbody>
+                    </table>
+                    if (vendorVMs.Count() <= 0)
+                    {
+                        <img class="img-no-result" src="images/_default/no-results.png" />
+                    }
+                }
+
+            </div>
+
+            <div class="modal-footer justify-content-center">
+            </div>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Vendor">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <EditForm Model="vendorVM" Context="formVendorVM">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>NHÀ CUNG CẤP</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa-regular fa-circle-xmark text-danger"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label>Mã nhà cung cấp</label>
+                            @if (vendorVM.IsTypeUpdate == 0)
+                            {
+                                <InputText class="form-control form-control-sm" placeholder="Mã mặc định" @bind-Value="vendorVM.VendorCode" disabled />
+                                <ValidationMessage For="@(() => vendorVM.VendorCode)" />
+                            }
+                            else
+                            {
+                                <input type="text" readonly class="form-control form-control-sm" value="@vendorVM.VendorCode" />
+                            }
+                        </div>
+                        <div class="form-group col-md-5">
+                            <label>Mã số thuế</label>
+                            <InputText class="form-control form-control-sm" @bind-Value="@vendorVM.VendorTaxCode" />
+                            <ValidationMessage For="@(() => vendorVM.VendorTaxCode)" />
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label>Điện thoại</label>
+                            <InputText class="form-control form-control-sm" @bind-Value="@vendorVM.VendorTel" />
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tên nhà cung cấp</label>
+                        <InputText class="form-control form-control-sm" @bind-Value="@vendorVM.VendorName" />
+                        <ValidationMessage For="@(() => vendorVM.VendorName)" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Địa chỉ</label>
+                        <InputTextArea class="form-control form-control-sm" @bind-Value="@vendorVM.VendorAddress" />
+                        <ValidationMessage For="@(() => vendorVM.VendorAddress)" />
+                    </div>
+
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateVendor(formVendorVM, vendorVM.IsTypeUpdate))><i class="fas fa-check"></i> Lưu</button>
+                    @if (vendorVM.IsTypeUpdate == 1)
+                    {
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateVendor(formVendorVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                    }
+                </div>
+
+            </EditForm>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+@* End Vendor *@
+
+@* Customer *@
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalList_Customer">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background-color: #f4f6f9;">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    <span>KHÁCH HÀNG</span>
+                </h5>
+
+                <div class="btn-toolbar">
+                    <div class="btn-group btn-group-sm mr-2">
+                        @if (!String.IsNullOrEmpty(customerVM.CustomerCode))
+                        {
+                            <button type="button" class="btn btn-sm btn-primary" @onclick=@(() => InitializeModalUpdate_Customer(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
+                        }
+
+                        <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Customer(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm</button>
+                    </div>
+
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></div>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Tìm kiếm">
+                    </div>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa-regular fa-circle-xmark text-danger"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="modal-body p-0" style="height: calc(100vh - 120px);">
+
+                @if (customerVMs != null)
+                {
+                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="text-center">Mã</th>
+                                <th>Tên</th>
+                                <th>Địa chỉ</th>
+                                <th class="text-center">Công nợ</th>
+                                <th class="text-center">Mã số thuế</th>
+                                <th class="text-center">Điện thoại</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <Virtualize Items="@customerVMs" Context="_customerVM" OverscanCount="50">
+                                <tr class="@(SetSelected(_customerVM))" @onclick="() => onclick_Selected(_customerVM)">
+                                    <td class="text-center">@_customerVM.CustomerCode</td>
+                                    <td>@_customerVM.CustomerName</td>
+                                    <td>@_customerVM.CustomerAddress</td>
+                                    <td></td>
+                                    <td class="text-center">@_customerVM.CustomerTaxCode</td>
+                                    <td class="text-center">@_customerVM.CustomerTel</td>
+                                </tr>
+                            </Virtualize>
+                        </tbody>
+                    </table>
+                    if (customerVMs.Count() <= 0)
+                    {
+                        <img class="img-no-result" src="images/_default/no-results.png" />
+                    }
+                }
+
+
+            </div>
+
+            <div class="modal-footer justify-content-center">
+            </div>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Customer">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <EditForm Model="customerVM" Context="formCustomerVM">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>KHÁCH HÀNG</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa-regular fa-circle-xmark text-danger"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label>Mã khách hàng</label>
+                            @if (customerVM.IsTypeUpdate == 0)
+                            {
+                                <InputText class="form-control form-control-sm" placeholder="Mã mặc định" @bind-Value="customerVM.CustomerCode" disabled />
+                                <ValidationMessage For="@(() => customerVM.CustomerCode)" />
+                            }
+                            else
+                            {
+                                <input type="text" readonly class="form-control form-control-sm" value="@customerVM.CustomerCode" />
+                            }
+                        </div>
+                        <div class="form-group col-md-5">
+                            <label>Mã số thuế</label>
+                            <InputText class="form-control form-control-sm" @bind-Value="@customerVM.CustomerTaxCode" />
+                            <ValidationMessage For="@(() => customerVM.CustomerTaxCode)" />
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label>Điện thoại:</label>
+                            <InputText class="form-control form-control-sm" @bind-Value="@customerVM.CustomerTel" />
+                            <ValidationMessage For="@(() => customerVM.CustomerTel)" />
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tên khách hàng</label>
+                        <InputText class="form-control form-control-sm" @bind-Value="@customerVM.CustomerName" />
+                        <ValidationMessage For="@(() => customerVM.CustomerName)" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Địa chỉ:</label>
+                        <InputTextArea class="form-control form-control-sm" @bind-Value="@customerVM.CustomerAddress" />
+                        <ValidationMessage For="@(() => customerVM.CustomerAddress)" />
+                    </div>
+
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateCustomer(formCustomerVM, customerVM.IsTypeUpdate))><i class="fas fa-check"></i> Lưu</button>
+                    @if (customerVM.IsTypeUpdate == 1)
+                    {
+                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateCustomer(formCustomerVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                    }
+                </div>
+
+            </EditForm>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+@* End Customer *@
+
+@* Stock *@
+@if (filterVM.CategoryName == "Stock")
+{
+    <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalList_Stock">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content" style="background-color: #f4f6f9;">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        <span>KHO</span>
+                    </h5>
+
+                    <div class="btn-toolbar">
+                        <div class="btn-group btn-group-sm mr-2">
+                            @if (!String.IsNullOrEmpty(stockVM.StockCode))
+                            {
+                                <button type="button" class="btn btn-sm btn-primary" @onclick=@(() => InitializeModalUpdate_Stock(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
+                            }
+
+                            <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Stock(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm</button>
+                        </div>
+
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></div>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Tìm kiếm">
+                        </div>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i class="fa-regular fa-circle-xmark text-danger"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-body p-0" style="height: calc(100vh - 120px);">
+
+                    @if (stockVMs != null)
+                    {
+                        <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-center">Mã</th>
+                                    <th>Tên</th>
+                                    <th>Địa chỉ</th>
+                                    <th class="text-center">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <Virtualize Items="@stockVMs" Context="_stockVM" OverscanCount="50">
+                                    <tr class="@(SetSelected(_stockVM))" @onclick="() => onclick_Selected(_stockVM)">
+                                        <td class="text-center">@_stockVM.StockCode</td>
+                                        <td>@_stockVM.StockName</td>
+                                        <td>@_stockVM.StockAddress</td>
+
+                                        <td class="text-center">
+                                            @if (_stockVM.StockActive)
+                                            {
+                                                <i class="fas fa-check text-success"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-times"></i>
+                                            }
+                                        </td>
+
+                                    </tr>
+                                </Virtualize>
+                            </tbody>
+                        </table>
+                        if (stockVMs.Count() <= 0)
+                        {
+                            <img class="img-no-result" src="images/_default/no-results.png" />
+                        }
+                    }
+
+                </div>
+
+                <div class="modal-footer justify-content-center">
+                </div>
+
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    </div>
+
+    <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Stock">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <EditForm Model="stockVM" Context="formStockVM">
+
+                    <FluentValidationValidator />
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <span>KHO</span>
+                        </h5>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i class="fa-regular fa-circle-xmark text-danger"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label>Mã</label>
+                                @if (stockVM.IsTypeUpdate == 0)
+                                {
+                                    <InputText class="form-control form-control-sm" placeholder="Mã kho" @bind-Value:get="stockVM.StockCode" @bind-Value:set="(value) => {stockVM.StockCode = value.ToUpper();}" autofocus />
+                                    <ValidationMessage For="@(() => stockVM.StockCode)" />
+                                }
+                                else
+                                {
+                                    <input type="text" readonly class="form-control form-control-sm" value="@stockVM.StockCode" />
+                                }
+                            </div>
+                            <div class="form-group col-md-9">
+                                <label>Tên</label>
+                                <InputText class="form-control form-control-sm" @bind-Value="@stockVM.StockName" />
+                                <ValidationMessage For="@(() => stockVM.StockName)" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Địa chỉ</label>
+                            <InputTextArea class="form-control form-control-sm" @bind-Value="@stockVM.StockAddress" />
+                        </div>
+
+                        <div class="form-row align-items-center">
+                            <div class="icheck-success d-inline">
+                                <input type="radio" id="Stock_isActive1" name="Stock_isActive" checked="@(stockVM.StockActive == true)" @onchange="(() => stockVM.StockActive = true)">
+                                <label for="Stock_isActive1">
+                                    Hoạt động
+                                </label>
+                            </div>
+                            <label>
+                                &nbsp;&nbsp;
+                            </label>
+                            <div class="icheck-danger d-inline">
+                                <input type="radio" id="Stock_isActive2" name="Stock_isActive" checked="@(stockVM.StockActive == false)" @onchange="(() => stockVM.StockActive = false)">
+                                <label for="Stock_isActive2">
+                                    Không hoạt động
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateStock(formStockVM, stockVM.IsTypeUpdate))><i class="fas fa-check"></i> Lưu</button>
+                        @if (stockVM.IsTypeUpdate == 1)
+                        {
+                            <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateStock(formStockVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
+                        }
+                    </div>
+
+                </EditForm>
+
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    </div>
+}
+@* End Stock *@
+
 @* Items *@
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalList_Items">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background-color: #f4f6f9;">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    <span>HÀNG HÓA, DỊCH VỤ</span>
+                </h5>
+
+                <div class="btn-toolbar">
+                    <div class="btn-group btn-group-sm mr-2">
+                        @if (!String.IsNullOrEmpty(itemsVM.ICode))
+                        {
+                            <button type="button" class="btn btn-sm btn-primary" @onclick=@(() => InitializeModalUpdate_Items(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
+                        }
+
+                        <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Items(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm</button>
+                    </div>
+
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></div>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Tìm kiếm">
+                    </div>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa-regular fa-circle-xmark text-danger"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="modal-body p-0" style="height: calc(100vh - 120px);">
+
+                @if (itemsVMs != null)
+                {
+                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Hình ảnh</th>
+                                <th class="text-center">Mã hàng hóa</th>
+                                <th>Tên hàng</th>
+                                <th>Loại hàng</th>
+                                <th>Lớp hàng</th>
+                                <th>Nhóm hàng</th>
+                                <th>Đơn vị tính</th>
+                                <th>Giá mua</th>
+                                <th>Giá bán</th>
+                                <th class="text-center">Thuế GTGT</th>
+
+                                <th class="text-center">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <Virtualize Items="@itemsVMs" Context="_itemVM" OverscanCount="50">
+                                <tr class="@(SetSelected(_itemVM))" @onclick="() => onclick_Selected(_itemVM)">
+                                    <td class="text-center">
+                                        <img class="table-picture" src="@_itemVM.IURLPicture1">
+                                    </td>
+                                    <td align="center">@_itemVM.ICode</td>
+                                    <td>@_itemVM.IName</td>
+                                    <td>@_itemVM.ITypeName</td>
+                                    <td>@_itemVM.IClsName</td>
+                                    <td>@_itemVM.IGrpName</td>
+                                    <td>@_itemVM.IUnitName</td>
+                                    <td class="text-right">@String.Format("{0:#,##0.##}", _itemVM.ICost)</td>
+                                    <td class="text-right">@String.Format("{0:#,##0.##}", _itemVM.IPrice)</td>
+                                    <td class="text-center">@_itemVM.VATName</td>
+                                    <td class="text-center">
+                                        @if (_itemVM.IActive)
+                                        {
+                                            <i class="fas fa-check text-success"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-times"></i>
+                                        }
+                                    </td>
+                                </tr>
+                            </Virtualize>
+                        </tbody>
+
+                    </table>
+
+                    if (itemsVMs.Count() <= 0)
+                    {
+                        <img class="img-no-result" src="images/_default/no-results.png" />
+                    }
+
+                }
+
+            </div>
+
+            <div class="modal-footer justify-content-center">
+            </div>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Items">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -1708,457 +2297,6 @@
 </div>
 @* End Items *@
 
-@* Vendor *@
-<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalList_Vendor">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content" style="background-color: #f4f6f9;">
-
-            <div class="modal-header">
-
-                <h5 class="modal-title">
-                    <span>NHÀ CUNG CẤP</span>
-                </h5>
-
-                <div class="ml-auto">
-                    @if (!String.IsNullOrEmpty(vendorVM.VendorCode))
-                    {
-                        <button type="button" class="btn btn-sm btn-primary" @onclick=@(() => InitializeModalUpdate_Vendor(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
-                    }
-
-                    <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Vendor(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm</button>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <i class="fa-regular fa-circle-xmark text-danger"></i>
-                    </button>
-                </div>
-
-            </div>
-
-            <div class="modal-body p-0" style="height: calc(100vh - 120px);">
-
-                @if (vendorVMs != null)
-                {
-                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
-                        <thead class="thead-light">
-                            <tr>
-                                <th class="text-center">M</th>
-                                <th>Tên</th>
-                                <th class="text-center">Địa chỉ</th>
-                                <th class="text-center">Mã số thuế</th>
-                                <th class="text-center">Điện thoại</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <Virtualize Items="@vendorVMs" Context="_vendorVM" OverscanCount="50">
-                                <tr class="@(SetSelected(_vendorVM))" @onclick="() => onclick_Selected(_vendorVM)">
-                                    <td class="text-center">@_vendorVM.VendorCode</td>
-                                    <td>@_vendorVM.VendorName</td>
-                                    <td>@_vendorVM.VendorAddress</td>
-                                    <td class="text-center">@_vendorVM.VendorTaxCode</td>
-                                    <td class="text-center">@_vendorVM.VendorTel</td>
-                                </tr>
-                            </Virtualize>
-                        </tbody>
-                    </table>
-                    if (vendorVMs.Count() <= 0)
-                    {
-                        <img class="img-no-result" src="images/_default/no-results.png" />
-                    }
-                }
-
-            </div>
-
-            <div class="modal-footer justify-content-center">
-            </div>
-
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-</div>
-
-<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Vendor">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-
-            <EditForm Model="vendorVM" Context="formVendorVM">
-
-                <FluentValidationValidator />
-
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <span>NHÀ CUNG CẤP</span>
-                    </h5>
-
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <i class="fa-regular fa-circle-xmark text-danger"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-
-                    <div class="form-row">
-                        <div class="form-group col-md-3">
-                            <label>Mã nhà cung cấp</label>
-                            @if (vendorVM.IsTypeUpdate == 0)
-                            {
-                                <InputText class="form-control form-control-sm" placeholder="Mã mặc định" @bind-Value="vendorVM.VendorCode" disabled />
-                                <ValidationMessage For="@(() => vendorVM.VendorCode)" />
-                            }
-                            else
-                            {
-                                <input type="text" readonly class="form-control form-control-sm" value="@vendorVM.VendorCode" />
-                            }
-                        </div>
-                        <div class="form-group col-md-5">
-                            <label>Mã số thuế</label>
-                            <InputText class="form-control form-control-sm" @bind-Value="@vendorVM.VendorTaxCode" />
-                            <ValidationMessage For="@(() => vendorVM.VendorTaxCode)" />
-                        </div>
-
-                        <div class="form-group col-md-4">
-                            <label>Điện thoại</label>
-                            <InputText class="form-control form-control-sm" @bind-Value="@vendorVM.VendorTel" />
-                        </div>
-
-                    </div>
-
-                    <div class="form-group">
-                        <label>Tên nhà cung cấp</label>
-                        <InputText class="form-control form-control-sm" @bind-Value="@vendorVM.VendorName" />
-                        <ValidationMessage For="@(() => vendorVM.VendorName)" />
-                    </div>
-
-                    <div class="form-group">
-                        <label>Địa chỉ</label>
-                        <InputTextArea class="form-control form-control-sm" @bind-Value="@vendorVM.VendorAddress" />
-                        <ValidationMessage For="@(() => vendorVM.VendorAddress)" />
-                    </div>
-
-
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateVendor(formVendorVM, vendorVM.IsTypeUpdate))><i class="fas fa-check"></i> Lưu</button>
-                    @if (vendorVM.IsTypeUpdate == 1)
-                    {
-                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateVendor(formVendorVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
-                    }
-                </div>
-
-            </EditForm>
-
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-</div>
-@* End Vendor *@
-
-@* Customer *@
-<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalList_Customer">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content" style="background-color: #f4f6f9;">
-
-            <div class="modal-header">
-
-                <h5 class="modal-title">
-                    <span>KHÁCH HÀNG</span>
-                </h5>
-
-                <div class="ml-auto">
-                    @if (!String.IsNullOrEmpty(customerVM.CustomerCode))
-                    {
-                        <button type="button" class="btn btn-sm btn-primary" @onclick=@(() => InitializeModalUpdate_Customer(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
-                    }
-
-                    <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Customer(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm</button>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <i class="fa-regular fa-circle-xmark text-danger"></i>
-                    </button>
-                </div>
-
-            </div>
-
-            <div class="modal-body p-0" style="height: calc(100vh - 120px);">
-
-                @if (customerVMs != null)
-                {
-                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
-                        <thead class="thead-light">
-                            <tr>
-                                <th class="text-center">Mã</th>
-                                <th>Tên</th>
-                                <th>Địa chỉ</th>
-                                <th class="text-center">Công nợ</th>
-                                <th class="text-center">Mã số thuế</th>
-                                <th class="text-center">Điện thoại</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <Virtualize Items="@customerVMs" Context="_customerVM" OverscanCount="50">
-                                <tr class="@(SetSelected(_customerVM))" @onclick="() => onclick_Selected(_customerVM)">
-                                    <td class="text-center">@_customerVM.CustomerCode</td>
-                                    <td>@_customerVM.CustomerName</td>
-                                    <td>@_customerVM.CustomerAddress</td>
-                                    <td></td>
-                                    <td class="text-center">@_customerVM.CustomerTaxCode</td>
-                                    <td class="text-center">@_customerVM.CustomerTel</td>
-                                </tr>
-                            </Virtualize>
-                        </tbody>
-                    </table>
-                    if (customerVMs.Count() <= 0)
-                    {
-                        <img class="img-no-result" src="images/_default/no-results.png" />
-                    }
-                }
-
-
-            </div>
-
-            <div class="modal-footer justify-content-center">
-            </div>
-
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-</div>
-
-<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Customer">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-
-            <EditForm Model="customerVM" Context="formCustomerVM">
-
-                <FluentValidationValidator />
-
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <span>KHÁCH HÀNG</span>
-                    </h5>
-
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <i class="fa-regular fa-circle-xmark text-danger"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-
-                    <div class="form-row">
-                        <div class="form-group col-md-3">
-                            <label>Mã khách hàng</label>
-                            @if (customerVM.IsTypeUpdate == 0)
-                            {
-                                <InputText class="form-control form-control-sm" placeholder="Mã mặc định" @bind-Value="customerVM.CustomerCode" disabled />
-                                <ValidationMessage For="@(() => customerVM.CustomerCode)" />
-                            }
-                            else
-                            {
-                                <input type="text" readonly class="form-control form-control-sm" value="@customerVM.CustomerCode" />
-                            }
-                        </div>
-                        <div class="form-group col-md-5">
-                            <label>Mã số thuế</label>
-                            <InputText class="form-control form-control-sm" @bind-Value="@customerVM.CustomerTaxCode" />
-                            <ValidationMessage For="@(() => customerVM.CustomerTaxCode)" />
-                        </div>
-
-                        <div class="form-group col-md-4">
-                            <label>Điện thoại:</label>
-                            <InputText class="form-control form-control-sm" @bind-Value="@customerVM.CustomerTel" />
-                            <ValidationMessage For="@(() => customerVM.CustomerTel)" />
-                        </div>
-
-                    </div>
-
-                    <div class="form-group">
-                        <label>Tên khách hàng</label>
-                        <InputText class="form-control form-control-sm" @bind-Value="@customerVM.CustomerName" />
-                        <ValidationMessage For="@(() => customerVM.CustomerName)" />
-                    </div>
-
-                    <div class="form-group">
-                        <label>Địa chỉ:</label>
-                        <InputTextArea class="form-control form-control-sm" @bind-Value="@customerVM.CustomerAddress" />
-                        <ValidationMessage For="@(() => customerVM.CustomerAddress)" />
-                    </div>
-
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateCustomer(formCustomerVM, customerVM.IsTypeUpdate))><i class="fas fa-check"></i> Lưu</button>
-                    @if (customerVM.IsTypeUpdate == 1)
-                    {
-                        <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateCustomer(formCustomerVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
-                    }
-                </div>
-
-            </EditForm>
-
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-</div>
-@* End Customer *@
-
-@* Stock *@
-@if (filterVM.CategoryName == "Stock")
-{
-    <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalList_Stock">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content" style="background-color: #f4f6f9;">
-
-                <div class="modal-header">
-
-                    <h5 class="modal-title">
-                        <span>KHO</span>
-                    </h5>
-
-                    <div class="ml-auto">
-                        @if (!String.IsNullOrEmpty(stockVM.StockCode))
-                        {
-                            <button type="button" class="btn btn-sm btn-primary" @onclick=@(() => InitializeModalUpdate_Stock(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
-                        }
-
-                        <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_Stock(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm</button>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <i class="fa-regular fa-circle-xmark text-danger"></i>
-                        </button>
-                    </div>
-
-                </div>
-
-                <div class="modal-body p-0" style="height: calc(100vh - 120px);">
-
-                    @if (stockVMs != null)
-                    {
-                        <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th class="text-center">Mã</th>
-                                    <th>Tên</th>
-                                    <th>Địa chỉ</th>
-                                    <th class="text-center">Trạng thái</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <Virtualize Items="@stockVMs" Context="_stockVM" OverscanCount="50">
-                                    <tr class="@(SetSelected(_stockVM))" @onclick="() => onclick_Selected(_stockVM)">
-                                        <td class="text-center">@_stockVM.StockCode</td>
-                                        <td>@_stockVM.StockName</td>
-                                        <td>@_stockVM.StockAddress</td>
-
-                                        <td class="text-center">
-                                            @if (_stockVM.StockActive)
-                                            {
-                                                <i class="fas fa-check text-success"></i>
-                                            }
-                                            else
-                                            {
-                                                <i class="fas fa-times"></i>
-                                            }
-                                        </td>
-
-                                    </tr>
-                                </Virtualize>
-                            </tbody>
-                        </table>
-                        if (stockVMs.Count() <= 0)
-                        {
-                            <img class="img-no-result" src="images/_default/no-results.png" />
-                        }
-                    }
-
-                </div>
-
-                <div class="modal-footer justify-content-center">
-                </div>
-
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-    </div>
-
-    <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_Stock">
-        <div class="modal-dialog">
-            <div class="modal-content">
-
-                <EditForm Model="stockVM" Context="formStockVM">
-
-                    <FluentValidationValidator />
-
-                    <div class="modal-header">
-                        <h5 class="modal-title">
-                            <span>KHO</span>
-                        </h5>
-
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <i class="fa-regular fa-circle-xmark text-danger"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-
-                        <div class="form-row">
-                            <div class="form-group col-md-3">
-                                <label>Mã</label>
-                                @if (stockVM.IsTypeUpdate == 0)
-                                {
-                                    <InputText class="form-control form-control-sm" placeholder="Mã kho" @bind-Value:get="stockVM.StockCode" @bind-Value:set="(value) => {stockVM.StockCode = value.ToUpper();}" autofocus />
-                                    <ValidationMessage For="@(() => stockVM.StockCode)" />
-                                }
-                                else
-                                {
-                                    <input type="text" readonly class="form-control form-control-sm" value="@stockVM.StockCode" />
-                                }
-                            </div>
-                            <div class="form-group col-md-9">
-                                <label>Tên</label>
-                                <InputText class="form-control form-control-sm" @bind-Value="@stockVM.StockName" />
-                                <ValidationMessage For="@(() => stockVM.StockName)" />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Địa chỉ</label>
-                            <InputTextArea class="form-control form-control-sm" @bind-Value="@stockVM.StockAddress" />
-                        </div>
-
-                        <div class="form-row align-items-center">
-                            <div class="icheck-success d-inline">
-                                <input type="radio" id="Stock_isActive1" name="Stock_isActive" checked="@(stockVM.StockActive == true)" @onchange="(() => stockVM.StockActive = true)">
-                                <label for="Stock_isActive1">
-                                    Hoạt động
-                                </label>
-                            </div>
-                            <label>
-                                &nbsp;&nbsp;
-                            </label>
-                            <div class="icheck-danger d-inline">
-                                <input type="radio" id="Stock_isActive2" name="Stock_isActive" checked="@(stockVM.StockActive == false)" @onchange="(() => stockVM.StockActive = false)">
-                                <label for="Stock_isActive2">
-                                    Không hoạt động
-                                </label>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="modal-footer justify-content-center">
-                        <button type="submit" class="btn btn-sm btn-success" @onclick=@(() => UpdateStock(formStockVM, stockVM.IsTypeUpdate))><i class="fas fa-check"></i> Lưu</button>
-                        @if (stockVM.IsTypeUpdate == 1)
-                        {
-                            <button type="submit" class="btn btn-sm btn-danger" @onclick=@(() => UpdateStock(formStockVM,2))><i class="fas fa-trash-alt"></i> Xóa</button>
-                        }
-                    </div>
-
-                </EditForm>
-
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-    </div>
-}
-@* End Stock *@
-
 <Modal_RptViewer ReportName=@ReportName></Modal_RptViewer>
 
 <EditForm Model="@filterVM">
@@ -2276,6 +2414,7 @@
                         <a class="dropdown-item" @onclick=@(() => GetCustomers())>Khách hàng</a>
                         <a class="dropdown-item" @onclick=@(() => GetVendors())>Nhà cung cấp</a>
                         <a class="dropdown-item" @onclick=@(() => GetStocks())>Kho</a>
+                        <a class="dropdown-item" @onclick=@(() => GetItems())>Hàng hóa, dịch vụ</a>
 
                     </div>
                 </div>
