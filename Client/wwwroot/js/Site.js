@@ -198,9 +198,15 @@ function ShowModal(id) {
     $(id).modal();
 }
 
-function updateScrollToBottom() {
-    $('#updateScrollToBottom').animate({
-        scrollTop: $('#updateScrollToBottom').get(0).scrollHeight
+function updateScrollToBottom(id) {
+    $('#updateScrollToBottom' + id + '').animate({
+        scrollTop: $('#updateScrollToBottom' + id + '').get(0).scrollHeight
+    }, 1000);
+}
+
+function updateScrollToTop(id) {
+    $('#updateScrollToTop' + id + '').animate({
+        scrollTop: 0
     }, 1000);
 }
 

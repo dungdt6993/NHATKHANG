@@ -287,6 +287,8 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
+            filterVM.CategoryName = "Voucher";
+
             vSubTypeVMs = await voucherService.GetVSubTypeVMs(_vTypeID);
 
             if (filterVM.FuncID == "FIN_Cash" || filterVM.FuncID == "FIN_Deposit")
@@ -474,7 +476,7 @@ namespace D69soft.Client.Pages.FIN
                 await txtSearchItems.Focus();
             }
 
-            await js.InvokeAsync<object>("updateScrollToBottom");
+            await js.InvokeAsync<object>("updateScrollToBottom","Voucher");
         }
 
         private async Task CreateVoucherDetail()
@@ -486,7 +488,7 @@ namespace D69soft.Client.Pages.FIN
 
             voucherDetailVMs.Add(_voucherDetailVM);
 
-            await js.InvokeAsync<object>("updateScrollToBottom");
+            await js.InvokeAsync<object>("updateScrollToBottom", "Voucher");
         }
 
         private void onchange_VDQty(ChangeEventArgs e, VoucherDetailVM _voucherDetailVM)
@@ -1937,19 +1939,26 @@ namespace D69soft.Client.Pages.FIN
                         isLoading = false;
                         return;
                     }
-
                 }
 
                 itemsVM.IDetail = await QuillHtml.GetHTML();
 
                 itemsVM.ICode = await inventoryService.UpdateItems(itemsVM, quantitativeItemsVMs);
-                itemsVM.IsTypeUpdate = 1;
 
-                //Cập nhật Items từ Voucher
-                if(filterVM.TypeView==0)
+                if (filterVM.CategoryName == "Voucher")
                 {
-                    voucherDetailVM = (await SearchItems(itemsVM.ICode)).First();
-                    await SelectedItem(voucherDetailVM);
+                    //Cập nhật Items từ Voucher
+                    if (filterVM.TypeView == 0)
+                    {
+                        voucherDetailVM = (await SearchItems(itemsVM.ICode)).First();
+                        await SelectedItem(voucherDetailVM);
+                    }
+                }
+
+                if(filterVM.CategoryName == "Items")
+                {
+                    itemsVMs.Insert(0,itemsVM);
+                    await js.InvokeAsync<object>("updateScrollToTop", "Items");
                 }
 
                 //Cập nhật Items từ tồn kho
@@ -1958,8 +1967,13 @@ namespace D69soft.Client.Pages.FIN
                     inventoryVMs = await inventoryService.GetInventorys(filterVM);
                 }
 
+                logVM.LogDesc = (itemsVM.IsTypeUpdate == 0 ? "Thêm mới" : "Cập nhật") + " hàng hóa " + itemsVM.ICode + "";
+                await sysService.InsertLog(logVM);
+
+                await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Items");
-                await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+
+                itemsVM.IsTypeUpdate = 1;
             }
             else
             {
@@ -1969,10 +1983,14 @@ namespace D69soft.Client.Pages.FIN
 
                     if (result != "Err_NotDel")
                     {
-                        await GetItems();
+                        logVM.LogDesc = "Xóa hàng hóa " + itemsVM.ICode + "";
+                        await sysService.InsertLog(logVM);
 
+                        itemsVMs.Remove(itemsVM);
+                        itemsVM = new();
+
+                        await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Items");
-                        await js.Toast_Alert("Xóa thành công!", SweetAlertMessageType.success);
                     }
                     else
                     {
