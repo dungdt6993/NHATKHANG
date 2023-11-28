@@ -1226,7 +1226,11 @@ namespace D69soft.Client.Pages.FIN
                 logVM.LogDesc = (bankAccountVM.IsTypeUpdate == 0 ? "Thêm mới" : "Cập nhật") + " tài khoản ngân hàng " + bankAccountVM.BankAccount + " - " + bankVMs.Where(x => x.SwiftCode == bankAccountVM.SwiftCode).Select(x => x.BankShortName).First() + "";
                 await sysService.InsertLog(logVM);
 
-                bankAccountVMs = (await moneyService.GetBankAccountList()).ToList();
+                if (filterVM.CategoryName == "BankAccount")
+                {
+                    bankAccountVMs = (await moneyService.GetBankAccountList()).ToList();
+                    bankAccountVM = new();
+                }
 
                 await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_BankAccount");
@@ -1244,8 +1248,8 @@ namespace D69soft.Client.Pages.FIN
                         logVM.LogDesc = "Xóa tài khoản ngân hàng " + bankAccountVM.BankAccount + " - " + bankVMs.Where(x => x.SwiftCode == bankAccountVM.SwiftCode).Select(x => x.BankShortName).First() + "";
                         await sysService.InsertLog(logVM);
 
-                        bankAccountVM = new();
                         bankAccountVMs = (await moneyService.GetBankAccountList()).ToList();
+                        bankAccountVM = new();
 
                         await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_BankAccount");
@@ -1325,8 +1329,17 @@ namespace D69soft.Client.Pages.FIN
                 logVM.LogDesc = (vendorVM.IsTypeUpdate == 0 ? "Thêm mới" : "Cập nhật") + " nhà cung cấp " + vendorVM.VendorCode + "";
                 await sysService.InsertLog(logVM);
 
-                vendorVMs = (await purchasingService.GetVendorList()).ToList();
-                voucherVM.VendorCode = vendorVM.VendorCode;
+                if (filterVM.CategoryName == "Vendor")
+                {
+                    vendorVMs = (await purchasingService.GetVendorList()).ToList();
+                    vendorVM = new();
+                }
+
+                if (filterVM.CategoryName == "Voucher")
+                {
+                    vendorVMs.Insert(0, vendorVM);
+                    voucherVM.VendorCode = vendorVM.VendorCode;
+                }
 
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Vendor");
                 await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
@@ -1344,8 +1357,8 @@ namespace D69soft.Client.Pages.FIN
                         logVM.LogDesc = "Xóa nhà cung cấp " + vendorVM.VendorCode + "";
                         await sysService.InsertLog(logVM);
 
-                        vendorVM = new();
                         vendorVMs = (await purchasingService.GetVendorList()).ToList();
+                        vendorVM = new();
 
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Vendor");
                         await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
@@ -1425,8 +1438,17 @@ namespace D69soft.Client.Pages.FIN
                 logVM.LogDesc = (customerVM.IsTypeUpdate == 0 ? "Thêm mới" : "Cập nhật") + " khách hàng " + customerVM.CustomerCode + "";
                 await sysService.InsertLog(logVM);
 
-                customerVMs = (await customerService.GetCustomers()).ToList();
-                voucherVM.CustomerCode = customerVM.CustomerCode;
+                if (filterVM.CategoryName == "Customer")
+                {
+                    customerVMs = (await customerService.GetCustomers()).ToList();
+                    customerVM = new();
+                }
+
+                if (filterVM.CategoryName == "Voucher")
+                {
+                    customerVMs.Insert(0, customerVM);
+                    voucherVM.CustomerCode = customerVM.CustomerCode;
+                }
 
                 await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Customer");
@@ -1444,8 +1466,8 @@ namespace D69soft.Client.Pages.FIN
                         logVM.LogDesc = "Xóa khách hàng " + customerVM.CustomerCode + "";
                         await sysService.InsertLog(logVM);
 
-                        customerVM = new();
                         customerVMs = (await customerService.GetCustomers()).ToList();
+                        customerVM = new();
 
                         await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Customer");
@@ -1527,7 +1549,11 @@ namespace D69soft.Client.Pages.FIN
                 logVM.LogDesc = (stockVM.IsTypeUpdate == 0 ? "Thêm mới" : "Cập nhật") + " kho " + stockVM.StockCode + "";
                 await sysService.InsertLog(logVM);
 
-                stockVMs = (await inventoryService.GetStockList()).ToList();
+                if (filterVM.CategoryName == "Stock")
+                {
+                    stockVMs = (await inventoryService.GetStockList()).ToList();
+                    stockVM = new();
+                }
 
                 await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Stock");
@@ -1545,8 +1571,8 @@ namespace D69soft.Client.Pages.FIN
                         logVM.LogDesc = "Xóa kho " + stockVM.StockCode + "";
                         await sysService.InsertLog(logVM);
 
-                        stockVM = new();
                         stockVMs = (await inventoryService.GetStockList()).ToList();
+                        stockVM = new();
 
                         await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_Stock");
@@ -1957,8 +1983,11 @@ namespace D69soft.Client.Pages.FIN
 
                 if(filterVM.CategoryName == "Items")
                 {
-                    itemsVMs.Insert(0,itemsVM);
-                    await js.InvokeAsync<object>("updateScrollToTop", "Items");
+                    if (itemsVM.IsTypeUpdate == 0)
+                    {
+                        itemsVMs.Insert(0, itemsVM);
+                        await js.InvokeAsync<object>("updateScrollToTop", "Items");
+                    }
                 }
 
                 //Cập nhật Items từ tồn kho
