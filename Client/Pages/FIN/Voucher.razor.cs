@@ -1824,6 +1824,11 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
+        //public string search_Items { 
+        //    get { return filterVM.searchText; }
+        //    set { filterVM.searchText = value; }
+        //}
+
         private void onclick_Selected(ItemsVM _itemsVM)
         {
             itemsVM = _itemsVM == itemsVM ? new() : _itemsVM;
