@@ -220,8 +220,11 @@ namespace D69soft.Server.Controllers.FIN
             sql += "and (i.ITypeCode=@ITypeCode or coalesce(@ITypeCode,'') = '') ";
             sql += "and (i.IClsCode=@IClsCode or coalesce(@IClsCode,'') = '') ";
             sql += "and (i.IGrpCode=@IGrpCode or coalesce(@IGrpCode,'') = '') ";
-            sql += "and (i.ICode LIKE CONCAT('%',@searchText,'%') or i.IName LIKE CONCAT('%',@searchText,'%')) ";
+            sql += "and (i.ICode LIKE CONCAT('%',@searchValues,'%') or i.IName LIKE CONCAT('%',@searchValues,'%')) ";
             sql += "order by ic.IClsNo ";
+
+            sql += "OFFSET @list_skip ROWS FETCH NEXT @list_take ROWS ONLY; ";
+
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)

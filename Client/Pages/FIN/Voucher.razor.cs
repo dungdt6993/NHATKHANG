@@ -15,6 +15,7 @@ using D69soft.Client.Extensions;
 using Microsoft.AspNetCore.Components.Forms;
 using D69soft.Server.Services.HR;
 using Blazored.TextEditor;
+using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 namespace D69soft.Client.Pages.FIN
 {
@@ -1814,20 +1815,38 @@ namespace D69soft.Client.Pages.FIN
 
             filterVM.CategoryName = "Items";
 
-            itemsVM = new();
+            filterVM.searchValues = String.Empty;
 
-            filterVM.IActive = true;
-            itemsVMs = await inventoryService.GetItemsList(filterVM);
+            itemsVM = new();
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalList_Items");
 
             isLoading = false;
         }
 
-        //public string search_Items { 
-        //    get { return filterVM.searchText; }
-        //    set { filterVM.searchText = value; }
-        //}
+        private Virtualize<ItemsVM> virtualizeItemsList { get; set; }
+        private async ValueTask<ItemsProviderResult<ItemsVM>> LoadItemsList(ItemsProviderRequest request)
+        {
+            filterVM.list_take = 10;
+
+            filterVM.list_skip = request.StartIndex;
+            filterVM.list_take = Math.Min(request.Count, filterVM.list_count - request.StartIndex);
+
+            filterVM.IActive = true;
+            itemsVMs = await inventoryService.GetItemsList(filterVM);
+
+            filterVM.list_count = itemsVMs.Count;
+
+            return new ItemsProviderResult<ItemsVM>(itemsVMs, filterVM.list_count);
+        }
+
+        private async Task SearchItemsList(string value)
+        {
+            filterVM.searchValues = value;
+
+            await virtualizeItemsList.RefreshDataAsync();
+            StateHasChanged();
+        }
 
         private void onclick_Selected(ItemsVM _itemsVM)
         {

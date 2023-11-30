@@ -1627,7 +1627,7 @@
                         <div class="input-group-prepend">
                             <div class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></div>
                         </div>
-                        <input type="text" class="form-control" placeholder="Tìm kiếm" >
+                        <InputText type="text" class="form-control" placeholder="Tìm kiếm" @bind-Value:get="filterVM.searchValues" @bind-Value:set="SearchItemsList" />
                     </div>
 
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -1640,62 +1640,53 @@
 
             <div id="updateScrollToTopItems" class="modal-body table-responsive p-0" style="height: calc(100vh - 57px);">
 
-                @if (itemsVMs != null)
-                {
-                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Hình ảnh</th>
-                                <th class="text-center">Mã hàng hóa</th>
-                                <th>Tên hàng</th>
-                                <th>Loại hàng</th>
-                                <th>Lớp hàng</th>
-                                <th>Nhóm hàng</th>
-                                <th>Đơn vị tính</th>
-                                <th>Giá mua</th>
-                                <th>Giá bán</th>
-                                <th class="text-center">Thuế GTGT</th>
+                <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Hình ảnh</th>
+                            <th class="text-center">Mã hàng hóa</th>
+                            <th>Tên hàng</th>
+                            <th>Loại hàng</th>
+                            <th>Lớp hàng</th>
+                            <th>Nhóm hàng</th>
+                            <th>Đơn vị tính</th>
+                            <th>Giá mua</th>
+                            <th>Giá bán</th>
+                            <th class="text-center">Thuế GTGT</th>
 
-                                <th class="text-center">Trạng thái</th>
+                            <th class="text-center">Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <Virtualize @ref="virtualizeItemsList" ItemsProvider="LoadItemsList" Context="_itemVM" SpacerElement="tr">
+                            <tr class="@(SetSelected(_itemVM))" @onclick="() => onclick_Selected(_itemVM)">
+                                <td class="text-center">
+                                    <img class="table-picture" src="@_itemVM.IURLPicture1">
+                                </td>
+                                <td align="center">@_itemVM.ICode</td>
+                                <td>@_itemVM.IName</td>
+                                <td>@_itemVM.ITypeName</td>
+                                <td>@_itemVM.IClsName</td>
+                                <td>@_itemVM.IGrpName</td>
+                                <td>@_itemVM.IUnitName</td>
+                                <td class="text-right">@String.Format("{0:#,##0.##}", _itemVM.ICost)</td>
+                                <td class="text-right">@String.Format("{0:#,##0.##}", _itemVM.IPrice)</td>
+                                <td class="text-center">@_itemVM.VATName</td>
+                                <td class="text-center">
+                                    @if (_itemVM.IActive)
+                                    {
+                                        <i class="fas fa-check text-success"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-times"></i>
+                                    }
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <Virtualize Items="@itemsVMs" Context="_itemVM" OverscanCount="50">
-                                <tr class="@(SetSelected(_itemVM))" @onclick="() => onclick_Selected(_itemVM)">
-                                    <td class="text-center">
-                                        <img class="table-picture" src="@_itemVM.IURLPicture1">
-                                    </td>
-                                    <td align="center">@_itemVM.ICode</td>
-                                    <td>@_itemVM.IName</td>
-                                    <td>@_itemVM.ITypeName</td>
-                                    <td>@_itemVM.IClsName</td>
-                                    <td>@_itemVM.IGrpName</td>
-                                    <td>@_itemVM.IUnitName</td>
-                                    <td class="text-right">@String.Format("{0:#,##0.##}", _itemVM.ICost)</td>
-                                    <td class="text-right">@String.Format("{0:#,##0.##}", _itemVM.IPrice)</td>
-                                    <td class="text-center">@_itemVM.VATName</td>
-                                    <td class="text-center">
-                                        @if (_itemVM.IActive)
-                                        {
-                                            <i class="fas fa-check text-success"></i>
-                                        }
-                                        else
-                                        {
-                                            <i class="fas fa-times"></i>
-                                        }
-                                    </td>
-                                </tr>
-                            </Virtualize>
-                        </tbody>
+                        </Virtualize>
+                    </tbody>
 
-                    </table>
-
-                    if (itemsVMs.Count() <= 0)
-                    {
-                        <img class="img-no-result" src="images/_default/no-results.png" />
-                    }
-
-                }
+                </table>
 
             </div>
 

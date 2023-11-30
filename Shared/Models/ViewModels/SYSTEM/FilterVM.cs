@@ -8,6 +8,10 @@ namespace D69soft.Shared.Models.ViewModels.SYSTEM
 {
     public class FilterVM
     {
+        public int list_count { get; set; }
+        public int list_skip { get; set; }
+        public int list_take { get; set; }
+
         //SYS
         public string UserID { get; set; }
         public string FuncID { get; set; }
