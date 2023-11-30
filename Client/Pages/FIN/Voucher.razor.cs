@@ -1824,18 +1824,16 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
-        private Virtualize<ItemsVM> virtualizeItemsList { get; set; }
+        private Virtualize<ItemsVM>? virtualizeItemsList;
         private async ValueTask<ItemsProviderResult<ItemsVM>> LoadItemsList(ItemsProviderRequest request)
         {
-            filterVM.list_take = 10;
+            filterVM.list_count = 1000;
 
             filterVM.list_skip = request.StartIndex;
             filterVM.list_take = Math.Min(request.Count, filterVM.list_count - request.StartIndex);
 
             filterVM.IActive = true;
             itemsVMs = await inventoryService.GetItemsList(filterVM);
-
-            filterVM.list_count = itemsVMs.Count;
 
             return new ItemsProviderResult<ItemsVM>(itemsVMs, filterVM.list_count);
         }

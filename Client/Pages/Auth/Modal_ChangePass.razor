@@ -11,34 +11,60 @@
                 <FluentValidationValidator />
 
                 <div class="modal-header">
-                    <h5 class="modal-title">Thay đổi mật khẩu đăng nhập</h5>
+                    <h5 class="modal-title">Thiết lập mật khẩu</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <i class="fa-regular fa-circle-xmark text-danger"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Mật khẩu mới</label>
-                        <div class="col-sm-8">
-                            <InputText type="password" class="form-control" @bind-Value="changePassVM.NewPass" />
+
+                    <p class="font-size-16 mt-2 mb-2 text-bold text-danger">
+                        <span>Mật khẩu có tối thiểu 6 ký tự. Mật khẩu và xác nhận mật khẩu phải trùng nhau.</span>
+                    </p>
+
+                    <div class="form-row">
+                        <div class="input-group mb-3">
+                            <InputText type="@(changePassVM.isShowNewPass?"text":"password")" class="form-control" placeholder="Đặt mật khẩu" @bind-Value="changePassVM.NewPass" />
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    @if (!changePassVM.isShowNewPass)
+                                    {
+                                        <span class="fa-solid fa-eye-slash" style="cursor:pointer" @onclick="(() => changePassVM.isShowNewPass = true)"></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="fa-solid fa-eye" style="cursor:pointer" @onclick="(() => changePassVM.isShowNewPass = false)"></span>
+                                    }
+                                </div>
+                            </div>
                             <ValidationMessage For="@(() => changePassVM.NewPass)" />
                         </div>
                     </div>
 
-                    <div class="form-group row">
-                        <label class="col-sm-4 col-form-label">Nhập lại mật khẩu mới</label>
-                        <div class="col-sm-8">
-                            <InputText type="password" class="form-control" @bind-Value="changePassVM.ComfirmNewPass" />
+                    <div class="form-row">
+                        <div class="input-group mb-3">
+                            <InputText type="@(changePassVM.isShowComfirmNewPass?"text":"password")" class="form-control" placeholder="Xác nhận mật khẩu" @bind-Value="changePassVM.ComfirmNewPass" />
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    @if (!changePassVM.isShowComfirmNewPass)
+                                    {
+                                        <span class="fa-solid fa-eye-slash" style="cursor:pointer" @onclick="(() => changePassVM.isShowComfirmNewPass = true)"></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="fa-solid fa-eye" style="cursor:pointer" @onclick="(() => changePassVM.isShowComfirmNewPass = false)"></span>
+                                    }
+                                </div>
+                            </div>
                             <ValidationMessage For="@(() => changePassVM.ComfirmNewPass)" />
                         </div>
                     </div>
 
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times"></i> Thoát</button>
                     <button type="submit" class="btn btn-success">
                         <i class="fas fa-check"></i>
-                        Đổi mật khẩu
+                        Xác thực
                     </button>
                 </div>
             </EditForm>
@@ -61,7 +87,7 @@
 
         if (await authService.ChangePass(changePassVM))
         {
-            await js.Swal_Message("Thông báo!", "Đổi mật khẩu đăng nhập thành công.", SweetAlertMessageType.success);
+            await js.Swal_Message("Thông báo!", "Thiết lập mật khẩu thành công.", SweetAlertMessageType.success);
 
             await js.InvokeAsync<object>("CloseModal", "#InitializeModal_ChangePass");
         }
