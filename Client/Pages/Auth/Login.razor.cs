@@ -52,7 +52,7 @@ namespace D69soft.Client.Pages.Auth
             if (loginResponseVM.Successful)
             {
                 logVM.LogType = "AUTH";
-                logVM.LogName = "Login";
+                logVM.LogName = "Đăng nhập hệ thống";
                 logVM.LogUser = userVM.Eserial;
                 await sysService.InsertLog(logVM);
 

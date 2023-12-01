@@ -62,7 +62,7 @@ namespace D69soft.Server.Controllers
 
         //JWT
         [HttpPost("Login")]
-        public async Task<ActionResult<LoginResponseVM>> Login([FromBody] UserVM _userVM)
+        public async Task<ActionResult<LoginResponseVM>> Login(UserVM _userVM)
         {
             int loginResponse = 0;
 

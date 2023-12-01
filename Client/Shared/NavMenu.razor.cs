@@ -29,34 +29,41 @@ namespace D69soft.Client.Shared
 
         bool ckViewFuncMenuRpt = false;
 
-        protected override async Task OnInitializedAsync()
-        {
-            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
-
-            userVM = await sysService.GetInfoUser(filterVM.UserID);
-
-            if (String.IsNullOrEmpty(userVM.Eserial))
-            {
-                navigationManager.NavigateTo("/Auth/Login");
-            }
-
-            modules = await sysService.GetModuleMenu(filterVM.UserID);
-
-            funcMenuGrps = await sysService.GetFuncMenuGroup(filterVM.UserID);
-
-            funcMenus = await sysService.GetFuncMenu(filterVM.UserID);
-
-            ckViewFuncMenuRpt = await sysService.CheckViewFuncMenuRpt(filterVM.UserID);
-
-            isLoadingScreen = false;
-        }
-
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
                 await js.InvokeAsync<object>("menu_treeview");
             }
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+            filterVM.UserID = (await authenticationStateTask).User.GetUserId();
+
+            if(String.IsNullOrEmpty(filterVM.UserID))
+            {
+                userVM = await sysService.GetInfoUser(filterVM.UserID);
+
+                if (userVM == null)
+                {
+                    navigationManager.NavigateTo("/Auth/Login");
+                }
+            }
+            else
+            {
+                navigationManager.NavigateTo("/Auth/Login");
+            }
+
+            //modules = await sysService.GetModuleMenu(filterVM.UserID);
+
+            //funcMenuGrps = await sysService.GetFuncMenuGroup(filterVM.UserID);
+
+            //funcMenus = await sysService.GetFuncMenu(filterVM.UserID);
+
+            //ckViewFuncMenuRpt = await sysService.CheckViewFuncMenuRpt(filterVM.UserID);
+
+            isLoadingScreen = false;
         }
 
         private void ClickMenuFunc(string _urlFunc)

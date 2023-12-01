@@ -26,11 +26,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        filterVM.UserID = (await authenticationStateTask).User.GetUserId();
+        // filterVM.UserID = (await authenticationStateTask).User.GetUserId();
 
-        if (!await authService.CheckChangePassDefault(filterVM.UserID))
-        {
-            await js.InvokeAsync<object>("ShowModal", "#InitializeModal_ChangePass");
-        }
+        // if (!await authService.CheckChangePassDefault(filterVM.UserID))
+        // {
+        //     await js.InvokeAsync<object>("ShowModal", "#InitializeModal_ChangePass");
+        // }
     }
 }
