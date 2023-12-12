@@ -321,7 +321,7 @@ namespace D69soft.Client.Pages.HR
         {
             profileVM = _profileVM == profileVM ? new() : _profileVM;
         }
-        public async Task onchange_StartContractDate(DateRange _range)
+        public void onchange_StartContractDate(DateRange _range)
         {
             isLoading = true;
 

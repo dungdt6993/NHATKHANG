@@ -1815,9 +1815,14 @@ namespace D69soft.Client.Pages.FIN
 
             filterVM.CategoryName = "Items";
 
+            itemsVM = new();
+
             filterVM.searchValues = String.Empty;
 
-            itemsVM = new();
+            filterVM.IActive = true;
+            itemsVMs = await inventoryService.GetItemsList(filterVM);
+
+            await SearchItemsList(String.Empty);
 
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalList_Items");
 
@@ -1825,13 +1830,12 @@ namespace D69soft.Client.Pages.FIN
         }
 
         private Virtualize<ItemsVM>? virtualizeItemsList;
-        private async ValueTask<ItemsProviderResult<ItemsVM>> LoadItemsList(ItemsProviderRequest request)
+        private ValueTask<ItemsProviderResult<ItemsVM>> LoadItemsList(ItemsProviderRequest request)
         {
-            var numEmployees = Math.Min(request.Count, totalEmployees - request.StartIndex);
-            var employees = await EmployeesService.GetEmployeesAsync(request.StartIndex,
-                numEmployees, request.CancellationToken);
-
-            return new ItemsProviderResult<Employee>(employees, totalEmployees);
+            return new(new ItemsProviderResult<ItemsVM>(
+                    itemsVMs.Where(x => x.ICode.Contains(filterVM.searchValues) || x.IName.ToUpper().Contains(filterVM.searchValues.ToUpper())).Skip(request.StartIndex).Take(request.Count),
+                    itemsVMs.Where(x => x.ICode.Contains(filterVM.searchValues) || x.IName.ToUpper().Contains(filterVM.searchValues.ToUpper())).Count()
+                ));
         }
 
         private async Task SearchItemsList(string value)

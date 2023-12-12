@@ -223,7 +223,7 @@ namespace D69soft.Server.Controllers.FIN
             sql += "and (i.ICode LIKE CONCAT('%',@searchValues,'%') or i.IName LIKE CONCAT('%',@searchValues,'%')) ";
             sql += "order by ic.IClsNo ";
 
-            sql += "OFFSET @list_skip ROWS FETCH NEXT @list_take ROWS ONLY; ";
+            //sql += "OFFSET @list_skip ROWS FETCH NEXT @list_take ROWS ONLY; ";
 
             using (var conn = new SqlConnection(_connConfig.Value))
             {
