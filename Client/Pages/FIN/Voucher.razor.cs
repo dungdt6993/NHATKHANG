@@ -1827,15 +1827,11 @@ namespace D69soft.Client.Pages.FIN
         private Virtualize<ItemsVM>? virtualizeItemsList;
         private async ValueTask<ItemsProviderResult<ItemsVM>> LoadItemsList(ItemsProviderRequest request)
         {
-            filterVM.list_count = 1000;
+            var numEmployees = Math.Min(request.Count, totalEmployees - request.StartIndex);
+            var employees = await EmployeesService.GetEmployeesAsync(request.StartIndex,
+                numEmployees, request.CancellationToken);
 
-            filterVM.list_skip = request.StartIndex;
-            filterVM.list_take = Math.Min(request.Count, filterVM.list_count - request.StartIndex);
-
-            filterVM.IActive = true;
-            itemsVMs = await inventoryService.GetItemsList(filterVM);
-
-            return new ItemsProviderResult<ItemsVM>(itemsVMs, filterVM.list_count);
+            return new ItemsProviderResult<Employee>(employees, totalEmployees);
         }
 
         private async Task SearchItemsList(string value)
