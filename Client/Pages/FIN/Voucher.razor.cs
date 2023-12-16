@@ -94,7 +94,7 @@ namespace D69soft.Client.Pages.FIN
 
         //ItemsClass
         ItemsClassVM itemsClassVM = new();
-        IEnumerable<ItemsClassVM> itemsClassVMs;
+        List<ItemsClassVM> itemsClassVMs;
 
         //ItemsGroup
         ItemsGroupVM itemsGroupVM = new();
@@ -195,7 +195,7 @@ namespace D69soft.Client.Pages.FIN
             //Items
             itemsUnitVMs = (await inventoryService.GetItemsUnitList()).ToList();
             itemsTypeVMs = await inventoryService.GetItemsTypes();
-            itemsClassVMs = await inventoryService.GetItemsClassList();
+            itemsClassVMs = (await inventoryService.GetItemsClassList()).ToList();
             itemsGroupVMs = await inventoryService.GetItemsGroupList();
 
             //Account
@@ -1594,6 +1594,34 @@ namespace D69soft.Client.Pages.FIN
         }
 
         //ItemsClass
+        private async Task GetItemsClass()
+        {
+            isLoading = true;
+
+            filterVM.CategoryName = "ItemsClass";
+
+            itemsClassVM = new();
+
+            itemsClassVMs = (await inventoryService.GetItemsClassList()).ToList();
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalList_ItemsClass");
+
+            isLoading = false;
+        }
+
+        private void onclick_Selected(ItemsClassVM _itemsClassVM)
+        {
+            itemsClassVM = _itemsClassVM == itemsClassVM ? new() : _itemsClassVM;
+        }
+
+        private string SetSelected(ItemsClassVM _itemsClassVM)
+        {
+            if (itemsClassVM.IClsCode != _itemsClassVM.IClsCode)
+            {
+                return string.Empty;
+            }
+            return "selected";
+        }
         private async Task InitializeModalUpdate_ItemsClass(int _IsTypeUpdate)
         {
             isLoading = true;
@@ -1627,7 +1655,7 @@ namespace D69soft.Client.Pages.FIN
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsClass");
                 await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
 
-                itemsClassVMs = await inventoryService.GetItemsClassList();
+                itemsClassVMs = (await inventoryService.GetItemsClassList()).ToList();
                 itemsVM.IClsCode = itemsClassVM.IClsCode;
             }
             else
@@ -1641,8 +1669,8 @@ namespace D69soft.Client.Pages.FIN
                         logVM.LogDesc = "Xóa lớp hàng " + itemsClassVM.IClsCode + "";
                         await sysService.InsertLog(logVM);
 
-                        itemsClassVMs = await inventoryService.GetItemsClassList();
-                        itemsVM.IClsCode = String.Empty;
+                        itemsClassVMs = (await inventoryService.GetItemsClassList()).ToList();
+                        itemsClassVM = new();
 
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsClass");
                         await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
