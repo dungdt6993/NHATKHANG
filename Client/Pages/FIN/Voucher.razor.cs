@@ -112,7 +112,7 @@ namespace D69soft.Client.Pages.FIN
 
         //Unit
         ItemsUnitVM itemsUnitVM = new();
-        IEnumerable<ItemsUnitVM> itemsUnitVMs;
+        List<ItemsUnitVM> itemsUnitVMs;
 
         //VAT
         IEnumerable<VATDefVM> vatDefVMs;
@@ -193,7 +193,7 @@ namespace D69soft.Client.Pages.FIN
             stockVMs = (await inventoryService.GetStockList()).ToList();
 
             //Items
-            itemsUnitVMs = await inventoryService.GetItemsUnitList();
+            itemsUnitVMs = (await inventoryService.GetItemsUnitList()).ToList();
             itemsTypeVMs = await inventoryService.GetItemsTypes();
             itemsClassVMs = await inventoryService.GetItemsClassList();
             itemsGroupVMs = await inventoryService.GetItemsGroupList();
@@ -1734,6 +1734,35 @@ namespace D69soft.Client.Pages.FIN
         }
 
         //ItemsUnit
+        private async Task GetItemsUnit()
+        {
+            isLoading = true;
+
+            filterVM.IUnitCode = "IUnitCode";
+
+            itemsUnitVM = new();
+
+            itemsUnitVMs = (await inventoryService.GetItemsUnitList()).ToList();
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalList_ItemsUnit");
+
+            isLoading = false;
+        }
+
+        private void onclick_Selected(ItemsUnitVM _itemsUnitVM)
+        {
+            itemsUnitVM = _itemsUnitVM == itemsUnitVM ? new() : _itemsUnitVM;
+        }
+
+        private string SetSelected(ItemsUnitVM _itemsUnitVM)
+        {
+            if (itemsUnitVM.IUnitCode != _itemsUnitVM.IUnitCode)
+            {
+                return string.Empty;
+            }
+            return "selected";
+        }
+
         private async Task InitializeModalUpdate_ItemsUnit(int _IsTypeUpdate)
         {
             isLoading = true;
@@ -1741,11 +1770,6 @@ namespace D69soft.Client.Pages.FIN
             if (_IsTypeUpdate == 0)
             {
                 itemsUnitVM = new();
-            }
-
-            if (_IsTypeUpdate == 1)
-            {
-                itemsUnitVM = itemsUnitVMs.First(x => x.IUnitCode == itemsVM.IUnitCode);
             }
 
             itemsUnitVM.IsTypeUpdate = _IsTypeUpdate;
@@ -1773,7 +1797,7 @@ namespace D69soft.Client.Pages.FIN
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsUnit");
                 await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
 
-                itemsUnitVMs = await inventoryService.GetItemsUnitList();
+                itemsUnitVMs = (await inventoryService.GetItemsUnitList()).ToList();
                 itemsVM.IUnitCode = itemsUnitVM.IUnitCode;
             }
             else
@@ -1787,8 +1811,8 @@ namespace D69soft.Client.Pages.FIN
                         logVM.LogDesc = "Xóa đơn vị tính " + itemsGroupVM.IGrpCode + "";
                         await sysService.InsertLog(logVM);
 
-                        itemsUnitVMs = await inventoryService.GetItemsUnitList();
-                        itemsVM.IUnitCode = String.Empty;
+                        itemsUnitVMs = (await inventoryService.GetItemsUnitList()).ToList();
+                        itemsUnitVM = new();
 
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsUnit");
                         await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);

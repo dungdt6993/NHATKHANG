@@ -38,6 +38,7 @@ namespace D69soft.Shared.Models.ViewModels.SYSTEM
         public int searchActive { get; set; }
         public bool IActive { get; set; }
         public string ICode { get; set; }
+        public string IUnitCode { get; set; }
         public string StockCode { get; set; }
         public string VTypeID { get; set; }
         public string InvoiceNumber { get; set; }

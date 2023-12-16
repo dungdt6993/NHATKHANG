@@ -2099,6 +2099,69 @@
     </div>
 </div>
 
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalList_ItemsUnit">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: #f4f6f9;">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    <span>ĐƠN VỊ TÍNH</span>
+                </h5>
+
+                <div class="btn-toolbar">
+                    <div class="btn-group btn-group-sm mr-2">
+                        @if (!String.IsNullOrEmpty(itemsUnitVM.IUnitCode))
+                        {
+                            <button type="button" class="btn btn-sm btn-primary" @onclick=@(() => InitializeModalUpdate_ItemsUnit(1))><i class="fa-solid fa-file-invoice"></i> Chi tiết</button>
+                        }
+                        <button type="button" class="btn btn-sm btn-success" @onclick="(() => InitializeModalUpdate_ItemsUnit(0))"><i class="fa-solid fa-xl fa-plus"></i> Thêm</button>
+                    </div>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa-regular fa-circle-xmark text-danger"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="modal-body table-responsive p-0" style="height: calc(100vh - 120px);">
+
+                @if (itemsUnitVMs != null)
+                {
+                    <table class="table table-sm table-bordered table-head-fixed table-hover table-hover-cursor tblFontSizeMin">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="text-center">Mã</th>
+                                <th>Tên</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <Virtualize Items="@itemsUnitVMs" Context="_itemsUnitVM" OverscanCount="50">
+                                <tr class="@(SetSelected(_itemsUnitVM))" @onclick="() => onclick_Selected(_itemsUnitVM)">
+                                    <td class="text-center">@_itemsUnitVM.IUnitCode</td>
+                                    <td>@_itemsUnitVM.IUnitName</td>
+                                </tr> 
+                            </Virtualize>
+                        </tbody>
+                    </table>
+                    if (itemsUnitVMs.Count() <= 0)
+                    {
+                        <img class="img-no-result" src="images/_default/no-results.png" />
+                    }
+                }
+            </div>
+
+            <div class="modal-footer justify-content-center">
+            </div>
+
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModalUpdate_ItemsUnit">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -2392,6 +2455,7 @@
                         <a class="dropdown-item" @onclick=@(() => GetVendors())>Nhà cung cấp</a>
                         <a class="dropdown-item" @onclick=@(() => GetStocks())>Kho</a>
                         <a class="dropdown-item" @onclick=@(() => GetItems())>Hàng hóa, dịch vụ</a>
+                        <a class="dropdown-item" @onclick=@(() => GetItemsUnit())>Đơn vị tính</a>
 
                     </div>
                 </div>
