@@ -98,7 +98,7 @@ namespace D69soft.Client.Pages.FIN
 
         //ItemsGroup
         ItemsGroupVM itemsGroupVM = new();
-        IEnumerable<ItemsGroupVM> itemsGroupVMs;
+        List<ItemsGroupVM> itemsGroupVMs;
 
         //Items
         ItemsVM itemsVM = new();
@@ -196,7 +196,7 @@ namespace D69soft.Client.Pages.FIN
             itemsUnitVMs = (await inventoryService.GetItemsUnitList()).ToList();
             itemsTypeVMs = await inventoryService.GetItemsTypes();
             itemsClassVMs = (await inventoryService.GetItemsClassList()).ToList();
-            itemsGroupVMs = await inventoryService.GetItemsGroupList();
+            itemsGroupVMs = (await inventoryService.GetItemsGroupList()).ToList();
 
             //Account
             accountVMs = await voucherService.GetAccounts();
@@ -1622,6 +1622,7 @@ namespace D69soft.Client.Pages.FIN
             }
             return "selected";
         }
+
         private async Task InitializeModalUpdate_ItemsClass(int _IsTypeUpdate)
         {
             isLoading = true;
@@ -1637,6 +1638,7 @@ namespace D69soft.Client.Pages.FIN
 
             isLoading = false;
         }
+
         private async Task UpdateItemsClass(EditContext _formItemsClassVM, int _IsTypeUpdate)
         {
             itemsClassVM.IsTypeUpdate = _IsTypeUpdate;
@@ -1691,6 +1693,35 @@ namespace D69soft.Client.Pages.FIN
         }
 
         //ItemsGroup
+        private async Task GetItemsGroup()
+        {
+            isLoading = true;
+
+            filterVM.CategoryName = "ItemsGroup";
+
+            itemsGroupVM = new();
+
+            itemsGroupVMs = (await inventoryService.GetItemsGroupList()).ToList();
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModalList_ItemsGroup");
+
+            isLoading = false;
+        }
+
+        private void onclick_Selected(ItemsGroupVM _itemsGroupVM)
+        {
+            itemsGroupVM = _itemsGroupVM == itemsGroupVM ? new() : _itemsGroupVM;
+        }
+
+        private string SetSelected(ItemsGroupVM _itemsGroupVM)
+        {
+            if (itemsGroupVM.IGrpCode != _itemsGroupVM.IGrpCode)
+            {
+                return string.Empty;
+            }
+            return "selected";
+        }
+
         private async Task InitializeModalUpdate_ItemsGroup(int _IsTypeUpdate)
         {
             isLoading = true;
@@ -1726,7 +1757,7 @@ namespace D69soft.Client.Pages.FIN
                 await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsGroup");
                 await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
 
-                itemsGroupVMs = await inventoryService.GetItemsGroupList();
+                itemsGroupVMs = (await inventoryService.GetItemsGroupList()).ToList();
                 itemsVM.IGrpCode = itemsGroupVM.IGrpCode;
             }
             else
@@ -1740,8 +1771,8 @@ namespace D69soft.Client.Pages.FIN
                         logVM.LogDesc = "Xóa nhóm hàng " + itemsGroupVM.IGrpCode + "";
                         await sysService.InsertLog(logVM);
 
-                        itemsGroupVMs = await inventoryService.GetItemsGroupList();
-                        itemsVM.IGrpCode = String.Empty;
+                        itemsGroupVMs = (await inventoryService.GetItemsGroupList()).ToList();
+                        itemsGroupVM = new();
 
                         await js.InvokeAsync<object>("CloseModal", "#InitializeModalUpdate_ItemsGroup");
                         await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);

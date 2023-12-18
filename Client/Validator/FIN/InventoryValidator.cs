@@ -77,6 +77,7 @@ namespace D69soft.Client.Validator.FIN
                     return result;
                 }).When(x => x.IsTypeUpdate == 0).WithMessage("Đã tồn tại.");
 
+                RuleFor(x => x.IClsCode).NotEmpty().WithMessage("Không được trống.");
                 RuleFor(x => x.IGrpName).NotEmpty().WithMessage("Không được trống.");
             });
         }

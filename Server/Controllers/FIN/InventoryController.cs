@@ -96,7 +96,9 @@ namespace D69soft.Server.Controllers.FIN
         [HttpGet("GetItemsGroupList")]
         public async Task<ActionResult<IEnumerable<ItemsGroupVM>>> GetItemsGroupList()
         {
-            var sql = "select * from FIN.ItemsGroup order by IGrpName ";
+            var sql = "select * from FIN.ItemsGroup igrp ";
+            sql += "join FIN.ItemsClass iclass on iclass.IClsCode = igrp.IClsCode ";
+            sql += "order by IGrpName ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)
