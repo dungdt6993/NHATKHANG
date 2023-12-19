@@ -241,11 +241,10 @@ namespace D69soft.Server.Controllers.FIN
 
             if (_filterVM.TypeView == 1)
             {
-                sql += "i.IName, vat.VATName, sum(vd.VDAmount) as sumVDAmount, sum(vd.VDDiscountAmount) as sumVDDiscountAmount, sum(vd.VATAmount) as sumVATAmount, sum(vd.VDAmount-vd.VDDiscountAmount+vd.VATAmount) as sumTotalAmount ";
+                sql += "vd.IDescTax, vat.VATName, sum(vd.VDAmount) as sumVDAmount, sum(vd.VDDiscountAmount) as sumVDDiscountAmount, sum(vd.VATAmount) as sumVATAmount, sum(vd.VDAmount-vd.VDDiscountAmount+vd.VATAmount) as sumTotalAmount ";
             }
 
             sql += "from FIN.Voucher v join FIN.VoucherDetail vd on vd.VNumber = v.VNumber ";
-            sql += "join FIN.Items i on i.ICode = vd.ICode ";
             sql += "join FIN.VATDef vat on vat.VATCode = vd.VATCode ";
             sql += "left join FIN.Vendor vendor on vendor.VendorCode = v.VendorCode ";
             sql += "left join CRM.Customer cus on cus.CustomerCode = v.CustomerCode ";
@@ -260,7 +259,7 @@ namespace D69soft.Server.Controllers.FIN
             }
             if (_filterVM.TypeView == 1)
             {
-                sql += "group by v.InvoiceDate, v.InvoiceNumber, coalesce(vendor.VendorName,'') + coalesce(cus.CustomerName,''), coalesce(vendor.VendorTaxCode,'') + coalesce(cus.CustomerTaxCode,''), i.IName, vat.VATName ";
+                sql += "group by v.InvoiceDate, v.InvoiceNumber, coalesce(vendor.VendorName,'') + coalesce(cus.CustomerName,''), coalesce(vendor.VendorTaxCode,'') + coalesce(cus.CustomerTaxCode,''), vd.IDescTax, vat.VATName ";
             }
             sql += "order by v.InvoiceDate desc ";
             using (var conn = new SqlConnection(_connConfig.Value))

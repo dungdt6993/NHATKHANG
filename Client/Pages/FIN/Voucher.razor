@@ -418,10 +418,11 @@
                                             {
                                                 <th class="text-center" style="width: 110px;">% Thuế GTGT</th>
                                                 <th class="text-center" style="width: 110px;">Tiền thuế GTGT</th>
-                                                <th class="text-center" style="width: 110px;">TK Thuế</th>
-                                                <th class="text-center">
+                                                @* <th class="text-center" style="width: 110px;">TK Thuế</th> *@
+                                                <th>
                                                     Diễn giải thuế
-                                                    @if(voucherVM.VTypeID == "FIN_Sale") {
+                                                    @if (voucherVM.VTypeID == "FIN_Sale")
+                                                    {
                                                         if (voucherDetailVMs != null)
                                                         {
                                                             <a data-toggle="tooltip" data-placement="top" title="Cập nhật" @onclick=@(() => UpdateAllIDescTax())>
@@ -627,44 +628,47 @@
 
                                                             <td class="text-right">@String.Format("{0:#,##0}", _voucherDetailVM.VATAmount)</td>
 
-                                                            @if (_voucherDetailVM.IsUpdateTaxAccount == 0)
-                                                            {
-                                                                <td class="text-center">
-                                                                    @if (_voucherDetailVM.TaxAccount == 0)
-                                                                    {
-                                                                        <a class="text-center" @onclick=@(() => _voucherDetailVM.IsUpdateTaxAccount = 1)>-----Chọn-----</a>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <a @onclick=@(() => _voucherDetailVM.IsUpdateTaxAccount = 1)>@_voucherDetailVM.TaxAccount</a>
-                                                                    }
-                                                                </td>
-                                                            }
-                                                            else
-                                                            {
-                                                                <td>
-                                                                    <select class="selectpicker form-control form-control-sm"
-                                                                            data-style="btn-selectpicker"
-                                                                            data-container="body" data-live-search="true"
-                                                                            data-show-subtext="true"
-                                                                            @bind="_voucherDetailVM.TaxAccount">
+                                                            // @if (_voucherDetailVM.IsUpdateTaxAccount == 0)
+                                                            // {
+                                                            //     <td class="text-center">
+                                                            //         @if (_voucherDetailVM.TaxAccount == 0)
+                                                            //         {
+                                                            //             <a class="text-center" @onclick=@(() => _voucherDetailVM.IsUpdateTaxAccount = 1)>-----Chọn-----</a>
+                                                            //         }
+                                                            //         else
+                                                            //         {
+                                                            //             <a @onclick=@(() => _voucherDetailVM.IsUpdateTaxAccount = 1)>@_voucherDetailVM.TaxAccount</a>
+                                                            //         }
+                                                            //     </td>
+                                                            // }
+                                                            // else
+                                                            // {
+                                                            //     <td>
+                                                            //         <select class="selectpicker form-control form-control-sm"
+                                                            //                 data-style="btn-selectpicker"
+                                                            //                 data-container="body" data-live-search="true"
+                                                            //                 data-show-subtext="true"
+                                                            //                 @bind="_voucherDetailVM.TaxAccount">
 
-                                                                        <option value=0>-----Chọn-----</option>
-                                                                        @if (accountVMs != null)
-                                                                        {
-                                                                            @foreach (var _accountVM in accountVMs)
-                                                                            {
-                                                                                <option data-subtext="@_accountVM.AccountName" value="@_accountVM.AccountNo">@_accountVM.AccountNo</option>
-                                                                            }
-                                                                        }
-                                                                    </select>
-                                                                </td>
-                                                            }
+                                                            //             <option value=0>-----Chọn-----</option>
+                                                            //             @if (accountVMs != null)
+                                                            //             {
+                                                            //                 @foreach (var _accountVM in accountVMs)
+                                                            //                 {
+                                                            //                     <option data-subtext="@_accountVM.AccountName" value="@_accountVM.AccountNo">@_accountVM.AccountNo</option>
+                                                            //                 }
+                                                            //             }
+                                                            //         </select>
+                                                            //     </td>
+                                                            // }
 
                                                             <td>
                                                                 @if (voucherVM.VTypeID == "FIN_Purchasing")
                                                                 {
-                                                                    <textarea class="form-control form-control-sm" @bind="@_voucherDetailVM.IDescTax" />
+                                                                    if (!String.IsNullOrEmpty(_voucherDetailVM.VATCode))
+                                                                    {
+                                                                        <textarea class="form-control form-control-sm" @bind="@_voucherDetailVM.IDescTax" />
+                                                                    }
                                                                 }
                                                                 else
                                                                 {
@@ -823,7 +827,7 @@
 
                                                     <th class="text-right">@String.Format("{0:#,##0}", @voucherDetailVMs.Select(x => x.VATAmount).Sum())</th>
 
-                                                    <th class="text-center"></th>
+                                                    @* <th class="text-center"></th> *@
 
                                                     <th></th>
                                                 }

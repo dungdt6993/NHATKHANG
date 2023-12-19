@@ -472,7 +472,7 @@ namespace D69soft.Client.Pages.FIN
 
                 if (voucherVM.VTypeID == "FIN_Sale")
                 {
-                    if(!String.IsNullOrEmpty(_voucherDetailVM.VATCode))
+                    if (!String.IsNullOrEmpty(_voucherDetailVM.VATCode))
                     {
                         await UpdateIDescTax(_voucherDetailVM);
                     }
@@ -485,7 +485,7 @@ namespace D69soft.Client.Pages.FIN
                 await txtSearchItems.Focus();
             }
 
-            await js.InvokeAsync<object>("updateScrollToBottom","Voucher");
+            await js.InvokeAsync<object>("updateScrollToBottom", "Voucher");
         }
 
         private async Task CreateVoucherDetail()
@@ -564,7 +564,7 @@ namespace D69soft.Client.Pages.FIN
             StateHasChanged();
         }
 
-        private async void onchange_VAT(string value, VoucherDetailVM _voucherDetailVM)
+        private async Task onchange_VAT(string value, VoucherDetailVM _voucherDetailVM)
         {
             isLoading = true;
 
@@ -595,8 +595,6 @@ namespace D69soft.Client.Pages.FIN
             {
                 _voucherDetailVM.IDescTax = String.Empty;
             }
-
-            StateHasChanged();
 
             isLoading = false;
         }
@@ -960,6 +958,21 @@ namespace D69soft.Client.Pages.FIN
                                 isLoading = false;
                                 return;
                             }
+                        }
+                    }
+
+                    if (voucherVM.IsInvoice)
+                    {
+                        foreach (var _voucherDetailVM in voucherDetailVMs.Where(x => String.IsNullOrEmpty(x.VATCode)))
+                        {
+                            await UpdateIDescTax(_voucherDetailVM);
+                        }
+
+                        if (voucherDetailVMs.Where(x => !String.IsNullOrEmpty(x.VATCode) && String.IsNullOrEmpty(x.IDescTax)).Count() > 0)
+                        {
+                            await js.Swal_Message("Cảnh báo!", "Diễn giải thuế không được trống.", SweetAlertMessageType.warning);
+                            isLoading = false;
+                            return;
                         }
                     }
 
@@ -2126,7 +2139,7 @@ namespace D69soft.Client.Pages.FIN
                     }
                 }
 
-                if(filterVM.CategoryName == "Items")
+                if (filterVM.CategoryName == "Items")
                 {
                     if (itemsVM.IsTypeUpdate == 0)
                     {
