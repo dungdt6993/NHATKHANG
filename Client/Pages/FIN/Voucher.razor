@@ -381,8 +381,6 @@
                                     {
                                         <th>Tên hàng</th>
 
-                                        <th>Tên hàng trên hóa đơn</th>
-
                                         <th class="text-center">Đơn vị</th>
 
                                         @if (voucherVM.VTypeID == "FIN_InventoryCheck")
@@ -421,6 +419,17 @@
                                                 <th class="text-center" style="width: 110px;">% Thuế GTGT</th>
                                                 <th class="text-center" style="width: 110px;">Tiền thuế GTGT</th>
                                                 <th class="text-center" style="width: 110px;">TK Thuế</th>
+                                                <th class="text-center">
+                                                    Diễn giải thuế
+                                                    @if(voucherVM.VTypeID == "FIN_Sale") {
+                                                        if (voucherDetailVMs != null)
+                                                        {
+                                                            <a data-toggle="tooltip" data-placement="top" title="Cập nhật" @onclick=@(() => UpdateAllIDescTax())>
+                                                                <span class="badge bg-success"><i class="fa-solid fa-arrows-rotate"></i></span>
+                                                            </a>
+                                                        }
+                                                    }
+                                                </th>
                                             }
                                         }
 
@@ -430,7 +439,7 @@
                                                 Xuất tại kho
                                                 @if (voucherDetailVMs != null)
                                                 {
-                                                    <a data-toggle="tooltip" data-placement="top" title="Lấy lại tồn" @onclick=@(() => UpdateAllInventoryCheck_Qty())>
+                                                    <a data-toggle="tooltip" data-placement="top" title="Cập nhật" @onclick=@(() => UpdateAllInventoryCheck_Qty())>
                                                         <span class="badge bg-success"><i class="fa-solid fa-arrows-rotate"></i></span>
                                                     </a>
                                                 }
@@ -494,8 +503,6 @@
                                                             </BlazoredTypeahead>
                                                         </td>
                                                     }
-
-                                                    <td><@_voucherDetailVM.IInvoiceName</td>
 
                                                     <td class="text-center">@_voucherDetailVM.IUnitName</td>
 
@@ -653,6 +660,17 @@
                                                                     </select>
                                                                 </td>
                                                             }
+
+                                                            <td>
+                                                                @if (voucherVM.VTypeID == "FIN_Purchasing")
+                                                                {
+                                                                    <textarea class="form-control form-control-sm" @bind="@_voucherDetailVM.IDescTax" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    @_voucherDetailVM.IDescTax
+                                                                }
+                                                            </td>
                                                         }
                                                     }
 
@@ -774,7 +792,6 @@
                                         {
                                             <th class="text-center">@voucherDetailVMs.Count()</th>
                                             <th></th>
-
                                             <th class="text-center"></th>
 
                                             @if (voucherVM.VTypeID == "FIN_InventoryCheck")
@@ -807,6 +824,8 @@
                                                     <th class="text-right">@String.Format("{0:#,##0}", @voucherDetailVMs.Select(x => x.VATAmount).Sum())</th>
 
                                                     <th class="text-center"></th>
+
+                                                    <th></th>
                                                 }
                                             }
                                             @if (voucherVM.VTypeID == "FIN_Trf" || voucherVM.VTypeID == "FIN_Output" || (voucherVM.VTypeID == "FIN_Sale" && voucherVM.IsInventory))
@@ -891,7 +910,7 @@
                                 {
                                     @if (!voucherVM.IsInvoice)
                                     {
-                                        <a class="dropdown-item" @onclick=@(() => PrintVoucher("FIN_Bao_gia"))>Báo giá</a>
+                                        <a class="dropdown-item" @onclick=@(() => PrintVoucher("Bao_gia"))>Báo giá</a>
                                     }
                                     <a class="dropdown-item" @onclick=@(() => PrintVoucher("Phieu_xuat_kho_ban_hang"))>Phiếu xuất kho bán hàng</a>
                                     <a class="dropdown-item" @onclick=@(() => PrintVoucher("Bien_ban_ban_giao_kiem_bao_hanh"))>Biên bản bàn giao kiêm bảo hành</a>

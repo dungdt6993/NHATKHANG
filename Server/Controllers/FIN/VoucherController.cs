@@ -79,7 +79,7 @@ namespace D69soft.Server.Controllers.FIN
         {
             var sql = "select SeqVD, vd.VDDesc, i.ICode, i.IName, i.IPrice, i.StockDefault, vd.VDQty, iu.IUnitName, vd.VDPrice, vd.VDAmount, vd.VDDiscountPercent, vd.VDDiscountAmount,";
             sql += "vd.ToStockCode, toStock.StockName as ToStockName, vd.FromStockCode, fromStock.StockName as FromStockName, vd.VDNote, ";
-            sql += "vd.InventoryCheck_StockCode, inventorycheckStock.StockName as InventoryCheck_StockName, vd.InventoryCheck_Qty, vd.InventoryCheck_ActualQty, vat.VATCode, coalesce(vat.VATRate,0) as VATRate, vat.VATName, vd.VATAmount, vd.TaxAccount ";
+            sql += "vd.InventoryCheck_StockCode, inventorycheckStock.StockName as InventoryCheck_StockName, vd.InventoryCheck_Qty, vd.InventoryCheck_ActualQty, vd.IDescTax, vat.VATCode, coalesce(vat.VATRate,0) as VATRate, vat.VATName, vd.VATAmount, vd.TaxAccount ";
             sql += "from FIN.VoucherDetail vd ";
             sql += "left join FIN.Items i on i.ICode = vd.ICode ";
             sql += "left join FIN.ItemsUnit iu on iu.IUnitCode = i.IUnitCode ";
@@ -151,8 +151,8 @@ namespace D69soft.Server.Controllers.FIN
                     //VoucherDetailVM
                     foreach (var _voucherDetailVM in _voucherDetailVMs)
                     {
-                        sqlVoucherDetailVM = "Insert into FIN.VoucherDetail(VNumber,VDDesc,ICode,VDQty,VDPrice,VDAmount,VDDiscountPercent,VDDiscountAmount,VATCode,VATAmount,TaxAccount,FromStockCode,ToStockCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty) ";
-                        sqlVoucherDetailVM += "Values('" + VNumber + "',@VDDesc,@ICode,@VDQty,@VDPrice,@VDAmount,@VDDiscountPercent,@VDDiscountAmount,@VATCode,@VATAmount,@TaxAccount,@FromStockCode,@ToStockCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty) ";
+                        sqlVoucherDetailVM = "Insert into FIN.VoucherDetail(VNumber,VDDesc,ICode,VDQty,VDPrice,VDAmount,VDDiscountPercent,VDDiscountAmount,IDescTax,VATCode,VATAmount,TaxAccount,FromStockCode,ToStockCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty) ";
+                        sqlVoucherDetailVM += "Values('" + VNumber + "',@VDDesc,@ICode,@VDQty,@VDPrice,@VDAmount,@VDDiscountPercent,@VDDiscountAmount,@IDescTax,@VATCode,@VATAmount,@TaxAccount,@FromStockCode,@ToStockCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty) ";
                         await conn.ExecuteAsync(sqlVoucherDetailVM, _voucherDetailVM);
                     }
 
@@ -178,8 +178,8 @@ namespace D69soft.Server.Controllers.FIN
                     //VoucherDetailVM
                     foreach (var _voucherDetailVM in _voucherDetailVMs)
                     {
-                        sqlVoucherDetailVM = "Insert into FIN.VoucherDetail(VNumber,VDDesc,ICode,VDQty,VDPrice,VDAmount,VDDiscountPercent,VDDiscountAmount,VATCode,VATAmount,TaxAccount,FromStockCode,ToStockCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty) ";
-                        sqlVoucherDetailVM += "Values('" + _voucherVM.VNumber + "',@VDDesc,@ICode,@VDQty,@VDPrice,@VDAmount,@VDDiscountPercent,@VDDiscountAmount,@VATCode,@VATAmount,@TaxAccount,@FromStockCode,@ToStockCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty) ";
+                        sqlVoucherDetailVM = "Insert into FIN.VoucherDetail(VNumber,VDDesc,ICode,VDQty,VDPrice,VDAmount,VDDiscountPercent,VDDiscountAmount,IDescTax,VATCode,VATAmount,TaxAccount,FromStockCode,ToStockCode,VDNote,InventoryCheck_StockCode,InventoryCheck_Qty,InventoryCheck_ActualQty) ";
+                        sqlVoucherDetailVM += "Values('" + _voucherVM.VNumber + "',@VDDesc,@ICode,@VDQty,@VDPrice,@VDAmount,@VDDiscountPercent,@VDDiscountAmount,@IDescTax,@VATCode,@VATAmount,@TaxAccount,@FromStockCode,@ToStockCode,@VDNote,@InventoryCheck_StockCode,@InventoryCheck_Qty,@InventoryCheck_ActualQty) ";
 
                         await conn.ExecuteAsync(sqlVoucherDetailVM, _voucherDetailVM);
                     }
@@ -270,6 +270,23 @@ namespace D69soft.Server.Controllers.FIN
 
                 var result = await conn.QueryAsync<InvoiceVM>(sql, _filterVM);
                 return result.ToList();
+            }
+        }
+
+        [HttpPost("GetIDescTax/{_VDate}")]
+        public async Task<ActionResult<string>> GetIDescTax(DateTimeOffset _VDate, VoucherDetailVM _voucherDetailVM)
+        {
+            var sql = String.Empty;
+            sql += "select top 1 IDescTax from FIN.VoucherDetail vd ";
+            sql += "join (select * from FIN.Voucher where VActive=1) v on v.VNumber = vd.VNumber ";
+            sql += "where v.VDate <= CAST('"+_VDate.ToString("MM/dd/yyyy")+ "' as datetime) and ICode=@ICode and coalesce(vd.VATCode,'') <> '' ";
+            sql += "group by IDescTax having sum(case when v.VTypeID='FIN_Purchasing' then VDQty else 0 end) - sum(case when v.VTypeID='FIN_Sale' then VDQty else 0 end)>0 ";
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                return await conn.ExecuteScalarAsync<string>(sql, _voucherDetailVM);
             }
         }
 

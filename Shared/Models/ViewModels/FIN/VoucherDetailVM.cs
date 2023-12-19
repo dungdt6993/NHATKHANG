@@ -43,6 +43,7 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public decimal VDAmount { get; set; }
         public decimal VDDiscountPercent { get; set; }
         public decimal VDDiscountAmount { get; set; }
+        public string IDescTax { get; set; }
         public decimal VATAmount { get; set; }
         public string FromStockCode { get; set; }
         public string ToStockCode { get; set; }
@@ -56,7 +57,6 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string ICode { get; set; }
         public string IBarCode { get; set; }
         public string IName { get; set; }
-        public string IInvoiceName { get; set; }
         public string IDetail { get; set; }
         public decimal ICost { get; set; }
         public decimal IPrice { get; set; }

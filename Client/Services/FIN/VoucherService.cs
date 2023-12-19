@@ -66,6 +66,13 @@ namespace D69soft.Client.Services.FIN
             return await response.Content.ReadFromJsonAsync<List<InvoiceVM>>();
         }
 
+        public async Task<string> GetIDescTax(DateTimeOffset _VDate, VoucherDetailVM _voucherDetailVM)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetIDescTax/{_VDate.ToString("yyyy-MM-dd")}", _voucherDetailVM);
+
+            return await response.Content.ReadAsStringAsync();
+        }
+
         //Account
         public async Task<IEnumerable<AccountVM>> GetAccounts()
         {

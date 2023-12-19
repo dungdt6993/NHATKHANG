@@ -16,6 +16,7 @@ namespace D69soft.Shared.Models.Entities.FIN
         public decimal VDAmount { get; set; }
         public decimal VDDiscountPercent { get; set; }
         public decimal VDDiscountAmount { get; set; }
+        public string IDescTax { get; set; }
         public decimal VATAmount { get; set; }
         public string FromStockCode { get; set; }
         public string ToStockCode { get; set; }

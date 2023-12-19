@@ -470,6 +470,14 @@ namespace D69soft.Client.Pages.FIN
                     await UpdateInventoryCheck_Qty(_voucherDetailVM);
                 }
 
+                if (voucherVM.VTypeID == "FIN_Sale")
+                {
+                    if(!String.IsNullOrEmpty(_voucherDetailVM.VATCode))
+                    {
+                        await UpdateIDescTax(_voucherDetailVM);
+                    }
+                }
+
                 voucherDetailVMs.Add(_voucherDetailVM);
 
                 onchange_VAT(_voucherDetailVM.VATCode, _voucherDetailVM);
@@ -556,7 +564,7 @@ namespace D69soft.Client.Pages.FIN
             StateHasChanged();
         }
 
-        private void onchange_VAT(string value, VoucherDetailVM _voucherDetailVM)
+        private async void onchange_VAT(string value, VoucherDetailVM _voucherDetailVM)
         {
             isLoading = true;
 
@@ -579,9 +587,18 @@ namespace D69soft.Client.Pages.FIN
 
             voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
 
-            isLoading = false;
+            if (!String.IsNullOrEmpty(_voucherDetailVM.VATCode))
+            {
+                await UpdateIDescTax(_voucherDetailVM);
+            }
+            else
+            {
+                _voucherDetailVM.IDescTax = String.Empty;
+            }
 
             StateHasChanged();
+
+            isLoading = false;
         }
 
         private async void onchange_InventoryCheck_StockCode(string value, VoucherDetailVM _voucherDetailVM)
@@ -1054,6 +1071,29 @@ namespace D69soft.Client.Pages.FIN
         private async Task UpdateInventoryCheck_Qty(VoucherDetailVM _voucherDetailVM)
         {
             _voucherDetailVM.InventoryCheck_Qty = await inventoryService.GetInventoryCheck_Qty(voucherVM.VDate.Value, _voucherDetailVM);
+        }
+
+        private async Task UpdateAllIDescTax()
+        {
+            isLoading = true;
+
+            foreach (var _voucherDetailVM in voucherDetailVMs)
+            {
+                await UpdateIDescTax(_voucherDetailVM);
+            }
+
+            isLoading = false;
+        }
+        private async Task UpdateIDescTax(VoucherDetailVM _voucherDetailVM)
+        {
+            if (!String.IsNullOrEmpty(_voucherDetailVM.VATCode))
+            {
+                _voucherDetailVM.IDescTax = await voucherService.GetIDescTax(voucherVM.VDate.Value, _voucherDetailVM);
+            }
+            else
+            {
+                _voucherDetailVM.IDescTax = String.Empty;
+            }
         }
 
         //Lập phiếu thu tiền/trả tiền
