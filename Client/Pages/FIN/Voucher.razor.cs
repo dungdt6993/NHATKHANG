@@ -472,15 +472,12 @@ namespace D69soft.Client.Pages.FIN
 
                 if (voucherVM.VTypeID == "FIN_Sale")
                 {
-                    if (!String.IsNullOrEmpty(_voucherDetailVM.VATCode))
-                    {
-                        await UpdateIDescTax(_voucherDetailVM);
-                    }
+                    await UpdateIDescTax(_voucherDetailVM);
                 }
 
                 voucherDetailVMs.Add(_voucherDetailVM);
 
-                onchange_VAT(_voucherDetailVM.VATCode, _voucherDetailVM);
+                await onchange_VAT(_voucherDetailVM.VATCode, _voucherDetailVM);
 
                 await txtSearchItems.Focus();
             }
@@ -587,14 +584,7 @@ namespace D69soft.Client.Pages.FIN
 
             voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
 
-            if (!String.IsNullOrEmpty(_voucherDetailVM.VATCode))
-            {
-                await UpdateIDescTax(_voucherDetailVM);
-            }
-            else
-            {
-                _voucherDetailVM.IDescTax = String.Empty;
-            }
+            await UpdateIDescTax(_voucherDetailVM);
 
             isLoading = false;
         }
@@ -816,6 +806,16 @@ namespace D69soft.Client.Pages.FIN
                             return;
                         }
                     }
+
+                    if (voucherVM.IsInvoice)
+                    {
+                        if (voucherDetailVMs.Where(x => !String.IsNullOrEmpty(x.VATCode) && String.IsNullOrEmpty(x.IDescTax)).Count() > 0)
+                        {
+                            await js.Swal_Message("Cảnh báo!", "Diễn giải thuế không được trống.", SweetAlertMessageType.warning);
+                            isLoading = false;
+                            return;
+                        }
+                    }
                 }
 
                 if (voucherVM.VTypeID == "FIN_Input")
@@ -961,21 +961,6 @@ namespace D69soft.Client.Pages.FIN
                         }
                     }
 
-                    if (voucherVM.IsInvoice)
-                    {
-                        foreach (var _voucherDetailVM in voucherDetailVMs.Where(x => String.IsNullOrEmpty(x.VATCode)))
-                        {
-                            await UpdateIDescTax(_voucherDetailVM);
-                        }
-
-                        if (voucherDetailVMs.Where(x => !String.IsNullOrEmpty(x.VATCode) && String.IsNullOrEmpty(x.IDescTax)).Count() > 0)
-                        {
-                            await js.Swal_Message("Cảnh báo!", "Diễn giải thuế không được trống.", SweetAlertMessageType.warning);
-                            isLoading = false;
-                            return;
-                        }
-                    }
-
                     if (voucherVM.IsPayment)
                     {
                         VoucherVM _voucherVM = new();
@@ -1090,7 +1075,7 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            foreach (var _voucherDetailVM in voucherDetailVMs)
+            foreach (var _voucherDetailVM in voucherDetailVMs.Where(x => !String.IsNullOrEmpty(x.VATCode)))
             {
                 await UpdateIDescTax(_voucherDetailVM);
             }
@@ -1099,7 +1084,7 @@ namespace D69soft.Client.Pages.FIN
         }
         private async Task UpdateIDescTax(VoucherDetailVM _voucherDetailVM)
         {
-            if (voucherVM.VDate.HasValue && !String.IsNullOrEmpty(_voucherDetailVM.VATCode))
+            if (voucherVM.InvoiceDate.HasValue && !String.IsNullOrEmpty(_voucherDetailVM.VATCode))
             {
                 _voucherDetailVM.IDescTax = await voucherService.GetIDescTax(voucherVM.InvoiceDate.Value, _voucherDetailVM);
             }
