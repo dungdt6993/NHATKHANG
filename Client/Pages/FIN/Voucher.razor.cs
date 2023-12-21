@@ -1099,9 +1099,9 @@ namespace D69soft.Client.Pages.FIN
         }
         private async Task UpdateIDescTax(VoucherDetailVM _voucherDetailVM)
         {
-            if (!String.IsNullOrEmpty(_voucherDetailVM.VATCode))
+            if (voucherVM.VDate.HasValue && !String.IsNullOrEmpty(_voucherDetailVM.VATCode))
             {
-                _voucherDetailVM.IDescTax = await voucherService.GetIDescTax(voucherVM.VDate.Value, _voucherDetailVM);
+                _voucherDetailVM.IDescTax = await voucherService.GetIDescTax(voucherVM.InvoiceDate.Value, _voucherDetailVM);
             }
             else
             {

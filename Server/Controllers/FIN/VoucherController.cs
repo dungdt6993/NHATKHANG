@@ -272,13 +272,13 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
-        [HttpPost("GetIDescTax/{_VDate}")]
-        public async Task<ActionResult<string>> GetIDescTax(DateTimeOffset _VDate, VoucherDetailVM _voucherDetailVM)
+        [HttpPost("GetIDescTax/{_InvoiceDate}")]
+        public async Task<ActionResult<string>> GetIDescTax(DateTimeOffset _InvoiceDate, VoucherDetailVM _voucherDetailVM)
         {
             var sql = String.Empty;
             sql += "select top 1 IDescTax from FIN.VoucherDetail vd ";
             sql += "join (select * from FIN.Voucher where VActive=1) v on v.VNumber = vd.VNumber ";
-            sql += "where v.VDate <= CAST('"+_VDate.ToString("MM/dd/yyyy")+ "' as datetime) and ICode=@ICode and coalesce(vd.VATCode,'') <> '' ";
+            sql += "where v.InvoiceDate <= CAST('" + _InvoiceDate.ToString("MM/dd/yyyy") + "' as datetime) and ICode=@ICode and coalesce(vd.VATCode,'') <> '' ";
             sql += "group by IDescTax having sum(case when v.VTypeID='FIN_Purchasing' then VDQty else 0 end) - sum(case when v.VTypeID='FIN_Sale' then VDQty else 0 end)>0 ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
