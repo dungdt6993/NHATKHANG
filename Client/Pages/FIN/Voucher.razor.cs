@@ -1308,6 +1308,17 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
+        //Search TaxCode
+        private async Task SearchTaxCode()
+        {
+            TaxCodeVM _taxCodeVM;
+
+            _taxCodeVM = await voucherService.SearchTaxCode(vendorVM.VendorTaxCode);
+
+            vendorVM.VendorName = _taxCodeVM.name;
+            vendorVM.VendorAddress = _taxCodeVM.address;
+        }
+
         //Vendor
         private async Task GetVendors()
         {

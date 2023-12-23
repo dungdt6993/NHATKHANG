@@ -94,5 +94,11 @@ namespace D69soft.Client.Services.FIN
             return await response.Content.ReadFromJsonAsync<List<InventoryVM>>();
         }
 
+        //SearchTaxCode
+        public async Task<TaxCodeVM> SearchTaxCode(string _TaxCode)
+        {
+            return await _httpClient.GetFromJsonAsync<TaxCodeVM>($"https://api.vietqr.io/v2/business/{_TaxCode}");
+        }
+
     }
 }
