@@ -663,16 +663,9 @@
                                                             // }
 
                                                             <td>
-                                                                @if (voucherVM.VTypeID == "FIN_Purchasing")
+                                                                @if (!String.IsNullOrEmpty(_voucherDetailVM.VATCode))
                                                                 {
-                                                                    if (!String.IsNullOrEmpty(_voucherDetailVM.VATCode))
-                                                                    {
-                                                                        <textarea class="form-control form-control-sm" @bind="@_voucherDetailVM.IDescTax" />
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    @_voucherDetailVM.IDescTax
+                                                                    <textarea class="form-control form-control-sm" @bind="@_voucherDetailVM.IDescTax" />
                                                                 }
                                                             </td>
                                                         }
@@ -1265,7 +1258,7 @@
                         </div>
 
                         <div class="form-group col-md-3">
-                          <label>Mã số thuế</label>
+                            <label>Mã số thuế</label>
                             <div class="input-group input-group-sm">
                                 <InputText class="form-control form-control-sm" @bind-Value="@vendorVM.VendorTaxCode" />
                                 <ValidationMessage For="@(() => vendorVM.VendorTaxCode)" />

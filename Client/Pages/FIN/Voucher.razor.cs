@@ -778,15 +778,15 @@ namespace D69soft.Client.Pages.FIN
                     {
                         voucherDetailVMs.ToList().ForEach(x => { x.FromStockCode = String.Empty; x.ToStockCode = String.Empty; });
                     }
-                    else
-                    {
-                        if (voucherDetailVMs.Where(x => String.IsNullOrEmpty(x.ToStockCode)).Count() > 0)
-                        {
-                            await js.Swal_Message("Cảnh báo!", "Kho nhập không được trống.", SweetAlertMessageType.warning);
-                            isLoading = false;
-                            return;
-                        }
-                    }
+                    //else
+                    //{
+                    //    if (voucherDetailVMs.Where(x => String.IsNullOrEmpty(x.ToStockCode)).Count() > 0)
+                    //    {
+                    //        await js.Swal_Message("Cảnh báo!", "Kho nhập không được trống.", SweetAlertMessageType.warning);
+                    //        isLoading = false;
+                    //        return;
+                    //    }
+                    //}
                 }
 
                 if (voucherVM.VTypeID == "FIN_Sale")
@@ -797,25 +797,25 @@ namespace D69soft.Client.Pages.FIN
                     {
                         voucherDetailVMs.ToList().ForEach(x => { x.FromStockCode = String.Empty; x.ToStockCode = String.Empty; });
                     }
-                    else
-                    {
-                        if (voucherDetailVMs.Where(x => String.IsNullOrEmpty(x.FromStockCode)).Count() > 0)
-                        {
-                            await js.Swal_Message("Cảnh báo!", "Kho xuất không được trống.", SweetAlertMessageType.warning);
-                            isLoading = false;
-                            return;
-                        }
-                    }
+                    //else
+                    //{
+                    //    if (voucherDetailVMs.Where(x => String.IsNullOrEmpty(x.FromStockCode)).Count() > 0)
+                    //    {
+                    //        await js.Swal_Message("Cảnh báo!", "Kho xuất không được trống.", SweetAlertMessageType.warning);
+                    //        isLoading = false;
+                    //        return;
+                    //    }
+                    //}
 
-                    if (voucherVM.IsInvoice)
-                    {
-                        if (voucherDetailVMs.Where(x => !String.IsNullOrEmpty(x.VATCode) && String.IsNullOrEmpty(x.IDescTax)).Count() > 0)
-                        {
-                            await js.Swal_Message("Cảnh báo!", "Diễn giải thuế không được trống.", SweetAlertMessageType.warning);
-                            isLoading = false;
-                            return;
-                        }
-                    }
+                    //if (voucherVM.IsInvoice)
+                    //{
+                    //    if (voucherDetailVMs.Where(x => !String.IsNullOrEmpty(x.VATCode) && String.IsNullOrEmpty(x.IDescTax)).Count() > 0)
+                    //    {
+                    //        await js.Swal_Message("Cảnh báo!", "Diễn giải thuế không được trống.", SweetAlertMessageType.warning);
+                    //        isLoading = false;
+                    //        return;
+                    //    }
+                    //}
                 }
 
                 if (voucherVM.VTypeID == "FIN_Input")
