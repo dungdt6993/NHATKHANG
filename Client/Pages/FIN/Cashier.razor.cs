@@ -101,20 +101,20 @@ namespace D69soft.Client.Pages.FIN
                     .WithUrl(configuration["BaseAddress"] + "cashierHub")
                     .Build();
 
-            hubConnection.On<string, string, string>("Receive_LoadRoomTable", (POSCode, roomTableID, userID) =>
+            hubConnection.On<string, string, string>("Receive_LoadRoomTable", (StockCode, RoomTableCode, UserID) =>
             {
-                if (POSCode == filterVM.StockCode)
+                if (StockCode == filterVM.StockCode)
                 {
-                    if (!String.IsNullOrEmpty(infoInvoice.CheckNo))
+                    if (!String.IsNullOrEmpty(voucherVM.VNumber))
                     {
-                        if (filterVM.UserID != userID && infoInvoice.RoomTableID == roomTableID && roomTableID != "TakeOut")
+                        if (filterVM.UserID != UserID && voucherVM.RoomTableCode == RoomTableCode && RoomTableCode != "TakeOut")
                         {
-                            js.Swal_Message("" + infoInvoice.RoomTableAreaName + "/" + infoInvoice.RoomTableName + "", "Nhân viên mã <strong>#" + userID + "</strong> đang cập nhật!.", SweetAlertMessageType.warning);
-                            infoInvoice = new();
+                            js.Swal_Message("" + voucherVM.RoomTableAreaName + "/" + voucherVM.RoomTableName + "", "Nhân viên mã <strong>#" + UserID + "</strong> đang cập nhật!.", SweetAlertMessageType.warning);
+                            voucherVM = new();
                         }
                     }
 
-                    FilterRoomTable(filterVM.RoomTableAreaID);
+                    FilterRoomTable(filterVM.RoomTableAreaCode);
                 }
 
                 StateHasChanged();
@@ -136,11 +136,11 @@ namespace D69soft.Client.Pages.FIN
             search_itemsVMs = itemsVMs = await cashierService.GetItems(filterVM);
         }
 
-        private async void FilterRoomTable(string _roomTableAreaID)
+        private async void FilterRoomTable(string _RoomTableAreaCode)
         {
             isLoading = true;
 
-            filterVM.RoomTableAreaID = _roomTableAreaID;
+            filterVM.RoomTableAreaCode = _RoomTableAreaCode;
 
             roomTableList = await cashierService.GetRoomTable(filterVM);
 
@@ -174,37 +174,37 @@ namespace D69soft.Client.Pages.FIN
             }
         }
 
-        private async Task OpenRoomTable(string _roomTableID, int _isOpen)
+        private async Task OpenRoomTable(string _RoomTableCode, bool _IsOpen)
         {
             isLoading = true;
 
-            filterVM.RoomTableID = _roomTableID;
-            filterVM.isOpen = _isOpen;
+            filterVM.RoomTableCode = _RoomTableCode;
+            filterVM.IsOpen = _IsOpen;
 
-            if (_isOpen == 1 && infoInvoice.IsClickChangeRoomTable == 1)
+            if (_IsOpen && voucherVM.IsClickChangeRoomTable)
             {
                 await js.Toast_Alert("Phòng/bàn đã được mở, vui lòng kiểm tra lại!", SweetAlertMessageType.warning);
             }
             else
             {
-                await cashierService.OpenRoomTable(filterVM, infoInvoice);
+                await cashierService.OpenRoomTable(filterVM, voucherVM);
 
-                if (infoInvoice.IsClickChangeRoomTable == 1)
+                if (voucherVM.IsClickChangeRoomTable == 1)
                 {
                     await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
                 }
 
-                infoInvoice = await cashierService.GetInfoInvoice(filterVM);
+                voucherVM = await cashierService.GetInfoInvoice(filterVM);
 
-                customer = infoInvoice.CustomerID != "" ? await customerService.GetCustomerByID(infoInvoice.CustomerID) : new();
+                customer = voucherVM.CustomerID != "" ? await customerService.GetCustomerByID(voucherVM.CustomerID) : new();
 
-                invoiceItemsList = await cashierService.GetInvoiceItems(infoInvoice.CheckNo);
+                invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
 
-                invoiceTotal = await cashierService.GetInvoiceTotal(infoInvoice.CheckNo);
+                invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
 
                 filterVM.ICode = String.Empty;
 
-                await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, filterVM.RoomTableID, filterVM.UserID);
+                await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, filterVM.RoomTableCode, filterVM.UserID);
             }
 
             isLoading = false;
@@ -214,24 +214,24 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            filterVM.RoomTableID = "TakeOut";
+            filterVM.RoomTableCode = "TakeOut";
 
             await cashierService.OpenTakeOut(filterVM);
 
-            if (infoInvoice.IsClickChangeRoomTable == 1 && infoInvoice.RoomTableID != "TakeOut")
+            if (voucherVM.IsClickChangeRoomTable == 1 && voucherVM.RoomTableCode != "TakeOut")
             {
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
-                await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, infoInvoice.RoomTableID, filterVM.UserID);
+                await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, voucherVM.RoomTableCode, filterVM.UserID);
             }
 
-            infoInvoice = await cashierService.GetInfoInvoice(filterVM);
+            voucherVM = await cashierService.GetInfoInvoice(filterVM);
 
-            customer = infoInvoice.CustomerID != "" ? await customerService.GetCustomerByID(infoInvoice.CustomerID) : new();
+            customer = voucherVM.CustomerID != "" ? await customerService.GetCustomerByID(voucherVM.CustomerID) : new();
 
-            invoiceItemsList = await cashierService.GetInvoiceItems(infoInvoice.CheckNo);
+            invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
 
-            invoiceTotal = await cashierService.GetInvoiceTotal(infoInvoice.CheckNo);
+            invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
 
             filterVM.ICode = String.Empty;
 
@@ -242,14 +242,14 @@ namespace D69soft.Client.Pages.FIN
         {
             if (await js.Swal_Confirm("" + itemsVMs.Where(x => x.ICode == _iCode).Select(x => x.IName).First() + " - " + String.Format("{0:#,##0.##}", itemsVMs.Where(x => x.ICode == _iCode).Select(x => x.IPrice).First()) + "", $"Bạn có muốn cập nhật mặt hàng này?", SweetAlertMessageType.question))
             {
-                filterVM.CheckNo = infoInvoice.CheckNo;
+                filterVM.VNumber = voucherVM.VNumber;
                 filterVM.ICode = _iCode;
 
                 await cashierService.ChooseItems(filterVM);
 
-                invoiceItemsList = await cashierService.GetInvoiceItems(infoInvoice.CheckNo);
+                invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
 
-                invoiceTotal = await cashierService.GetInvoiceTotal(infoInvoice.CheckNo);
+                invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
 
                 filterVM.ReportName = "CustomNewReport";
 
@@ -261,11 +261,11 @@ namespace D69soft.Client.Pages.FIN
         {
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
             {
-                await cashierService.DelInvoiceItems(infoInvoice.CheckNo, seq);
+                await cashierService.DelInvoiceItems(voucherVM.VNumber, seq);
 
-                invoiceItemsList = await cashierService.GetInvoiceItems(infoInvoice.CheckNo);
+                invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
 
-                invoiceTotal = await cashierService.GetInvoiceTotal(infoInvoice.CheckNo);
+                invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
 
                 filterVM.ReportName = "CustomNewReport";
             }
@@ -275,11 +275,11 @@ namespace D69soft.Client.Pages.FIN
         {
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn muốn hủy?", SweetAlertMessageType.question))
             {
-                await cashierService.DelInvoice(infoInvoice.CheckNo);
+                await cashierService.DelInvoice(voucherVM.VNumber);
 
-                await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, infoInvoice.RoomTableID, filterVM.UserID);
+                await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, voucherVM.RoomTableCode, filterVM.UserID);
 
-                infoInvoice = new();
+                voucherVM = new();
             }
 
         }
@@ -371,8 +371,8 @@ namespace D69soft.Client.Pages.FIN
 
             await cashierService.UpdateInvoiceDetail(invoiceDetail);
 
-            invoiceItemsList = await cashierService.GetInvoiceItems(infoInvoice.CheckNo);
-            invoiceTotal = await cashierService.GetInvoiceTotal(infoInvoice.CheckNo);
+            invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
+            invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
 
             filterVM.ICode = invoiceDetail.ICode;
 
@@ -387,7 +387,7 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            invoiceItemsList = await cashierService.GetInvoiceItems(infoInvoice.CheckNo);
+            invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
 
             isLoading = false;
         }
@@ -456,7 +456,7 @@ namespace D69soft.Client.Pages.FIN
 
             await cashierService.UpdateInvoiceDiscount(invoiceDetail);
 
-            invoiceTotal = await cashierService.GetInvoiceTotal(infoInvoice.CheckNo);
+            invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
 
             filterVM.ReportName = "CustomNewReport";
 
@@ -470,7 +470,7 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            invoiceTotal = await cashierService.GetInvoiceTotal(infoInvoice.CheckNo);
+            invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
 
             isLoading = false;
         }
@@ -496,8 +496,8 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            customer.CustomerID = infoInvoice.CustomerID = await customerService.UpdateCustomer(customer);
-            await cashierService.UpdateInvoiceCustomer(infoInvoice);
+            customer.CustomerID = voucherVM.CustomerID = await customerService.UpdateCustomer(customer);
+            await cashierService.UpdateInvoiceCustomer(voucherVM);
 
             await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Customer");
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
@@ -515,21 +515,21 @@ namespace D69soft.Client.Pages.FIN
             if (result != null)
             {
                 customer = result;
-                infoInvoice.CustomerID = result.CustomerID;
+                voucherVM.CustomerID = result.CustomerID;
             }
             else
             {
                 customer = new();
-                infoInvoice.CustomerID = "";
+                voucherVM.CustomerID = "";
             }
-            await cashierService.UpdateInvoiceCustomer(infoInvoice);
+            await cashierService.UpdateInvoiceCustomer(voucherVM);
         }
 
         private async Task ChangeRoomTableAsync()
         {
             isLoading = true;
 
-            infoInvoice.IsClickChangeRoomTable = 1;
+            voucherVM.IsClickChangeRoomTable = 1;
 
             await js.Toast_Alert("Chọn phòng/bàn trống để chuyển!", SweetAlertMessageType.warning);
 
@@ -542,7 +542,7 @@ namespace D69soft.Client.Pages.FIN
 
             payment = new PaymentVM();
 
-            payment.CheckNo = infoInvoice.CheckNo;
+            payment.VNumber = voucherVM.VNumber;
 
             payment.PModeCode = "CASH";
 
@@ -653,11 +653,11 @@ namespace D69soft.Client.Pages.FIN
             await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Payment");
             await js.Toast_Alert("Thanh toán thành công!", SweetAlertMessageType.success);
 
-            await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, infoInvoice.RoomTableID, filterVM.UserID);
+            await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, voucherVM.RoomTableCode, filterVM.UserID);
 
             payment.isPayment = 1;
 
-            infoInvoice = new();
+            voucherVM = new();
 
             roomTableList = await cashierService.GetRoomTable(filterVM);
 
@@ -666,17 +666,17 @@ namespace D69soft.Client.Pages.FIN
 
         private void ClickTabRoomTable()
         {
-            infoInvoice = new();
+            voucherVM = new();
         }
 
         private void ClickTabMenu()
         {
-            infoInvoice.IsClickChangeRoomTable = 0;
+            voucherVM.IsClickChangeRoomTable = 0;
         }
 
         protected async Task PrintInvoice()
         {
-            filterVM.ReportName = "POS_PrintInvoice?CheckNo=" + infoInvoice.CheckNo + "";
+            filterVM.ReportName = "POS_PrintInvoice?VNumber=" + voucherVM.VNumber + "";
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalView_Rpt");
         }
     }

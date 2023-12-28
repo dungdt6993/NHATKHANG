@@ -3,7 +3,7 @@ using D69soft.Shared.Models.Entities.HR;
 
 namespace D69soft.Shared.Models.ViewModels.FIN
 {
-    public class VoucherVM : Division, VType, VSubType, Voucher, Vendor, Customer, Stock, ItemsType, PaymentType, BankAccount
+    public class VoucherVM : Division, VType, VSubType, Voucher, Vendor, Customer, Stock, ItemsType, PaymentType, BankAccount, RoomTable, RoomTableArea
     {
         //Para
         public string UserID { get; set; }
@@ -74,5 +74,9 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public int BankAccountID { get; set; }
         public string BankAccount { get; set; }
         public string AccountHolder { get; set; }
+        public string RoomTableCode { get; set; }
+        public string RoomTableName { get; set; }
+        public string RoomTableAreaCode { get; set; }
+        public string RoomTableAreaName { get; set; }
     }
 }

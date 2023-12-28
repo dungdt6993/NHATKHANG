@@ -8,7 +8,7 @@ namespace D69soft.Shared.Models.Entities.FIN
 {
     public interface RoomTable
     {
-        public string RoomTableID { get; set; }
+        public string RoomTableCode { get; set; }
 
         public string RoomTableName { get; set; }
     }
