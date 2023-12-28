@@ -1,0 +1,809 @@
+﻿@page "/FIN/Cashier"
+@using D69soft.Client.Pages.SYS
+@using D69soft.Shared.Models.ViewModels.CRM;
+
+<LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
+<Loading isLoading="@isLoading"></Loading>
+
+<Modal_RptViewer ReportName=@filterPosVM.ReportName></Modal_RptViewer>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_Customer">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <EditForm Model="@customer" OnValidSubmit="@UpdateCustomer">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        @if (customer.IsTypeUpdate == 0)
+                        {
+                            <span>THÊM MỚI KHÁCH HÀNG</span>
+                        }
+                        else
+                        {
+                            <span>CẬP NHẬT KHÁCH HÀNG</span>
+                        }
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Mã khách hàng</label>
+                        <div class="col-sm-9">
+                            @if (customer.IsTypeUpdate == 0)
+                            {
+                                <InputText class="form-control form-control-border border-width-2" placeholder="Mã mặc định" @bind-Value:get="customer.CustomerID" @bind-Value:set="(value) => {customer.CustomerID = value.ToUpper();}" />
+                                <ValidationMessage For="@(() => customer.CustomerID)" />
+                            }
+                            else
+                            {
+                                <InputText class="form-control form-control-border border-width-2" @bind-Value="@customer.CustomerID" disabled />
+                            }
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Tên khách hàng</label>
+                        <div class="col-sm-9">
+                            <InputText class="form-control form-control-border border-width-2" @bind-Value="@customer.CustomerName" />
+                            <ValidationMessage For="@(() => customer.CustomerName)" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Điện thoại</label>
+                        <div class="col-sm-9">
+                            <InputText class="form-control form-control-border border-width-2" placeholder="Ví dụ: 0912345678" @bind-Value="@customer.Tel" />
+                            <ValidationMessage For="@(() => customer.Tel)" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Địa chỉ</label>
+                        <div class="col-sm-9">
+                            <InputText class="form-control form-control-border border-width-2" @bind-Value="@customer.Address" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-default btn-lg" data-dismiss="modal"><i class="fas fa-times"></i> Thoát</button>
+
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-save"></i>
+                        Cập nhật
+                    </button>
+
+                </div>
+            </EditForm>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_UpdateInvoiceDetail">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@invoiceDetail" OnValidSubmit="@UpdateInvoiceDetail">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header" style="display: inherit;">
+                    <div class="row">
+                        <div class="col-12 col-sm-9">
+                            <h5 class="modal-title">
+
+                                <div class="input-group ">
+                                    @*<span>@invoiceDetail.IName - @string.Format("{0:#,##0.##}", @invoiceDetail.Price)</span>*@
+
+                                    <span>@invoiceDetail.IName</span>&ensp;
+
+                                    <input type="text" name="currency-mask" class="form-control form-control-border border-width-2" @bind="invoiceDetail.Price" onClick="this.select();" style="font-size: larger; font-weight: bold; text-align: right;" />
+                                </div>
+
+                            </h5>
+                        </div>
+
+                        <div class="col-12 col-sm-3">
+                            <div class="input-group ">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn bg-purple" style="border-radius: 50%;" @onclick=@(()=>click_UpdateQty("-"))><i class="fa-solid fa-minus"></i></button>
+                                </div>
+                                <input type="text" class="form-control form-control-border border-width-2" @bind="onchange_Qty" @bind:event="oninput" onClick="this.select();" style="font-size: larger; font-weight: bold; text-align: center;" />
+                                <div class="input-group-append">
+                                    <button type="button" class="btn bg-purple" style="border-radius: 50%;" @onclick=@(()=>click_UpdateQty("+"))><i class="fa-solid fa-plus"></i></button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="modal-body">
+                    @if (invoiceDetail != null)
+                    {
+                        <div class="form-group">
+                            <label>Ghi chú:</label>
+                            <textarea class="form-control" placeholder="Nhập ghi chú..." @bind="invoiceDetail.INote" />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-sm-7">
+                                <div class="input-group ">
+                                    <label>Giảm giá:</label>
+                                    <input type="text" name="currency-mask" class="form-control form-control-border border-width-2" @bind="onchange_ItemsDiscountPrice" @bind:event="oninput" onClick="this.select();" style="font-size: larger; font-weight: bold; text-align: right;" />
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-warning btn-lg">VNĐ</button>
+                                    </div>
+                                    <input type="text" name="percent-mask" class="form-control form-control-border border-width-2" @bind="onchange_ItemsDiscountPercent" @bind:event="oninput" onClick="this.select();" style="font-size: larger; font-weight: bold; text-align: right;" />
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn bg-gray btn-lg">%</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-5">
+                                <button type="button" class="btn btn-outline-secondary btn-lg" style="margin-bottom: 5px;" @onclick=@(()=>click_ItemsDiscountPercentSuggest(0))>0%</button>
+                                <button type="button" class="btn btn-outline-secondary btn-lg" style="margin-bottom: 5px;" @onclick=@(()=>click_ItemsDiscountPercentSuggest(5))>5%</button>
+                                <button type="button" class="btn btn-outline-secondary btn-lg" style="margin-bottom: 5px;" @onclick=@(()=>click_ItemsDiscountPercentSuggest(10))>10%</button>
+                                <button type="button" class="btn btn-outline-secondary btn-lg" style="margin-bottom: 5px;" @onclick=@(()=>click_ItemsDiscountPercentSuggest(15))>15%</button>
+                                <button type="button" class="btn btn-outline-secondary btn-lg" style="margin-bottom: 5px;" @onclick=@(()=>click_ItemsDiscountPercentSuggest(20))>20%</button>
+                                <button type="button" class="btn btn-outline-secondary btn-lg" style="margin-bottom: 5px;" @onclick=@(()=>click_ItemsDiscountPercentSuggest(25))>25%</button>
+                                <button type="button" class="btn btn-outline-secondary btn-lg" style="margin-bottom: 5px;" @onclick=@(()=>click_ItemsDiscountPercentSuggest(30))>30%</button>
+                                <button type="button" class="btn btn-outline-secondary btn-lg" style="margin-bottom: 5px;" @onclick=@(()=>click_ItemsDiscountPercentSuggest(50))>50%</button>
+                            </div>
+
+                        </div>
+                    }
+                </div>
+
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-default btn-lg" data-dismiss="modal" @onclick=@(()=>CloseModal_UpdateInvoiceDetail())><i class="fas fa-times"></i> Thoát</button>
+
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-save"></i>
+                        Cập nhật
+                    </button>
+
+                </div>
+            </EditForm>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_InvoiceDiscount">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@invoiceDetail" OnValidSubmit="@UpdateInvoiceDiscount">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>Số hóa đơn: <span>@invoiceDetail.CheckNo</span></span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick=@(()=>CloseModal_InvoiceDiscount())>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    @if (invoiceDetail != null)
+                    {
+                        <div class="row">
+                            <div class="col-12 col-sm-7">
+                                <div class="input-group ">
+                                    <label>Giảm giá:</label>
+                                    <input type="text" name="currency-mask" class="form-control form-control-border border-width-2" @bind="onchange_InvoiceDiscountPrice" @bind:event="oninput" onClick="this.select();" style="font-size: larger; font-weight: bold; text-align: right;" />
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-warning btn-lg">VNĐ</button>
+                                    </div>
+                                    <input type="text" name="percent-mask" class="form-control form-control-border border-width-2" @bind="onchange_InvoiceDiscountPercent" @bind:event="oninput" onClick="this.select();" style="font-size: larger; font-weight: bold; text-align: right;" />
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn bg-gray btn-lg">%</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-5">
+                                <button type="button" class="btn btn-outline-secondary btn-lg" style="margin-bottom: 5px;" @onclick=@(()=>click_InvoiceDiscountPercentSuggest(0))>0%</button>
+                                <button type="button" class="btn btn-outline-secondary btn-lg" style="margin-bottom: 5px;" @onclick=@(()=>click_InvoiceDiscountPercentSuggest(5))>5%</button>
+                                <button type="button" class="btn btn-outline-secondary btn-lg" style="margin-bottom: 5px;" @onclick=@(()=>click_InvoiceDiscountPercentSuggest(10))>10%</button>
+                                <button type="button" class="btn btn-outline-secondary btn-lg" style="margin-bottom: 5px;" @onclick=@(()=>click_InvoiceDiscountPercentSuggest(15))>15%</button>
+                                <button type="button" class="btn btn-outline-secondary btn-lg" style="margin-bottom: 5px;" @onclick=@(()=>click_InvoiceDiscountPercentSuggest(20))>20%</button>
+                                <button type="button" class="btn btn-outline-secondary btn-lg" style="margin-bottom: 5px;" @onclick=@(()=>click_InvoiceDiscountPercentSuggest(25))>25%</button>
+                                <button type="button" class="btn btn-outline-secondary btn-lg" style="margin-bottom: 5px;" @onclick=@(()=>click_InvoiceDiscountPercentSuggest(30))>30%</button>
+                                <button type="button" class="btn btn-outline-secondary btn-lg" style="margin-bottom: 5px;" @onclick=@(()=>click_InvoiceDiscountPercentSuggest(50))>50%</button>
+                            </div>
+
+                        </div>
+                    }
+                </div>
+
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-default btn-lg" data-dismiss="modal" @onclick=@(()=>CloseModal_InvoiceDiscount())><i class="fas fa-times"></i> Thoát</button>
+
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="fas fa-save"></i>
+                        Cập nhật
+                    </button>
+
+                </div>
+            </EditForm>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_Payment">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <EditForm Model="@payment" OnValidSubmit="@SavePayment">
+
+                <FluentValidationValidator />
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span>THÔNG TIN THANH TOÁN</span>
+                    </h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
+                </div>
+                <div class="modal-body" style="background: #f8f8fa;">
+                    @if (payment != null)
+                    {
+                        <div class="row">
+
+                            <div class="col-12 col-sm-3">
+                                @{
+                                    string active_CASH;
+                                    active_CASH = payment.PModeCode == "CASH" ? "active_btnPMode" : "";
+
+                                    string active_CCARD;
+                                    active_CCARD = payment.PModeCode == "CCARD" ? "active_btnPMode" : "";
+
+                                    string active_BANKING;
+                                    active_BANKING = payment.PModeCode == "BANKING" ? "active_btnPMode" : "";
+
+                                    <button type="button" class="btn btn-block bg-white btn-lg border @active_CASH" style="text-align: left;" @onclick=@(()=>click_PaymentMode("CASH"))><span style="color:#6f42c1"><i class="far fa-2xl fa-money-bill-alt"></i> Tiền mặt</span></button>
+                                    <button type="button" class="btn btn-block bg-white btn-lg border @active_CCARD" style="text-align: left;" @onclick=@(()=>click_PaymentMode("CCARD"))><span style="color:#6f42c1"><i class="fa-brands fa-2xl fa-cc-visa"></i> Thẻ</span></button>
+                                    <button type="button" class="btn btn-block bg-white btn-lg border @active_BANKING" style="text-align: left;" @onclick=@(()=>click_PaymentMode("BANKING"))><span style="color:#6f42c1"><i class="fa-solid fa-2xl fa-credit-card"></i> Chuyển khoản</span></button>
+                                }
+                            </div>
+
+                            <div class="col-12 col-sm-9">
+
+                                <div class="form-group">
+
+                                    <table class="table" style="background: white;">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    Khách đưa
+                                                </th>
+                                                <th style="text-align: right;">
+                                                    Tổng thanh toán
+                                                </th>
+                                                <th style="text-align: right;">
+                                                    Tiền thừa
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <input type="text" name="currency-mask" class="form-control form-control-border border-width-2" @bind="onchange_CustomerAmount" @bind:event="oninput" onClick="this.select();" style="font-size: larger;" />
+                                                </td>
+                                                <td style="text-align: right; font-weight: bold; font-size: larger;">
+
+                                                    @string.Format("{0:#,##0.##}", payment.sumAmountPay)
+
+                                                </td>
+                                                <td style="text-align: right; font-size: medium;">
+                                                    @string.Format("{0:#,##0.##}", payment.ReturnAmount * -1)
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                                <div class="form-group">
+
+                                    @if (customerAmountSuggestList != null)
+                                    {
+                                        <table class="table table-bordered">
+                                            <tbody>
+                                                <tr>
+                                                    @foreach (var customerAmountSuggest in customerAmountSuggestList)
+                                                    {
+                                                        <td style="padding: 0;">
+                                                            <button type="button" class="btn btn-block bg-white btn-lg" @onclick=@(()=>click_CustomerAmountSuggest(customerAmountSuggest.CustomerAmountSuggest))><span style="color:#6f42c1">@string.Format("{0:#,##0.##}", customerAmountSuggest.CustomerAmountSuggest)</span></button>
+                                                        </td>
+                                                    }
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    }
+                                </div>
+
+                                <div class="form-group">
+
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("1"))><span style="color:#6f42c1">1</span></button>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("2"))><span style="color:#6f42c1">2</span></button>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("3"))><span style="color:#6f42c1">3</span></button>
+                                                </td>
+                                                <td rowspan="2">
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("x"))><span style="color:#6f42c1"><i class="fa-solid fa-lg fa-delete-left"></i></span></button>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("4"))><span style="color:#6f42c1">4</span></button>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("5"))><span style="color:#6f42c1">5</span></button>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("6"))><span style="color:#6f42c1">6</span></button>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("7"))><span style="color:#6f42c1">7</span></button>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("8"))><span style="color:#6f42c1">8</span></button>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("9"))><span style="color:#6f42c1">9</span></button>
+                                                </td>
+                                                <td rowspan="2">
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("c"))><span style="color:#6f42c1">C</span></button>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("0"))><span style="color:#6f42c1">0</span></button>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("00"))><span style="color:#6f42c1">00</span></button>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("000"))><span style="color:#6f42c1">000</span></button>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                                <button type="submit" class="btn btn-block bg-purple btn-lg">
+                                    <i class="fa fa-lg fa-file-invoice-dollar"></i> <span style="font-weight: bold;">Thanh toán</span>
+                                </button>
+
+                            </div>
+                        </div>
+                    }
+                </div>
+            </EditForm>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<section id="POS" class="content" style="padding-top: 5px">
+
+    <div class="container-fluid">
+
+        <div class="row">
+
+            <div class="col-12 col-sm-5">
+
+                <div class="card card-purple card-outline">
+
+                    @if (!String.IsNullOrEmpty(infoInvoice.CheckNo))
+                    {
+                        <div class="v_invoice" style="height: 100%;">
+
+                            <table class="table no-border" style="margin-bottom: 6px;">
+                                <thead style="background-color: #6f42c1;color: #FFF">
+                                    <tr>
+                                        @if (infoInvoice.RoomTableID != "TakeOut")
+                                        {
+                                            <th style="font-weight: bold; width: 50%;">@infoInvoice.RoomTableAreaName/@infoInvoice.RoomTableName</th>
+                                        }
+                                        else
+                                        {
+                                            <th style="font-weight: bold; width: 50%;">@infoInvoice.RoomTableName</th>
+                                        }
+                                        <th style="font-weight: bold; width: 50%;">Số hóa đơn: @infoInvoice.CheckNo</th>
+                                    </tr>
+                                </thead>
+                            </table>
+
+                            <div style="margin-bottom: 5px; display: flex;">
+
+                                <div class="col-12 col-sm-11">
+
+                                    <BlazoredTypeahead SearchMethod="SearchCustomer"
+                                                       Value="customer"
+                                                       ValueChanged="@( (CustomerVM i) => SelectedCustomer(i) )"
+                                                       ValueExpression="@( () => customer)"
+                                                       Debounce="500"
+                                                       MinimumLength="2"
+                                                       MaximumSuggestions="6"
+                                                       placeholder="Tìm kiếm theo tên hoặc số điện thoại...">
+                                        <SelectedTemplate Context="_cus">
+                                            @if (!String.IsNullOrEmpty(customer.CustomerID))
+                                            {
+                                                <i class="fa-solid fa-user-tie"></i> @_cus.CustomerName <i class="fa-solid fa-phone-flip"></i> @_cus.Tel
+                                            }
+                                            else
+                                            {
+                                                <i class="fa-solid fa-magnifying-glass"></i> <span>Tìm kiếm khách hàng...</span>
+                                            }
+                                        </SelectedTemplate>
+                                        <ResultTemplate Context="_cus">
+                                            <i class="fa-solid fa-user-tie"></i> @_cus.CustomerName <i class="fa-solid fa-phone-flip"></i> @_cus.Tel
+                                        </ResultTemplate>
+                                        <NotFoundTemplate Context="_cus">
+                                            <i class="fa-solid fa-file-circle-xmark text-danger"></i> Không có dữ liệu
+                                        </NotFoundTemplate>
+                                    </BlazoredTypeahead>
+
+                                </div>
+
+                                @if (infoInvoice.CustomerID == "")
+                                {
+                                    <button type="button" class="btn" data-target="#InitializeModal_Customer" data-toggle="modal" @onclick=@(()=>InitializeModal_Customer(0))><i class="fa-solid fa-xl fa-user-plus text-success"></i></button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn" data-target="#InitializeModal_Customer" data-toggle="modal" @onclick=@(()=>InitializeModal_Customer(1))><i class="fa-solid fa-xl fa-user-pen text-gray"></i></button>
+                                }
+
+                            </div>
+
+                            <div class="list-items table-responsive" style="height: calc(100vh - 392px);">
+
+                                @if (invoiceItemsList != null)
+                                {
+                                    <table class="table table-head-fixed table-hover table-hover-cursor">
+                                        <thead>
+                                            <tr style="background-color: #dff0d8">
+                                                <th>Sản phẩm</th>
+                                                <th style="width: 15%; text-align: right;">Giá</th>
+                                                <th style="width: 10%; text-align: center;">SL</th>
+                                                <th style="width: 20%; text-align: right;">Tổng</th>
+                                                <th class="text-center"><a href="javascript:void(0);" @onclick=@(()=>DelInvoiceItems(0))><i class="fa-solid fa-trash-can" style="color:#c82333;"></i></a></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var invoiceItems in invoiceItemsList)
+                                            {
+                                                string focusItems;
+                                                focusItems = filterPosVM.ICode == invoiceItems.ICode ? "border: 2px solid #6f42c1;" : "";
+
+                                                <tr style="@focusItems">
+                                                    <td data-target="#InitializeModal_UpdateInvoiceDetail" data-toggle="modal" @onclick=@(()=>InitializeModal_UpdateInvoiceDetail(invoiceItems))>
+                                                        <span>@invoiceItems.IName</span>
+                                                        @if (invoiceItems.INote != "")
+                                                        {
+                                                            <br />
+
+                                                            <span style="font-size: .8rem !important; color: gray;"><i class="fa-solid fa-note-sticky"></i> @invoiceItems.INote</span>
+                                                        }
+                                                    </td>
+                                                    <td class="text-right" data-target="#InitializeModal_UpdateInvoiceDetail" data-toggle="modal" @onclick=@(()=>InitializeModal_UpdateInvoiceDetail(invoiceItems))>
+                                                        <span class="text-right">@string.Format("{0:#,##0.##}", @invoiceItems.Price)</span>
+                                                        @if (invoiceItems.Items_DiscountPrice != 0)
+                                                        {
+                                                            <br />
+
+                                                            <span style="font-size: .8rem !important; color: #c82333;">@string.Format("{0:#,##0.##}", @invoiceItems.Items_DiscountPrice * -1)</span>
+                                                        }
+                                                    </td>
+                                                    <td class="text-center" data-target="#InitializeModal_UpdateInvoiceDetail" data-toggle="modal" @onclick=@(()=>InitializeModal_UpdateInvoiceDetail(invoiceItems))>@invoiceItems.Qty</td>
+                                                    <td class="text-right" data-target="#InitializeModal_UpdateInvoiceDetail" data-toggle="modal" @onclick=@(()=>InitializeModal_UpdateInvoiceDetail(invoiceItems))><span class="text-right">@string.Format("{0:#,##0.##}", @invoiceItems.IAmount)</span></td>
+                                                    <td class="text-center"><a href="javascript:void(0);" style="color:#c82333;" @onclick=@(()=>DelInvoiceItems(@invoiceItems.Seq))><i class="fa-regular fa-trash-can" title="Xóa"></i></a></td>
+                                                </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
+
+                                    if (invoiceItemsList.Count() <= 0)
+                                    {
+                                        <img class="img-no-result" src="images/_default/no-results.png" />
+                                    }
+
+                                }
+
+                            </div>
+
+                            @if (invoiceTotal == null)
+                            {
+                                invoiceTotal = new();
+                            }
+
+                            <table class="table" style="margin-bottom: 10px;">
+                                <thead>
+                                    <tr style="background-color: #d9edf7">
+                                        <th width="25%">Tổng sản phẩm</th>
+                                        <th class="text-right"><span>@invoiceTotal.sumQty</span></th>
+                                        <th width="25%">Tổng tiền</th>
+                                        <th class="text-right" colspan="2"><span>@string.Format("{0:#,##0.##}", @invoiceTotal.sumAmount)</span></th>
+                                    </tr>
+                                    <tr style="background-color: #d9edf7">
+                                        <th width="25%">Thuế</th>
+                                        <th class="text-right"><span>@string.Format("{0:#,##0.##}", @invoiceTotal.sumAmount * @infoInvoice.Invoice_TaxPercent / 100)</span></th>
+                                        <th width="25%"><a href="javascript:void(0);" data-target="#InitializeModal_InvoiceDiscount" data-toggle="modal" @onclick=@(()=>InitializeModal_InvoiceDiscount(invoiceTotal)) id="add_discount">Giảm giá</a></th>
+                                        <th class="text-right"><span>@string.Format("{0:#,##0.##}", @invoiceTotal.Invoice_DiscountPrice * -1)</span></th>
+                                    </tr>
+                                    <tr style="background-color: #dff0d8">
+                                        <th colspan="2" style="font-weight: bold;">Tổng tiền thanh toán <a role="button" data-toggle="modal" data-target="#noteModal"></a></th>
+                                        <th class="text-right" colspan="2" style="font-weight: bold;"><span>@string.Format("{0:#,##0.##}", @invoiceTotal.sumAmountPay)</span></th>
+                                    </tr>
+                                </thead>
+                            </table>
+
+                            <div class="row">
+                                <div class="col-12 col-sm-4">
+                                    <div class="btn-group-vertical btn-block">
+                                        <button type="button" class="btn bg-gradient-gray btn-block" @onclick=@(() => ChangeRoomTableAsync())><i class="fa-solid fa-xl fa-right-left"></i>&nbsp;<strong>CHUYỂN</strong></button>
+                                        <button type="button" class="btn btn-danger btn-block" @onclick=@(() => DelInvoice())><i class="fa fa-xl fa-ban"></i>&nbsp;<strong>HỦY</strong></button>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-4">
+                                    <div class="btn-group-vertical btn-block">
+                                        <button type="button" class="btn bg-purple btn-block"><i class="fa fa-xl fa-bell"></i>&nbsp;<strong>THÔNG BÁO</strong></button>
+                                        <button type="button" class="btn bg-navy btn-block" @onclick=@(() => PrintInvoice())><i class="fa fa-xl fa-print"></i>&nbsp;<strong>IN HÓA ĐƠN</strong></button>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-4">
+
+                                    @{
+                                        bool disabled_btnPay;
+                                        disabled_btnPay = invoiceItemsList.Count() == 0 ? true : false;
+                                    }
+
+                                    <button type="button" disabled="@disabled_btnPay" class="btn bg-success btn-block" style="height: 67px;" data-target="#InitializeModal_Payment" data-toggle="modal" @onclick="()=>InitializeModal_Payment()"><i class="fa-solid fa-xl fa-dollar-sign"></i>&nbsp;<strong>THANH TOÁN</strong></button>
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="overlay-wrapper" style="height: calc(100vh - 97px); color:#6f42c1;">
+                            @if (!String.IsNullOrEmpty(filterPosVM.POSCode))
+                            {
+                                <div class="overlay">
+                                    <a @onclick=@(() => filterPosVM.POSCode = String.Empty)>
+                                        <i class="fa-solid fa-xl fa-store fa-spin" style="color:#6f42c1;"></i>
+                                    </a>
+                                    <div class="text-bold pt-2">@pointOfSaleVMs.Where(x => x.POSCode == filterPosVM.POSCode).Select(x => x.POSName).First()</div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="overlay"><i class="fa-solid fa-xl fa-hand-point-right fa-spin" style="color:#6f42c1;"></i><div class="text-bold pt-2">Vui lòng chọn điểm bán hàng...</div></div>
+                            }
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+            <div class="col-12 col-sm-7">
+
+                @if (String.IsNullOrEmpty(filterPosVM.POSCode))
+                {
+                    <div class="card card-purple card-outline">
+                        <div class="card-header">
+
+                            <h5 class="text-center text-bold"><i class="fa-solid fa-xl fa-store"></i> ĐIỂM BÁN HÀNG</h5>
+
+                        </div>
+                        <div class="card-body" style="overflow: auto; height: calc(100vh - 140px);">
+                            @if (pointOfSaleVMs != null)
+                            {
+                                @foreach (var _pointOfSaleVM in pointOfSaleVMs)
+                                {
+                                    <a class="btn btn-app" style="min-width: 145px;" @onclick=@(() => ChoosePointOfSale(_pointOfSaleVM.POSCode))>
+                                        <i class="fa-solid fa-xl fa-store"></i><br />@_pointOfSaleVM.POSName
+                                    </a>
+                                }
+                            }
+
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="card card-purple card-outline card-outline-tabs">
+                        <div class="card-header p-0 border-bottom-0">
+                            <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                                <li class="nav-item">
+                                    @{
+                                        string active_tabRoomTable;
+
+                                        if (String.IsNullOrEmpty(infoInvoice.CheckNo))
+                                        {
+                                            active_tabRoomTable = "active";
+                                        }
+                                        else
+                                        {
+                                            active_tabRoomTable = @infoInvoice.IsClickChangeRoomTable == 1 ? "active" : "";
+                                        }
+
+                                    }
+                                    <a class="nav-link @active_tabRoomTable" @onclick=@(() => ClickTabRoomTable()) id="custom-tabs-four-room-tab" data-toggle="pill" href="#custom-tabs-four-room" role="tab" aria-controls="custom-tabs-four-room" aria-selected="true"><i class="fa-solid fa-table"></i> PHÒNG/BÀN</a>
+                                </li>
+                                @if (!String.IsNullOrEmpty(infoInvoice.CheckNo))
+                                {
+                                    <li class="nav-item">
+                                        @{
+                                            string active_tabMenu;
+
+                                            active_tabMenu = @infoInvoice.IsClickChangeRoomTable == 1 ? "" : "active";
+
+                                        }
+                                        <a class="nav-link @active_tabMenu" @onclick=@(() => ClickTabMenu()) id="custom-tabs-four-menu-tab" data-toggle="pill" href="#custom-tabs-four-menu" role="tab" aria-controls="custom-tabs-four-menu" aria-selected="false"><i class="fa-solid fa-book-open"></i> MENU</a>
+
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="card-body" style="padding: 10px;">
+                            <div class="tab-content" id="custom-tabs-four-tabContent">
+                                @{
+                                    string active_tabContentRoomTable;
+
+                                    if (String.IsNullOrEmpty(infoInvoice.CheckNo))
+                                    {
+                                        active_tabContentRoomTable = "show active";
+                                    }
+                                    else
+                                    {
+                                        active_tabContentRoomTable = @infoInvoice.IsClickChangeRoomTable == 1 ? "show active" : "";
+                                    }
+                                }
+                                <div class="tab-pane fade @active_tabContentRoomTable" id="custom-tabs-four-room" role="tabpanel" aria-labelledby="custom-tabs-four-room-tab">
+
+                                    <div class="card">
+                                        <div class="card-header">
+
+                                            @if (roomTableAreaList != null)
+                                            {
+                                                string active_RoomTable;
+                                                active_RoomTable = String.IsNullOrEmpty(filterPosVM.RoomTableAreaID) ? "active" : "";
+
+                                                <button class="button button2 @active_RoomTable" @onclick=@(() => FilterRoomTable(String.Empty))>Tất cả</button>
+                                                @foreach (var roomTableArea in roomTableAreaList)
+                                                {
+                                                    active_RoomTable = filterPosVM.RoomTableAreaID == roomTableArea.RoomTableAreaID ? "active" : "";
+
+                                                    <button class="button button2 @active_RoomTable" @onclick=@(() => FilterRoomTable(roomTableArea.RoomTableAreaID))>@roomTableArea.RoomTableAreaName</button>
+                                                }
+                                            }
+
+                                        </div>
+                                        <div class="card-body" style="overflow: auto; height: calc(100vh - 217px);">
+                                            @if (infoInvoice.IsClickChangeRoomTable != 1)
+                                            {
+                                                <a class="btn btn-app" @onclick=@(() => OpenTakeOut())><i class="fa fa-shopping-bag" aria-hidden="true"></i>Mang về</a>
+                                            }
+                                            @if (roomTableList != null)
+                                            {
+                                                @foreach (var roomTable in roomTableList)
+                                                {
+                                                    <a class="btn btn-app" @onclick=@(() => OpenRoomTable(roomTable.RoomTableID, roomTable.isOpen))>
+                                                        @if (roomTable.isOpen == 1)
+                                                        {
+                                                            <span class="badge bg-green">@roomTable.OpenBy - @roomTable.OpenByName (@(roomTable.OpenTime.HasValue ? roomTable.OpenTime.Value.ToString("dd/MM/yyyy HH:mm") : ""))</span>
+                                                        }
+                                                        <i class="fa fa-table" aria-hidden="true"></i>@roomTable.RoomTableName
+                                                    </a>
+                                                }
+                                            }
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                @{
+                                    string active_tabContentMenu;
+
+                                    if (!String.IsNullOrEmpty(infoInvoice.CheckNo))
+                                    {
+                                        active_tabContentMenu = infoInvoice.IsClickChangeRoomTable == 1 ? "" : "show active";
+                                    }
+                                    else
+                                    {
+                                        active_tabContentMenu = "";
+                                    }
+
+                                }
+                                <div class="tab-pane fade @active_tabContentMenu" id="custom-tabs-four-menu" role="tabpanel" aria-labelledby="custom-tabs-four-menu-tab">
+
+                                    <input type="search" @bind="onchange_SearchValues" @bind:event="oninput" class="form-control form-control-lg" placeholder="Tìm kiếm sản phẩm...">
+
+                                    @if (itemsVMs != null)
+                                    {
+                                        <button class="button button2 @(filterPosVM.IGrpCode == string.Empty ? "active" : "")" @onclick=@(() => FilterItems(string.Empty))>Tất cả</button>
+                                        @foreach (var _iGrp in itemsVMs.Select(x => new { x.IGrpCode, x.IGrpName }).Distinct())
+                                        {
+                                            <button class="button button2 @(filterPosVM.IGrpCode == _iGrp.IGrpCode ? "active" : "")" @onclick=@(() => FilterItems(_iGrp.IGrpCode))>@_iGrp.IGrpName</button>
+                                        }
+                                    }
+
+                                    <div id="item-list">
+                                        <div class="items" style="overflow: auto; height: calc(100vh - 260px);">
+                                            @if (itemsVMs != null)
+                                            {
+                                                <Virtualize Items="@search_itemsVMs" Context="_itemsVM" OverscanCount="50">
+                                                    <button type="button" data-name="@_itemsVM.IName" class="btn btn-both" @onclick=@(() => ChooseItems(_itemsVM.ICode))>
+                                                        <span class="bg-img"><img src="@_itemsVM.IURLPicture1" alt="@_itemsVM.IName" style="width: 150px; height: 150px;"></span>
+                                                        <span><span style="color: #6f42c1;">@_itemsVM.IName</span></span>
+                                                        <span style="height: 20px; font-weight: bold;">@string.Format("{0:#,##0.##}", @_itemsVM.IPrice)</span>
+                                                    </button>
+                                                </Virtualize>
+
+                                                if (search_itemsVMs.Count() <= 0)
+                                                {
+                                                    <img class="img-no-result" src="images/_default/no-results.png" />
+                                                }
+
+                                            }
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+            <!-- /.nav-tabs-custom -->
+        </div>
+        <!-- /.col -->
+
+    </div>
+
+</section>

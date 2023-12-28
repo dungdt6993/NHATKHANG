@@ -52,9 +52,7 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string StockCode { get; set; }
         public string StockName { get; set; }
         public string StockAddress { get; set; }
+        public bool IsPOS { get; set; }
         public bool StockActive { get; set; }
-        //Para
-
-
     }
 }
