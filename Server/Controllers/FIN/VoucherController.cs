@@ -343,6 +343,7 @@ namespace D69soft.Server.Controllers.FIN
         }
 
         //POS
+        [HttpGet("GetRoomTableArea/{_StockCode}")]
         public async Task<ActionResult<IEnumerable<RoomTableAreaVM>>> GetRoomTableArea(string _StockCode)
         {
             var sql = "select * from FIN.RoomTableArea ";
@@ -361,16 +362,16 @@ namespace D69soft.Server.Controllers.FIN
         [HttpPost("GetRoomTable")]
         public async Task<ActionResult<IEnumerable<RoomTableVM>>> GetRoomTable(FilterVM _filterVM)
         {
-            var sql = "select distinct rt.RoomTableID, RoomTableName, coalesce(isOpen,0) as isOpen, pOpenBy.FirstName as OpenByName, OpenBy, OpenTime from POS.RoomTable rt  ";
-            sql += "join POS.RoomTableArea rta on rta.RoomTableAreaID = rt.RoomTableAreaID  ";
+            var sql = "select distinct rt.RoomTableCode, RoomTableName, coalesce(VActive,0) as IsOpen, pOpenBy.FirstName as OpenByName, EserialPerform, TimeCreated from FIN.RoomTable rt ";
+            sql += "join FIN.RoomTableArea rta on rta.RoomTableAreaCode = rt.RoomTableAreaCode ";
             sql += "left join ( ";
-            sql += "select POSCode, RoomTableID, OpenBy, MAX(OpenTime) as OpenTime, isOpen from POS.Invoice ";
-            sql += "where isOpen=1 and POSCode=@POSCode group by POSCode, RoomTableID,OpenBy, isOpen ";
-            sql += "having  MAX(CheckNo)>0 ";
-            sql += ") inv on inv.RoomTableID = rt.RoomTableID ";
-            sql += "left join HR.Profile pOpenBy on pOpenBy.Eserial = inv.OpenBy ";
-            sql += "where rta.POSCode=@POSCode ";
-            sql += " and (rt.RoomTableAreaID=@RoomTableAreaID or coalesce(@RoomTableAreaID,'')='') ";
+            sql += "select StockCode, RoomTableCode, EserialPerform, MAX(TimeCreated) as TimeCreated, VActive from FIN.Voucher ";
+            sql += "where VActive=0 and StockCode=@StockCode group by StockCode, RoomTableCode, EserialPerform, VActive  ";
+            sql += "having MAX(VNumber)>0 ";
+            sql += ") v on v.RoomTableCode = rt.RoomTableCode ";
+            sql += "left join HR.Profile pOpenBy on pOpenBy.Eserial = v.EserialPerform ";
+            sql += "where rta.StockCode=@StockCode ";
+            sql += " and (rt.RoomTableAreaCode=@RoomTableAreaCode or coalesce(@RoomTableAreaCode,'')='') ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)

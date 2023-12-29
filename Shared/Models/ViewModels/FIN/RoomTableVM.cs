@@ -27,6 +27,8 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string EserialPerform { get; set; }
 
         //Bien
+        public bool IsOpen { get; set; }
+        public DateTimeOffset? TimeCreated { get; set; }
         public string OpenByName { get; set; }
     }
 }

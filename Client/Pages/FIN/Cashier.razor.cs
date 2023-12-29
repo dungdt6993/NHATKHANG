@@ -55,7 +55,7 @@ namespace D69soft.Client.Pages.FIN
         List<VoucherDetailVM> voucherDetailVMs;
 
         //Customer
-        CustomerVM customer = new();
+        CustomerVM customerVM = new();
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -125,14 +125,14 @@ namespace D69soft.Client.Pages.FIN
             isLoadingScreen = false;
         }
 
-        private async Task ChoosePointOfSale(string _posCode)
+        private async Task ChoosePointOfSale(string _StockCode)
         {
-            filterVM.StockCode = _posCode;
+            filterVM.StockCode = _StockCode;
 
             roomTableAreaVMs = await voucherService.GetRoomTableArea(filterVM.StockCode);
             roomTableVMs = await voucherService.GetRoomTable(filterVM);
 
-            search_itemsVMs = itemsVMs = await inventoryService.GetItemsList(filterVM);
+            //search_itemsVMs = itemsVMs = await inventoryService.GetItemsList(filterVM);
         }
 
         private async void FilterRoomTable(string _RoomTableAreaCode)
@@ -208,7 +208,7 @@ namespace D69soft.Client.Pages.FIN
 
             isLoading = false;
         }
-         
+
         private async Task OpenTakeOut()
         {
             isLoading = true;
@@ -283,7 +283,7 @@ namespace D69soft.Client.Pages.FIN
 
         }
 
-        private void InitializeModal_UpdateInvoiceDetail(InvoiceVM _invoiceDetail)
+        private void InitializeModal_UpdateInvoiceDetail(VoucherDetailVM _voucherDetailVM)
         {
             isLoading = true;
 
@@ -309,14 +309,14 @@ namespace D69soft.Client.Pages.FIN
 
         private decimal onchange_ItemsDiscountPrice
         {
-            //get { return invoiceDetail.Items_DiscountPrice; }
+            get { return voucherDetailVM.VDDiscountAmount; }
             set
             {
                 isLoading = true;
 
-                //invoiceDetail.Items_DiscountPrice = value > invoiceDetail.Price ? invoiceDetail.Price : value;
+                voucherDetailVM.VDDiscountAmount = value > voucherDetailVM.VDPrice ? voucherDetailVM.VDPrice : value;
 
-                //invoiceDetail.Items_DiscountPercent = invoiceDetail.Price != 0 ? invoiceDetail.Items_DiscountPrice / invoiceDetail.Price * 100 : 0;
+                voucherDetailVM.VDDiscountPercent = voucherDetailVM.VDPrice != 0 ? voucherDetailVM.VDDiscountAmount / voucherDetailVM.VDPrice * 100 : 0;
 
                 isLoading = false;
             }
@@ -324,14 +324,14 @@ namespace D69soft.Client.Pages.FIN
 
         private decimal onchange_ItemsDiscountPercent
         {
-            //get { return invoiceDetail.Items_DiscountPercent; }
+            get { return voucherDetailVM.VDDiscountPercent; }
             set
             {
                 isLoading = true;
 
-                //invoiceDetail.Items_DiscountPercent = value;
+                voucherDetailVM.VDDiscountPercent = value;
 
-                //invoiceDetail.Items_DiscountPrice = invoiceDetail.Price * invoiceDetail.Items_DiscountPercent / 100;
+                voucherDetailVM.VDDiscountAmount = voucherDetailVM.VDPrice * voucherDetailVM.VDDiscountPercent / 100;
 
                 isLoading = false;
             }
@@ -341,14 +341,14 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            //if (value == "+")
-            //{
-            //    invoiceDetail.Qty++;
-            //}
-            //if (value == "-")
-            //{
-            //    invoiceDetail.Qty = invoiceDetail.Qty > 1 ? invoiceDetail.Qty - 1 : 1;
-            //}
+            if (value == "+")
+            {
+                voucherDetailVM.VDQty++;
+            }
+            if (value == "-")
+            {
+                voucherDetailVM.VDQty = voucherDetailVM.VDQty > 1 ? voucherDetailVM.VDQty - 1 : 1;
+            }
 
             isLoading = false;
         }
@@ -357,9 +357,9 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            //invoiceDetail.Items_DiscountPercent = value;
+            voucherDetailVM.VDDiscountPercent = value;
 
-            //invoiceDetail.Items_DiscountPrice = invoiceDetail.Price * invoiceDetail.Items_DiscountPercent / 100;
+            voucherDetailVM.VDDiscountAmount = voucherDetailVM.VDPrice * voucherDetailVM.VDDiscountPercent / 100;
 
             isLoading = false;
         }
@@ -373,7 +373,7 @@ namespace D69soft.Client.Pages.FIN
             //invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
             //invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
 
-            //filterVM.ICode = invoiceDetail.ICode;
+            filterVM.ICode = voucherDetailVM.ICode;
 
             await js.InvokeAsync<object>("CloseModal", "#InitializeModal_UpdateInvoiceDetail");
 
@@ -404,16 +404,16 @@ namespace D69soft.Client.Pages.FIN
 
         private decimal onchange_InvoiceDiscountPrice
         {
-            //get { return invoiceDetail.Invoice_DiscountPrice; }
+            get { return voucherDetailVM.VDDiscountAmount; }
             set
             {
                 isLoading = true;
 
-                //invoiceDetail.Invoice_DiscountPrice = value > invoiceDetail.sumAmount ? invoiceDetail.sumAmount : value;
+                //voucherDetailVM.VDDiscountAmount = value > voucherDetailVM.VDAmount ? voucherDetailVM.VDAmount : value;
 
-                //invoiceDetail.Invoice_DiscountPercent = invoiceDetail.sumAmount != 0 ? invoiceDetail.Invoice_DiscountPrice / invoiceDetail.sumAmount * 100 : 0;
+                //voucherDetailVM.VDDiscountPercent = voucherDetailVM.VDAmount != 0 ? voucherDetailVM.VDDiscountAmount / voucherDetailVM.VDAmount * 100 : 0;
 
-                //invoiceDetail.sumAmountPay = invoiceDetail.sumAmount - invoiceDetail.Invoice_DiscountPrice - invoiceDetail.Invoice_TaxPercent * invoiceDetail.sumAmount / 100;
+                //voucherDetailVM.sumAmountPay = voucherDetailVM.VDAmount - voucherDetailVM.VDDiscountAmount - voucherDetailVM.Invoice_TaxPercent * voucherDetailVM.sumAmount / 100;
 
                 isLoading = false;
             }
@@ -421,16 +421,16 @@ namespace D69soft.Client.Pages.FIN
 
         private decimal onchange_InvoiceDiscountPercent
         {
-            //get { return invoiceDetail.Invoice_DiscountPercent; }
+            //get { return voucherDetailVM.Invoice_DiscountPercent; }
             set
             {
                 isLoading = true;
 
-                //invoiceDetail.Invoice_DiscountPercent = value;
+                //voucherDetailVM.Invoice_DiscountPercent = value;
 
-                //invoiceDetail.Invoice_DiscountPrice = invoiceDetail.sumAmount * invoiceDetail.Invoice_DiscountPercent / 100;
+                //voucherDetailVM.Invoice_DiscountPrice = voucherDetailVM.sumAmount * voucherDetailVM.Invoice_DiscountPercent / 100;
 
-                //invoiceDetail.sumAmountPay = invoiceDetail.sumAmount - invoiceDetail.Invoice_DiscountPrice - invoiceDetail.Invoice_TaxPercent * invoiceDetail.sumAmount / 100;
+                //voucherDetailVM.sumAmountPay = voucherDetailVM.sumAmount - voucherDetailVM.Invoice_DiscountPrice - voucherDetailVM.Invoice_TaxPercent * voucherDetailVM.sumAmount / 100;
 
                 isLoading = false;
             }
@@ -440,11 +440,11 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            //invoiceDetail.Invoice_DiscountPercent = value;
+            //voucherDetailVM.Invoice_DiscountPercent = value;
 
-            //invoiceDetail.Invoice_DiscountPrice = invoiceDetail.sumAmount * invoiceDetail.Invoice_DiscountPercent / 100;
+            //voucherDetailVM.Invoice_DiscountPrice = voucherDetailVM.sumAmount * voucherDetailVM.Invoice_DiscountPercent / 100;
 
-            //invoiceDetail.sumAmountPay = invoiceDetail.sumAmount - invoiceDetail.Invoice_DiscountPrice - invoiceDetail.Invoice_TaxPercent * invoiceDetail.sumAmount / 100;
+            //voucherDetailVM.sumAmountPay = voucherDetailVM.sumAmount - voucherDetailVM.Invoice_DiscountPrice - voucherDetailVM.Invoice_TaxPercent * voucherDetailVM.sumAmount / 100;
 
             isLoading = false;
         }
@@ -480,12 +480,12 @@ namespace D69soft.Client.Pages.FIN
 
             if (typeUpdate == 0)
             {
-                customer = new CustomerVM();
-                customer.IsTypeUpdate = 0;
+                customerVM = new CustomerVM();
+                customerVM.IsTypeUpdate = 0;
             }
             else
             {
-                customer.IsTypeUpdate = 1;
+                customerVM.IsTypeUpdate = 1;
             }
 
             isLoading = false;
