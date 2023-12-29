@@ -342,5 +342,44 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
+        //POS
+        public async Task<ActionResult<IEnumerable<RoomTableAreaVM>>> GetRoomTableArea(string _StockCode)
+        {
+            var sql = "select * from FIN.RoomTableArea ";
+            sql += "where StockCode=@StockCode order by RoomTableAreaName ";
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                var result = await conn.QueryAsync<RoomTableAreaVM>(sql, new { StockCode = _StockCode });
+                return Ok(result);
+            }
+
+        }
+
+        [HttpPost("GetRoomTable")]
+        public async Task<ActionResult<IEnumerable<RoomTableVM>>> GetRoomTable(FilterVM _filterVM)
+        {
+            var sql = "select distinct rt.RoomTableID, RoomTableName, coalesce(isOpen,0) as isOpen, pOpenBy.FirstName as OpenByName, OpenBy, OpenTime from POS.RoomTable rt  ";
+            sql += "join POS.RoomTableArea rta on rta.RoomTableAreaID = rt.RoomTableAreaID  ";
+            sql += "left join ( ";
+            sql += "select POSCode, RoomTableID, OpenBy, MAX(OpenTime) as OpenTime, isOpen from POS.Invoice ";
+            sql += "where isOpen=1 and POSCode=@POSCode group by POSCode, RoomTableID,OpenBy, isOpen ";
+            sql += "having  MAX(CheckNo)>0 ";
+            sql += ") inv on inv.RoomTableID = rt.RoomTableID ";
+            sql += "left join HR.Profile pOpenBy on pOpenBy.Eserial = inv.OpenBy ";
+            sql += "where rta.POSCode=@POSCode ";
+            sql += " and (rt.RoomTableAreaID=@RoomTableAreaID or coalesce(@RoomTableAreaID,'')='') ";
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                var result = await conn.QueryAsync<RoomTableVM>(sql, _filterVM);
+                return Ok(result);
+            }
+        }
+
     }
 }

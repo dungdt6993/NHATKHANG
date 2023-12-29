@@ -37,10 +37,6 @@ namespace D69soft.Client.Services
             services.AddTransient<OPService>();
             services.AddTransient<RequestService>();
 
-            //POS
-            services.AddTransient<CashierService>();
-
-
             return services;
         }
     }

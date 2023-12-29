@@ -7,23 +7,24 @@ using System.Threading.Tasks;
 
 namespace D69soft.Shared.Models.ViewModels.FIN
 {
-    public class RoomTableVM : RoomTable, Invoice
+    public class RoomTableVM : RoomTable, Voucher
     {
-        public string RoomTableID { get; set; }
+        public string RoomTableCode { get; set; }
         public string RoomTableName { get; set; }
-        public int isOpen { get; set; }
-        public int isClose { get; set; }
-        public string OpenBy { get; set; }
-        public string CheckNo { get; set; }
-        public DateTime? IDate { get; set; }
-        public DateTime? OpenTime { get; set; }
-        public DateTime? CloseTime { get; set; }
-        public string CloseBy { get; set; }
-        public decimal Invoice_DiscountPrice { get; set; }
-        public decimal Invoice_DiscountPercent { get; set; }
-        public decimal Invoice_TaxPercent { get; set; }
-        public decimal Invoice_TotalPaid { get; set; }
-        public bool INVActive { get; set; }
+
+        public string VNumber { get; set; }
+        public string VReference { get; set; }
+        public string VDesc { get; set; }
+        public DateTimeOffset? VDate { get; set; }
+        public string VContact { get; set; }
+        public bool VActive { get; set; }
+        public decimal TotalAmount { get; set; }
+        public decimal PaymentAmount { get; set; }
+        public bool IsPayment { get; set; }
+        public bool IsInvoice { get; set; }
+        public string InvoiceNumber { get; set; }
+        public DateTimeOffset? InvoiceDate { get; set; }
+        public string EserialPerform { get; set; }
 
         //Bien
         public string OpenByName { get; set; }

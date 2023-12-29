@@ -9,6 +9,9 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public string UserID { get; set; }
         public int IsTypeUpdate { get; set; }
 
+        //POS
+        public bool IsClickChangeRoomTable { get; set; }
+
         public string DataFromExcel { get; set; }
         public string DivisionID { get; set; }
         public string DivisionName { get; set; }

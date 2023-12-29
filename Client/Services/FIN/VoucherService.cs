@@ -100,5 +100,18 @@ namespace D69soft.Client.Services.FIN
             return await _httpClient.GetFromJsonAsync<TaxCodeVM>($"https://api.vietqr.io/v2/business/{_TaxCode}");
         }
 
+        //POS
+        public async Task<IEnumerable<RoomTableAreaVM>> GetRoomTableArea(string _StockCode)
+        {
+            return await _httpClient.GetFromJsonAsync<IEnumerable<RoomTableAreaVM>>($"api/Voucher/GetRoomTableArea/{_StockCode}");
+        }
+
+        public async Task<IEnumerable<RoomTableVM>> GetRoomTable(FilterVM _filterVM)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"api/Cashier/GetRoomTable", _filterVM);
+
+            return await response.Content.ReadFromJsonAsync<IEnumerable<RoomTableVM>>();
+        }
+
     }
 }

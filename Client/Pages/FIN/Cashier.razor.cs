@@ -17,9 +17,8 @@ namespace D69soft.Client.Pages.FIN
         [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
 
         [Inject] SysService sysService { get; set; }
-        [Inject] CashierService cashierService { get; set; }
+        [Inject] VoucherService voucherService { get; set; }
         [Inject] CustomerService customerService { get; set; }
-
         [Inject] InventoryService inventoryService { get; set; }
 
         [Inject] IConfiguration configuration { get; set; }
@@ -40,8 +39,8 @@ namespace D69soft.Client.Pages.FIN
         List<StockVM> stockVMs;
 
         //RoomTable
-        IEnumerable<RoomTableAreaVM> roomTableAreaList;
-        IEnumerable<RoomTableVM> roomTableList;
+        IEnumerable<RoomTableAreaVM> roomTableAreaVMs;
+        IEnumerable<RoomTableVM> roomTableVMs;
 
         //Items
         List<ItemsVM> itemsVMs;
@@ -91,10 +90,10 @@ namespace D69soft.Client.Pages.FIN
 
             if (!String.IsNullOrEmpty(filterVM.StockCode))
             {
-                roomTableAreaList = await cashierService.GetRoomTableArea(filterVM.StockCode);
-                roomTableList = await cashierService.GetRoomTable(filterVM);
+                roomTableAreaVMs = await voucherService.GetRoomTableArea(filterVM.StockCode);
+                roomTableVMs = await voucherService.GetRoomTable(filterVM);
 
-                search_itemsVMs = itemsVMs = await cashierService.GetItems(filterVM);
+                search_itemsVMs = itemsVMs = await inventoryService.GetItemsList(filterVM);
             }
 
             hubConnection = new HubConnectionBuilder()
@@ -130,10 +129,10 @@ namespace D69soft.Client.Pages.FIN
         {
             filterVM.StockCode = _posCode;
 
-            roomTableAreaList = await cashierService.GetRoomTableArea(filterVM.StockCode);
-            roomTableList = await cashierService.GetRoomTable(filterVM);
+            roomTableAreaVMs = await voucherService.GetRoomTableArea(filterVM.StockCode);
+            roomTableVMs = await voucherService.GetRoomTable(filterVM);
 
-            search_itemsVMs = itemsVMs = await cashierService.GetItems(filterVM);
+            search_itemsVMs = itemsVMs = await inventoryService.GetItemsList(filterVM);
         }
 
         private async void FilterRoomTable(string _RoomTableAreaCode)
@@ -142,7 +141,7 @@ namespace D69soft.Client.Pages.FIN
 
             filterVM.RoomTableAreaCode = _RoomTableAreaCode;
 
-            roomTableList = await cashierService.GetRoomTable(filterVM);
+            roomTableVMs = await voucherService.GetRoomTable(filterVM);
 
             isLoading = false;
 
@@ -187,53 +186,53 @@ namespace D69soft.Client.Pages.FIN
             }
             else
             {
-                await cashierService.OpenRoomTable(filterVM, voucherVM);
+                //await cashierService.OpenRoomTable(filterVM, voucherVM);
 
-                if (voucherVM.IsClickChangeRoomTable == 1)
-                {
-                    await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
-                }
+                //if (voucherVM.IsClickChangeRoomTable)
+                //{
+                //    await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+                //}
 
-                voucherVM = await cashierService.GetInfoInvoice(filterVM);
+                //voucherVM = await cashierService.GetInfoInvoice(filterVM);
 
-                customer = voucherVM.CustomerID != "" ? await customerService.GetCustomerByID(voucherVM.CustomerID) : new();
+                //customer = voucherVM.CustomerCode != "" ? await customerService.GetCustomerByID(voucherVM.CustomerCode) : new();
 
-                invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
+                //invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
 
-                invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
+                //invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
 
-                filterVM.ICode = String.Empty;
+                //filterVM.ICode = String.Empty;
 
                 await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, filterVM.RoomTableCode, filterVM.UserID);
             }
 
             isLoading = false;
         }
-
+         
         private async Task OpenTakeOut()
         {
             isLoading = true;
 
             filterVM.RoomTableCode = "TakeOut";
 
-            await cashierService.OpenTakeOut(filterVM);
+            //await cashierService.OpenTakeOut(filterVM);
 
-            if (voucherVM.IsClickChangeRoomTable == 1 && voucherVM.RoomTableCode != "TakeOut")
-            {
-                await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
+            //if (voucherVM.IsClickChangeRoomTable && voucherVM.RoomTableCode != "TakeOut")
+            //{
+            //    await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
 
-                await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, voucherVM.RoomTableCode, filterVM.UserID);
-            }
+            //    await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, voucherVM.RoomTableCode, filterVM.UserID);
+            //}
 
-            voucherVM = await cashierService.GetInfoInvoice(filterVM);
+            //voucherVM = await cashierService.GetInfoInvoice(filterVM);
 
-            customer = voucherVM.CustomerID != "" ? await customerService.GetCustomerByID(voucherVM.CustomerID) : new();
+            //customer = voucherVM.CustomerCode != String.Empty ? await customerService.GetCustomerByID(voucherVM.CustomerCode) : new();
 
-            invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
+            //invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
 
-            invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
+            //invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
 
-            filterVM.ICode = String.Empty;
+            //filterVM.ICode = String.Empty;
 
             isLoading = false;
         }
@@ -245,11 +244,11 @@ namespace D69soft.Client.Pages.FIN
                 filterVM.VNumber = voucherVM.VNumber;
                 filterVM.ICode = _iCode;
 
-                await cashierService.ChooseItems(filterVM);
+                //await cashierService.ChooseItems(filterVM);
 
-                invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
+                //invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
 
-                invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
+                //invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
 
                 filterVM.ReportName = "CustomNewReport";
 
@@ -261,11 +260,11 @@ namespace D69soft.Client.Pages.FIN
         {
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
             {
-                await cashierService.DelInvoiceItems(voucherVM.VNumber, seq);
+                //await cashierService.DelInvoiceItems(voucherVM.VNumber, seq);
 
-                invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
+                //invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
 
-                invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
+                //invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
 
                 filterVM.ReportName = "CustomNewReport";
             }
@@ -275,9 +274,9 @@ namespace D69soft.Client.Pages.FIN
         {
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn muốn hủy?", SweetAlertMessageType.question))
             {
-                await cashierService.DelInvoice(voucherVM.VNumber);
+                //await cashierService.DelInvoice(voucherVM.VNumber);
 
-                await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, voucherVM.RoomTableCode, filterVM.UserID);
+                //await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, voucherVM.RoomTableCode, filterVM.UserID);
 
                 voucherVM = new();
             }
@@ -288,21 +287,21 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            invoiceDetail = new InvoiceVM();
+            //invoiceDetail = new InvoiceVM();
 
-            invoiceDetail = _invoiceDetail;
+            //invoiceDetail = _invoiceDetail;
 
             isLoading = false;
         }
 
-        private int onchange_Qty
+        private decimal onchange_Qty
         {
-            get { return invoiceDetail.Qty; }
+            get { return voucherDetailVM.VDQty; }
             set
             {
                 isLoading = true;
 
-                invoiceDetail.Qty = value == 0 ? 1 : value;
+                voucherDetailVM.VDQty = value == 0 ? 1 : value;
 
                 isLoading = false;
             }
@@ -310,14 +309,14 @@ namespace D69soft.Client.Pages.FIN
 
         private decimal onchange_ItemsDiscountPrice
         {
-            get { return invoiceDetail.Items_DiscountPrice; }
+            //get { return invoiceDetail.Items_DiscountPrice; }
             set
             {
                 isLoading = true;
 
-                invoiceDetail.Items_DiscountPrice = value > invoiceDetail.Price ? invoiceDetail.Price : value;
+                //invoiceDetail.Items_DiscountPrice = value > invoiceDetail.Price ? invoiceDetail.Price : value;
 
-                invoiceDetail.Items_DiscountPercent = invoiceDetail.Price != 0 ? invoiceDetail.Items_DiscountPrice / invoiceDetail.Price * 100 : 0;
+                //invoiceDetail.Items_DiscountPercent = invoiceDetail.Price != 0 ? invoiceDetail.Items_DiscountPrice / invoiceDetail.Price * 100 : 0;
 
                 isLoading = false;
             }
@@ -325,14 +324,14 @@ namespace D69soft.Client.Pages.FIN
 
         private decimal onchange_ItemsDiscountPercent
         {
-            get { return invoiceDetail.Items_DiscountPercent; }
+            //get { return invoiceDetail.Items_DiscountPercent; }
             set
             {
                 isLoading = true;
 
-                invoiceDetail.Items_DiscountPercent = value;
+                //invoiceDetail.Items_DiscountPercent = value;
 
-                invoiceDetail.Items_DiscountPrice = invoiceDetail.Price * invoiceDetail.Items_DiscountPercent / 100;
+                //invoiceDetail.Items_DiscountPrice = invoiceDetail.Price * invoiceDetail.Items_DiscountPercent / 100;
 
                 isLoading = false;
             }
@@ -342,14 +341,14 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            if (value == "+")
-            {
-                invoiceDetail.Qty++;
-            }
-            if (value == "-")
-            {
-                invoiceDetail.Qty = invoiceDetail.Qty > 1 ? invoiceDetail.Qty - 1 : 1;
-            }
+            //if (value == "+")
+            //{
+            //    invoiceDetail.Qty++;
+            //}
+            //if (value == "-")
+            //{
+            //    invoiceDetail.Qty = invoiceDetail.Qty > 1 ? invoiceDetail.Qty - 1 : 1;
+            //}
 
             isLoading = false;
         }
@@ -358,9 +357,9 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            invoiceDetail.Items_DiscountPercent = value;
+            //invoiceDetail.Items_DiscountPercent = value;
 
-            invoiceDetail.Items_DiscountPrice = invoiceDetail.Price * invoiceDetail.Items_DiscountPercent / 100;
+            //invoiceDetail.Items_DiscountPrice = invoiceDetail.Price * invoiceDetail.Items_DiscountPercent / 100;
 
             isLoading = false;
         }
@@ -369,12 +368,12 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            await cashierService.UpdateInvoiceDetail(invoiceDetail);
+            //await cashierService.UpdateInvoiceDetail(invoiceDetail);
 
-            invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
-            invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
+            //invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
+            //invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
 
-            filterVM.ICode = invoiceDetail.ICode;
+            //filterVM.ICode = invoiceDetail.ICode;
 
             await js.InvokeAsync<object>("CloseModal", "#InitializeModal_UpdateInvoiceDetail");
 
@@ -387,7 +386,7 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
+            //invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
 
             isLoading = false;
         }
@@ -396,25 +395,25 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            invoiceDetail = new InvoiceVM();
+            //invoiceDetail = new InvoiceVM();
 
-            invoiceDetail = _invoiceDetail;
+            //invoiceDetail = _invoiceDetail;
 
             isLoading = false;
         }
 
         private decimal onchange_InvoiceDiscountPrice
         {
-            get { return invoiceDetail.Invoice_DiscountPrice; }
+            //get { return invoiceDetail.Invoice_DiscountPrice; }
             set
             {
                 isLoading = true;
 
-                invoiceDetail.Invoice_DiscountPrice = value > invoiceDetail.sumAmount ? invoiceDetail.sumAmount : value;
+                //invoiceDetail.Invoice_DiscountPrice = value > invoiceDetail.sumAmount ? invoiceDetail.sumAmount : value;
 
-                invoiceDetail.Invoice_DiscountPercent = invoiceDetail.sumAmount != 0 ? invoiceDetail.Invoice_DiscountPrice / invoiceDetail.sumAmount * 100 : 0;
+                //invoiceDetail.Invoice_DiscountPercent = invoiceDetail.sumAmount != 0 ? invoiceDetail.Invoice_DiscountPrice / invoiceDetail.sumAmount * 100 : 0;
 
-                invoiceDetail.sumAmountPay = invoiceDetail.sumAmount - invoiceDetail.Invoice_DiscountPrice - invoiceDetail.Invoice_TaxPercent * invoiceDetail.sumAmount / 100;
+                //invoiceDetail.sumAmountPay = invoiceDetail.sumAmount - invoiceDetail.Invoice_DiscountPrice - invoiceDetail.Invoice_TaxPercent * invoiceDetail.sumAmount / 100;
 
                 isLoading = false;
             }
@@ -422,16 +421,16 @@ namespace D69soft.Client.Pages.FIN
 
         private decimal onchange_InvoiceDiscountPercent
         {
-            get { return invoiceDetail.Invoice_DiscountPercent; }
+            //get { return invoiceDetail.Invoice_DiscountPercent; }
             set
             {
                 isLoading = true;
 
-                invoiceDetail.Invoice_DiscountPercent = value;
+                //invoiceDetail.Invoice_DiscountPercent = value;
 
-                invoiceDetail.Invoice_DiscountPrice = invoiceDetail.sumAmount * invoiceDetail.Invoice_DiscountPercent / 100;
+                //invoiceDetail.Invoice_DiscountPrice = invoiceDetail.sumAmount * invoiceDetail.Invoice_DiscountPercent / 100;
 
-                invoiceDetail.sumAmountPay = invoiceDetail.sumAmount - invoiceDetail.Invoice_DiscountPrice - invoiceDetail.Invoice_TaxPercent * invoiceDetail.sumAmount / 100;
+                //invoiceDetail.sumAmountPay = invoiceDetail.sumAmount - invoiceDetail.Invoice_DiscountPrice - invoiceDetail.Invoice_TaxPercent * invoiceDetail.sumAmount / 100;
 
                 isLoading = false;
             }
@@ -441,11 +440,11 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            invoiceDetail.Invoice_DiscountPercent = value;
+            //invoiceDetail.Invoice_DiscountPercent = value;
 
-            invoiceDetail.Invoice_DiscountPrice = invoiceDetail.sumAmount * invoiceDetail.Invoice_DiscountPercent / 100;
+            //invoiceDetail.Invoice_DiscountPrice = invoiceDetail.sumAmount * invoiceDetail.Invoice_DiscountPercent / 100;
 
-            invoiceDetail.sumAmountPay = invoiceDetail.sumAmount - invoiceDetail.Invoice_DiscountPrice - invoiceDetail.Invoice_TaxPercent * invoiceDetail.sumAmount / 100;
+            //invoiceDetail.sumAmountPay = invoiceDetail.sumAmount - invoiceDetail.Invoice_DiscountPrice - invoiceDetail.Invoice_TaxPercent * invoiceDetail.sumAmount / 100;
 
             isLoading = false;
         }
@@ -454,11 +453,11 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            await cashierService.UpdateInvoiceDiscount(invoiceDetail);
+            //await cashierService.UpdateInvoiceDiscount(invoiceDetail);
 
-            invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
+            //invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
 
-            filterVM.ReportName = "CustomNewReport";
+            //filterVM.ReportName = "CustomNewReport";
 
             await js.InvokeAsync<object>("CloseModal", "#InitializeModal_InvoiceDiscount");
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
@@ -470,7 +469,7 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
+            //invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
 
             isLoading = false;
         }
@@ -496,8 +495,8 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            customer.CustomerID = voucherVM.CustomerID = await customerService.UpdateCustomer(customer);
-            await cashierService.UpdateInvoiceCustomer(voucherVM);
+            //customer.CustomerCode = voucherVM.CustomerCode = await customerService.UpdateCustomer(customer);
+            //await cashierService.UpdateInvoiceCustomer(voucherVM);
 
             await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Customer");
             await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
@@ -512,24 +511,24 @@ namespace D69soft.Client.Pages.FIN
 
         private async Task SelectedCustomer(CustomerVM result)
         {
-            if (result != null)
-            {
-                customer = result;
-                voucherVM.CustomerID = result.CustomerID;
-            }
-            else
-            {
-                customer = new();
-                voucherVM.CustomerID = "";
-            }
-            await cashierService.UpdateInvoiceCustomer(voucherVM);
+            //if (result != null)
+            //{
+            //    customer = result;
+            //    voucherVM.CustomerCode = result.CustomerCode;
+            //}
+            //else
+            //{
+            //    customer = new();
+            //    voucherVM.CustomerCode = "";
+            //}
+            //await cashierService.UpdateInvoiceCustomer(voucherVM);
         }
 
         private async Task ChangeRoomTableAsync()
         {
             isLoading = true;
 
-            voucherVM.IsClickChangeRoomTable = 1;
+            voucherVM.IsClickChangeRoomTable = true;
 
             await js.Toast_Alert("Chọn phòng/bàn trống để chuyển!", SweetAlertMessageType.warning);
 
@@ -540,31 +539,31 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            payment = new PaymentVM();
+            //payment = new PaymentVM();
 
-            payment.VNumber = voucherVM.VNumber;
+            //payment.VNumber = voucherVM.VNumber;
 
-            payment.PModeCode = "CASH";
+            //payment.PModeCode = "CASH";
 
-            payment.sumAmountPay = payment.CustomerAmount = invoiceTotal.sumAmountPay;
+            //payment.sumAmountPay = payment.CustomerAmount = invoiceTotal.sumAmountPay;
 
-            customerAmountSuggestList = await cashierService.GetCustomerAmountSuggest(invoiceTotal.sumAmountPay);
+            //customerAmountSuggestList = await cashierService.GetCustomerAmountSuggest(invoiceTotal.sumAmountPay);
 
             isLoading = false;
         }
 
         private decimal onchange_CustomerAmount
         {
-            get { return payment.CustomerAmount; }
+            //get { return payment.CustomerAmount; }
             set
             {
-                isLoading = true;
+                //isLoading = true;
 
-                payment.CustomerAmount = value;
+                //payment.CustomerAmount = value;
 
-                payment.ReturnAmount = payment.sumAmountPay - payment.CustomerAmount;
+                //payment.ReturnAmount = payment.sumAmountPay - payment.CustomerAmount;
 
-                isLoading = false;
+                //isLoading = false;
             }
         }
 
@@ -572,53 +571,53 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            switch (value)
-            {
-                case "1":
-                    payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 1 : payment.CustomerAmount;
-                    break;
-                case "2":
-                    payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 2 : payment.CustomerAmount; ;
-                    break;
-                case "3":
-                    payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 3 : payment.CustomerAmount; ;
-                    break;
-                case "4":
-                    payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 4 : payment.CustomerAmount; ;
-                    break;
-                case "5":
-                    payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 5 : payment.CustomerAmount; ;
-                    break;
-                case "6":
-                    payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 6 : payment.CustomerAmount; ;
-                    break;
-                case "7":
-                    payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 7 : payment.CustomerAmount; ;
-                    break;
-                case "8":
-                    payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 8 : payment.CustomerAmount; ;
-                    break;
-                case "9":
-                    payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 9 : payment.CustomerAmount; ;
-                    break;
-                case "0":
-                    payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 : payment.CustomerAmount; ;
-                    break;
-                case "00":
-                    payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 8 ? payment.CustomerAmount * 100 : payment.CustomerAmount;
-                    break;
-                case "000":
-                    payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 6 ? payment.CustomerAmount * 1000 : payment.CustomerAmount;
-                    break;
-                case "x":
-                    payment.CustomerAmount = (payment.CustomerAmount - int.Parse(payment.CustomerAmount.ToString().Substring(payment.CustomerAmount.ToString().Length - 1, 1))) / 10;
-                    break;
-                case "c":
-                    payment.CustomerAmount = 0;
-                    break;
-            }
+            //switch (value)
+            //{
+            //    case "1":
+            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 1 : payment.CustomerAmount;
+            //        break;
+            //    case "2":
+            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 2 : payment.CustomerAmount; ;
+            //        break;
+            //    case "3":
+            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 3 : payment.CustomerAmount; ;
+            //        break;
+            //    case "4":
+            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 4 : payment.CustomerAmount; ;
+            //        break;
+            //    case "5":
+            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 5 : payment.CustomerAmount; ;
+            //        break;
+            //    case "6":
+            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 6 : payment.CustomerAmount; ;
+            //        break;
+            //    case "7":
+            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 7 : payment.CustomerAmount; ;
+            //        break;
+            //    case "8":
+            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 8 : payment.CustomerAmount; ;
+            //        break;
+            //    case "9":
+            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 9 : payment.CustomerAmount; ;
+            //        break;
+            //    case "0":
+            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 : payment.CustomerAmount; ;
+            //        break;
+            //    case "00":
+            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 8 ? payment.CustomerAmount * 100 : payment.CustomerAmount;
+            //        break;
+            //    case "000":
+            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 6 ? payment.CustomerAmount * 1000 : payment.CustomerAmount;
+            //        break;
+            //    case "x":
+            //        payment.CustomerAmount = (payment.CustomerAmount - int.Parse(payment.CustomerAmount.ToString().Substring(payment.CustomerAmount.ToString().Length - 1, 1))) / 10;
+            //        break;
+            //    case "c":
+            //        payment.CustomerAmount = 0;
+            //        break;
+            //}
 
-            payment.ReturnAmount = payment.sumAmountPay - payment.CustomerAmount;
+            //payment.ReturnAmount = payment.sumAmountPay - payment.CustomerAmount;
 
             isLoading = false;
 
@@ -628,7 +627,7 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            payment.PModeCode = value;
+            //payment.PModeCode = value;
 
             isLoading = false;
         }
@@ -637,9 +636,9 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            payment.CustomerAmount = value;
+            //payment.CustomerAmount = value;
 
-            payment.ReturnAmount = payment.sumAmountPay - payment.CustomerAmount;
+            //payment.ReturnAmount = payment.sumAmountPay - payment.CustomerAmount;
 
             isLoading = false;
         }
@@ -648,18 +647,18 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            await cashierService.SavePayment(payment, filterVM.StockCode, filterVM.UserID);
+            //await cashierService.SavePayment(payment, filterVM.StockCode, filterVM.UserID);
 
-            await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Payment");
-            await js.Toast_Alert("Thanh toán thành công!", SweetAlertMessageType.success);
+            //await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Payment");
+            //await js.Toast_Alert("Thanh toán thành công!", SweetAlertMessageType.success);
 
-            await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, voucherVM.RoomTableCode, filterVM.UserID);
+            //await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, voucherVM.RoomTableCode, filterVM.UserID);
 
-            payment.isPayment = 1;
+            //payment.isPayment = 1;
 
-            voucherVM = new();
+            //voucherVM = new();
 
-            roomTableList = await cashierService.GetRoomTable(filterVM);
+            //roomTableList = await cashierService.GetRoomTable(filterVM);
 
             isLoading = false;
         }
@@ -671,7 +670,7 @@ namespace D69soft.Client.Pages.FIN
 
         private void ClickTabMenu()
         {
-            voucherVM.IsClickChangeRoomTable = 0;
+            voucherVM.IsClickChangeRoomTable = true;
         }
 
         protected async Task PrintInvoice()

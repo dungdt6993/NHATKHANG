@@ -62,16 +62,16 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
-        [HttpGet("GetCustomerByID/{_CustomerID}")]
-        public async Task<ActionResult<CustomerVM>> GetCustomerByID(string _CustomerID)
+        [HttpGet("GetCustomerByID/{_CustomerCode}")]
+        public async Task<ActionResult<CustomerVM>> GetCustomerByID(string _CustomerCode)
         {
-            var sql = "select * from CRM.Customer where CustomerID = @CustomerID";
+            var sql = "select * from CRM.Customer where CustomerCode = @CustomerCode";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)
                     conn.Open();
 
-                var result = await conn.QueryFirstAsync<CustomerVM>(sql, new { CustomerID = _CustomerID });
+                var result = await conn.QueryFirstAsync<CustomerVM>(sql, new { CustomerCode = _CustomerCode });
                 return result;
             }
         }

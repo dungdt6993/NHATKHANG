@@ -1,6 +1,5 @@
 ﻿@page "/FIN/Cashier"
 @using D69soft.Client.Pages.SYS
-@using D69soft.Shared.Models.ViewModels.CRM;
 
 <LoadingScreen isLoadingScreen="@isLoadingScreen"></LoadingScreen>
 <Loading isLoading="@isLoading"></Loading>
@@ -38,12 +37,12 @@
                         <div class="col-sm-9">
                             @if (customer.IsTypeUpdate == 0)
                             {
-                                <InputText class="form-control form-control-border border-width-2" placeholder="Mã mặc định" @bind-Value:get="customer.CustomerID" @bind-Value:set="(value) => {customer.CustomerID = value.ToUpper();}" />
-                                <ValidationMessage For="@(() => customer.CustomerID)" />
+                                <InputText class="form-control form-control-border border-width-2" placeholder="Mã mặc định" @bind-Value:get="customer.CustomerCode" @bind-Value:set="(value) => {customer.CustomerCode = value.ToUpper();}" />
+                                <ValidationMessage For="@(() => customer.CustomerCode)" />
                             }
                             else
                             {
-                                <InputText class="form-control form-control-border border-width-2" @bind-Value="@customer.CustomerID" disabled />
+                                <InputText class="form-control form-control-border border-width-2" @bind-Value="@customer.CustomerCode" disabled />
                             }
                         </div>
                     </div>
@@ -133,7 +132,7 @@
                     {
                         <div class="form-group">
                             <label>Ghi chú:</label>
-                            <textarea class="form-control" placeholder="Nhập ghi chú..." @bind="invoiceDetail.INote" />
+                            <textarea class="form-control" placeholder="Nhập ghi chú..." @bind="voucherDetailVM.VDNote" />
                         </div>
 
                         <div class="row">
@@ -464,7 +463,7 @@
                                                        MaximumSuggestions="6"
                                                        placeholder="Tìm kiếm theo tên hoặc số điện thoại...">
                                         <SelectedTemplate Context="_cus">
-                                            @if (!String.IsNullOrEmpty(customer.CustomerID))
+                                            @if (!String.IsNullOrEmpty(customer.CustomerCode))
                                             {
                                                 <i class="fa-solid fa-user-tie"></i> @_cus.CustomerName <i class="fa-solid fa-phone-flip"></i> @_cus.Tel
                                             }
@@ -483,7 +482,7 @@
 
                                 </div>
 
-                                @if (infoInvoice.CustomerID == "")
+                                @if (infoInvoice.CustomerCode == "")
                                 {
                                     <button type="button" class="btn" data-target="#InitializeModal_Customer" data-toggle="modal" @onclick=@(()=>InitializeModal_Customer(0))><i class="fa-solid fa-xl fa-user-plus text-success"></i></button>
                                 }
@@ -692,7 +691,7 @@
                                 @{
                                     string active_tabContentRoomTable;
 
-                                    if (String.IsNullOrEmpty(infoInvoice.CheckNo))
+                                    if (String.IsNullOrEmpty(voucherVM.VNumber))
                                     {
                                         active_tabContentRoomTable = "show active";
                                     }

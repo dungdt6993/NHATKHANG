@@ -19,9 +19,9 @@ namespace D69soft.Client.Services.FIN
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<CustomerVM> GetCustomerByID(string _CustomerID)
+        public async Task<CustomerVM> GetCustomerByID(string _CustomerCode)
         {
-            return await _httpClient.GetFromJsonAsync<CustomerVM>($"api/Customer/GetCustomerByID/{_CustomerID}");
+            return await _httpClient.GetFromJsonAsync<CustomerVM>($"api/Customer/GetCustomerByID/{_CustomerCode}");
         }
 
         public async Task<IEnumerable<CustomerVM>> GetCustomers()

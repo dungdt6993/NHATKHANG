@@ -9,7 +9,7 @@ namespace D69soft.Shared.Models.ViewModels.FIN
 {
     public class RoomTableAreaVM : RoomTableArea
     {
-        public string RoomTableAreaID { get; set; }
+        public string RoomTableAreaCode { get; set; }
         public string RoomTableAreaName { get; set; }
     }
 }
