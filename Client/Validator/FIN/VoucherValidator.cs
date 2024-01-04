@@ -23,6 +23,7 @@ namespace D69soft.Client.Validator.FIN
 
                 When(x => x.IsTypeUpdate == 6 && x.IsInvoice, () =>
                 {
+                    RuleFor(x => x.InvoiceSerial).NotEmpty().WithMessage("Không được trống.");
                     RuleFor(x => x.InvoiceNumber).NotEmpty().WithMessage("Không được trống.");
                     RuleFor(x => x.InvoiceDate).NotEmpty().WithMessage("Không được trống.");
                 });
@@ -41,6 +42,7 @@ namespace D69soft.Client.Validator.FIN
 
                 When(x => x.IsTypeUpdate == 6 && x.IsInvoice, () =>
                 {
+                    RuleFor(x => x.InvoiceSerial).NotEmpty().WithMessage("Không được trống.");
                     RuleFor(x => x.InvoiceNumber).NotEmpty().WithMessage("Không được trống.");
                     RuleFor(x => x.InvoiceDate).NotEmpty().WithMessage("Không được trống.");
                 });
