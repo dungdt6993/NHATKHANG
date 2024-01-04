@@ -303,16 +303,9 @@
                                         </div>
                                         <ValidationMessage For="@(() => voucherVM.VDate)" />
                                     </div>
-                                </div>
 
-                                @if (voucherVM.IsInvoice)
-                                {
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label>Số hóa đơn</label>
-                                            <InputText class="form-control form-control-sm" @bind-Value="voucherVM.InvoiceNumber" />
-                                            <ValidationMessage For="@(() => voucherVM.InvoiceNumber)" />
-                                        </div>
+                                    @if (voucherVM.IsInvoice)
+                                    {
                                         <div class="form-group col-md-6">
                                             <label>Ngày hóa đơn</label>
                                             <div class="input-group">
@@ -325,6 +318,22 @@
                                                 </div>
                                             </div>
                                             <ValidationMessage For="@(() => voucherVM.InvoiceDate)" />
+                                        </div>
+                                    }
+                                </div>
+
+                                @if (voucherVM.IsInvoice)
+                                {
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label>Mẫu số - Ký hiệu</label>
+                                            <InputText class="form-control form-control-sm" @bind-Value="voucherVM.InvoiceSerial" />
+                                            <ValidationMessage For="@(() => voucherVM.InvoiceSerial)" />
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>Số hóa đơn</label>
+                                            <InputText class="form-control form-control-sm" @bind-Value="voucherVM.InvoiceNumber" />
+                                            <ValidationMessage For="@(() => voucherVM.InvoiceNumber)" />
                                         </div>
                                     </div>
                                 }

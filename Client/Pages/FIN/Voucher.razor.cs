@@ -315,6 +315,8 @@ namespace D69soft.Client.Pages.FIN
 
             if (_IsTypeUpdate != 0)
             {
+                filterVM.ITypeCode = voucherVM.ITypeCode;
+
                 voucherDetailVMs = await voucherService.GetVoucherDetails(voucherVM.VNumber);
             }
 
@@ -384,7 +386,7 @@ namespace D69soft.Client.Pages.FIN
             get { return voucherVM.ITypeCode; }
             set
             {
-                voucherVM.ITypeCode = value;
+                filterVM.ITypeCode = voucherVM.ITypeCode = value;
 
                 voucherDetailVMs = new();
                 voucherVM.TotalAmount = 0;

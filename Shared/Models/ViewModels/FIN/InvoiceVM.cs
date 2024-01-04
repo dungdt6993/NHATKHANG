@@ -22,6 +22,7 @@ namespace D69soft.Shared.Models.ViewModels.FIN
         public decimal PaymentAmount { get; set; }
         public bool IsPayment { get; set; }
         public bool IsInvoice { get; set; }
+        public string InvoiceSerial { get; set; }
         public string InvoiceNumber { get; set; }
         public DateTimeOffset? InvoiceDate { get; set; }
         public string EserialPerform { get; set; }

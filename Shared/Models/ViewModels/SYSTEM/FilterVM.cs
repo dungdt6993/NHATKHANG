@@ -41,6 +41,7 @@ namespace D69soft.Shared.Models.ViewModels.SYSTEM
         public string IUnitCode { get; set; }
         public string StockCode { get; set; }
         public string VTypeID { get; set; }
+        public string InvoiceSerial { get; set; }
         public string InvoiceNumber { get; set; }
         public string IClsCode { get; set; }
         public string IGrpCode { get; set; }
