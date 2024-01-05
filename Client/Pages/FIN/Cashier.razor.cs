@@ -186,6 +186,26 @@ namespace D69soft.Client.Pages.FIN
             }
             else
             {
+                filterVM.FuncID = "FIN_Sale";
+
+                voucherVM = new();
+                voucherDetailVMs = new();
+
+                filterVM.TypeView = 0;
+
+                voucherVM.VSubTypeID = "FIN_Sale_POS";
+
+                voucherVM.IsTypeUpdate = 0;
+
+                voucherVM.VNumber = await voucherService.UpdateVoucher(voucherVM, voucherDetailVMs);
+
+                voucherVM.IsTypeUpdate = 3;
+
+                logVM.LogDesc = "Cập nhật chứng từ " + voucherVM.VNumber + "";
+                await sysService.InsertLog(logVM);
+
+                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
+
                 //await cashierService.OpenRoomTable(filterVM, voucherVM);
 
                 //if (voucherVM.IsClickChangeRoomTable)
