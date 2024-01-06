@@ -83,6 +83,8 @@ namespace D69soft.Client.Pages.FIN
                 navigationManager.NavigateTo("/");
             }
 
+            filterVM.DivisionID = (await sysService.GetInfoUser(filterVM.UserID)).DivisionID;
+
             //Stock
             stockVMs = (await inventoryService.GetStockList()).ToList();
 
@@ -193,18 +195,25 @@ namespace D69soft.Client.Pages.FIN
 
                 filterVM.TypeView = 0;
 
+                voucherVM.VTypeID = "FIN_Sale";
                 voucherVM.VSubTypeID = "FIN_Sale_POS";
 
                 voucherVM.IsTypeUpdate = 0;
 
+                voucherVM.DivisionID = filterVM.DivisionID;
+                voucherVM.VCode = "BH";
+                voucherVM.VDate = DateTime.Now;
+                voucherVM.VDesc = "Bán hàng";
+                voucherVM.EserialPerform = filterVM.UserID;
+
                 voucherVM.VNumber = await voucherService.UpdateVoucher(voucherVM, voucherDetailVMs);
 
-                voucherVM.IsTypeUpdate = 3;
+                voucherVM.IsTypeUpdate = 1;
 
-                logVM.LogDesc = "Cập nhật chứng từ " + voucherVM.VNumber + "";
+                logVM.LogDesc = "Mở phòng/bàn #" + _RoomTableCode + "";
                 await sysService.InsertLog(logVM);
 
-                await js.Swal_Message("Thông báo!", logVM.LogDesc, SweetAlertMessageType.success);
+                await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
 
                 //await cashierService.OpenRoomTable(filterVM, voucherVM);
 

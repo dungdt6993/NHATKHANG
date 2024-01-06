@@ -205,7 +205,6 @@ namespace D69soft.Client.Pages.FIN
             vatDefVMs = await voucherService.GetVATDefs();
 
             //Profile
-            filterVM.DivisionID = filterVM.DivisionID;
             filterVM.TypeProfile = 0;
             profileVMs = await profileService.GetProfileList(filterVM);
 
