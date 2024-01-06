@@ -142,8 +142,8 @@ namespace D69soft.Server.Controllers.FIN
                     sqlVoucherVM += "Create table #tmpAuto_Code_ID (Code_ID varchar(50)) ";
                     sqlVoucherVM += "Insert #tmpAuto_Code_ID ";
                     sqlVoucherVM += "exec SYSTEM.AUTO_CODE_ID 'FIN.Voucher','VNumber',@VCode,'0000' ";
-                    sqlVoucherVM += "Insert into FIN.Voucher (DivisionID,VNumber,VReference,VDesc,VDate,VendorCode,CustomerCode,StockCode,BankAccountID,VContact,ITypeCode,VActive,VTimeActive,IsPayment,PaymentTypeCode,TotalAmount,IsInventory,IsInvoice,InvoiceSerial,InvoiceNumber,InvoiceDate,VTypeID,VSubTypeID,TimeCreated,EserialPerform) ";
-                    sqlVoucherVM += "select @DivisionID,CODE_ID,@VReference,@VDesc,@VDate,@VendorCode,@CustomerCode,@StockCode,@BankAccountID,@VContact,@ITypeCode,@VActive,GETDATE(),@IsPayment,@PaymentTypeCode,@TotalAmount,@IsInventory,@IsInvoice,@InvoiceSerial,@InvoiceNumber,@InvoiceDate,@VTypeID,@VSubTypeID,GETDATE(),@EserialPerform from #tmpAuto_Code_ID ";
+                    sqlVoucherVM += "Insert into FIN.Voucher (DivisionID,VNumber,VReference,VDesc,VDate,VendorCode,CustomerCode,StockCode,BankAccountID,RoomTableCode,VContact,ITypeCode,VActive,VTimeActive,IsPayment,PaymentTypeCode,TotalAmount,IsInventory,IsInvoice,InvoiceSerial,InvoiceNumber,InvoiceDate,VTypeID,VSubTypeID,TimeCreated,EserialPerform) ";
+                    sqlVoucherVM += "select @DivisionID,CODE_ID,@VReference,@VDesc,@VDate,@VendorCode,@CustomerCode,@StockCode,@BankAccountID,@RoomTableCode,@VContact,@ITypeCode,@VActive,GETDATE(),@IsPayment,@PaymentTypeCode,@TotalAmount,@IsInventory,@IsInvoice,@InvoiceSerial,@InvoiceNumber,@InvoiceDate,@VTypeID,@VSubTypeID,GETDATE(),@EserialPerform from #tmpAuto_Code_ID ";
                     sqlVoucherVM += "select CODE_ID from #tmpAuto_Code_ID ";
 
                     VNumber = await conn.ExecuteScalarAsync<string>(sqlVoucherVM, _voucherVM);
@@ -169,7 +169,7 @@ namespace D69soft.Server.Controllers.FIN
                 if (_voucherVM.IsTypeUpdate == 1)
                 {
                     //VoucherVM
-                    sqlVoucherVM = "Update FIN.Voucher set VDesc=@VDesc,VDate=@VDate,VendorCode=@VendorCode,CustomerCode=@CustomerCode,StockCode=@StockCode,BankAccountID=@BankAccountID,VContact=@VContact,ITypeCode=@ITypeCode,IsPayment=@IsPayment,PaymentTypeCode=@PaymentTypeCode,TotalAmount=@TotalAmount,PaymentAmount=@PaymentAmount, ";
+                    sqlVoucherVM = "Update FIN.Voucher set VDesc=@VDesc,VDate=@VDate,VendorCode=@VendorCode,CustomerCode=@CustomerCode,StockCode=@StockCode,BankAccountID=@BankAccountID,RoomTableCode=@RoomTableCode,VContact=@VContact,ITypeCode=@ITypeCode,IsPayment=@IsPayment,PaymentTypeCode=@PaymentTypeCode,TotalAmount=@TotalAmount,PaymentAmount=@PaymentAmount, ";
                     sqlVoucherVM += "IsInventory=@IsInventory,IsInvoice=@IsInvoice,InvoiceSerial=@InvoiceSerial,InvoiceNumber=@InvoiceNumber,InvoiceDate=@InvoiceDate,VSubTypeID=@VSubTypeID,EserialPerform=@EserialPerform ";
                     sqlVoucherVM += "where VNumber=@VNumber ";
                     sqlVoucherVM += "Delete from FIN.VoucherDetail where VNumber=@VNumber ";

@@ -203,7 +203,9 @@ namespace D69soft.Client.Pages.FIN
                 voucherVM.DivisionID = filterVM.DivisionID;
                 voucherVM.VCode = "BH";
                 voucherVM.VDate = DateTime.Now;
-                voucherVM.VDesc = "Bán hàng";
+                voucherVM.VDesc = "Bán hàng POS";
+                voucherVM.CustomerCode = "KL";
+                voucherVM.RoomTableCode = _RoomTableCode;
                 voucherVM.EserialPerform = filterVM.UserID;
 
                 voucherVM.VNumber = await voucherService.UpdateVoucher(voucherVM, voucherDetailVMs);
