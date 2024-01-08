@@ -101,11 +101,6 @@ namespace D69soft.Client.Services.FIN
         }
 
         //POS
-        public async Task<IEnumerable<RoomTableAreaVM>> GetRoomTableArea(string _StockCode)
-        {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<RoomTableAreaVM>>($"api/Voucher/GetRoomTableArea/{_StockCode}");
-        }
-
         public async Task<IEnumerable<RoomTableVM>> GetRoomTable(FilterVM _filterVM)
         {
             var response = await _httpClient.PostAsJsonAsync($"api/Voucher/GetRoomTable", _filterVM);

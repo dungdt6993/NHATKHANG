@@ -436,7 +436,7 @@
                                     <tr>
                                         @if (voucherVM.RoomTableCode != "TakeOut")
                                         {
-                                            <th style="font-weight: bold; width: 50%;">@voucherVM.RoomTableAreaName/@voucherVM.RoomTableName</th>
+                                            <th style="font-weight: bold; width: 50%;">@voucherVM.RoomTableName</th>
                                         }
                                         else
                                         {
@@ -490,7 +490,7 @@
 
                             </div>
 
-                            <div class="list-items table-responsive" style="height: calc(100vh - 392px);">
+                            <div class="list-items table-responsive" style="height: calc(100vh - 166px);">
 
                                 @if (voucherDetailVMs != null)
                                 {
@@ -702,23 +702,6 @@
                                 <div class="tab-pane fade @active_tabContentRoomTable" id="custom-tabs-four-room" role="tabpanel" aria-labelledby="custom-tabs-four-room-tab">
 
                                     <div class="card">
-                                        <div class="card-header">
-
-                                            @if (roomTableAreaVMs != null)
-                                            {
-                                                string active_RoomTable;
-                                                active_RoomTable = String.IsNullOrEmpty(filterVM.RoomTableAreaCode) ? "active" : "";
-
-                                                <button class="button button2 @active_RoomTable" @onclick=@(() => FilterRoomTable(String.Empty))>Tất cả</button>
-                                                @foreach (var _roomTableAreaVM in roomTableAreaVMs)
-                                                {
-                                                    active_RoomTable = filterVM.RoomTableAreaCode == _roomTableAreaVM.RoomTableAreaCode ? "active" : "";
-
-                                                    <button class="button button2 @active_RoomTable" @onclick=@(() => FilterRoomTable(_roomTableAreaVM.RoomTableAreaCode))>@_roomTableAreaVM.RoomTableAreaName</button>
-                                                }
-                                            }
-
-                                        </div>
                                         <div class="card-body" style="overflow: auto; height: calc(100vh - 183px);">
                                             @if (!voucherVM.IsClickChangeRoomTable)
                                             {
@@ -743,12 +726,12 @@
                                     </div>
 
                                 </div>
-@*                                 @{
+                                @{
                                     string active_tabContentMenu;
 
-                                    if (!String.IsNullOrEmpty(infoInvoice.CheckNo))
+                                    if (!String.IsNullOrEmpty(voucherVM.VNumber))
                                     {
-                                        active_tabContentMenu = infoInvoice.IsClickChangeRoomTable == 1 ? "" : "show active";
+                                        active_tabContentMenu = voucherVM.IsClickChangeRoomTable ? "" : "show active";
                                     }
                                     else
                                     {
@@ -763,14 +746,14 @@
                                     @if (itemsVMs != null)
                                     {
                                         <button class="button button2 @(filterVM.IGrpCode == string.Empty ? "active" : "")" @onclick=@(() => FilterItems(string.Empty))>Tất cả</button>
-                                        @foreach (var _iGrp in itemsVMs.Select(x => new { x.IGrpCode, x.IGrpName }).Distinct())
+                                        @foreach (var _iGrp in itemsVMs.Where(x=>!String.IsNullOrEmpty(x.IGrpCode)).Select(x => new { x.IGrpCode, x.IGrpName }).Distinct())
                                         {
                                             <button class="button button2 @(filterVM.IGrpCode == _iGrp.IGrpCode ? "active" : "")" @onclick=@(() => FilterItems(_iGrp.IGrpCode))>@_iGrp.IGrpName</button>
                                         }
                                     }
 
                                     <div id="item-list">
-                                        <div class="items" style="overflow: auto; height: calc(100vh - 260px);">
+                                        <div class="items" style="overflow: auto; height: calc(100vh - 226px);">
                                             @if (itemsVMs != null)
                                             {
                                                 <Virtualize Items="@search_itemsVMs" Context="_itemsVM" OverscanCount="50">
@@ -790,7 +773,7 @@
                                         </div>
                                     </div>
 
-                                </div> *@
+                                </div>
                             </div>
                         </div>
 

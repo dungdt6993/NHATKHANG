@@ -39,7 +39,6 @@ namespace D69soft.Client.Pages.FIN
         List<StockVM> stockVMs;
 
         //RoomTable
-        IEnumerable<RoomTableAreaVM> roomTableAreaVMs;
         IEnumerable<RoomTableVM> roomTableVMs;
 
         //Items
@@ -90,14 +89,6 @@ namespace D69soft.Client.Pages.FIN
 
             filterVM.StockCode = stockVMs.Count() == 1 ? stockVMs.ElementAt(0).StockCode : String.Empty;
 
-            if (!String.IsNullOrEmpty(filterVM.StockCode))
-            {
-                roomTableAreaVMs = await voucherService.GetRoomTableArea(filterVM.StockCode);
-                roomTableVMs = await voucherService.GetRoomTable(filterVM);
-
-                search_itemsVMs = itemsVMs = await inventoryService.GetItemsList(filterVM);
-            }
-
             hubConnection = new HubConnectionBuilder()
                     .WithUrl(configuration["BaseAddress"] + "cashierHub")
                     .Build();
@@ -110,12 +101,12 @@ namespace D69soft.Client.Pages.FIN
                     {
                         if (filterVM.UserID != UserID && voucherVM.RoomTableCode == RoomTableCode && RoomTableCode != "TakeOut")
                         {
-                            js.Swal_Message("" + voucherVM.RoomTableAreaName + "/" + voucherVM.RoomTableName + "", "Nhân viên mã <strong>#" + UserID + "</strong> đang cập nhật!.", SweetAlertMessageType.warning);
+                            js.Swal_Message("" + voucherVM.RoomTableName + "", "Nhân viên mã <strong>#" + UserID + "</strong> đang cập nhật!.", SweetAlertMessageType.warning);
                             voucherVM = new();
                         }
                     }
 
-                    FilterRoomTable(filterVM.RoomTableAreaCode);
+                    FilterRoomTable();
                 }
 
                 StateHasChanged();
@@ -131,17 +122,16 @@ namespace D69soft.Client.Pages.FIN
         {
             filterVM.StockCode = _StockCode;
 
-            roomTableAreaVMs = await voucherService.GetRoomTableArea(filterVM.StockCode);
             roomTableVMs = await voucherService.GetRoomTable(filterVM);
 
-            //search_itemsVMs = itemsVMs = await inventoryService.GetItemsList(filterVM);
+            filterVM.IActive = true;
+            filterVM.IsSale = true;
+            search_itemsVMs = itemsVMs = await inventoryService.GetItemsList(filterVM);
         }
 
-        private async void FilterRoomTable(string _RoomTableAreaCode)
+        private async void FilterRoomTable()
         {
             isLoading = true;
-
-            filterVM.RoomTableAreaCode = _RoomTableAreaCode;
 
             roomTableVMs = await voucherService.GetRoomTable(filterVM);
 
@@ -171,7 +161,7 @@ namespace D69soft.Client.Pages.FIN
             set
             {
                 filterVM.searchValues = value;
-                search_itemsVMs = itemsVMs.Where(x => x.IGrpCode.ToUpper().Contains(filterVM.IGrpCode.ToUpper())).Where(x => x.IName.ToUpper().Contains(filterVM.searchValues.ToUpper())).ToList();
+                search_itemsVMs = itemsVMs.Where(x => x.IName.ToUpper().Contains(filterVM.searchValues.ToUpper())).ToList();
             }
         }
 
@@ -216,13 +206,6 @@ namespace D69soft.Client.Pages.FIN
                 await sysService.InsertLog(logVM);
 
                 await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
-
-                //await cashierService.OpenRoomTable(filterVM, voucherVM);
-
-                //if (voucherVM.IsClickChangeRoomTable)
-                //{
-                //    await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
-                //}
 
                 //voucherVM = await cashierService.GetInfoInvoice(filterVM);
 
@@ -270,7 +253,7 @@ namespace D69soft.Client.Pages.FIN
 
         private async Task ChooseItems(string _iCode)
         {
-            if (await js.Swal_Confirm("" + itemsVMs.Where(x => x.ICode == _iCode).Select(x => x.IName).First() + " - " + String.Format("{0:#,##0.##}", itemsVMs.Where(x => x.ICode == _iCode).Select(x => x.IPrice).First()) + "", $"Bạn có muốn cập nhật mặt hàng này?", SweetAlertMessageType.question))
+            if (await js.Swal_Confirm("" + itemsVMs.Where(x => x.ICode == _iCode).Select(x => x.IName).First() + " - " + String.Format("{0:#,##0.##}", itemsVMs.Where(x => x.ICode == _iCode).Select(x => x.IPrice).First()) + "", $"Bạn có muốn chọn mặt hàng này?", SweetAlertMessageType.question))
             {
                 filterVM.VNumber = voucherVM.VNumber;
                 filterVM.ICode = _iCode;

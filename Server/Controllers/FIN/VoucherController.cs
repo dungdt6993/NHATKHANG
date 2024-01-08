@@ -54,10 +54,15 @@ namespace D69soft.Server.Controllers.FIN
         public async Task<ActionResult<List<VoucherVM>>> GetVouchers(FilterVM _filterVM)
         {
             var sql = "select v.VNumber, v.VReference, v.VDate, v.VDesc, vType.VTypeID, vType.VTypeDesc, vSubType.VSubTypeID, ";
-            sql += "v.VendorCode, v.CustomerCode, v.StockCode, v.BankAccountID, v.VContact, v.ITypeCode, v.VActive, v.IsPayment, v.PaymentTypeCode, v.TotalAmount, v.PaymentAmount, v.IsInventory, v.IsInvoice, v.InvoiceSerial, v.InvoiceNumber, v.InvoiceDate, v.EserialPerform ";
+            sql += "v.VendorCode, v.CustomerCode, v.StockCode, v.BankAccountID, v.VContact, v.ITypeCode, v.VActive, v.IsPayment, v.PaymentTypeCode, v.TotalAmount, v.PaymentAmount, v.IsInventory, v.IsInvoice, v.InvoiceSerial, v.InvoiceNumber, v.InvoiceDate, v.EserialPerform, ";
+            sql += "rt.RoomTableName ";
+
             sql += "from FIN.Voucher v ";
             sql += "join FIN.VType vType on vType.VTypeID = v.VTypeID ";
             sql += "left join FIN.VSubType vSubType on vSubType.VSubTypeID = v.VSubTypeID ";
+
+            sql += "left join FIN.RoomTable rt on rt.RoomTableCode = v.RoomTableCode ";
+
             sql += "where vType.FuncID=@FuncID ";
             sql += "and format(v.VDate,'MM/dd/yyyy')>=format(@StartDate,'MM/dd/yyyy') and format(v.VDate,'MM/dd/yyyy')<=format(@EndDate,'MM/dd/yyyy') ";
             sql += "and (v.DivisionID=@DivisionID or coalesce(@DivisionID,'')='') ";
@@ -344,26 +349,11 @@ namespace D69soft.Server.Controllers.FIN
 
         //POS
         [HttpGet("GetRoomTableArea/{_StockCode}")]
-        public async Task<ActionResult<IEnumerable<RoomTableAreaVM>>> GetRoomTableArea(string _StockCode)
-        {
-            var sql = "select * from FIN.RoomTableArea ";
-            sql += "where StockCode=@StockCode order by RoomTableAreaName ";
-            using (var conn = new SqlConnection(_connConfig.Value))
-            {
-                if (conn.State == ConnectionState.Closed)
-                    conn.Open();
-
-                var result = await conn.QueryAsync<RoomTableAreaVM>(sql, new { StockCode = _StockCode });
-                return Ok(result);
-            }
-
-        }
 
         [HttpPost("GetRoomTable")]
         public async Task<ActionResult<IEnumerable<RoomTableVM>>> GetRoomTable(FilterVM _filterVM)
         {
             var sql = "select distinct rt.RoomTableCode, RoomTableName, coalesce(VActive,0) as IsOpen, pOpenBy.FirstName as OpenByName, EserialPerform, TimeCreated from FIN.RoomTable rt ";
-            sql += "join FIN.RoomTableArea rta on rta.RoomTableAreaCode = rt.RoomTableAreaCode ";
             sql += "left join ( ";
             sql += "select StockCode, RoomTableCode, EserialPerform, MAX(TimeCreated) as TimeCreated, VActive from FIN.Voucher ";
             sql += "where VActive=0 and StockCode=@StockCode group by StockCode, RoomTableCode, EserialPerform, VActive  ";
@@ -371,7 +361,6 @@ namespace D69soft.Server.Controllers.FIN
             sql += ") v on v.RoomTableCode = rt.RoomTableCode ";
             sql += "left join HR.Profile pOpenBy on pOpenBy.Eserial = v.EserialPerform ";
             sql += "where rta.StockCode=@StockCode ";
-            sql += " and (rt.RoomTableAreaCode=@RoomTableAreaCode or coalesce(@RoomTableAreaCode,'')='') ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)
