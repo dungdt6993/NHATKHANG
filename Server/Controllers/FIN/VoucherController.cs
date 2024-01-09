@@ -348,19 +348,16 @@ namespace D69soft.Server.Controllers.FIN
         }
 
         //POS
-        [HttpGet("GetRoomTableArea/{_StockCode}")]
-
         [HttpPost("GetRoomTable")]
         public async Task<ActionResult<IEnumerable<RoomTableVM>>> GetRoomTable(FilterVM _filterVM)
         {
-            var sql = "select distinct rt.RoomTableCode, RoomTableName, coalesce(VActive,0) as IsOpen, pOpenBy.FirstName as OpenByName, EserialPerform, TimeCreated from FIN.RoomTable rt ";
-            sql += "left join ( ";
-            sql += "select StockCode, RoomTableCode, EserialPerform, MAX(TimeCreated) as TimeCreated, VActive from FIN.Voucher ";
-            sql += "where VActive=0 and StockCode=@StockCode group by StockCode, RoomTableCode, EserialPerform, VActive  ";
-            sql += "having MAX(VNumber)>0 ";
+            var sql = "select v.VNumber, rt.RoomTableCode, RoomTableName, IsOpen, pOpenBy.FirstName as OpenByName, EserialPerform, TimeCreated from FIN.RoomTable rt ";
+            sql += "left join ( " ;
+            sql += "select VNumber, StockCode, RoomTableCode, EserialPerform, TimeCreated, case when coalesce(VActive,0) = 0 then 1 else 0 end as IsOpen from FIN.Voucher ";
+            sql += "where VActive=0 and StockCode=@StockCode and coalesce(RoomTableCode,'') <> '' ";
             sql += ") v on v.RoomTableCode = rt.RoomTableCode ";
-            sql += "left join HR.Profile pOpenBy on pOpenBy.Eserial = v.EserialPerform ";
-            sql += "where rta.StockCode=@StockCode ";
+            sql += "left join HR.Profile pOpenBy on pOpenBy.Eserial = v.EserialPerform  ";
+            sql += "where rt.StockCode=@StockCode ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == ConnectionState.Closed)

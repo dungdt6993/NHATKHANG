@@ -436,13 +436,13 @@
                                     <tr>
                                         @if (voucherVM.RoomTableCode != "TakeOut")
                                         {
-                                            <th style="font-weight: bold; width: 50%;">@voucherVM.RoomTableName</th>
+                                            <th style="width: 50%;">@voucherVM.RoomTableName</th>
                                         }
                                         else
                                         {
-                                            <th style="font-weight: bold; width: 50%;">@voucherVM.RoomTableName</th>
+                                            <th style="width: 50%;">@voucherVM.RoomTableName</th>
                                         }
-                                        <th style="font-weight: bold; width: 50%;">Số hóa đơn: @voucherVM.VNumber</th>
+                                        <th class="text-right" style="width: 50%;">Số hóa đơn: @voucherVM.VNumber</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -702,7 +702,7 @@
                                 <div class="tab-pane fade @active_tabContentRoomTable" id="custom-tabs-four-room" role="tabpanel" aria-labelledby="custom-tabs-four-room-tab">
 
                                     <div class="card">
-                                        <div class="card-body" style="overflow: auto; height: calc(100vh - 183px);">
+                                        <div class="card-body" style="overflow: auto; height: calc(100vh - 121px);">
                                             @if (!voucherVM.IsClickChangeRoomTable)
                                             {
                                                 <a class="btn btn-app" @onclick=@(() => OpenTakeOut())><i class="fa fa-shopping-bag" aria-hidden="true"></i>Mang về</a>
@@ -711,12 +711,12 @@
                                             {
                                                 @foreach (var _roomTableVM in roomTableVMs)
                                                 {
-                                                    <a class="btn btn-app" @onclick=@(() => OpenRoomTable(_roomTableVM.RoomTableCode, _roomTableVM.IsOpen))>
+                                                    <a class="btn btn-app" @onclick=@(() => OpenRoomTable(_roomTableVM))>
                                                         @if (_roomTableVM.IsOpen)
                                                         {
                                                             <span class="badge bg-green">@_roomTableVM.EserialPerform - @_roomTableVM.OpenByName (@(_roomTableVM.TimeCreated.HasValue ? _roomTableVM.TimeCreated.Value.ToString("HH:mm dd/MM/yyyy") : String.Empty))</span>
                                                         }
-                                                        <i class="fa fa-table" aria-hidden="true"></i>@_roomTableVM.RoomTableName
+                                                        <i class="fas fa-shopping-cart" aria-hidden="true"></i>@_roomTableVM.RoomTableName
                                                     </a>
                                                 }
                                             }
@@ -745,7 +745,7 @@
 
                                     @if (itemsVMs != null)
                                     {
-                                        <button class="button button2 @(filterVM.IGrpCode == string.Empty ? "active" : "")" @onclick=@(() => FilterItems(string.Empty))>Tất cả</button>
+                                        <button class="button button2 @(String.IsNullOrEmpty(filterVM.IGrpCode) ? "active" : "")" @onclick=@(() => FilterItems(String.Empty))>Tất cả</button>
                                         @foreach (var _iGrp in itemsVMs.Where(x=>!String.IsNullOrEmpty(x.IGrpCode)).Select(x => new { x.IGrpCode, x.IGrpName }).Distinct())
                                         {
                                             <button class="button button2 @(filterVM.IGrpCode == _iGrp.IGrpCode ? "active" : "")" @onclick=@(() => FilterItems(_iGrp.IGrpCode))>@_iGrp.IGrpName</button>

@@ -282,8 +282,8 @@
                             </div>
                             <div class="col-sm-3" style="padding-left: 10px;">
 
-                                <div class="form-row @(voucherVM.IsTypeUpdate==6?"noClick":"")">
-                                    <div class="form-group col-md-6">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 @(voucherVM.IsTypeUpdate==6?"noClick":"")">
                                         @if (voucherVM.VTypeID == "FIN_InventoryCheck")
                                         {
                                             <label>Ngày kiểm kê</label>
