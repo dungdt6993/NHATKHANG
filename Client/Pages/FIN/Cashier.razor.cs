@@ -200,8 +200,6 @@ namespace D69soft.Client.Pages.FIN
             else
             {
                 voucherVM.VTypeID = "FIN_Sale";
-                voucherVM.VSubTypeID = "FIN_Sale_POS";
-
                 voucherVM.IsTypeUpdate = 0;
 
                 voucherVM.DivisionID = filterVM.DivisionID;
@@ -209,6 +207,7 @@ namespace D69soft.Client.Pages.FIN
                 voucherVM.VDate = DateTime.Now;
                 voucherVM.VDesc = "Bán hàng POS";
                 voucherVM.CustomerCode = "KL";
+                voucherVM.PaymentTypeCode = "CASH";
                 voucherVM.StockCode = filterVM.StockCode;
                 voucherVM.RoomTableCode = _roomTableVM.RoomTableCode;
                 voucherVM.EserialPerform = filterVM.UserID;
@@ -222,17 +221,13 @@ namespace D69soft.Client.Pages.FIN
 
                 await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
 
+                filterVM.FuncID = "FIN_Sale";
+                filterVM.VNumber = voucherVM.VNumber;
+
+                filterVM.StartDate = DateTimeOffset.MinValue;
+                filterVM.EndDate = DateTimeOffset.MaxValue;
+
                 voucherVM = (await voucherService.GetVouchers(filterVM)).First();
-
-                //voucherVM = await cashierService.GetInfoInvoice(filterVM);
-
-                //customer = voucherVM.CustomerCode != "" ? await customerService.GetCustomerByID(voucherVM.CustomerCode) : new();
-
-                //invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
-
-                //invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
-
-                //filterVM.ICode = String.Empty;
 
                 await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, filterVM.RoomTableCode, filterVM.UserID);
             }
@@ -268,17 +263,48 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
+        private void onchange_VDQty(ChangeEventArgs e, VoucherDetailVM _voucherDetailVM)
+        {
+            _voucherDetailVM.VDQty = Math.Round(decimal.Parse(e.Value.ToString()), 2, MidpointRounding.AwayFromZero);
+
+            _voucherDetailVM.VDAmount = Math.Round(_voucherDetailVM.VDPrice * _voucherDetailVM.VDQty, MidpointRounding.AwayFromZero);
+
+            _voucherDetailVM.VDDiscountAmount = Math.Round(_voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDAmount / 100, MidpointRounding.AwayFromZero);
+
+            _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
+
+            voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
+
+            StateHasChanged();
+        }
+
         private async Task ChooseItems(string _ICode)
         {
             if (await js.Swal_Confirm("" + itemsVMs.Where(x => x.ICode == _ICode).Select(x => x.IName).First() + " - " + String.Format("{0:#,##0.##}", itemsVMs.Where(x => x.ICode == _ICode).Select(x => x.IPrice).First()) + "", $"Bạn có muốn chọn mặt hàng này?", SweetAlertMessageType.question))
             {
                 filterVM.VNumber = voucherVM.VNumber;
 
-                filterVM.IActive = true;
-                filterVM.searchText = _ICode;
-                var itemsVM = (await inventoryService.GetItemsList(filterVM)).First();
+                filterVM.searchItems = _ICode;
+                voucherDetailVM = (await voucherService.GetSearchItems(filterVM)).First();
 
+                voucherDetailVM.SeqVD = voucherDetailVMs.Count == 0 ? 1 : voucherDetailVMs.Select(x => x.SeqVD).Max() + 1;
+
+                voucherDetailVM.VDQty = 1;
+
+                voucherDetailVM.VDAmount = Math.Round(voucherDetailVM.VDPrice * voucherDetailVM.VDQty, MidpointRounding.AwayFromZero);
+
+                voucherDetailVM.VDDiscountAmount = Math.Round(voucherDetailVM.VDDiscountPercent * voucherDetailVM.VDAmount / 100, MidpointRounding.AwayFromZero);
+
+                voucherDetailVM.VATAmount = Math.Round((voucherDetailVM.VDAmount - voucherDetailVM.VDDiscountAmount) * voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
+
+                voucherDetailVMs.Add(voucherDetailVM);
+
+                voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
+
+                voucherVM.IsTypeUpdate = 1;
                 voucherVM.VNumber = await voucherService.UpdateVoucher(voucherVM, voucherDetailVMs);
+
+                voucherDetailVMs = await voucherService.GetVoucherDetails(voucherVM.VNumber);
 
                 filterVM.ReportName = "CustomNewReport";
 

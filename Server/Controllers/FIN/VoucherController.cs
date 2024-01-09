@@ -54,7 +54,7 @@ namespace D69soft.Server.Controllers.FIN
         public async Task<ActionResult<List<VoucherVM>>> GetVouchers(FilterVM _filterVM)
         {
             var sql = "select v.VNumber, v.VReference, v.VDate, v.VDesc, vType.VTypeID, vType.VTypeDesc, vSubType.VSubTypeID, ";
-            sql += "v.VendorCode, v.CustomerCode, v.StockCode, v.BankAccountID, v.VContact, v.ITypeCode, v.VActive, v.IsPayment, v.PaymentTypeCode, v.TotalAmount, v.PaymentAmount, v.IsInventory, v.IsInvoice, v.InvoiceSerial, v.InvoiceNumber, v.InvoiceDate, v.EserialPerform, ";
+            sql += "v.VendorCode, v.CustomerCode, v.StockCode, v.BankAccountID, rt.RoomTableCode, rt.RoomTableName, v.VContact, v.ITypeCode, v.VActive, v.IsPayment, v.PaymentTypeCode, v.TotalAmount, v.PaymentAmount, v.IsInventory, v.IsInvoice, v.InvoiceSerial, v.InvoiceNumber, v.InvoiceDate, v.EserialPerform, ";
             sql += "rt.RoomTableName ";
 
             sql += "from FIN.Voucher v ";
@@ -113,7 +113,7 @@ namespace D69soft.Server.Controllers.FIN
             sql += "join FIN.ItemsUnit iu on iu.IUnitCode = i.IUnitCode ";
             sql += "left join FIN.VATDef vat on vat.VATCode = i.VATDefault ";
             sql += "left join FIN.Stock s on s.StockCode = i.StockDefault ";
-            sql += "where i.IActive=1 and i.ITypeCode=@ITypeCode and (i.ICode LIKE CONCAT('%',@searchItems,'%') or i.IName LIKE CONCAT('%',@searchItems,'%')) ";
+            sql += "where i.IActive=1 and (i.ITypeCode=@ITypeCode or coalesce(@ITypeCode,'') = '') and (i.ICode LIKE CONCAT('%',@searchItems,'%') or i.IName LIKE CONCAT('%',@searchItems,'%')) ";
             using (var conn = new SqlConnection(_connConfig.Value))
             {
                 if (conn.State == System.Data.ConnectionState.Closed)

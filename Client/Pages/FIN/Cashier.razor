@@ -490,7 +490,7 @@
 
                             </div>
 
-                            <div class="list-items table-responsive" style="height: calc(100vh - 166px);">
+                            <div class="list-items table-responsive" style="height: calc(100vh - 358px);">
 
                                 @if (voucherDetailVMs != null)
                                 {
@@ -514,7 +514,7 @@
                                                 <tr style="@focusItems">
                                                     <td data-target="#InitializeModal_UpdateInvoiceDetail" data-toggle="modal" @onclick=@(()=>InitializeModal_UpdateInvoiceDetail(_voucherDetailVM))>
                                                         <span>@_voucherDetailVM.IName</span>
-                                                        @if (_voucherDetailVM.VDNote != "")
+                                                        @if (!String.IsNullOrEmpty(_voucherDetailVM.VDNote))
                                                         {
                                                             <br />
 
@@ -548,50 +548,46 @@
 
                             </div>
 
-                            @*                             <table class="table" style="margin-bottom: 10px;">
-                        <thead>
-                        <tr style="background-color: #d9edf7">
-                        <th width="25%">Tổng sản phẩm</th>
-                        <th class="text-right"><span>@invoiceTotal.sumQty</span></th>
-                        <th width="25%">Tổng tiền</th>
-                        <th class="text-right" colspan="2"><span>@string.Format("{0:#,##0.##}", @invoiceTotal.sumAmount)</span></th>
-                        </tr>
-                        <tr style="background-color: #d9edf7">
-                        <th width="25%">Thuế</th>
-                        <th class="text-right"><span>@string.Format("{0:#,##0.##}", @invoiceTotal.sumAmount * @infoInvoice.Invoice_TaxPercent / 100)</span></th>
-                        <th width="25%"><a href="javascript:void(0);" data-target="#InitializeModal_InvoiceDiscount" data-toggle="modal" @onclick=@(()=>InitializeModal_InvoiceDiscount(invoiceTotal)) id="add_discount">Giảm giá</a></th>
-                        <th class="text-right"><span>@string.Format("{0:#,##0.##}", @invoiceTotal.Invoice_DiscountPrice * -1)</span></th>
-                        </tr>
-                        <tr style="background-color: #dff0d8">
-                        <th colspan="2" style="font-weight: bold;">Tổng tiền thanh toán <a role="button" data-toggle="modal" data-target="#noteModal"></a></th>
-                        <th class="text-right" colspan="2" style="font-weight: bold;"><span>@string.Format("{0:#,##0.##}", @invoiceTotal.sumAmountPay)</span></th>
-                        </tr>
-                        </thead>
-                        </table> *@
+                            <table class="table" style="margin-bottom: 10px;">
+                                <thead>
+                                    <tr style="background-color: #d9edf7">
+                                        <th width="25%">Tổng tiền</th>
+                                        <th class="text-right" colspan="2"><span>@string.Format("{0:#,##0.##}", voucherVM.TotalAmount)</span></th>
+                                    </tr>
+                                    <tr style="background-color: #d9edf7">
+                                        <th width="25%"><a@*  href="javascript:void(0);" data-target="#InitializeModal_InvoiceDiscount" data-toggle="modal" @onclick=@(()=>InitializeModal_InvoiceDiscount(voucherVM)) id="add_discount" *@>Giảm giá</a></th>
+                                        <th class="text-right" colspan="2"><span>@String.Format("{0:#,##0}", voucherVM.PaymentAmount)</span></th>
+                                    </tr>
+                                    <tr style="background-color: #dff0d8">
+                                        <th width="25%">Tổng tiền thanh toán <a role="button" data-toggle="modal" data-target="#noteModal"></a></th>
+                                        <th class="text-right" colspan="2"><span>@String.Format("{0:#,##0.##}", voucherVM.TotalAmount)</span></th>
+                                    </tr>
+                                </thead>
+                            </table>
 
-                            @*                             <div class="row">
-                        <div class="col-12 col-sm-4">
-                        <div class="btn-group-vertical btn-block">
-                        <button type="button" class="btn bg-gradient-gray btn-block" @onclick=@(() => ChangeRoomTableAsync())><i class="fa-solid fa-xl fa-right-left"></i>&nbsp;<strong>CHUYỂN</strong></button>
-                        <button type="button" class="btn btn-danger btn-block" @onclick=@(() => DelInvoice())><i class="fa fa-xl fa-ban"></i>&nbsp;<strong>HỦY</strong></button>
-                        </div>
-                        </div>
-                        <div class="col-12 col-sm-4">
-                        <div class="btn-group-vertical btn-block">
-                        <button type="button" class="btn bg-primary btn-block"><i class="fa fa-xl fa-bell"></i>&nbsp;<strong>THÔNG BÁO</strong></button>
-                        <button type="button" class="btn bg-navy btn-block" @onclick=@(() => PrintInvoice())><i class="fa fa-xl fa-print"></i>&nbsp;<strong>IN HÓA ĐƠN</strong></button>
-                        </div>
-                        </div>
-                        <div class="col-12 col-sm-4">
+                            <div class="row">
+                                <div class="col-12 col-sm-4">
+                                    <div class="btn-group-vertical btn-block">
+                                        <button type="button" class="btn bg-gradient-gray btn-block" @onclick=@(() => ChangeRoomTableAsync())><i class="fa-solid fa-xl fa-right-left"></i>&nbsp;<strong>CHUYỂN</strong></button>
+                                        <button type="button" class="btn btn-danger btn-block" @onclick=@(() => DelInvoice())><i class="fa fa-xl fa-ban"></i>&nbsp;<strong>HỦY</strong></button>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-4">
+                                    <div class="btn-group-vertical btn-block">
+                                        <button type="button" class="btn bg-primary btn-block"><i class="fa fa-xl fa-bell"></i>&nbsp;<strong>THÔNG BÁO</strong></button>
+                                        <button type="button" class="btn bg-navy btn-block" @onclick=@(() => PrintInvoice())><i class="fa fa-xl fa-print"></i>&nbsp;<strong>IN HÓA ĐƠN</strong></button>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-4">
 
-                        @{
-                        bool disabled_btnPay;
-                        disabled_btnPay = invoiceItemsList.Count() == 0 ? true : false;
-                        }
+                                    @{
+                                        bool disabled_btnPay;
+                                        disabled_btnPay = voucherDetailVMs.Count() == 0 ? true : false;
+                                    }
 
-                        <button type="button" disabled="@disabled_btnPay" class="btn bg-success btn-block" style="height: 67px;" data-target="#InitializeModal_Payment" data-toggle="modal" @onclick="()=>InitializeModal_Payment()"><i class="fa-solid fa-xl fa-dollar-sign"></i>&nbsp;<strong>THANH TOÁN</strong></button>
-                        </div>
-                        </div> *@
+                                    <button type="button" disabled="@disabled_btnPay" class="btn bg-success btn-block" style="height: 67px;" data-target="#InitializeModal_Payment" data-toggle="modal" @onclick="()=>InitializeModal_Payment()"><i class="fa-solid fa-xl fa-dollar-sign"></i>&nbsp;<strong>THANH TOÁN</strong></button>
+                                </div>
+                            </div>
 
                         </div>
                     }
@@ -746,7 +742,7 @@
                                     @if (itemsVMs != null)
                                     {
                                         <button class="button button2 @(String.IsNullOrEmpty(filterVM.IGrpCode) ? "active" : "")" @onclick=@(() => FilterItems(String.Empty))>Tất cả</button>
-                                        @foreach (var _iGrp in itemsVMs.Where(x=>!String.IsNullOrEmpty(x.IGrpCode)).Select(x => new { x.IGrpCode, x.IGrpName }).Distinct())
+                                        @foreach (var _iGrp in itemsVMs.Where(x => !String.IsNullOrEmpty(x.IGrpCode)).Select(x => new { x.IGrpCode, x.IGrpName }).Distinct())
                                         {
                                             <button class="button button2 @(filterVM.IGrpCode == _iGrp.IGrpCode ? "active" : "")" @onclick=@(() => FilterItems(_iGrp.IGrpCode))>@_iGrp.IGrpName</button>
                                         }
