@@ -324,6 +324,7 @@ namespace D69soft.Client.Pages.FIN
 
                 voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
 
+
                 filterVM.ReportName = "CustomNewReport";
             }
         }
