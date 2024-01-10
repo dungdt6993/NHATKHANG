@@ -280,6 +280,8 @@ namespace D69soft.Client.Pages.FIN
 
         private async Task ChooseItems(string _ICode)
         {
+            isLoading = true;
+
             if (await js.Swal_Confirm("" + itemsVMs.Where(x => x.ICode == _ICode).Select(x => x.IName).First() + " - " + String.Format("{0:#,##0.##}", itemsVMs.Where(x => x.ICode == _ICode).Select(x => x.IPrice).First()) + "", $"Bạn có muốn chọn mặt hàng này?", SweetAlertMessageType.question))
             {
                 filterVM.VNumber = voucherVM.VNumber;
@@ -310,6 +312,8 @@ namespace D69soft.Client.Pages.FIN
 
                 await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
             }
+
+            isLoading = false;
         }
 
         private async Task DelInvoiceItems(int seq)

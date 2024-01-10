@@ -253,7 +253,7 @@ namespace D69soft.Server.Controllers.FIN
             sql += "join FIN.VATDef vat on vat.VATCode = vd.VATCode ";
             sql += "left join FIN.Vendor vendor on vendor.VendorCode = v.VendorCode ";
             sql += "left join CRM.Customer cus on cus.CustomerCode = v.CustomerCode ";
-            sql += "where v.VActive=1 and coalesce(v.InvoiceNumber,0) <> 0 and coalesce(vd.VATCode,'') <> '' ";
+            sql += "where v.VActive=1 and coalesce(vd.VATCode,'') <> '' ";
             sql += "and (v.DivisionID=@DivisionID or coalesce(@DivisionID,'')='') ";
             sql += "and (v.VTypeID=@VTypeID or coalesce(@VTypeID,'')='') ";
             sql += "and format(v.InvoiceDate,'MM/dd/yyyy')>=format(@StartDate,'MM/dd/yyyy') and format(v.InvoiceDate,'MM/dd/yyyy')<=format(@EndDate,'MM/dd/yyyy') ";

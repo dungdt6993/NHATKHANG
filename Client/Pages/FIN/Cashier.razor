@@ -497,6 +497,7 @@
                                     <table class="table table-head-fixed table-hover table-hover-cursor">
                                         <thead>
                                             <tr style="background-color: #dff0d8">
+                                                <th class="text-center">#</th>
                                                 <th>Sản phẩm</th>
                                                 <th style="width: 15%; text-align: right;">Giá</th>
                                                 <th style="width: 10%; text-align: center;">SL</th>
@@ -506,12 +507,19 @@
                                         </thead>
                                         <tbody>
 
+                                            @{
+                                                int rowNum = 1;
+                                            }
+
                                             @foreach (var _voucherDetailVM in voucherDetailVMs)
                                             {
                                                 string focusItems;
                                                 focusItems = filterVM.ICode == _voucherDetailVM.ICode ? "border: 2px solid #DBC277;" : "";
 
                                                 <tr style="@focusItems">
+
+                                                    <td class="text-center">@rowNum</td>
+
                                                     <td data-target="#InitializeModal_UpdateInvoiceDetail" data-toggle="modal" @onclick=@(()=>InitializeModal_UpdateInvoiceDetail(_voucherDetailVM))>
                                                         <span>@_voucherDetailVM.IName</span>
                                                         @if (!String.IsNullOrEmpty(_voucherDetailVM.VDNote))
@@ -534,6 +542,8 @@
                                                     <td class="text-right" data-target="#InitializeModal_UpdateInvoiceDetail" data-toggle="modal" @onclick=@(()=>InitializeModal_UpdateInvoiceDetail(_voucherDetailVM))><span class="text-right">@string.Format("{0:#,##0.##}", @_voucherDetailVM.VDAmount)</span></td>
                                                     <td class="text-center"><a href="javascript:void(0);" style="color:#c82333;" @onclick=@(()=>DelInvoiceItems(@_voucherDetailVM.SeqVD))><i class="fa-regular fa-trash-can" title="Xóa"></i></a></td>
                                                 </tr>
+
+                                                ++rowNum;
                                             }
 
                                         </tbody>
@@ -555,7 +565,7 @@
                                         <th class="text-right" colspan="2"><span>@string.Format("{0:#,##0.##}", voucherVM.TotalAmount)</span></th>
                                     </tr>
                                     <tr style="background-color: #d9edf7">
-                                        <th width="25%"><a@*  href="javascript:void(0);" data-target="#InitializeModal_InvoiceDiscount" data-toggle="modal" @onclick=@(()=>InitializeModal_InvoiceDiscount(voucherVM)) id="add_discount" *@>Giảm giá</a></th>
+                                        <th width="25%"><a@* href="javascript:void(0);" data-target="#InitializeModal_InvoiceDiscount" data-toggle="modal" @onclick=@(()=>InitializeModal_InvoiceDiscount(voucherVM)) id="add_discount" *@>Giảm giá</a></th>
                                         <th class="text-right" colspan="2"><span>@String.Format("{0:#,##0}", voucherVM.PaymentAmount)</span></th>
                                     </tr>
                                     <tr style="background-color: #dff0d8">
