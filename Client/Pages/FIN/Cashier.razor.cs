@@ -316,6 +316,18 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
+        private async Task onclick_removeItems(VoucherDetailVM _voucherDetailVM)
+        {
+            if (await js.Swal_Confirm("Xác nhận!", $"Bạn có muốn xóa?", SweetAlertMessageType.question))
+            {
+                voucherDetailVMs.Remove(_voucherDetailVM);
+
+                voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
+
+                filterVM.ReportName = "CustomNewReport";
+            }
+        }
+
         private async Task DelInvoiceItems(int seq)
         {
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
