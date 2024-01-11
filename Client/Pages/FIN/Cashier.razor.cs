@@ -297,8 +297,6 @@ namespace D69soft.Client.Pages.FIN
 
                 voucherDetailVM.VDDiscountAmount = Math.Round(voucherDetailVM.VDDiscountPercent * voucherDetailVM.VDAmount / 100, MidpointRounding.AwayFromZero);
 
-                voucherDetailVM.VATAmount = Math.Round((voucherDetailVM.VDAmount - voucherDetailVM.VDDiscountAmount) * voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
-
                 voucherDetailVMs.Add(voucherDetailVM);
 
                 voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
