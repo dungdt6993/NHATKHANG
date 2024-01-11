@@ -195,6 +195,8 @@ namespace D69soft.Client.Pages.FIN
 
                     voucherVM = (await voucherService.GetVouchers(filterVM)).First();
                     voucherDetailVMs = await voucherService.GetVoucherDetails(voucherVM.VNumber);
+
+                    voucherVM.IsTypeUpdate = 1;
                 }
             }
             else
@@ -322,8 +324,11 @@ namespace D69soft.Client.Pages.FIN
 
                 voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
 
+                voucherVM.VNumber = await voucherService.UpdateVoucher(voucherVM, voucherDetailVMs);
 
                 filterVM.ReportName = "CustomNewReport";
+
+                await js.Toast_Alert("Cập nhật thành công!", SweetAlertMessageType.success);
             }
         }
 
