@@ -24,8 +24,6 @@ namespace D69soft.Client.Pages.FIN
         [Inject] IConfiguration configuration { get; set; }
         private HubConnection hubConnection;
 
-        //private HubConnection hubConnection;
-
         bool isLoading;
         bool isLoadingScreen = true;
 
@@ -332,27 +330,18 @@ namespace D69soft.Client.Pages.FIN
             }
         }
 
-        private async Task DelInvoiceItems(int seq)
-        {
-            if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn xóa?", SweetAlertMessageType.question))
-            {
-                //await cashierService.DelInvoiceItems(voucherVM.VNumber, seq);
-
-                //invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
-
-                //invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
-
-                filterVM.ReportName = "CustomNewReport";
-            }
-        }
-
-        private async Task DelInvoice()
+        private async Task DelVoucher()
         {
             if (await js.Swal_Confirm("Xác nhận!", $"Bạn có chắn chắn muốn hủy?", SweetAlertMessageType.question))
             {
-                //await cashierService.DelInvoice(voucherVM.VNumber);
+                voucherVM.IsTypeUpdate = 2;
 
-                //await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, voucherVM.RoomTableCode, filterVM.UserID);
+                await voucherService.UpdateVoucher(voucherVM, voucherDetailVMs);
+
+                logVM.LogDesc = "Xóa chứng từ " + voucherVM.VNumber + "";
+                await sysService.InsertLog(logVM);
+
+                await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, voucherVM.RoomTableCode, filterVM.UserID);
 
                 voucherVM = new();
             }

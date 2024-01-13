@@ -502,7 +502,7 @@
                                                 <th style="width: 15%; text-align: right;">Giá</th>
                                                 <th style="width: 10%; text-align: center;">SL</th>
                                                 <th style="width: 20%; text-align: right;">Tổng</th>
-                                                <th class="text-center"><a href="javascript:void(0);" @onclick=@(()=>DelInvoiceItems(0))><i class="fa-solid fa-trash-can" style="color:#c82333;"></i></a></th>
+                                                <th class="text-center"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -513,7 +513,7 @@
 
                                             @foreach (var _voucherDetailVM in voucherDetailVMs)
                                             {
-                                                string focusItems;
+                                                String focusItems;
                                                 focusItems = filterVM.ICode == _voucherDetailVM.ICode ? "border: 2px solid #DBC277;" : "";
 
                                                 <tr style="@focusItems">
@@ -579,7 +579,7 @@
                                 <div class="col-12 col-sm-4">
                                     <div class="btn-group-vertical btn-block">
                                         <button type="button" class="btn bg-gradient-gray btn-block" @onclick=@(() => ChangeRoomTableAsync())><i class="fa-solid fa-xl fa-right-left"></i>&nbsp;<strong>CHUYỂN</strong></button>
-                                        <button type="button" class="btn btn-danger btn-block" @onclick=@(() => DelInvoice())><i class="fa fa-xl fa-ban"></i>&nbsp;<strong>HỦY</strong></button>
+                                        <button type="button" class="btn btn-danger btn-block" @onclick=@(() => DelVoucher())><i class="fa fa-xl fa-ban"></i>&nbsp;<strong>HỦY</strong></button>
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-4">
