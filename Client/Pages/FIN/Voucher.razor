@@ -2518,7 +2518,7 @@
 </div>
 @* End Items *@
 
-<Modal_RptViewer ReportName=@ReportName></Modal_RptViewer>
+<Modal_RptViewer ReportName=@filterVM.ReportName></Modal_RptViewer>
 
 <EditForm Model="@filterVM">
     <section class="content-header">
@@ -2739,7 +2739,7 @@
             @if (filterVM.TypeView == 1)
             {
                 <div class="card-header text-center">
-                    @if (ReportName == "FIN_So_quy_tien")
+                    @if (filterVM.ReportName == "FIN_So_quy_tien")
                     {
                         @if (filterVM.FuncID == "FIN_Cash")
                         {
@@ -2751,7 +2751,7 @@
                             <h5><b>SỔ TIỀN GỬI NGÂN HÀNG</b></h5>
                         }
                     }
-                    @if (ReportName == "FIN_Tong_hop_ton_kho")
+                    @if (filterVM.ReportName == "FIN_Tong_hop_ton_kho")
                     {
                         <h5><b>TỔNG HỢP TỒN KHO</b></h5>
                     }
@@ -2767,7 +2767,7 @@
                         }
                     </i>
 
-                    @if (ReportName == "FIN_So_quy_tien")
+                    @if (filterVM.ReportName == "FIN_So_quy_tien")
                     {
                         @if (moneyBooks != null)
                         {
@@ -2942,7 +2942,7 @@
                 }
                 @if (filterVM.TypeView == 1)
                 {
-                    @if (ReportName == "FIN_Tong_hop_ton_kho")
+                    @if (filterVM.ReportName == "FIN_Tong_hop_ton_kho")
                     {
                         @if (inventoryVMs != null)
                         {
@@ -2988,7 +2988,7 @@
                         }
                     }
 
-                    @if (ReportName == "FIN_So_quy_tien")
+                    @if (filterVM.ReportName == "FIN_So_quy_tien")
                     {
                         @if (moneyBooks != null)
                         {

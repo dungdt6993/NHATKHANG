@@ -267,21 +267,6 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
-        private void onchange_VDQty(ChangeEventArgs e, VoucherDetailVM _voucherDetailVM)
-        {
-            _voucherDetailVM.VDQty = Math.Round(decimal.Parse(e.Value.ToString()), 2, MidpointRounding.AwayFromZero);
-
-            _voucherDetailVM.VDAmount = Math.Round(_voucherDetailVM.VDPrice * _voucherDetailVM.VDQty, MidpointRounding.AwayFromZero);
-
-            _voucherDetailVM.VDDiscountAmount = Math.Round(_voucherDetailVM.VDDiscountPercent * _voucherDetailVM.VDAmount / 100, MidpointRounding.AwayFromZero);
-
-            _voucherDetailVM.VATAmount = Math.Round((_voucherDetailVM.VDAmount - _voucherDetailVM.VDDiscountAmount) * _voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
-
-            voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
-
-            StateHasChanged();
-        }
-
         private async Task ChooseItems(string _ICode)
         {
             isLoading = true;
@@ -296,6 +281,12 @@ namespace D69soft.Client.Pages.FIN
                 voucherDetailVM.SeqVD = voucherDetailVMs.Count == 0 ? 1 : voucherDetailVMs.Select(x => x.SeqVD).Max() + 1;
 
                 voucherDetailVM.VDQty = 1;
+
+                voucherDetailVM.VATCode = String.Empty;
+                voucherDetailVM.VATRate = 0;
+                voucherDetailVM.FromStockCode = String.Empty;
+                voucherDetailVM.ToStockCode = String.Empty;
+                voucherDetailVM.InventoryCheck_StockCode = filterVM.StockCode;
 
                 voucherDetailVM.VDAmount = Math.Round(voucherDetailVM.VDPrice * voucherDetailVM.VDQty, MidpointRounding.AwayFromZero);
 
@@ -370,35 +361,13 @@ namespace D69soft.Client.Pages.FIN
 
                 voucherDetailVM.VDQty = value == 0 ? 1 : value;
 
-                isLoading = false;
-            }
-        }
+                voucherDetailVM.VDAmount = Math.Round(voucherDetailVM.VDPrice * voucherDetailVM.VDQty, MidpointRounding.AwayFromZero);
 
-        private decimal onchange_ItemsDiscountPrice
-        {
-            get { return voucherDetailVM.VDDiscountAmount; }
-            set
-            {
-                isLoading = true;
+                voucherDetailVM.VDDiscountAmount = Math.Round(voucherDetailVM.VDDiscountPercent * voucherDetailVM.VDAmount / 100, MidpointRounding.AwayFromZero);
 
-                voucherDetailVM.VDDiscountAmount = value > voucherDetailVM.VDPrice ? voucherDetailVM.VDPrice : value;
+                voucherDetailVM.VATAmount = Math.Round((voucherDetailVM.VDAmount - voucherDetailVM.VDDiscountAmount) * voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
 
-                voucherDetailVM.VDDiscountPercent = voucherDetailVM.VDPrice != 0 ? voucherDetailVM.VDDiscountAmount / voucherDetailVM.VDPrice * 100 : 0;
-
-                isLoading = false;
-            }
-        }
-
-        private decimal onchange_ItemsDiscountPercent
-        {
-            get { return voucherDetailVM.VDDiscountPercent; }
-            set
-            {
-                isLoading = true;
-
-                voucherDetailVM.VDDiscountPercent = value;
-
-                voucherDetailVM.VDDiscountAmount = voucherDetailVM.VDPrice * voucherDetailVM.VDDiscountPercent / 100;
+                voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
 
                 isLoading = false;
             }
@@ -417,16 +386,68 @@ namespace D69soft.Client.Pages.FIN
                 voucherDetailVM.VDQty = voucherDetailVM.VDQty > 1 ? voucherDetailVM.VDQty - 1 : 1;
             }
 
+            voucherDetailVM.VDAmount = Math.Round(voucherDetailVM.VDPrice * voucherDetailVM.VDQty, MidpointRounding.AwayFromZero);
+
+            voucherDetailVM.VDDiscountAmount = Math.Round(voucherDetailVM.VDDiscountPercent * voucherDetailVM.VDAmount / 100, MidpointRounding.AwayFromZero);
+
+            voucherDetailVM.VATAmount = Math.Round((voucherDetailVM.VDAmount - voucherDetailVM.VDDiscountAmount) * voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
+
+            voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
+
             isLoading = false;
         }
 
-        private void click_ItemsDiscountPercentSuggest(int value)
+        private decimal onchange_VDDiscountAmount
+        {
+            get { return voucherDetailVM.VDDiscountAmount; }
+            set
+            {
+                isLoading = true;
+
+                voucherDetailVM.VDDiscountAmount = value > voucherDetailVM.VDAmount ? voucherDetailVM.VDDiscountAmount : value;
+
+                voucherDetailVM.VDDiscountPercent = voucherDetailVM.VDDiscountAmount != 0 ? Math.Round(voucherDetailVM.VDDiscountAmount * 100 / voucherDetailVM.VDAmount, 2, MidpointRounding.AwayFromZero) : 0;
+
+                voucherDetailVM.VATAmount = Math.Round((voucherDetailVM.VDAmount - voucherDetailVM.VDDiscountAmount) * voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
+
+                voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
+
+                isLoading = false;
+            }
+        }
+
+        private decimal onchange_VDDiscountPercent
+        {
+            get { return voucherDetailVM.VDDiscountPercent; }
+            set
+            {
+                isLoading = true;
+
+                voucherDetailVM.VDDiscountPercent = value > 100 ? voucherDetailVM.VDDiscountPercent : value;
+
+                voucherDetailVM.VDDiscountPercent = Math.Round(value, 2, MidpointRounding.AwayFromZero);
+
+                voucherDetailVM.VDDiscountAmount = Math.Round(voucherDetailVM.VDDiscountPercent * voucherDetailVM.VDAmount / 100, MidpointRounding.AwayFromZero);
+
+                voucherDetailVM.VATAmount = Math.Round((voucherDetailVM.VDAmount - voucherDetailVM.VDDiscountAmount) * voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
+
+                voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
+
+                isLoading = false;
+            }
+        }
+
+        private void click_VDDiscountPercentSuggest(int value)
         {
             isLoading = true;
 
             voucherDetailVM.VDDiscountPercent = value;
 
-            voucherDetailVM.VDDiscountAmount = voucherDetailVM.VDPrice * voucherDetailVM.VDDiscountPercent / 100;
+            voucherDetailVM.VDDiscountAmount = Math.Round(voucherDetailVM.VDDiscountPercent * voucherDetailVM.VDAmount / 100, MidpointRounding.AwayFromZero);
+
+            voucherDetailVM.VATAmount = Math.Round((voucherDetailVM.VDAmount - voucherDetailVM.VDDiscountAmount) * voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
+
+            voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
 
             isLoading = false;
         }
@@ -435,25 +456,24 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            //await cashierService.UpdateInvoiceDetail(invoiceDetail);
+            voucherVM.VNumber = await voucherService.UpdateVoucher(voucherVM, voucherDetailVMs);
 
-            //invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
-            //invoiceTotal = await cashierService.GetInvoiceTotal(voucherVM.VNumber);
+            voucherDetailVMs = await voucherService.GetVoucherDetails(voucherVM.VNumber);
 
-            filterVM.ICode = voucherDetailVM.ICode;
+            filterVM.SeqVD = voucherDetailVM.SeqVD;
 
-            await js.InvokeAsync<object>("CloseModal", "#InitializeModal_UpdateInvoiceDetail");
+            await js.InvokeAsync<object>("CloseModal", "#InitializeModal_UpdateVoucherDetail");
 
             filterVM.ReportName = "CustomNewReport";
 
             isLoading = false;
         }
 
-        private async Task CloseModal_UpdateInvoiceDetail()
+        private async Task CloseModal_UpdateVoucherDetail()
         {
             isLoading = true;
 
-            //invoiceItemsList = await cashierService.GetInvoiceItems(voucherVM.VNumber);
+            voucherDetailVMs = await voucherService.GetVoucherDetails(voucherVM.VNumber);
 
             isLoading = false;
         }
@@ -740,9 +760,9 @@ namespace D69soft.Client.Pages.FIN
             voucherVM.IsClickChangeRoomTable = true;
         }
 
-        protected async Task PrintInvoice()
+        protected async Task PrintVoucher(string _ReportName)
         {
-            filterVM.ReportName = "POS_PrintInvoice?VNumber=" + voucherVM.VNumber + "";
+            filterVM.ReportName = $"{_ReportName}?VNumber={voucherVM.VNumber}";
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalView_Rpt");
         }
     }

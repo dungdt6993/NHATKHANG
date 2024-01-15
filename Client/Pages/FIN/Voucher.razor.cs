@@ -120,9 +120,6 @@ namespace D69soft.Client.Pages.FIN
         //Account
         IEnumerable<AccountVM> accountVMs;
 
-        //RPT
-        string ReportName = String.Empty;
-
         //Inventory
         List<InventoryVM> inventoryVMs;
 
@@ -929,7 +926,7 @@ namespace D69soft.Client.Pages.FIN
                 }
             }
 
-            ReportName = "CustomNewReport";
+            filterVM.ReportName = "CustomNewReport";
 
             isLoading = false;
         }
@@ -1051,7 +1048,7 @@ namespace D69soft.Client.Pages.FIN
 
         protected async Task PrintVoucher(string _ReportName)
         {
-            ReportName = $"{_ReportName}?VNumber={voucherVM.VNumber}";
+            filterVM.ReportName = $"{_ReportName}?VNumber={voucherVM.VNumber}";
             await js.InvokeAsync<object>("ShowModal", "#InitializeModalView_Rpt");
         }
 
@@ -1191,7 +1188,7 @@ namespace D69soft.Client.Pages.FIN
 
             filterVM.TypeView = 1;
 
-            ReportName = _ReportName;
+            filterVM.ReportName = _ReportName;
 
             if (_ReportName == "FIN_So_quy_tien")
             {
@@ -2146,7 +2143,7 @@ namespace D69soft.Client.Pages.FIN
                 }
 
                 //Cập nhật Items từ tồn kho
-                if (filterVM.TypeView == 1 && ReportName == "FIN_Tong_hop_ton_kho")
+                if (filterVM.TypeView == 1 && filterVM.ReportName == "FIN_Tong_hop_ton_kho")
                 {
                     inventoryVMs = await inventoryService.GetInventorys(filterVM);
                 }

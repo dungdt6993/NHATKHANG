@@ -53,6 +53,7 @@ namespace D69soft.Shared.Models.ViewModels.SYSTEM
         public bool IsSale { get; set; }
 
         //POS
+        public int SeqVD { get; set; }
         public string RoomTableCode { get; set; }
         public string RoomTableAreaCode { get; set; }
         public bool IsOpen { get; set; }
