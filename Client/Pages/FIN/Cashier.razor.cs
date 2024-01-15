@@ -118,6 +118,8 @@ namespace D69soft.Client.Pages.FIN
 
         private async Task ChoosePointOfSale(string _StockCode)
         {
+            isLoading = true;
+
             filterVM.StockCode = _StockCode;
 
             roomTableVMs = await voucherService.GetRoomTable(filterVM);
@@ -125,6 +127,8 @@ namespace D69soft.Client.Pages.FIN
             filterVM.IActive = true;
             filterVM.IsSale = true;
             search_itemsVMs = itemsVMs = await inventoryService.GetItemsList(filterVM);
+
+            isLoading = false;
         }
 
         private async void FilterRoomTable()
@@ -348,13 +352,11 @@ namespace D69soft.Client.Pages.FIN
 
         }
 
-        private void InitializeModal_UpdateInvoiceDetail(VoucherDetailVM _voucherDetailVM)
+        private void InitializeModal_UpdateVoucherDetail(VoucherDetailVM _voucherDetailVM)
         {
             isLoading = true;
 
-            //invoiceDetail = new InvoiceVM();
-
-            //invoiceDetail = _invoiceDetail;
+            voucherDetailVM = _voucherDetailVM;
 
             isLoading = false;
         }
@@ -429,7 +431,7 @@ namespace D69soft.Client.Pages.FIN
             isLoading = false;
         }
 
-        private async Task UpdateInvoiceDetail()
+        private async Task UpdateVoucherDetail()
         {
             isLoading = true;
 

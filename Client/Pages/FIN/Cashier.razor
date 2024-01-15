@@ -89,10 +89,10 @@
     <!-- /.modal-dialog -->
 </div>
 
-<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_UpdateInvoiceDetail">
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_UpdateVoucherDetail">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <EditForm Model="@voucherDetailVM" OnValidSubmit="@UpdateInvoiceDetail">
+            <EditForm Model="@voucherDetailVM" OnValidSubmit="@UpdateVoucherDetail">
 
                 <FluentValidationValidator />
 
@@ -122,7 +122,6 @@
                                     <button type="button" class="btn bg-primary" style="border-radius: 50%;" @onclick=@(()=>click_UpdateQty("+"))><i class="fa-solid fa-plus"></i></button>
                                 </div>
                             </div>
-
                         </div>
 
                     </div>
@@ -520,7 +519,7 @@
 
                                                     <td class="text-center">@rowNum</td>
 
-                                                    <td data-target="#InitializeModal_UpdateInvoiceDetail" data-toggle="modal" @onclick=@(()=>InitializeModal_UpdateInvoiceDetail(_voucherDetailVM))>
+                                                    <td data-target="#InitializeModal_UpdateVoucherDetail" data-toggle="modal" @onclick=@(()=>InitializeModal_UpdateVoucherDetail(_voucherDetailVM))>
                                                         <span>@_voucherDetailVM.IName</span>
                                                         @if (!String.IsNullOrEmpty(_voucherDetailVM.VDNote))
                                                         {
@@ -529,7 +528,7 @@
                                                             <span style="font-size: .8rem !important; color: gray;"><i class="fa-solid fa-note-sticky"></i> @_voucherDetailVM.VDNote</span>
                                                         }
                                                     </td>
-                                                    <td class="text-right" data-target="#InitializeModal_UpdateInvoiceDetail" data-toggle="modal" @onclick=@(()=>InitializeModal_UpdateInvoiceDetail(_voucherDetailVM))>
+                                                    <td class="text-right" data-target="#InitializeModal_UpdateVoucherDetail" data-toggle="modal" @onclick=@(()=>InitializeModal_UpdateVoucherDetail(_voucherDetailVM))>
                                                         <span class="text-right">@string.Format("{0:#,##0.##}", @_voucherDetailVM.VDPrice)</span>
                                                         @if (_voucherDetailVM.VDDiscountAmount != 0)
                                                         {
@@ -538,8 +537,8 @@
                                                             <span style="font-size: .8rem !important; color: #c82333;">@string.Format("{0:#,##0.##}", @_voucherDetailVM.VDDiscountAmount * -1)</span>
                                                         }
                                                     </td>
-                                                    <td class="text-center" data-target="#InitializeModal_UpdateInvoiceDetail" data-toggle="modal" @onclick=@(()=>InitializeModal_UpdateInvoiceDetail(_voucherDetailVM))>@_voucherDetailVM.VDQty</td>
-                                                    <td class="text-right" data-target="#InitializeModal_UpdateInvoiceDetail" data-toggle="modal" @onclick=@(()=>InitializeModal_UpdateInvoiceDetail(_voucherDetailVM))><span class="text-right">@string.Format("{0:#,##0.##}", @_voucherDetailVM.VDAmount)</span></td>
+                                                    <td class="text-center" data-target="#InitializeModal_UpdateVoucherDetail" data-toggle="modal" @onclick=@(()=>InitializeModal_UpdateVoucherDetail(_voucherDetailVM))>@_voucherDetailVM.VDQty</td>
+                                                    <td class="text-right" data-target="#InitializeModal_UpdateVoucherDetail" data-toggle="modal" @onclick=@(()=>InitializeModal_UpdateVoucherDetail(_voucherDetailVM))><span class="text-right">@string.Format("{0:#,##0.##}", @_voucherDetailVM.VDAmount)</span></td>
                                                     <td class="text-center"><a href="javascript:void(0);" style="color:#c82333;" @onclick=@(()=>onclick_removeItems(_voucherDetailVM))><i class="fa-regular fa-trash-can" title="Xóa"></i></a></td>
                                                 </tr>
 
