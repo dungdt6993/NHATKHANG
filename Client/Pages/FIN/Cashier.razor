@@ -105,7 +105,7 @@
 
                     <div class="row">
                         <div class="col-12 col-sm-9">
-                            <input type="text" name="currency-mask" class="form-control form-control-border border-width-2" @bind="voucherDetailVM.VDPrice" onClick="this.select();" style="font-size: larger; font-weight: bold; text-align: right;" />
+                            <input type="text" name="currency-mask" class="form-control form-control-border border-width-2" @bind="onchange_VDPrice" onClick="this.select();" style="font-size: larger; font-weight: bold; text-align: right;" />
                         </div>
 
                         <div class="col-12 col-sm-3">
@@ -242,7 +242,7 @@
     <!-- /.modal-dialog -->
 </div> *@
 
-@* <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_Payment">
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_Payment">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <EditForm Model="@voucherVM" OnValidSubmit="@SavePayment">
@@ -295,7 +295,7 @@
                                                 </th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+@*                                         <tbody>
                                             <tr>
                                                 <td>
                                                     <input type="text" name="currency-mask" class="form-control form-control-border border-width-2" @bind="onchange_CustomerAmount" @bind:event="oninput" onClick="this.select();" style="font-size: larger;" />
@@ -309,14 +309,14 @@
                                                     @string.Format("{0:#,##0.##}", voucherVM.ReturnAmount * -1)
                                                 </td>
                                             </tr>
-                                        </tbody>
+                                        </tbody> *@
                                     </table>
 
                                 </div>
 
                                 <div class="form-group">
 
-                                    @if (customerAmountSuggestList != null)
+@*                                     @if (customerAmountSuggestList != null)
                                     {
                                         <table class="table table-bordered">
                                             <tbody>
@@ -330,7 +330,7 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                    }
+                                    } *@
                                 </div>
 
                                 <div class="form-group">
@@ -409,7 +409,7 @@
         <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
-</div> *@
+</div>
 
 <section id="POS" class="content" style="padding-top: 5px">
 
@@ -581,17 +581,11 @@
                                 <div class="col-12 col-sm-4">
                                     <div class="btn-group-vertical btn-block">
                                         <button type="button" class="btn bg-primary btn-block"><i class="fa fa-xl fa-bell"></i>&nbsp;<strong>THÔNG BÁO</strong></button>
-                                        <button type="button" class="btn bg-navy btn-block" @onclick=@(() => PrintVoucher("Phieu_xuat_kho_ban_hang"))><i class="fa fa-xl fa-print"></i>&nbsp;<strong>IN HÓA ĐƠN</strong></button>
+                                        <button type="button" disabled="@(voucherDetailVMs.Count() == 0 ? true : false)" class="btn bg-navy btn-block" @onclick=@(() => PrintVoucher("Phieu_xuat_kho_ban_hang"))><i class="fa fa-xl fa-print"></i>&nbsp;<strong>IN HÓA ĐƠN</strong></button>
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-4">
-
-                                    @{
-                                        bool disabled_btnPay;
-                                        disabled_btnPay = voucherDetailVMs.Count() == 0 ? true : false;
-                                    }
-
-                                    <button type="button" disabled="@disabled_btnPay" class="btn bg-success btn-block" style="height: 67px;" data-target="#InitializeModal_Payment" data-toggle="modal" @onclick="()=>InitializeModal_Payment()"><i class="fa-solid fa-xl fa-dollar-sign"></i>&nbsp;<strong>THANH TOÁN</strong></button>
+                                    <button type="button" disabled="@(voucherDetailVMs.Count() == 0 ? true : false)" class="btn bg-success btn-block" style="height: 67px;" data-target="#InitializeModal_Payment" data-toggle="modal" @onclick="()=>InitializeModal_Payment()"><i class="fa-solid fa-xl fa-dollar-sign"></i>&nbsp;<strong>THANH TOÁN</strong></button>
                                 </div>
                             </div>
 

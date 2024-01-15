@@ -178,9 +178,6 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            voucherVM = new();
-            voucherDetailVMs = new();
-
             if (_roomTableVM.IsOpen)
             {
                 if(voucherVM.IsClickChangeRoomTable)
@@ -203,35 +200,54 @@ namespace D69soft.Client.Pages.FIN
             }
             else
             {
-                voucherVM.VTypeID = "FIN_Sale";
-                voucherVM.IsTypeUpdate = 0;
+                if (!voucherVM.IsClickChangeRoomTable)
+                {
+                    voucherVM = new();
+                    voucherDetailVMs = new();
 
-                voucherVM.DivisionID = filterVM.DivisionID;
-                voucherVM.VCode = "BH";
-                voucherVM.VDate = DateTime.Now;
-                voucherVM.VDesc = "Bán hàng POS";
-                voucherVM.CustomerCode = "KL";
-                voucherVM.PaymentTypeCode = "CASH";
-                voucherVM.StockCode = filterVM.StockCode;
-                voucherVM.RoomTableCode = _roomTableVM.RoomTableCode;
-                voucherVM.EserialPerform = filterVM.UserID;
+                    voucherVM.VTypeID = "FIN_Sale";
+                    voucherVM.IsTypeUpdate = 0;
 
-                voucherVM.VNumber = await voucherService.UpdateVoucher(voucherVM, voucherDetailVMs);
+                    voucherVM.DivisionID = filterVM.DivisionID;
+                    voucherVM.VCode = "BH";
+                    voucherVM.VDate = DateTime.Now;
+                    voucherVM.VDesc = "Bán hàng POS";
+                    voucherVM.CustomerCode = "KL";
+                    voucherVM.PaymentTypeCode = "CASH";
+                    voucherVM.StockCode = filterVM.StockCode;
+                    voucherVM.RoomTableCode = _roomTableVM.RoomTableCode;
+                    voucherVM.EserialPerform = filterVM.UserID;
 
-                voucherVM.IsTypeUpdate = 1;
+                    voucherVM.VNumber = await voucherService.UpdateVoucher(voucherVM, voucherDetailVMs);
 
-                logVM.LogDesc = "Mở phòng/bàn #" + _roomTableVM.RoomTableCode + "";
-                await sysService.InsertLog(logVM);
+                    logVM.LogDesc = "Mở phòng/bàn #" + _roomTableVM.RoomTableCode + "";
+                    await sysService.InsertLog(logVM);
 
-                await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
+                    await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
 
-                filterVM.FuncID = "FIN_Sale";
-                filterVM.VNumber = voucherVM.VNumber;
+                    filterVM.FuncID = "FIN_Sale";
+                    filterVM.VNumber = voucherVM.VNumber;
 
-                filterVM.StartDate = DateTimeOffset.MinValue;
-                filterVM.EndDate = DateTimeOffset.MaxValue;
+                    filterVM.StartDate = DateTimeOffset.MinValue;
+                    filterVM.EndDate = DateTimeOffset.MaxValue;
 
-                voucherVM = (await voucherService.GetVouchers(filterVM)).First();
+                    voucherVM = (await voucherService.GetVouchers(filterVM)).First();
+
+                    voucherVM.IsTypeUpdate = 1;
+                }
+                else
+                {
+                    logVM.LogDesc = "Chuyển phòng/bàn #" + voucherVM.RoomTableCode + " sang #" + _roomTableVM.RoomTableCode + "";
+
+                    voucherVM.RoomTableCode = _roomTableVM.RoomTableCode;
+                    voucherVM.VNumber = await voucherService.UpdateVoucher(voucherVM, voucherDetailVMs);
+
+                    voucherVM = (await voucherService.GetVouchers(filterVM)).First();
+
+                    await sysService.InsertLog(logVM);
+
+                    await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
+                }
 
                 await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, filterVM.RoomTableCode, filterVM.UserID);
             }
@@ -395,6 +411,27 @@ namespace D69soft.Client.Pages.FIN
             voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
 
             isLoading = false;
+        }
+
+        private decimal onchange_VDPrice
+        {
+            get { return voucherDetailVM.VDPrice; }
+            set
+            {
+                isLoading = true;
+
+                voucherDetailVM.VDPrice = value;
+
+                voucherDetailVM.VDAmount = Math.Round(voucherDetailVM.VDPrice * voucherDetailVM.VDQty, MidpointRounding.AwayFromZero);
+
+                voucherDetailVM.VDDiscountAmount = Math.Round(voucherDetailVM.VDDiscountPercent * voucherDetailVM.VDAmount / 100, MidpointRounding.AwayFromZero);
+
+                voucherDetailVM.VATAmount = Math.Round((voucherDetailVM.VDAmount - voucherDetailVM.VDDiscountAmount) * voucherDetailVM.VATRate, MidpointRounding.AwayFromZero);
+
+                voucherVM.TotalAmount = voucherDetailVMs.Select(x => x.VDAmount - x.VDDiscountAmount + x.VATAmount).Sum();
+
+                isLoading = false;
+            }
         }
 
         private decimal onchange_VDDiscountAmount
@@ -757,7 +794,7 @@ namespace D69soft.Client.Pages.FIN
 
         private void ClickTabMenu()
         {
-            voucherVM.IsClickChangeRoomTable = true;
+            voucherVM.IsClickChangeRoomTable = false;
         }
 
         protected async Task PrintVoucher(string _ReportName)
