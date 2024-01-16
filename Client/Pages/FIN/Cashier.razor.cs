@@ -61,7 +61,7 @@ namespace D69soft.Client.Pages.FIN
         {
             if (firstRender)
             {
-                await js.InvokeAsync<object>("openWinNewTab");
+                await js.InvokeAsync<object>("bootrap_select");
             }
             await js.InvokeAsync<object>("maskCurrency");
             await js.InvokeAsync<object>("maskPercent"); ;
