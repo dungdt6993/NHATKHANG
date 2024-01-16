@@ -98,13 +98,14 @@
 
                 <div class="modal-header" style="display: inherit;">
                     <div class="row">
-                        <h5 class="modal-title">
-                            <span>@voucherDetailVM.IName</span>&ensp;
-                        </h5>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-12 col-sm-9">
+                        <div class="col-12 col-sm-6">
+                            <h5 class="modal-title">
+                                <span>@voucherDetailVM.IName</span>&ensp;
+                            </h5>
+                        </div>
+
+                        <div class="col-12 col-sm-3">
                             <input type="text" name="currency-mask" class="form-control form-control-border border-width-2" @bind="onchange_VDPrice" onClick="this.select();" style="font-size: larger; font-weight: bold; text-align: right;" />
                         </div>
 
@@ -245,7 +246,7 @@
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="InitializeModal_Payment">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <EditForm Model="@voucherVM" OnValidSubmit="@SavePayment">
+            <EditForm Model="@voucherVM" OnValidSubmit="@Payment">
 
                 <FluentValidationValidator />
 
@@ -255,7 +256,7 @@
                     </h5>
 
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <i class="fa-regular fa-circle-xmark text-danger"></i>
                     </button>
 
                 </div>
@@ -295,42 +296,39 @@
                                                 </th>
                                             </tr>
                                         </thead>
-@*                                         <tbody>
+                                        <tbody>
                                             <tr>
                                                 <td>
-                                                    <input type="text" name="currency-mask" class="form-control form-control-border border-width-2" @bind="onchange_CustomerAmount" @bind:event="oninput" onClick="this.select();" style="font-size: larger;" />
+                                                    <input type="text" name="currency-mask" class="form-control form-control-border border-width-2" @bind="voucherVM.PaymentAmount" @bind:event="oninput" onClick="this.select();" style="font-size: larger;" />
                                                 </td>
                                                 <td style="text-align: right; font-weight: bold; font-size: larger;">
-
-                                                    @string.Format("{0:#,##0.##}", voucherVM.sumAmountPay)
-
+                                                    @String.Format("{0:#,##0.##}", voucherVM.TotalAmount)
                                                 </td>
                                                 <td style="text-align: right; font-size: medium;">
-                                                    @string.Format("{0:#,##0.##}", voucherVM.ReturnAmount * -1)
+                                                    @string.Format("{0:#,##0.##}", voucherVM.PaymentAmount - voucherVM.TotalAmount)
                                                 </td>
                                             </tr>
-                                        </tbody> *@
+                                        </tbody>
                                     </table>
 
                                 </div>
 
                                 <div class="form-group">
-
-@*                                     @if (customerAmountSuggestList != null)
+                                    @if (amountSuggests != null)
                                     {
                                         <table class="table table-bordered">
                                             <tbody>
                                                 <tr>
-                                                    @foreach (var customerAmountSuggest in customerAmountSuggestList)
+                                                    @foreach (var _amountSuggest in amountSuggests)
                                                     {
                                                         <td style="padding: 0;">
-                                                            <button type="button" class="btn btn-block bg-white btn-lg" @onclick=@(()=>click_CustomerAmountSuggest(customerAmountSuggest.CustomerAmountSuggest))><span style="color:#DBC277">@string.Format("{0:#,##0.##}", customerAmountSuggest.CustomerAmountSuggest)</span></button>
+                                                            <button type="button" class="btn btn-block bg-white btn-lg" @onclick=@(()=>click_AmountSuggest(_amountSuggest.AmountSuggest))><span style="color:#DBC277">@String.Format("{0:#,##0.##}", _amountSuggest.AmountSuggest)</span></button>
                                                         </td>
                                                     }
                                                 </tr>
                                             </tbody>
                                         </table>
-                                    } *@
+                                    }
                                 </div>
 
                                 <div class="form-group">
@@ -339,55 +337,55 @@
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("1"))><span style="color:#DBC277">1</span></button>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorPayment("1"))><span style="color:#DBC277">1</span></button>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("2"))><span style="color:#DBC277">2</span></button>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorPayment("2"))><span style="color:#DBC277">2</span></button>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("3"))><span style="color:#DBC277">3</span></button>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorPayment("3"))><span style="color:#DBC277">3</span></button>
                                                 </td>
                                                 <td rowspan="2">
-                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("x"))><span style="color:#DBC277"><i class="fa-solid fa-lg fa-delete-left"></i></span></button>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorPayment("x"))><span style="color:#DBC277"><i class="fa-solid fa-lg fa-delete-left"></i></span></button>
                                                 </td>
                                             </tr>
 
                                             <tr>
                                                 <td>
-                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("4"))><span style="color:#DBC277">4</span></button>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorPayment("4"))><span style="color:#DBC277">4</span></button>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("5"))><span style="color:#DBC277">5</span></button>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorPayment("5"))><span style="color:#DBC277">5</span></button>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("6"))><span style="color:#DBC277">6</span></button>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorPayment("6"))><span style="color:#DBC277">6</span></button>
                                                 </td>
                                             </tr>
 
                                             <tr>
                                                 <td>
-                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("7"))><span style="color:#DBC277">7</span></button>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorPayment("7"))><span style="color:#DBC277">7</span></button>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("8"))><span style="color:#DBC277">8</span></button>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorPayment("8"))><span style="color:#DBC277">8</span></button>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("9"))><span style="color:#DBC277">9</span></button>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorPayment("9"))><span style="color:#DBC277">9</span></button>
                                                 </td>
                                                 <td rowspan="2">
-                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("c"))><span style="color:#DBC277">C</span></button>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorPayment("c"))><span style="color:#DBC277">C</span></button>
                                                 </td>
                                             </tr>
 
                                             <tr>
                                                 <td>
-                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("0"))><span style="color:#DBC277">0</span></button>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorPayment("0"))><span style="color:#DBC277">0</span></button>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("00"))><span style="color:#DBC277">00</span></button>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorPayment("00"))><span style="color:#DBC277">00</span></button>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorUpdateInvoiceDtl("000"))><span style="color:#DBC277">000</span></button>
+                                                    <button type="button" class="btn btn-lg btn-block bg-white" @onclick=@(()=>click_CalculatorPayment("000"))><span style="color:#DBC277">000</span></button>
                                                 </td>
                                             </tr>
 
@@ -514,7 +512,7 @@
 
                                                     <td class="text-center">@rowNum</td>
 
-                                                    <td data-target="#InitializeModal_UpdateVoucherDetail" data-toggle="modal" @onclick=@(()=>InitializeModal_UpdateVoucherDetail(_voucherDetailVM))>
+                                                    <td @onclick=@(()=>InitializeModal_UpdateVoucherDetail(_voucherDetailVM))>
                                                         <span>@_voucherDetailVM.IName</span>
                                                         @if (!String.IsNullOrEmpty(_voucherDetailVM.VDNote))
                                                         {
@@ -523,11 +521,11 @@
                                                             <span style="font-size: .8rem !important; color: gray;"><i class="fa-solid fa-note-sticky"></i> @_voucherDetailVM.VDNote</span>
                                                         }
                                                     </td>
-                                                    <td class="text-right" data-target="#InitializeModal_UpdateVoucherDetail" data-toggle="modal" @onclick=@(()=>InitializeModal_UpdateVoucherDetail(_voucherDetailVM))>
+                                                    <td class="text-right" @onclick=@(()=>InitializeModal_UpdateVoucherDetail(_voucherDetailVM))>
                                                         <span class="text-right">@string.Format("{0:#,##0.##}", @_voucherDetailVM.VDPrice)</span>
                                                     </td>
-                                                    <td class="text-center" data-target="#InitializeModal_UpdateVoucherDetail" data-toggle="modal" @onclick=@(()=>InitializeModal_UpdateVoucherDetail(_voucherDetailVM))>@_voucherDetailVM.VDQty</td>
-                                                    <td class="text-right" data-target="#InitializeModal_UpdateVoucherDetail" data-toggle="modal" @onclick=@(()=>InitializeModal_UpdateVoucherDetail(_voucherDetailVM))>
+                                                    <td class="text-center" @onclick=@(()=>InitializeModal_UpdateVoucherDetail(_voucherDetailVM))>@_voucherDetailVM.VDQty</td>
+                                                    <td class="text-right" @onclick=@(()=>InitializeModal_UpdateVoucherDetail(_voucherDetailVM))>
                                                         <span class="text-right">@string.Format("{0:#,##0.##}", @_voucherDetailVM.VDAmount)</span>
                                                         @if (_voucherDetailVM.VDDiscountAmount != 0)
                                                         {
@@ -585,7 +583,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-4">
-                                    <button type="button" disabled="@(voucherDetailVMs.Count() == 0 ? true : false)" class="btn bg-success btn-block" style="height: 67px;" data-target="#InitializeModal_Payment" data-toggle="modal" @onclick="()=>InitializeModal_Payment()"><i class="fa-solid fa-xl fa-dollar-sign"></i>&nbsp;<strong>THANH TOÁN</strong></button>
+                                    <button type="button" disabled="@(voucherDetailVMs.Count() == 0 ? true : false)" class="btn bg-success btn-block" style="height: 67px;" @onclick="()=>InitializeModal_Payment()"><i class="fa-solid fa-xl fa-dollar-sign"></i>&nbsp;<strong>THANH TOÁN</strong></button>
                                 </div>
                             </div>
 

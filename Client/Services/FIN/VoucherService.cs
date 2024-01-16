@@ -108,5 +108,10 @@ namespace D69soft.Client.Services.FIN
             return await response.Content.ReadFromJsonAsync<IEnumerable<RoomTableVM>>();
         }
 
+        public async Task<IEnumerable<VoucherVM>> GetAmountSuggest(decimal _TotalAmount)
+        {
+            return await _httpClient.GetFromJsonAsync<IEnumerable<VoucherVM>>($"api/Voucher/GetAmountSuggest/{_TotalAmount}");
+        }
+
     }
 }

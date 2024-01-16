@@ -54,6 +54,9 @@ namespace D69soft.Client.Pages.FIN
         //Customer
         CustomerVM customerVM = new();
 
+        //Payment
+        IEnumerable<VoucherVM> amountSuggests;
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -194,8 +197,6 @@ namespace D69soft.Client.Pages.FIN
 
                     voucherVM = (await voucherService.GetVouchers(filterVM)).First();
                     voucherDetailVMs = await voucherService.GetVoucherDetails(voucherVM.VNumber);
-
-                    voucherVM.IsTypeUpdate = 1;
                 }
             }
             else
@@ -232,8 +233,6 @@ namespace D69soft.Client.Pages.FIN
                     filterVM.EndDate = DateTimeOffset.MaxValue;
 
                     voucherVM = (await voucherService.GetVouchers(filterVM)).First();
-
-                    voucherVM.IsTypeUpdate = 1;
                 }
                 else
                 {
@@ -248,6 +247,8 @@ namespace D69soft.Client.Pages.FIN
 
                     await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
                 }
+
+                voucherVM.IsTypeUpdate = 1;
 
                 await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, filterVM.RoomTableCode, filterVM.UserID);
             }
@@ -349,7 +350,7 @@ namespace D69soft.Client.Pages.FIN
 
                 await voucherService.UpdateVoucher(voucherVM, voucherDetailVMs);
 
-                logVM.LogDesc = "Xóa chứng từ " + voucherVM.VNumber + "";
+                logVM.LogDesc = "Xóa hóa đơn bán hàng số " + voucherVM.VNumber + "";
                 await sysService.InsertLog(logVM);
 
                 await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, voucherVM.RoomTableCode, filterVM.UserID);
@@ -359,11 +360,13 @@ namespace D69soft.Client.Pages.FIN
 
         }
 
-        private void InitializeModal_UpdateVoucherDetail(VoucherDetailVM _voucherDetailVM)
+        private async Task InitializeModal_UpdateVoucherDetail(VoucherDetailVM _voucherDetailVM)
         {
             isLoading = true;
 
             voucherDetailVM = _voucherDetailVM;
+
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModal_UpdateVoucherDetail");
 
             isLoading = false;
         }
@@ -663,85 +666,66 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            //payment = new PaymentVM();
+            voucherVM.PaymentTypeCode = "CASH";
 
-            //payment.VNumber = voucherVM.VNumber;
+            voucherVM.PaymentAmount = voucherVM.TotalAmount;
 
-            //payment.PModeCode = "CASH";
+            amountSuggests = await voucherService.GetAmountSuggest(voucherVM.TotalAmount);
 
-            //payment.sumAmountPay = payment.CustomerAmount = invoiceTotal.sumAmountPay;
-
-            //customerAmountSuggestList = await cashierService.GetCustomerAmountSuggest(invoiceTotal.sumAmountPay);
+            await js.InvokeAsync<object>("ShowModal", "#InitializeModal_Payment");
 
             isLoading = false;
         }
 
-        private decimal onchange_CustomerAmount
-        {
-            //get { return payment.CustomerAmount; }
-            set
-            {
-                //isLoading = true;
-
-                //payment.CustomerAmount = value;
-
-                //payment.ReturnAmount = payment.sumAmountPay - payment.CustomerAmount;
-
-                //isLoading = false;
-            }
-        }
-
-        private void click_CalculatorUpdateInvoiceDtl(string value)
+        private void click_CalculatorPayment(string value)
         {
             isLoading = true;
 
-            //switch (value)
-            //{
-            //    case "1":
-            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 1 : payment.CustomerAmount;
-            //        break;
-            //    case "2":
-            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 2 : payment.CustomerAmount; ;
-            //        break;
-            //    case "3":
-            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 3 : payment.CustomerAmount; ;
-            //        break;
-            //    case "4":
-            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 4 : payment.CustomerAmount; ;
-            //        break;
-            //    case "5":
-            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 5 : payment.CustomerAmount; ;
-            //        break;
-            //    case "6":
-            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 6 : payment.CustomerAmount; ;
-            //        break;
-            //    case "7":
-            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 7 : payment.CustomerAmount; ;
-            //        break;
-            //    case "8":
-            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 8 : payment.CustomerAmount; ;
-            //        break;
-            //    case "9":
-            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 + 9 : payment.CustomerAmount; ;
-            //        break;
-            //    case "0":
-            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 9 ? payment.CustomerAmount * 10 : payment.CustomerAmount; ;
-            //        break;
-            //    case "00":
-            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 8 ? payment.CustomerAmount * 100 : payment.CustomerAmount;
-            //        break;
-            //    case "000":
-            //        payment.CustomerAmount = payment.CustomerAmount.ToString().Length < 6 ? payment.CustomerAmount * 1000 : payment.CustomerAmount;
-            //        break;
-            //    case "x":
-            //        payment.CustomerAmount = (payment.CustomerAmount - int.Parse(payment.CustomerAmount.ToString().Substring(payment.CustomerAmount.ToString().Length - 1, 1))) / 10;
-            //        break;
-            //    case "c":
-            //        payment.CustomerAmount = 0;
-            //        break;
-            //}
-
-            //payment.ReturnAmount = payment.sumAmountPay - payment.CustomerAmount;
+            switch (value)
+            {
+                case "1":
+                    voucherVM.PaymentAmount = voucherVM.PaymentAmount.ToString().Length < 9 ? voucherVM.PaymentAmount * 10 + 1 : voucherVM.PaymentAmount;
+                    break;
+                case "2":
+                    voucherVM.PaymentAmount = voucherVM.PaymentAmount.ToString().Length < 9 ? voucherVM.PaymentAmount * 10 + 2 : voucherVM.PaymentAmount; ;
+                    break;
+                case "3":
+                    voucherVM.PaymentAmount = voucherVM.PaymentAmount.ToString().Length < 9 ? voucherVM.PaymentAmount * 10 + 3 : voucherVM.PaymentAmount; ;
+                    break;
+                case "4":
+                    voucherVM.PaymentAmount = voucherVM.PaymentAmount.ToString().Length < 9 ? voucherVM.PaymentAmount * 10 + 4 : voucherVM.PaymentAmount; ;
+                    break;
+                case "5":
+                    voucherVM.PaymentAmount = voucherVM.PaymentAmount.ToString().Length < 9 ? voucherVM.PaymentAmount * 10 + 5 : voucherVM.PaymentAmount; ;
+                    break;
+                case "6":
+                    voucherVM.PaymentAmount = voucherVM.PaymentAmount.ToString().Length < 9 ? voucherVM.PaymentAmount * 10 + 6 : voucherVM.PaymentAmount; ;
+                    break;
+                case "7":
+                    voucherVM.PaymentAmount = voucherVM.PaymentAmount.ToString().Length < 9 ? voucherVM.PaymentAmount * 10 + 7 : voucherVM.PaymentAmount; ;
+                    break;
+                case "8":
+                    voucherVM.PaymentAmount = voucherVM.PaymentAmount.ToString().Length < 9 ? voucherVM.PaymentAmount * 10 + 8 : voucherVM.PaymentAmount; ;
+                    break;
+                case "9":
+                    voucherVM.PaymentAmount = voucherVM.PaymentAmount.ToString().Length < 9 ? voucherVM.PaymentAmount * 10 + 9 : voucherVM.PaymentAmount; ;
+                    break;
+                case "0":
+                    voucherVM.PaymentAmount = voucherVM.PaymentAmount.ToString().Length < 9 ? voucherVM.PaymentAmount * 10 : voucherVM.PaymentAmount; ;
+                    break;
+                case "00":
+                    voucherVM.PaymentAmount = voucherVM.PaymentAmount.ToString().Length < 8 ? voucherVM.PaymentAmount * 100 : voucherVM.PaymentAmount;
+                    break;
+                case "000":
+                    voucherVM.PaymentAmount = voucherVM.PaymentAmount.ToString().Length < 6 ? voucherVM.PaymentAmount * 1000 : voucherVM.PaymentAmount;
+                    break;
+                case "x":
+                    voucherVM.PaymentAmount = (voucherVM.PaymentAmount - int.Parse(voucherVM.PaymentAmount.ToString().Substring(voucherVM.PaymentAmount.ToString().Length - 1, 1))) / 10;
+                    break;
+                case "c":
+                    voucherVM.PaymentAmount = 0;
+                    break;
+            }
 
             isLoading = false;
 
@@ -751,38 +735,93 @@ namespace D69soft.Client.Pages.FIN
         {
             isLoading = true;
 
-            //payment.PModeCode = value;
+            voucherVM.PaymentTypeCode = value;
 
             isLoading = false;
         }
 
-        private void click_CustomerAmountSuggest(decimal value)
+        private void click_AmountSuggest(decimal value)
         {
             isLoading = true;
 
-            //payment.CustomerAmount = value;
-
-            //payment.ReturnAmount = payment.sumAmountPay - payment.CustomerAmount;
+            voucherVM.PaymentAmount = value;
 
             isLoading = false;
         }
 
-        private async Task SavePayment()
+        private async Task Payment()
         {
             isLoading = true;
 
-            //await cashierService.SavePayment(payment, filterVM.StockCode, filterVM.UserID);
+            voucherVM.PaymentAmount = voucherVM.PaymentAmount > voucherVM.TotalAmount ? voucherVM.TotalAmount : voucherVM.PaymentAmount;
 
-            //await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Payment");
-            //await js.Toast_Alert("Thanh toán thành công!", SweetAlertMessageType.success);
+            voucherVM.VActive = true;
+            voucherVM.IsTypeUpdate = 4;
 
-            //await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, voucherVM.RoomTableCode, filterVM.UserID);
+            await voucherService.UpdateVoucher(voucherVM, voucherDetailVMs);
 
-            //payment.isPayment = 1;
+            VoucherVM _voucherVM = new();
+            VoucherDetailVM _voucherDetailVM = new();
+            List<VoucherDetailVM> _voucherDetailVMs = new();
 
-            //voucherVM = new();
+            if (voucherVM.VTypeID == "FIN_Sale")
+            {
+                _voucherVM.VDesc = "Thu tiền " + voucherVM.VDesc;
+                if (voucherVM.PaymentTypeCode == "CASH")
+                {
+                    _voucherVM.VCode = "PT";
+                    _voucherVM.VTypeID = "FIN_Cash_Receipt";
+                    _voucherVM.VSubTypeID = "FIN_Cash_Receipt_Customer";
+                }
 
-            //roomTableList = await cashierService.GetRoomTable(filterVM);
+                if (voucherVM.PaymentTypeCode == "BANK")
+                {
+                    _voucherVM.VCode = "GBC";
+                    _voucherVM.VTypeID = "FIN_Deposit_Credit";
+                    _voucherVM.VSubTypeID = "FIN_Deposit_Credit_Customer";
+                }
+            }
+
+            _voucherVM.IsTypeUpdate = 0;
+
+            _voucherVM.UserID = filterVM.UserID;
+
+            _voucherVM.DivisionID = filterVM.DivisionID;
+
+            _voucherVM.BankAccountID = voucherVM.BankAccountID;
+
+            _voucherVM.EserialPerform = voucherVM.EserialPerform;
+
+            _voucherVM.VDate = voucherVM.VDate;
+
+            _voucherVM.TotalAmount = voucherVM.PaymentAmount;
+
+            _voucherVM.VReference = voucherVM.VNumber;
+
+            _voucherVM.VActive = true;
+
+            _voucherDetailVM.VDDesc = _voucherVM.VDesc;
+            _voucherDetailVM.VDQty = 1;
+            _voucherDetailVM.VDPrice = voucherVM.PaymentAmount;
+            _voucherDetailVM.VDAmount = voucherVM.PaymentAmount;
+
+            _voucherDetailVMs.Add(_voucherDetailVM);
+
+            await voucherService.UpdateVoucher(_voucherVM, _voucherDetailVMs);
+
+            await hubConnection.SendAsync("Send_LoadRoomTable", filterVM.StockCode, voucherVM.RoomTableCode, filterVM.UserID);
+
+            await PrintVoucher("Phieu_xuat_kho_ban_hang");
+
+            logVM.LogDesc = "Thanh toán hóa đơn số " + voucherVM.VNumber + "";
+            await sysService.InsertLog(logVM);
+
+            await js.Toast_Alert(logVM.LogDesc, SweetAlertMessageType.success);
+
+            voucherVM = new();
+            voucherDetailVMs = new();
+
+            await js.InvokeAsync<object>("CloseModal", "#InitializeModal_Payment");
 
             isLoading = false;
         }

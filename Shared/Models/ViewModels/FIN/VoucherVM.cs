@@ -11,6 +11,7 @@ namespace D69soft.Shared.Models.ViewModels.FIN
 
         //POS
         public bool IsClickChangeRoomTable { get; set; }
+        public decimal AmountSuggest { get; set; }
 
         public string DataFromExcel { get; set; }
         public string DivisionID { get; set; }

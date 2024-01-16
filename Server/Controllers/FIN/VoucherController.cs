@@ -368,5 +368,21 @@ namespace D69soft.Server.Controllers.FIN
             }
         }
 
+        [HttpGet("GetAmountSuggest/{_TotalAmount}")]
+        public async Task<ActionResult<IEnumerable<VoucherVM>>> GetAmountSuggest(decimal _TotalAmount)
+        {
+            using (var conn = new SqlConnection(_connConfig.Value))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+
+                DynamicParameters parm = new DynamicParameters();
+                parm.Add("@TotalAmount", _TotalAmount);
+
+                var result = await conn.QueryAsync<VoucherVM>("POS.Cashier_AmountSuggest", parm, commandType: CommandType.StoredProcedure);
+                return Ok(result);
+            }
+        }
+
     }
 }
