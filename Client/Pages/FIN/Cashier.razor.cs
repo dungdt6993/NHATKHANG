@@ -45,7 +45,6 @@ namespace D69soft.Client.Pages.FIN
 
         //Voucher
         VoucherVM voucherVM = new();
-        List<VoucherVM> voucherVMs;
 
         //VoucherDetail
         VoucherDetailVM voucherDetailVM = new();
